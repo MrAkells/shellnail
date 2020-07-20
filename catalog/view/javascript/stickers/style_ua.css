@@ -1,0 +1,68 @@
+.stickers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    text-align: left;
+    }
+.sticker_bestseller {
+	margin-bottom: 5px;
+    }
+.sticker_bestseller:before {
+    content: "Топ продажу";
+    display: block;
+    text-align: center;
+    min-width: 110px;
+    color: #2ca147;
+    font-weight: bold;
+    border: 2px solid #2ca147;
+    padding: 10px 0;
+    font-size: 13px;
+    
+    }
+.sticker_new_product {
+	margin-bottom: 5px;
+    }
+.sticker_new_product:before {
+	content: "Новинка";
+    display: block;
+    text-align: center;
+    min-width: 110px;
+    color: #f9121a;
+    font-weight: bold;
+    border: 2px solid #f9121a;
+    padding: 10px 0;
+    font-size: 13px;
+    
+    }
+.sticker_most_viewed {
+	margin-bottom: 5px;
+    }
+.sticker_most_viewed:before {
+	content: "Популярний";
+    display: block;
+    text-align: center;
+    min-width: 110px;
+    color: #2fb5ea;
+    font-weight: bold;
+    border: 2px solid #2fb5ea;
+    padding: 10px 0;
+    font-size: 13px;
+    
+    }
+    
+        .sticker_special {
+	margin-bottom: 5px;
+    }
+.sticker_special:before {
+	content: "Знижка";
+    display: block;
+    text-align: center;
+    min-width: 110px;
+    color: #F08080;
+    font-weight: bold;
+    border: 2px solid #F08080;
+    padding: 10px 0;
+    font-size: 13px;
+    
+    }

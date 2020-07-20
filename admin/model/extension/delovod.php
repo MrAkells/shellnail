@@ -1,0 +1,111 @@
+<?php
+class ModelExtensionDelovod extends Model {
+	public function editIsbn($id, $isbn) {
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `sku` = '" . $this->db->escape($id) . "', `isbn` = '" . $this->db->escape($isbn) . "' WHERE `product_id` = '" . (int)$id . "'");
+	}
+
+	public function getProductsByCategoryId($category_id, $isbn = true) {
+		$query = $this->db->query("SELECT p.product_id, pd.name FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p2c.category_id = '" . (int)$category_id. "'" . ($isbn?" AND p.isbn = ''" :"") . " ORDER BY pd.name ASC");
+
+		return $query->rows;
+	}
+
+	public function getProduct($product_id) {
+		$query = $this->db->query("SELECT DISTINCT p.price, p.weight, pd.name, p.sku, p.isbn, p2c.category_id, cd.name as category, md.name as manufacturer  FROM " . DB_PREFIX . "product p
+					LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')
+					LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (p.manufacturer_id = md.manufacturer_id AND md.language_id = '" . (int)$this->config->get('config_language_id') . "')
+					LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id AND p2c.main_category = 1)
+					LEFT JOIN " . DB_PREFIX . "category_description cd ON (p2c.category_id = cd.category_id AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "')
+					WHERE p.product_id = '" . (int)$product_id .  "'");
+
+		return $query->row;
+	}
+
+	public function updateBalance($data) {
+                 // auto sms code
+                $this->sms_log =  new Log('sms.log');
+                $sms_config = new Config();
+                $sms_config->load('sms');
+                $this->sms_config = $sms_config;
+                $this->makeUrl();
+                
+                $query_sms=$this->db->query("SELECT sms.product_id, sms.name as user_name, sms.phone as user_phone, pd.name as product_name, isbn FROM " . DB_PREFIX . "product p JOIN sms ON (p.product_id=sms.product_id) LEFT JOIN ".DB_PREFIX."product_description pd ON(p.product_id=pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+                $waiters = [];
+                foreach($query_sms as $row){
+                    if(isset($waiters[$row['isbn']])){
+                        $waiters[$row['isbn']][] = $row;
+                    }else{
+                        $waiters[$row['isbn']] = array($row);
+                    }
+                }    
+               
+            // end of auto sms
+		$i = 0;
+		foreach ($data as $good) {
+                    
+                    if(isset($waiters[$good->id]) && (int)$good->qty>0){
+                        $this->notify($waiters[$good->id]);
+                    } 
+                    
+				++$i;
+				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '" . (int)$good->qty . "', date_modified = NOW() WHERE `isbn` = '" . $good->id . "'");
+                               
+		}
+		if($i){
+				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0',  date_modified = NOW() WHERE `isbn` <> '' AND `mpn` = '' AND `date_modified` < (NOW() - INTERVAL 1 MINUTE)");
+		}
+	}
+        
+    public function notify($rows) {
+
+        $product_id = isset($rows[0]['product_id']) ? $rows[0]['product_id'] : false;
+        if ($product_id) {
+
+            foreach ($rows as $row) {
+                $this->sendSms($row);
+            }
+
+            $this->db->query("DELETE FROM sms WHERE product_id = '" . (int) $product_id . "'");
+        }
+    }
+
+    public function sendSms($data) {
+
+        $username = $this->sms_config->get('sms_username'); //'380508448537';    
+        $token = $this->sms_config->get('sms_token');  //'VKpJeF81HzujOj9';       
+        $from = $this->sms_config->get('sms_from');  //'shellnail';  
+
+        $to = '38' . $data['user_phone'];
+        $name = $data['product_name'];
+
+        $link = HTTPS_CATALOG.$this->url->link('product/product', '&product_id=' . $data['product_id']);
+
+        $message = "Товар $name, который Вы ожидаете появился в наличии $link";
+        $text = iconv('utf-8', 'windows-1251', $message);
+        $text = urlencode($text);
+
+        $ch = curl_init();
+        $url = "https://gate.smsclub.mobi/token/?username=$username&token=$token&from=$from&to=$to&text=$text";
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $result = curl_exec($ch);
+        $this->sms_log->write('SMS was sended to user ' . $data['user_name'] . ' on number ' . $data['user_phone'] . '. Result = ' . $result);
+    }
+    
+     private function makeUrl(){
+        $seo_type = $this->config->get('config_seo_url_type');
+        if (!$seo_type) {
+            $seo_type = 'seo_url';
+        }
+        require_once(DIR_CATALOG . 'controller/startup/' . $seo_type . '.php');
+        $classSeo = 'ControllerStartup'.str_replace('_','',$seo_type);
+        $seoUrl = new $classSeo($this->registry);
+
+        $urlToCatalog = new Url(HTTP_CATALOG, $this->config->get('config_secure') ? HTTPS_CATALOG : HTTP_CATALOG);
+        $urlToCatalog->addRewrite($seoUrl);
+       
+        $this->url=$urlToCatalog;
+    }
+
+}
+

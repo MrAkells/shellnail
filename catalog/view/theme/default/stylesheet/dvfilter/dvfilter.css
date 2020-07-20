@@ -1,0 +1,387 @@
+/*=Font size */
+.dvfilter-option .option-name,
+.dvfilter-option .option-values,
+.dvfilter-option .option-description,
+.dvfilter-option .fields-price
+{
+    font-size: 12px;
+}
+.dvfilter{
+        border-color: #f6f6f6;
+        box-shadow: none;
+        border-radius: 3px;
+}
+.dvfilter .panel-heading {
+    color: #4b4b4b;
+    background-color: transparent;
+    border-color: #ddd;
+    
+    padding: 15px 0;
+    text-transform: uppercase;
+    margin: 0 15px;
+}
+.filter-title{
+    font-family: 'Roboto-Medium'; 
+    font-size: 16px;
+    float: left;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.dvfilter a,
+.dvfilter a:hover,
+.dvfilter a:active{background: none; border: none; padding: 0; text-shadow: none; color: #666;}
+
+.dvfilter-option .option-name, .dvfilter-option .option-name:hover{font-size: 14px; margin-bottom: 10px; color: #4b4b4b;}
+.dvfilter-option .option-values{overflow: visible;}
+.list-group-item {
+    /*overflow: visible!important;*/
+    overflow: hidden;
+}
+.dvfilter-option .option-values .dropdown-menu{width: 100%;}
+.dvfilter-option .option-values .dropdown-menu > li{
+    padding: 10px;
+}
+
+.dvfilter-option .color{border-radius: 3px 3px 3px 3px; float: left; height: 19px; margin: 1px -16px 0 -3px; width: 19px;}
+.dvfilter-option .image{background-repeat: no-repeat; background-position: 0 0; float: left; height: 19px; margin: 1px -16px 0 -3px; position: relative; width: 19px; z-index: 10;}
+
+.dvfilter-option label{cursor: pointer; display: block; font-size: 12px; font-weight: normal; line-height: 1; padding: 0px 4px 4px 4px; margin-top: 7px;}
+.dvfilter-option label input {
+    width: 20px; 
+    display: inline-block; 
+    margin: 0 5px 0 0; 
+    vertical-align: top;
+}
+.dvfilter-option label small{background-color: #DBEAF9; color: #0E6A93; font-weight: 200; font-size: 10px; margin-left: 5px; padding: 0 3px;}
+
+.dvfilter-option label.disabled{color: #999999;}
+.dvfilter-option label.disabled small{background-color: #EFEFEF; color: #999999;}
+
+.dvfilter-option label a{color: #4b4b4b; text-decoration: none; font-size: 14px;}
+.dvfilter-option label.selected {color: #E56101;}
+.dvfilter-option label.selected small{display: none;}
+
+/*=Selected Options */
+.selected-options {color: #333333; padding: 0!important; border: none; float: right;}
+.selected-options .dvfilter-option{background-color: #F8F8F8; font-size: 10px; padding: 4px 5px;}
+
+/*=Price filtering */
+.option-values input {
+    min-width: 60px;
+    width: 33%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    float: left;
+}
+.option-values .dash {
+    display: block;
+    float: left;
+    font-size: 19px;
+    padding: 0 8px;
+    margin: 5px 0 10px 0;
+}
+.option-values p {
+    margin-top: 10px;
+}
+.option-values p a {
+    text-decoration: underline;
+}
+.option-values p a:hover {
+    color: #1a6cce;
+}
+.option-values button {
+    margin-left: 4px;
+    background: #ef4d4d;
+    border: none;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 2px;
+}
+.angle_up i {
+    float: right;
+    font-size: 15px;
+    color: #cbcbcb;
+}
+.angle_up i:hover {
+    color: #1a6cce;
+}
+.btn.divo-check {
+    border: 1px solid #d3d7da;
+    box-shadow: none;
+}
+.divo-check {
+    background: url(../../../../../../image/catalog/checkboxes.png) left no-repeat;
+    width: 22px;
+    height: 22px;
+    background-position: -45px 0;
+    outline: none !important;
+}
+.divo-check>a {
+    margin-left: 30px;
+}
+.selected.divo-check {
+    background: url(../../../../../../image/catalog/checkboxes.png) left no-repeat;
+    width: 22px;
+    height: 22px;
+    background-position: 0 0;
+}
+.selected.divo-check.active{
+    box-shadow: none;
+    border: 2px solid #410043;
+}
+.color_selected .selected.divo-check.active{
+    width: 27px;
+    height: 27px;
+}
+.list-group {
+    padding: 0 15px;
+}
+.list-group-item {
+    padding: 10px 0;
+}
+.list-group-item.dvfilter-option:first-child, .list-group-item.selected-options {
+    border-top: none;
+}
+.list-group-item.dvfilter-option {
+    border-bottom: none;
+}
+.btn-more {
+    margin: 10px 0 15px 0;
+    border: 1px solid #ef4d4d !important;
+    border-radius: 0;
+    background: #ef4d4d;
+    outline: none !important;
+    box-shadow: none !important;
+}
+.btn-more:hover, .btn-more:active, .btn-more:focus {
+    border: 1px solid #ef4d4d;
+    background: #ef4d4d !important;
+}
+.btn-more i {
+    color: #fff;
+}
+
+#dvfilter-price .option-values{padding: 10px 10px 5px;}
+.trackbar, .trackbar .left-block, .trackbar .right-block{height: 4px;}
+
+.popover-content .form-inline{white-space: nowrap;}
+.popover-content .form-inline .form-group{display: inline-block; margin-bottom: 0; vertical-align: middle;}
+
+.scale{margin-bottom: 35px; margin-left: 15px; margin-right: 15px;}
+
+.trackbar{background-color: #41AA35; margin:0; padding: 0;} /*=Width was given automatically */
+.trackbar .handler-block{background-color: #DADADA; width: 0;}
+.trackbar .left-block{border-radius: 3px 0 0 3px; float: left; margin: 0 0 0 -3px; padding: 0 0 0 3px;}
+.trackbar .right-block{border-radius: 0 3px 3px 0; float: right; margin: 0 -3px 0 0; padding: 0 3px 0 0;}
+.trackbar .trackbar-handler{-moz-box-sizing: content-box; -webkit-box-sizing: content-box; -o-box-sizing: content-box; box-sizing: content-box; border: 4px solid #04B6F0; background-color: #0E6A93; border-radius: 50% 50% 50% 50%; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); cursor:pointer; width: 4px; height: 4px;margin-top: -4px;}
+.scale.disabled .trackbar,
+.scale.disabled .trackbar-handler{background-color: #F2F2F2;}
+.scale.disabled .trackbar-handler{border-color: #BABABA;}
+
+.trackbar .left-handler{float: right; margin-right: -6px;}
+.trackbar .right-handler{float: left; margin-left: -6px;}
+
+.trackbar-scale{height: 18px; line-height: normal; margin: 2px 0 0; padding: 0 8px 0 5px;}
+.trackbar-scale a,
+.trackbar-scale div{border-left: 1px solid #DADADA;display:block;float:left;margin-right: -2px;text-decoration: none;position: relative;height: 5px;}
+
+.trackbar-scale a.last,
+.trackbar-scale div.last{border-right: 1px solid #DADADA; margin-right: -4px;}
+
+.trackbar-scale a:hover,
+.trackbar-scale a:hover span,
+.trackbar-scale a:hover + a .from{background-color: #F8F8F8; color:#000000;}
+
+.trackbar-scale div{background-color: #0EB9F0;}
+.trackbar-scale a span,
+.trackbar-scale div span{color: #666666; font-size: 8px; position: absolute; top: 5px;}
+
+.trackbar-scale a span.from,
+.trackbar-scale div span.from{left: 0; }
+
+.trackbar-scale a span.to,
+.trackbar-scale div span.to{right: 0; }
+
+/*=Price diagram */
+.price-diagram{box-shadow: 0 1px 1px #DBDEE1 inset; background: #F2F2F2 url('../../image/dvfilter/diagram-bg-repeat.png') repeat 0 1px; border-radius: 3px 3px 3px 3px; overflow: hidden; margin: 10px 10px 5px 5px;}
+.diagram-field{position:relative;margin: 0;height: 40px;}
+.diagram-field circle{stroke-width: 2; opacity: 1;}
+.diagram-field path{stroke-width: 1; opacity: 0.25; stroke-opacity: 1;}
+
+.dvfilter .popover .form-inline .form-control{width: 100px;}
+/* Position center style */
+
+.dvfilter-content-top,
+
+.dvfilter-content-bottom{}
+.dvfilter-content-top .box-content,
+
+.dvfilter-content-bottom .box-content{font-size: 0;}
+
+.dvfilter-content-top .dvfilter-option,
+
+.dvfilter-content-bottom .dvfilter-option{display: inline-block; vertical-align: top; width: 33%;}
+
+.dvfilter-content-top .dvfilter-option + .dvfilter-option,
+
+.dvfilter-content-bottom .dvfilter-option + .dvfilter-option{border-top: none;}
+
+.option-name:hover {
+    cursor: pointer;
+    color: #1a6cce;
+}
+.parametr-filter{
+    display: table-cell;
+    vertical-align: middle;
+    height: 22px;
+}
+.resel-all{
+    color: #307ecd;
+    font-size: 14px;
+    border-bottom: 1px dotted #307ecd;
+    padding: 0px;
+}
+.color_selected label{
+    border: 1px solid #410043;
+}
+.color_selected .new-popover{
+    display: inline-block;
+    padding: 2px 10px;
+    background-color: #976ba8;
+    color: #fff;
+    font-size: 14px;
+    line-height: 26px;
+    cursor: default;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    z-index: 2;
+    margin: -14px 0 0 3px;
+    padding: 2px 10px
+}
+.color_selected .new-popover:before{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -3px;
+    margin: -6px 0 0 -9px;
+    border: 6px solid transparent;
+    border-right-color: #976ba8;
+}
+.colored{
+    display: inline-block;
+    margin-right: 4px;
+    width: 27px;
+    height: 27px;
+}
+.divo-btn{
+    position: relative;
+}
+.dvfilter-option .colored label{
+    margin-top: 0px;
+    line-height: 37px;
+}
+.colored .divo-check {
+    width: 25px;
+    height: 25px;
+    border-radius: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.dvfilter-option{
+    overflow: visible!important;
+}
+.btn-dvfilter{
+    display: block;
+    width: 80%;
+    font-family: 'Roboto-Medium'; 
+    color: #4b4b4b;
+    font-size: 16px;
+    text-transform: uppercase;
+    background-color: transparent;
+    border: 1px solid #410043;
+    border-radius: 5px;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.custom_popover:hover{
+    background-color: #5f2e73;
+}
+.custom_popover:hover:before {
+    border-right-color: #5f2e73;
+}
+@media (max-width: 480px) {
+.btn-dvfilter{
+    width: 100%;
+}
+}
+@media (max-width: 1199px) {
+    .option-values button {
+        margin-left: 1px;
+    }
+    .option-values input {
+        font-size: 11px;
+    }
+}
+@media (max-width: 991px) {
+    .colored {
+    width: 54px;
+    height: 54px;
+   
+}
+    .colored .divo-check {
+    width: 50px;
+    height: 50px;
+    }
+    .color_selected .selected.divo-check.active {
+    width: 54px;
+    height: 54px;
+    }
+    .dvfilter-option .colored label {
+        line-height: 96px;
+    }
+    .option-values input {
+        width: 100%;
+    }
+    .option-values .dash {
+        width: 100%;
+        text-align: center;
+    }
+    .option-values button {
+        margin-top: 10px;
+        float: left;
+        width: 100%;
+    }
+     #dvfilter{
+        display: block;
+    }
+/*    .option-values {
+        display: none;
+    }*/
+}
+@media (max-width: 767px) {
+    .navbar.navbar-default {
+        margin-top: 10px;
+    }
+    .navbar-toggle {
+        border-radius: 0 !important;
+    }
+    
+    #dvfilter{
+        display: block;
+    }
+/*    .option-values {
+        display: none;
+    }*/
+    }
+    
+    @media (max-width: 767px) and (max-width: 991px){
+        #dvfilter-content > .list-group-item:first-child > .option-values{
+        display: block;
+    }
+}

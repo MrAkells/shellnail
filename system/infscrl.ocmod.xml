@@ -1,0 +1,28 @@
+<modification>
+	<name>Infinite Product Scroll</name>
+    <version>2.X-3.X-3.X</version>
+    <link>http://www.opencarttools.net</link>
+    <author>opencarttools@gmail.com</author>
+    <code>23856</code> 	
+ 	  	
+ 	<file path="catalog/controller/product/*.php">
+        <operation error="skip">
+            <search position="replace"><![CDATA[$pagination = new Pagination();]]></search>
+			<add position="replace"><![CDATA[$data['infscrl_status'] = false;
+			if(isset($product_total) && isset($limit) ) {
+			$data['infscrl_status'] = $this->config->get(((substr(VERSION,0,3)>='3.0') ? 'module_infscrl_status' : 'infscrl_status'));
+ 			$data['infscrl_module'] = (substr(VERSION,0,3)>='3.0' || substr(VERSION,0,3)=='2.3') ? $this->load->controller('extension/module/infscrl') : $this->load->controller('module/infscrl');
+			}
+			$pagination = new Pagination();
+			]]></add> 
+         </operation>
+  	</file>  
+	
+	<!-- inside product folder all tpl --> 
+	<file path="catalog/view/theme/*/template/product/*.tpl">
+		<operation error="skip">
+            <search position="replace"><![CDATA[<?php echo $footer; ?>]]></search>
+			<add position="replace"><![CDATA[<?php if(isset($infscrl_status) && $infscrl_status) { echo $infscrl_module; } ?> <?php echo $footer; ?>]]></add> 
+        </operation>
+  	</file>
+</modification>
