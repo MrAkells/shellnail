@@ -207,8 +207,7 @@
 
                         var d = new Date();
                         var seconds_now = Math.round(d.getTime() / 1000);
-                        var end = $('#end_of_promo<?php echo $promo['
-                            promo_id ']; ?>').data('seconds');
+                        var end = $('#end_of_promo<?php echo $promo['promo_id']; ?>').data('seconds');
                         var seconds_to_end = end - seconds_now;
                         var days = Math.floor(seconds_to_end / (3600 * 24));
                         var hour = Math.floor((seconds_to_end - (days * 3600 * 24)) / 3600);
@@ -216,20 +215,15 @@
                         var seconds = seconds_to_end - (days * 3600 * 24) - (hour * 3600) - (minutes * 60);
 
 
-                        $('#simple-timer<?php echo $promo['
-                            promo_id ']; ?>').simpletimer({
+                        $('#simple-timer<?php echo $promo['promo_id']; ?>').simpletimer({
                             day: days,
-                            dayDom: '.timer-day<?php echo $promo['
-                            promo_id ']; ?>',
+                            dayDom: '.timer-day<?php echo $promo['promo_id']; ?>',
                             hour: hour,
-                            hourDom: '.timer-hour<?php echo $promo['
-                            promo_id ']; ?>',
+                            hourDom: '.timer-hour<?php echo $promo['promo_id']; ?>',
                             minute: minutes,
-                            minuteDom: '.timer-minute<?php echo $promo['
-                            promo_id ']; ?>',
+                            minuteDom: '.timer-minute<?php echo $promo['promo_id']; ?>',
                             second: seconds,
-                            secondDom: '.timer-second<?php echo $promo['
-                            promo_id ']; ?>'
+                            secondDom: '.timer-second<?php echo $promo['promo_id']; ?>'
                         });
 
                     });
