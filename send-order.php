@@ -97,29 +97,25 @@ if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 
 	
 	# Соединение
-	$link_to_connection = mysql_connect($db_host, $db_username, $db_password) or die('Could not connect: ' . mysql_error());
-
-	# Выбор базы данных
-	mysql_select_db($db_database) or die('Не могу выбрать базу данных');
-
-        if($decrease_quantity){
-            $update_quantity = mysql_query("UPDATE oc_product SET quantity=quantity-1 WHERE `product_id` = '".(int)$_POST["product_id"]."'");    
-        }
-        
-        if(isset($save_sms_array)){
-          
-            mysql_query("SET NAMES 'utf8' COLLATE 'utf8_general_ci'");
-            mysql_query("SET CHARACTER SET 'utf8'");
-            $sql_text = "INSERT INTO sms SET phone= '".$save_sms_array['phone']."', product_id= '".$save_sms_array['product_id']."', name= '". $save_sms_array['name'] ."'";
-           
-            $result = mysql_query($sql_text);  
+	$db_link = mysqli_connect($db_host, $db_username, $db_password, $db_database);
+	if($decrease_quantity){
+		$update_quantity = mysqli_query($db_link,"UPDATE oc_product SET quantity=quantity-1 WHERE `product_id` = '".(int)$_POST["product_id"]."'");    
+	}
+	
+	if(isset($save_sms_array)){
+		
+		mysqli_query($db_link,"SET NAMES 'utf8' COLLATE 'utf8_general_ci'");
+		mysqli_query($db_link,"SET CHARACTER SET 'utf8'");
+		$sql_text = "INSERT INTO sms SET phone= '".$save_sms_array['phone']."', product_id= '".$save_sms_array['product_id']."', name= '". $save_sms_array['name'] ."'";
+		
+		$result = mysqli_query($db_link,$sql_text);  
 //            var_dump($sql_text, $result);
 //            die;
-        }
+	}
         
-    $result = mysql_query("SELECT * FROM `$db_table` WHERE `code` = 'buyoneclick_'");
+    $result = mysqli_query($db_link,"SELECT * FROM `$db_table` WHERE `code` = 'buyoneclick_'");
 
-    while ($row = mysql_fetch_assoc($result)) {
+    while ($row = mysqli_fetch_assoc($result)) {
 		switch ($row['key']) {
 			case 'buyoneclick_turbosms_status' :
 				$turbosms_status = $row['value'];
