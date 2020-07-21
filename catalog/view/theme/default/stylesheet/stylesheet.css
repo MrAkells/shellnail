@@ -2276,7 +2276,11 @@ ul.new-sorting>li>a{
 	font-size: 14px;
     height: 30px;
     color: #373737!important;
-    position: relative;
+		position: relative;
+}
+ul.new-sorting>li>a:hover{
+	cursor: pointer;
+	border-bottom: 1px dotted #373737;
 }
 ul.new-sorting li{
 	padding: 6px 5px 5px 5px;
