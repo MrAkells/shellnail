@@ -19,6 +19,16 @@ class ControllerCommonHeader extends Controller {
 		} else {
 			$server = $this->config->get('config_url');
 		}
+		// noindex for issue 2
+		if(isset($this->request->server['REQUEST_URI'])){
+			$pattern = '/';
+			$pattern .= '(account\/)|(affiliate\/)|(checkout\/)|(\/wishlist)|(product\/search)|(product\/compare)|(\/system)|(\/catalog)';
+			$pattern .= '(manufacturer_id)|(sort=)|(order=)|(limit=)|(filter=)|(filter_)|(tracking=)';
+			$pattern .='/';
+			if (preg_match($pattern, $this->request->server['REQUEST_URI'])) {
+				$this->document->setNoindex(true);
+			}
+		}
 
 		if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
 			$this->document->addLink($server . 'image/' . $this->config->get('config_icon'), 'icon');
