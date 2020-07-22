@@ -2354,6 +2354,9 @@ ul.new-sorting li{
 }
 .divo-btn__disabled .parametr-filter {
 	margin-left: 30px;
+	display: inline-flex;
+	align-items: center;
+	font-size: 14px;
 }
 /*---End-Filter---*/
 
