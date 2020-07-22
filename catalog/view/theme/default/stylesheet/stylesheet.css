@@ -2347,7 +2347,16 @@ ul.new-sorting li{
 #dvfilter{
 	margin-top: 15px;
 }
+.divo-btn__disabled {
+	pointer-events: none;
+	cursor: not-allowed;
+}
+.divo-btn__disabled .parametr-filter {
+	margin-left: 30px;
+}
 /*---End-Filter---*/
+
+
 /*News-articles-and-reviews*/
 .row-article{
 	margin-bottom: 35px;
