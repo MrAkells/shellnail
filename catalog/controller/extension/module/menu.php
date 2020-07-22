@@ -3,7 +3,11 @@ class ControllerExtensionModuleMenu extends Controller {
 	public function index($settings=array()) {
 		$this->load->language('extension/module/menu');
 
-                $this->document->addStyle('catalog/view/theme/default/stylesheet/menu.css');
+		$menu_css = filemtime(DIR_APPLICATION  . 'view/theme/default/stylesheet/menu.css');
+
+		$version_menu_css = 'catalog/view/theme/default/stylesheet/menu.css?v' . $menu_css;
+
+    $this->document->addStyle($version_menu_css);
                 
 		$data['heading_title'] = $this->language->get('heading_title');
 

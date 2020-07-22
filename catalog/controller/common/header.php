@@ -218,6 +218,9 @@ class ControllerCommonHeader extends Controller {
                 
 		$data['search'] = $this->load->controller('common/search');
 		$data['cart'] = $this->load->controller('common/cart');
+
+		$data['version_stylesheet_css'] = filemtime(DIR_APPLICATION  . 'view/theme/default/stylesheet/stylesheet.css');
+	
   
 		// For page specific css
 		if (isset($this->request->get['route'])) {
