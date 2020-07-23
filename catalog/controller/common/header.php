@@ -22,8 +22,9 @@ class ControllerCommonHeader extends Controller {
 		// noindex for issue 2
 		if(isset($this->request->server['REQUEST_URI'])){
 			$pattern = '/';
-			$pattern .= '(account\/)|(affiliate\/)|(checkout\/)|(\/wishlist)|(product\/search)|(product\/compare)|(\/system)|(\/catalog)';
-			$pattern .= '(manufacturer_id)|(sort=)|(order=)|(limit=)|(filter=)|(filter_)|(tracking=)';
+			$pattern .= '(account\/)|(affiliate\/)|(checkout\/)|(\/wishlist)|(product\/search)|(product\/compare)|(\/system)|(\/catalog)|(login\/)|(\/compare-products)|(\/cart\/)';
+			$pattern .= '|(forgot-password\/)';
+			$pattern .= '|(manufacturer_id)|(sort=)|(order=)|(limit=)|(filter=)|(filter_)|(tracking=)';
 			$pattern .='/';
 			if (preg_match($pattern, $this->request->server['REQUEST_URI'])) {
 				$this->document->setNoindex(true);
