@@ -199,7 +199,7 @@ class ControllerInformationSdSitemap extends Controller {
 			//$this->addOptions($this->checkOptions($options,$c_m_counters),$cat_manufacture_name .' ,',$cat_manufacture_href,$m_level);
 
 		}
-		$rows = array_merge($rows,$this->addOptions($options,$cat_name. ' ',$cat_href,$level,$data['category_id'],0,0,1));
+		$rows = array_merge($rows,$this->addOptions($options,$cat_name. ' ',$cat_href,$level,$data['category_id'],0,1));
 		if($rows) $this->model_catalog_sd_sitemap->addRows($rows);
 		
 	}
@@ -223,7 +223,7 @@ class ControllerInformationSdSitemap extends Controller {
 		return $opt;
 	}
 
-	private function addOptions($options, $name, $href, $level, $category_id = 0, $option_id = 0, $value_id = 0, $type = 0) {
+	private function addOptions($options, $name, $href, $level, $category_id = 0, $option_id = 0, $type = 0) {
 		$insert_rows = [];
 		foreach ($options as $key_opt => $option) {
 			if($option_id != $option['option_id']){
@@ -246,7 +246,7 @@ class ControllerInformationSdSitemap extends Controller {
 					// 	'href' => $cat_option_href . $value['keyword'],
 					// 	'level' => $level,
 					// 	]);				
-
+					unset($options[$key_opt]['values'][$key_val]);
 					if($type) {
 						// $filter_data = array(
 						// 	'filter_category_id' => $category_id,
@@ -254,10 +254,10 @@ class ControllerInformationSdSitemap extends Controller {
 						// );
 						//$c_o_counters = $this->model_catalog_dvfilter->getCounters($filter_data);
 						//$this->addOptions($options,$cat_option_name  . $value['name'] . ', ',$cat_option_href . $value['keyword']. '_', $level + 1,0,$option['option_id'],$value['value_id']);
-						$insert_rows = array_merge($insert_rows,$this->addOptions($options,$cat_option_name  . $value['name'] . ', ',$cat_option_href . $value['keyword']. '_', $level + 1,0,$option['option_id'],$value['value_id']));
+						$insert_rows = array_merge($insert_rows,$this->addOptions($options,$cat_option_name  . $value['name'] . ', ',$cat_option_href . $value['keyword']. '_', $level + 1,0,$option['option_id']));
 					}
 				//}
-				unset($options[$key_opt]['values'][$key_val]);
+				//unset($options[$key_opt]['values'][$key_val]);
 			}
 			unset($options[$key_opt]);
 		}
