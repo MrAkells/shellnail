@@ -21,7 +21,7 @@
   <div class="col-md-12">
     <nav class="sd_sitemap">
     <?php foreach ($categories as $category) { ?>
-      <div class="sd_sitemap__level sd_sitemap__level--<?php echo $category['level']; ?>"><a class="category-items" href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></div>
+      <div class="sd_sitemap__level sd_sitemap__level--<?php echo $category['level']; ?>"><a class="sd_sitemap__item" href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></div>
     <?php } ?>
     </nav>
   </div>
@@ -31,7 +31,7 @@
 
  <?php if ($page_last) { ?>
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
           <ul>
             <li><a href="<?php echo $special; ?>"><?php echo $text_special; ?></a></li>
             <li><a href="<?php echo $search; ?>"><?php echo $text_search; ?></a></li>
@@ -47,6 +47,7 @@
         </div>
       </div>
       <?php } ?>
+
       <div id="pagination_row" class="row hidden-xs">
         <div class="pagination-casing"><?php echo $pagination; ?></div>
         <div class="col-sm-6 text-right"><?php echo $results; ?></div>

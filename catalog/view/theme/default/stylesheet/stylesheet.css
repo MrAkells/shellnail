@@ -5617,25 +5617,33 @@ aside#column-left{
 	line-height: 18px;
 }
 .sd_sitemap__level {
-	padding-left: 10;
+	padding-left: 15px;
+	position: relative;
+	margin-bottom: 3px;
 }
 .sd_sitemap__level::before {
-	content: '*';
+	content: '\203A';
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 10px;
-	height: auto;
+	height: 14px;
+	font-size: 16px;
+	line-height: 14px;
 }
 .sd_sitemap__level--1 {
 	margin-left: 5px;
+	font-size: 16px;
 }
-.sd_sitemap__level--12 {
+.sd_sitemap__level--2 {
 	margin-left: 15px;
+	font-size: 15px;
 }
 .sd_sitemap__level--3 {
 	margin-left: 25px;
+	font-size: 14px;
 }
 .sd_sitemap__level--4 {
 	margin-left: 35px;
+	font-size: 13px;
 }
