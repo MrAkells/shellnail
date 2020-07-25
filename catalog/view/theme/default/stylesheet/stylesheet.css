@@ -5611,3 +5611,31 @@ aside#column-left{
 .input_error{
     border: 1px solid #a94442 !important;
 }
+
+.sd_sitemap {
+	font-size: 13px;
+	line-height: 18px;
+}
+.sd_sitemap__level {
+	padding-left: 10;
+}
+.sd_sitemap__level::before {
+	content: '*';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 10px;
+	height: auto;
+}
+.sd_sitemap__level--1 {
+	margin-left: 5px;
+}
+.sd_sitemap__level--12 {
+	margin-left: 15px;
+}
+.sd_sitemap__level--3 {
+	margin-left: 25px;
+}
+.sd_sitemap__level--4 {
+	margin-left: 35px;
+}
