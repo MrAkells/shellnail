@@ -187,17 +187,18 @@ class ControllerInformationSdSitemap extends Controller {
 				// 	'href' => $cat_manufacture_href,
 				// 	'level' => $level,
 				// 	]);				
+			
+				$filter_data = array(
+					'filter_category_id' => $data['category_id'],
+					//'filter_manufacturer_id' => $manufacturer['value_id'],
+					'filter_dvfilter' => 'm:'.$manufacturer['value_id']
+				);
+				$c_m_counters = $this->model_catalog_dvfilter->getCounters($filter_data);
+
+				$rows = array_merge($rows, $this->addOptions($this->checkOptions($options,$c_m_counters),$cat_manufacture_name .' ,',$cat_manufacture_href,$m_level));
+				//$this->addOptions($this->checkOptions($options,$c_m_counters),$cat_manufacture_name .' ,',$cat_manufacture_href,$m_level);
 			}
-			$filter_data = array(
-				'filter_category_id' => $data['category_id'],
-				'filter_manufacturer_id' => $manufacturer['value_id'],
-				'filter_dvfilter' => ''
-			);
-			$c_m_counters = $this->model_catalog_dvfilter->getCounters($filter_data);
-
-			$rows = array_merge($rows, $this->addOptions($this->checkOptions($options,$c_m_counters),$cat_manufacture_name .' ,',$cat_manufacture_href,$m_level));
-			//$this->addOptions($this->checkOptions($options,$c_m_counters),$cat_manufacture_name .' ,',$cat_manufacture_href,$m_level);
-
+		
 		}
 		$rows = array_merge($rows,$this->addOptions($options,$cat_name. ' ',$cat_href,$level,$data['category_id'],0,1));
 		if($rows) $this->model_catalog_sd_sitemap->addRows($rows);
@@ -231,7 +232,7 @@ class ControllerInformationSdSitemap extends Controller {
 				$cat_option_href = $href . '_' . $option['keyword']. '_';
 			} else {
 				$cat_option_name = $name;
-				$cat_option_href = $href;
+				$cat_option_href = $href. '_';
 			}
             foreach ($option['values'] as $key_val => $value) {
 
@@ -241,20 +242,19 @@ class ControllerInformationSdSitemap extends Controller {
 						'href' => $cat_option_href . $value['keyword'],
 						'level' => $level,
 					];
-					// $this->model_catalog_sd_sitemap->add([
-					// 	'name' => $cat_option_name . $value['name'],
-					// 	'href' => $cat_option_href . $value['keyword'],
-					// 	'level' => $level,
-					// 	]);				
 					unset($options[$key_opt]['values'][$key_val]);
 					if($type) {
-						// $filter_data = array(
-						// 	'filter_category_id' => $category_id,
-						// 	'filter_dvfilter' => $option['option_id'].':'. $value['value_id']
-						// );
-						//$c_o_counters = $this->model_catalog_dvfilter->getCounters($filter_data);
-						//$this->addOptions($options,$cat_option_name  . $value['name'] . ', ',$cat_option_href . $value['keyword']. '_', $level + 1,0,$option['option_id'],$value['value_id']);
-						$insert_rows = array_merge($insert_rows,$this->addOptions($options,$cat_option_name  . $value['name'] . ', ',$cat_option_href . $value['keyword']. '_', $level + 1,0,$option['option_id']));
+						if($option_id != $option['option_id']){
+							$filter_data = array(
+								'filter_category_id' => $category_id,
+								'filter_dvfilter' => $option['option_id'].':'. $value['value_id']
+							);
+							$c_o_counters = $this->model_catalog_dvfilter->getCounters($filter_data);
+							$insert_rows = array_merge($insert_rows,$this->addOptions($this->checkOptions($options,$c_o_counters),$cat_option_name  . $value['name'] . ', ',$cat_option_href . $value['keyword'], $level + 1,0,$option['option_id']));
+						} else{
+							$insert_rows = array_merge($insert_rows,$this->addOptions($options,$cat_option_name  . $value['name'] . ', ',$cat_option_href . $value['keyword'], $level + 1,0,$option['option_id']));
+						}
+						
 					}
 				//}
 				//unset($options[$key_opt]['values'][$key_val]);
