@@ -14,7 +14,6 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 		$cat = '';
 		
 		$this->settings = $settings = json_decode($this->config->get('fx_sitemap_settings'), true);
-		
 		if (!$settings['sitemap_on']) exit;
 		
 		$this->load->model('extension/module/fxsitemap');		
@@ -722,7 +721,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 				}
 				
 			}
-			
+
 			$this->response->addHeader(empty($settings['http_header']) ? 'Content-Type: application/xml' : $settings['http_header']);
 			
 			$this->response->setOutput($output);			
@@ -1284,5 +1283,639 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 		$this->model_extension_module_fxsitemap->PasteManCatDB($data);
 		
 		return count($categories) . ' categories and ' . $i . ' manufacturers';
+	}
+
+	public function get_xml() {
+		
+		$cat = '';
+		
+		$this->settings = $settings = json_decode($this->config->get('fx_sitemap_settings'), true);
+		if (!$settings['sitemap_on']) exit;
+		
+		$this->load->model('extension/module/fxsitemap');		
+		
+		if ($settings['multistore']) $this->model_extension_module_fxsitemap->isMulti(true);
+		
+		$host = $this->config->get('config_secure') ? str_replace('http:/', 'https:/', $this->config->get('config_ssl')) : $this->config->get('config_url');
+		$ssl = $this->config->get('config_secure') ? 'https://' : 'http://';
+		
+		/*if (substr_count($host, "/") > 3){		
+			$ssl = $this->config->get('config_secure') ? 'https://' : 'http://';
+			$host = $ssl . $this->request->server['HTTP_HOST'];
+		}*/
+		
+		
+		$config_language_id = (int)$this->config->get('config_language_id');		
+        
+        
+        if ($settings['default']){
+            $parse = parse_url(str_replace('&amp;', '&', $settings['default']));          
+            if (isset($parse['query'])) parse_str($parse['query'], $get_arrs);
+        }
+		
+		if (!isset($get_arrs)) $get_arrs = array();
+		
+		$get_arr = array();
+		
+		$arrs = array('limit', 'page', 'part', 'express', 'express_cat', 'ultra', 'file', 'key', 'save', 'multi', 'img', 'blog', 'article', 'news', 'language', 'prefix', 'host', 'cat_prefix', 'prod_prefix', 'man_prefix', 'amp');
+		
+		foreach ($arrs as $g) {
+			if (isset($get_arrs[$g])){
+				$get_arr[$g] = $get_arrs[$g];
+			}
+			if (isset($this->request->get[$g])){
+				$get_arr[$g] = $this->request->get[$g];
+				if ($this->request->get[$g] == 'off') unset($get_arr[$g]);
+			}
+			
+		}
+		
+		if (isset($this->request->get['page'])){
+			$get_arr['part'] = $this->request->get['page'];
+		}
+		if (isset($this->request->get['part']) || isset($this->request->get['page'])){
+			unset($get_arr['multi']);
+			$settings['multi'] = false;
+			
+		}
+		if (isset($this->request->get['multi']) && $this->request->get['multi'] == 'off'){
+			$get_arr['multi'] = false;
+		}
+		
+		$this->get_arr = $get_arr;
+		
+		$this->settings = $settings = array_merge($settings, $get_arr);
+		
+		
+		/*----*/
+		
+		$language_id = isset($settings['language']) ? $settings['language'] : $config_language_id;
+		
+		$this->config->set('config_language_id', $language_id);
+		
+		$host_wo_prefix = str_replace('index.php?route=common/home', '', $this->url->link('common/home', '', 'SSL'));
+		
+		if (isset($settings['host'])) $host_wo_prefix = $settings['host'];
+		
+		$prefix = isset($settings['prefix']) ? $settings['prefix'] : '';
+		
+		$this->host = $host = rtrim($host_wo_prefix, '/') . '/' . $prefix;
+		
+		$host_wo_prefix = rtrim($host_wo_prefix, '/') . '/';
+		
+		/*----*/
+		
+		
+		
+		$mode = $settings['express'] ? 'express' : ($settings['ultra'] ? 'ultra' : '');		
+		
+		$this->load->model('extension/module/fxsitemap');
+		
+		$this->model_extension_module_fxsitemap->lang($language_id);
+		
+		$mode = $settings['express'] ? 'express' : ($settings['ultra'] ? 'ultra' : '');		
+		
+		
+		$excluded = $this->excluded = $settings['exclude_file_on'] ? $this->check("delete.sitemap") : array();
+		$plus  =  $settings['add_file_on'] ? $this->check("add.sitemap") : array();
+		
+		$ex = !empty($this->excluded) ? $this->excluded[0] : '';
+		
+		if ($ex == 'db:hpmodel_product_hidden' || $ex == 'db:kjseries_product_hidden' || $ex == 'db:hidden'){
+			$excluded = array();
+			$this->model_extension_module_fxsitemap->db_exclude($ex);
+		}
+		
+		$start_time = (time() + (float)microtime());
+		
+		$total = $total_p = 0;
+
+		$url = '';
+		
+		if ($settings['multi'] || !isset($settings['part']) || (isset($settings['part']) && (int)$settings['part'] == 0)){
+		
+			if ($settings['products_on']){
+				if (isset($settings['img'])){
+					$total_p =  $settings['img'] == 1 ? $this->model_extension_module_fxsitemap->getProductsTotal() : $this->model_extension_module_fxsitemap->getImgTotal();
+					$url .= '&amp;img='. (int)$settings['img'];
+				}else{
+					$total_p = $this->model_extension_module_fxsitemap->getProductsTotal();
+				}
+			}
+
+			$limit = (isset($settings['limit']) && ((int)$settings['limit'] > 0)) ? (int)$settings['limit'] : 47999;
+			//if ($total_p > $limit) {
+				$total += $total_c = !$settings['categories_on'] ? 0 : $this->model_extension_module_fxsitemap->getCategoriesTotal();
+				$total += $total_m = !$settings['brands_on'] ? 0 : $this->model_extension_module_fxsitemap->getManufacturersTotal();
+				$total += $total_cm = !$settings['brands_category_on'] ? 0 : $this->model_extension_module_fxsitemap->getManCatDBTotal();
+				$total += !$settings['news_on'] ? 0 : $this->model_extension_module_fxsitemap->getAllNewsTotal();
+				$total += !$settings['blog_on'] ? 0 : $this->model_extension_module_fxsitemap->getAllBlogTotal();
+				$total += !$settings['mfp_on'] ? 0 : $this->model_extension_module_fxsitemap->getMFPTotal();
+				$total += !$settings['ocfilter_on'] ? 0 : $this->model_extension_module_fxsitemap->getOCFilterTotal();
+				$total += !$settings['vier_on'] ? 0 : $this->model_extension_module_fxsitemap->getVierTotal();
+				$total += !$settings['informations_on'] ? 0 : $this->model_extension_module_fxsitemap->getInformationsTotal();
+				$total += !$settings['records_on'] ? 0 : $this->model_extension_module_fxsitemap->getCMSBlogTotal();
+				$total += !$settings['article_on'] ? 0 : $this->model_extension_module_fxsitemap->getArticlesTotal($settings['article_route'] == 'octemplates/blog_article' ? 'oct_blog_' : '');
+				$total += !$settings['add_file_on'] ? 0 : count($plus);
+				$total += !$settings['exclude_file_on'] ? 0 : -count($plus);
+				$total += !$settings['home_on'] ? 0 :1;
+				$total += !$settings['special_on'] ? 0 :1;
+				$total += !$settings['contact_on'] ? 0 :1;
+			//}
+			
+		}		
+
+		if ($settings['multi']){
+			
+			unset($settings['multi']);
+			
+			$m_arrs = array('limit', 'express', 'express_cat', 'ultra', 'file', 'key', 'save', 'img', 'blog', 'article', 'news', 'language', 'prefix', 'host', 'cat_prefix', 'prod_prefix', 'man_prefix', 'amp');
+
+			$limit = (isset($settings['limit']) && ((int)$settings['limit'] > 0)) ? (int)$settings['limit'] : 47999;
+			
+			if (isset($get_arr['limit'])){
+				$url .= '&amp;limit='. (int)$settings['limit'];
+			}
+			
+			foreach ($m_arrs as $g) {
+				if (isset($this->request->get[$g]))	$url .= '&amp;'. $g .'='. $this->request->get[$g];
+			}
+			
+			$file_access = false;
+			
+			if(isset($settings['key']) && ($settings['key'] == $settings['key'])) $file_access = true;				
+			if(!$settings['key']) $file_access = true;
+			
+			$output = '<?xml version="1.0" encoding="utf-8"?>';
+			
+			$output = '<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/catalog/view/theme/default/stylesheet/fx_sitemap.xsl"?>';
+			
+			$output .= '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+		
+			if (($total + $total_p) > $limit) {
+				$num = ceil($total / $limit);
+				$num_p = ceil($total_p / $limit);
+				$n = 1;
+				
+				do {
+					if ($total == 0) continue;
+					$go = $host . 'index.php?route=extension/feed/fx_sitemap&amp;part=0.' . $n . str_replace("{n}", $n, $url);					
+					$file = isset($settings['file']) ? $host . $settings['file']. '0.' . $n.'.xml' : $go;
+					
+					$output .= '<sitemap>';
+					$output .= '<loc>' . $file . '</loc>';
+					$output .= '</sitemap>';
+					
+					if (isset($settings['file']) && isset($settings['save']) && $file_access){
+						$out = $this->cache->get('fx.sitemap.0.' . $n);
+						if (!$out) {
+							$out = $this->goSitemap($go);
+							$this->cache->set('fx.sitemap.0.' . $n, $out);
+						} else {							
+							file_put_contents($settings['file'].'0.' . $n .'.xml', $out);
+						}
+					}
+					
+					$n++;
+				} while ($n <= $num);
+				
+				$n = 1;
+				
+				do {
+					if ($total_p == 0) continue;
+					$go = $host . 'index.php?route=extension/feed/fx_sitemap&amp;part=' . $n . str_replace("{n}", $n, $url);					
+					$file = isset($settings['file']) ? $host . $settings['file'].$n.'.xml' : $go;
+					
+					$output .= '<sitemap>';
+					$output .= '<loc>' . $file . '</loc>';
+					$output .= '</sitemap>';
+					
+					if (isset($settings['file']) && isset($settings['save']) && $file_access){
+						$out = $this->cache->get('fx.sitemap.' . $n);
+						if (!$out) {
+							$out = $this->goSitemap($go);
+							$this->cache->set('fx.sitemap.' . $n, $out);
+						} else {							
+							file_put_contents($settings['file']. $n .'.xml', $out);
+						}
+					}
+					
+					$n++;
+				} while ($n <= $num_p);
+
+			}else{
+				$url .= '&amp;multi=off';
+				$go = $host . 'index.php?route=extension/feed/fx_sitemap' . $url;					
+				$file = isset($settings['file']) ? $host . $settings['file'].'.xml' : $go;
+				
+				$output .= '<sitemap>';
+				$output .= '<loc>' . $file . '</loc>';
+				$output .= '</sitemap>';
+				
+				if (isset($settings['file']) && isset($settings['save']) && $file_access){
+					$out = $this->goSitemap($go);
+				}
+			}
+
+				$output .= '</sitemapindex>';
+				
+				$this->response->addHeader(empty($settings['http_header']) ? 'Content-Type: application/xml' : $settings['http_header']);
+				$this->response->setOutput($output);
+
+			
+		}else{
+			
+			$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+			$output = '<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/catalog/view/theme/default/stylesheet/fx_sitemap.xsl"?>';
+			if (!isset($settings['img'])){
+				$output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+			}else{
+				$output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+			}
+			//	$output = $output . '<url><loc>'. $host .'</loc><changefreq>daily</changefreq><priority>1</priority></url>'; //главная
+			
+			$data['limit'] = $settings['limit'] ? (int)$settings['limit'] : 49499;
+			
+			$data['start'] = isset($settings['part']) ? ((int)$settings['part'] - 1) * (int)$data['limit'] : 0;
+			
+			if ($data['start'] < 0) $data['start'] = 0;
+			
+			$out = array();
+
+			if ($settings['product_changefreq'] == 'off') $settings['product_changefreq'] = '';
+			if ($settings['category_changefreq'] == 'off') $settings['category_changefreq'] = '';
+			if ($settings['brands_changefreq'] == 'off') $settings['brands_changefreq'] = '';
+			
+			
+			if ($settings['products_on'] && !((isset($settings['part'])) && (float)$settings['part'] < 1)){  ///// PRODUCTS
+			
+				if ($mode == 'express' || $this->settings['multilang']){   /////  EXPRESS
+				
+					$products = $this->model_extension_module_fxsitemap->getProductsExpress($data);
+					
+					$date = '';					
+					
+					$prod_prefix = isset($this->request->get['prod_prefix']) ? $this->request->get['prod_prefix'] : $prefix;						
+					$prod_host = str_replace($prefix, $prod_prefix, $host);
+					
+					foreach ($products as $product) {
+						$url = $prod_host;
+						
+						if (!isset($product['keyword'])) {
+							$url .= 'index.php?route=product/product&amp;product_id=' . $product['product_id'];					
+						}else {						
+							$url .= $product['keyword'] . $settings['postfix'];			
+						}
+						
+						if ($settings['product_lastmod']) $date = (int)$product['date_modified'] > 2000 ? substr($product['date_modified'], 0, 10) : '';
+						
+						$output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority']);
+					}
+					
+				}else if ($mode == 'ultra'){   /////  ULTRA
+				
+					$this->cacher();
+					
+					$products = $this->model_extension_module_fxsitemap->getProductsUltra($data);
+					
+					$date = '';
+					
+					$categories_cache = $this->categories;
+					
+					foreach ($products as $product) {
+						
+						$category_url = $product_url = '';
+						
+						$in_category = !empty($product['category_id']) && isset($categories_cache[$product['category_id']]);
+						
+						$short = !empty($product['keyword']) && !$in_category;						
+						
+						$is_seo_url = $short || (!empty($product['keyword']) && $in_category && $categories_cache[$product['category_id']]['is_seo']);
+
+						if (!$is_seo_url){ 
+							$category_url = 'index.php?route=product/product&amp;product_id=';
+							if ($in_category) $category_url = 'index.php?route=product/product&amp;path=' . $product['category_id'] . '&amp;product_id=';
+							$product_url = $product['product_id'];
+						} else {
+							if (!isset($cat_slash)) $cat_slash = substr($categories_cache[$product['category_id']]['url'], -1) == '/' ? '' : '/';
+							$category_url = $short ? '' : $categories_cache[$product['category_id']]['url'] . $cat_slash;
+							$product_url = $product['keyword'] . $settings['postfix'];					
+						}
+						
+						$url = $host . $category_url . $product_url;
+						
+						if ($settings['product_lastmod']) $date = (int)$product['date_modified'] > 2000 ? substr($product['date_modified'], 0, 10) : '';
+						
+						$output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority']);
+					}
+					
+				}else{   /////  NORMAL
+				
+					if ( isset($settings['img']) && ($settings['img'] == 1) ){
+						$products = $this->model_extension_module_fxsitemap->getImgOne($data);
+					}elseif (isset($settings['img'])){
+						$products = $this->model_extension_module_fxsitemap->getImg($data);
+					}else{
+						$products = $this->model_extension_module_fxsitemap->getProducts($data);
+					}
+					
+					$date = '';
+					
+					foreach ($products as $product) {
+					
+						if ($settings['product_lastmod']){
+					
+							$date = date_format( new DateTime($product['date_modified']), 'Y-m-d');
+							if ($date == '-0001-11-30') $date = date_format( new DateTime($product['date_added']), 'Y-m-d'); 
+							if ($date == '-0001-11-30') $date = ''; 
+						
+						}
+						
+						$url= $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL');
+						
+						if (isset($settings['amp'])) $url = str_replace("&product_id=", "&amp;product_id=", $url);
+						
+						$output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority'], isset($settings['img']) ? $product : array());
+
+					}
+				}
+			}
+		
+			if (!isset($settings['part']) || ((int)$settings['part'] == 0)) {
+				
+				$subpart = 1;
+				
+				$out = array();
+				
+				$i = 1;
+				
+				$tp = (!isset($settings['part']) && isset($total_p)) ? $total_p : 0;
+				
+				if (isset($settings['part'])) $subpart = (int)(str_replace('0.', '', (string)$settings['part']));
+				$subpart = $subpart ? $subpart : 1;
+				
+				$limit = $data['limit'] = (int)$settings['limit'] > 0 ? (int)$settings['limit'] : 49499;
+			
+				$start = $data['start'] = ($subpart - 1) * $data['limit'];
+				
+				$max = isset($settings['part']) ? $data['start'] + $data['limit'] : $limit;
+				
+				//$i = $start > 0 ? $start : 1;
+				
+				
+				$cat_prefix = isset($this->request->get['cat_prefix']) ? $this->request->get['cat_prefix'] : $prefix;						
+				$cat_host = str_replace($prefix, $cat_prefix, $host);
+				
+				while ($i + $tp <= $max){
+
+					$mode = ($mode == 'express') ? '' : $mode;
+					if ($this->settings['multilang'] || $this->settings['express_cat']) $mode = 'express';
+					
+					if ($settings['categories_on']){ /////  CATEGORIES ADD					
+						$this->load->model('catalog/sd_sitemap');
+						$page = 1;
+						$limit = 5000;
+						$sitemap_total = $this->model_catalog_sd_sitemap->getTotal();
+						$start_row = ($page - 1) * $limit;
+
+						while ($start_row < $sitemap_total) {
+							$filter_data = array(
+								'start' => $start_row,
+								'limit' => $limit
+							);
+							$categories =$this->model_catalog_sd_sitemap->get($filter_data);						
+						//print_r(count($categories));
+							foreach ($categories as $category){
+								
+								if ($i > $start){
+									$date = '';
+									$out[$i] = $this->xml($category['href'], $date, $settings['category_changefreq'], $settings['category_priority']);
+								}
+								$i++; if ($i > $max) break(2);								
+							}
+							$start_row = (++$page - 1) * $limit;					
+						}
+
+
+					}
+					
+					
+					
+					if ($settings['brands_on']){					
+						$manufacturers = ($mode == 'express' || $mode == 'ultra') ? $this->model_extension_module_fxsitemap->getManufacturersExpress() : $this->model_extension_module_fxsitemap->getManufacturers();						
+						
+						$man_prefix = isset($this->request->get['man_prefix']) ? $this->request->get['man_prefix'] : $prefix;						
+						$man_host = str_replace($prefix, $man_prefix, $host);
+						
+						foreach ($manufacturers as $manufacturer) {
+							if ($i > $start){
+								$url= isset($manufacturer['keyword']) ? $man_host . $manufacturer['keyword'] . $settings['postfix'] : $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id'], 'SSL');
+								
+								if (isset($settings['amp'])) $url = str_replace("&manufacturer_id=", "&amp;manufacturer_id=", $url);
+								
+								$out[$i] = $this->xml($url, '', $settings['brands_changefreq'], $settings['brands_priority']);
+							}
+							$i++; if ($i > $max) break(2);
+						}
+					}
+					
+					
+					if ($settings['informations_on']){
+						$informations = ($mode == 'express' || $mode == 'ultra') ? $this->model_extension_module_fxsitemap->getInformationsExpress() : $this->model_extension_module_fxsitemap->getInformations();
+						foreach ($informations as $information) {
+							if ($i > $start){
+								$url= isset($information['keyword']) ? $host . $information['keyword'] . $settings['postfix'] : $this->url->link('information/information', 'information_id=' . $information['information_id'], 'SSL');
+								
+								if (isset($settings['amp'])) $url = str_replace("&information_id=", "&amp;information_id=", $url);
+								
+								$out[$i] = $this->xml($url);
+							}
+							$i++; if ($i > $max) break(2);
+						}
+					}
+					
+					
+					if ($settings['blog_on']){
+						
+						$route = $settings['records_on'] ? 'record/blog' : $settings['blog_route'];
+						$blog = empty($route) ? array() : $this->model_extension_module_fxsitemap->getAllBlog();
+						foreach ($blog as $new) {
+							if ($i > $start){
+								$url= str_replace("&blog", "&amp;blog", $this->url->link( $route, 'blog_id=' . $new['blog_id'], 'SSL'));
+								$out[$i] = $this->xml($url); 
+							}
+							$i++; if ($i > $max) break(2);
+						}
+					}
+					
+					if ($settings['news_on']){
+						
+						$route = $settings['news_route'];
+						$news = empty($route) ? array() : $this->model_extension_module_fxsitemap->getAllNews();
+						foreach ($news as $new) {
+							if ($i > $start){
+								$url= str_replace("&new", "&amp;new", $this->url->link( $route, 'news_id=' . $new['news_id'], 'SSL'));
+								$out[$i] = $this->xml($url);
+							}
+							$i++; if ($i > $max) break(2);
+						}
+					}
+					
+					if ($settings['article_on']){					
+						$route = $settings['article_route'];
+						
+						$oct = $route == 'octemplates/blog_article' ? 'oct_blog_' : '';
+						
+						$articles = $this->model_extension_module_fxsitemap->getArticles($oct);
+						
+						foreach ($articles as $new) {
+							if ($i > $start){
+								$url= str_replace("&article", "&amp;article", $this->url->link( $route, $oct . 'article_id=' . $new['article_id'], 'SSL'));
+								$out[$i] = $this->xml($url);
+							}
+							$i++; if ($i > $max) break(2);
+						}					
+					}
+					
+					if ($settings['records_on']){
+						
+						$blog = $this->model_extension_module_fxsitemap->getCMSBlog();
+						$route = 'record/record' ;
+						foreach ($blog as $new) {
+							if ($i > $start){					
+								$url = str_replace("&record", "&amp;record", $this->url->link( $route, 'record_id=' . $new['record_id'], 'SSL'));						
+								$date = (int)$new['date_modified'] > 2000 ? substr($new['date_modified'], 0, 10) : '';
+								$out[$i] = $this->xml($url, $date);
+							}
+							$i++; if ($i > $max) break(2);
+						}
+					}					
+					
+					if ($settings['home_on'] || $settings['contact_on'] || $settings['special_on']){
+					
+						$pages = $this->model_extension_module_fxsitemap->getPages();
+												
+						if ($settings['home_on'] && $i > $start){
+							$url = $this->url->link('common/home', '', 'SSL');
+							$date = $pages['home']['date'];
+							$out[$i] = $this->xml($url, $date, 'weekly', '1.0');
+							$i++;
+						}
+						
+						if ($settings['special_on'] && $i > $start){
+							$url = $this->url->link('product/special', '', 'SSL');
+							$date = $pages['special']['date'];
+							$out[$i] = $this->xml($url, $date, 'weekly', '0.8');
+							$i++;
+						}
+						
+						if ($settings['contact_on'] && $i > $start){
+							$url = $this->url->link('information/contact', '', 'SSL');
+							$date = $pages['contact']['date'];
+							$out[$i] = $this->xml($url, $date, 'monthly', '0.6');
+							$i++;
+						}
+					
+					}					
+					
+					if ($settings['brands_category_on']){
+						$categories_m = $this->model_extension_module_fxsitemap->getManCatDB();
+						foreach ($categories_m as $category) {
+							$manufacturers = explode(',', $category['manufacturers']);
+							foreach ($manufacturers as $manufacturer) {
+								if ($i > $start){
+									$url = $this->url->link('product/category', 'path=' . $category['category_id'] . '&manufacturer_id=' . $manufacturer);
+									$out[$i] = $this->xml($url, '', 'monthly', '0.5');
+								}								
+								$i++; if ($i > $max) break(3);
+							}
+						}
+					}
+					
+					$slash = $settings['slash'] ? '/' : '';
+					
+					if ($settings['mfp_on']){
+						$mfp = $this->model_extension_module_fxsitemap->getMFP();
+						foreach ($mfp as $filter) {
+							if ($i > $start){
+								if (!isset($mfp_slash)) $mfp_slash = substr($filter['path'], -1) == '/' ? '' : '/';
+								$url = $host_wo_prefix . $filter['path'] . $mfp_slash . $filter['alias'] . $slash;
+								$out[$i] = $this->xml($url);
+							}								
+							$i++; if ($i > $max) break(2);
+						}
+					}
+					
+					if ($settings['vier_on']){
+						/*
+						$vier = $this->model_extension_module_fxsitemap->getVier();
+						foreach ($vier as $filter) {
+							if ($i > $start){								
+								$url = $host . ltrim($filter['link'], '/');
+								$out[$i] = $this->xml($url);
+							}								
+							$i++; if ($i > $max) break(2);
+						}*/
+						if ((float)VERSION < 2.3) {
+							$this->load->model('module/filter_vier');
+							$vier = $this->xml_to_line($this->model_module_filter_vier->genSiteMapFV());
+						}else{
+							$this->load->model('extension/module/filter_vier');
+							$vier = $this->xml_to_line($this->model_extension_module_filter_vier->genSiteMapFV());
+						}
+						
+						foreach ($vier as $filter) {
+						
+							if ($i > $start) $out[$i] = $filter;
+							
+							$i++; if ($i > $max) break(2);
+						}
+					}
+
+				
+					if ($settings['add_file_on']){	   ////// ADD			
+						foreach ($plus as $p) {
+							if ($i > $start) $out[$i] = $this->xml(str_replace("&", "&amp;", $p));
+							$i++; if ($i > $max) break(2);
+						}
+					}
+					
+					break;
+				}
+			}
+			
+			$lines = $out;
+			
+			foreach ($lines as $line) {
+				$output = $output . $line;
+			}
+			
+			$plug = '';
+			
+			if (isset($settings['part'])){ 
+				$part_num = (int)str_replace('0.', '', $settings['part'], $n);
+				
+				$part_calc = ($n ? $total : $total_p) / $data['limit'];
+				
+				if ($part_calc < $part_num && !strpos($output, '</url>')) $plug = '<url><loc>'. $host .'</loc></url>';
+			}			
+			
+			$output .= $plug;
+			
+			$output = $output . '</urlset>';
+			
+			$file_access = false;						
+			if(isset($this->request->get['key']) && ($settings['key'] == $this->request->get['key'])) $file_access = true;							
+			if(!$settings['key']) $file_access = true;
+			
+			
+			$this->config->set('config_language_id', $config_language_id);
+
+
+			file_put_contents(DIR_DOWNLOAD .'fx_sitemap.xml', $output);		
+			$end = time();
+			echo $end - $start_time;	
+		}
+		
 	}
 }
