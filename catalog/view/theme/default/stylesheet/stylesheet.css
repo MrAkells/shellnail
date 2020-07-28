@@ -5649,7 +5649,7 @@ aside#column-left{
 }
 
 .color-disabled {
-	opacity: 0.3;
+	opacity: 0.2;
 }
 .color-disabled:hover .divo-check {
 	cursor: not-allowed;
