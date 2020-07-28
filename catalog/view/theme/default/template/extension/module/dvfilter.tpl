@@ -250,7 +250,7 @@
                                 <?php } else {
                                   $color_key = (string)$value['name'];
                                 ?>
-                                  <div class="divo-btn colored" data-toggle="buttons">
+                                  <div class="divo-btn colored <?php echo ($value['count']?'':'color-disabled'); ?>" data-toggle="buttons">
                                     <label id="v-<?php echo $value['id']; ?>" class="btn divo-check" style="background: <?php echo $filter_colors_array[$color_key]; ?>;" title="<?php echo $color_key; ?>">
                                     <?php if ($value['count']) { ?> 
                                       <input type="<?php echo $option['type']; ?>" autocomplete="off" name="dvfilter_filter[<?php echo $option['option_id']; ?>]" value="<?php echo $value['href']; ?>" class="dvf-target" title="<?php echo $value['name']; ?>" />
