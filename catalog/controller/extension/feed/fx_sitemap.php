@@ -1689,9 +1689,9 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 								
 								if ($i > $start){
 									$date = '';
-									$out[$i] = $this->xml($category['href'], $date, $settings['category_changefreq'], $settings['category_priority']);
+									$output .= $this->xml($category['href'], $date, $settings['category_changefreq'], $settings['category_priority']);
 								}
-								$i++; if ($i > $max) break(2);								
+						
 							}
 							$start_row = (++$page - 1) * $limit;					
 						}
