@@ -179,7 +179,7 @@ class ControllerInformationSdSitemap extends Controller {
 			if(isset($counters['m'.$manufacturer['value_id']])){
 				$rows[] = [
 						'name' => $cat_manufacture_name,
-						'href' => $cat_manufacture_href,
+						'href' => $cat_manufacture_href. '/',
 						'level' => $level,
 				];
 				// $this->model_catalog_sd_sitemap->add([
@@ -231,6 +231,7 @@ class ControllerInformationSdSitemap extends Controller {
 				$cat_option_name = $name . $option['name'] . ' ';
 				$cat_option_href = $href . '_' . $option['keyword']. '_';
 			} else {
+				continue;
 				$cat_option_name = $name;
 				$cat_option_href = $href. '_';
 			}
@@ -239,7 +240,7 @@ class ControllerInformationSdSitemap extends Controller {
 				//if(isset($counters[$option['option_id'].$value['value_id']])){
 					$insert_rows[] = [
 						'name' => $cat_option_name . $value['name'],
-						'href' => $cat_option_href . $value['keyword'],
+						'href' => $cat_option_href . $value['keyword']. '/',
 						'level' => $level,
 					];
 					unset($options[$key_opt]['values'][$key_val]);
