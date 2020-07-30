@@ -5647,3 +5647,11 @@ aside#column-left{
 	margin-left: 35px;
 	font-size: 13px;
 }
+
+.color-disabled {
+	opacity: 0.2;
+}
+.color-disabled:hover .divo-check {
+	cursor: not-allowed;
+	
+}
