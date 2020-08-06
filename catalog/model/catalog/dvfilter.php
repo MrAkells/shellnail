@@ -11,7 +11,7 @@ class ModelCatalogDVFilter extends Model {
 
         $options_data = array();
 
-        $options_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "dvfilter_option oo LEFT JOIN " . DB_PREFIX . "dvfilter_option_description ood ON (oo.option_id = ood.option_id) LEFT JOIN " . DB_PREFIX . "dvfilter_option_to_category cotc ON (oo.option_id = cotc.option_id) WHERE oo.status = '1' AND cotc.category_id = '" . (int) $category_id . "' AND ood.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY oo.sort_order");
+        $options_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "dvfilter_option oo LEFT JOIN " . DB_PREFIX . "dvfilter_option_description ood ON (oo.option_id = ood.option_id) LEFT JOIN " . DB_PREFIX . "dvfilter_option_to_category cotc ON (oo.option_id = cotc.option_id) WHERE oo.status = '1' AND cotc.category_id = '" . (int) $category_id . "' AND ood.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY oo.sort_order, keyword");
 
         if ($options_query->num_rows) {
             $options_id = array();
