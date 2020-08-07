@@ -477,12 +477,12 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
                         if(isset($active_promos_products['1'][$product_id])){
                             $data['active_promos']=array(
                                 'title'=>$active_promos_products['1'][$product_id]['title'],
-                                'href'=>$this->url->link('product/category', 'category_id=' . (int)$active_promos_products['1'][$product_id]['promo_id'])
+                                'href'=>$this->url->link('product/category', 'path=90_' . (int)$active_promos_products['1'][$product_id]['promo_id'])
                             );
                         }else if(isset($active_promos_products['2'][$product_id])){
                             $data['active_promos']=array(
                                 'title'=>$active_promos_products['2'][$product_id]['title'],
-                                'href'=>$this->url->link('product/category', 'category_id=' . (int)$active_promos_products['2'][$product_id]['promo_id'])
+                                'href'=>$this->url->link('product/category', 'path=90_' . (int)$active_promos_products['2'][$product_id]['promo_id'])
                             );
                         }
                     
