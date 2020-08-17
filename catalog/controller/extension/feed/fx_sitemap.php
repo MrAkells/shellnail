@@ -1046,7 +1046,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 	public function category_path($category_id){
 	
 
-		return $path;
+		//return $path;
 		
 	}
 	
@@ -1286,7 +1286,6 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 	}
 
 	public function get_xml() {
-		
 		$cat = '';
 		
 		$this->settings = $settings = json_decode($this->config->get('fx_sitemap_settings'), true);
@@ -1815,7 +1814,6 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 							$out[$i] = $this->xml($url, $date, 'monthly', '0.6');
 							$i++;
 						}
-					
 					}					
 					
 					if ($settings['brands_category_on']){
@@ -1883,7 +1881,13 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 					break;
 				}
 			}
-			
+
+			$out[$i] = $this->xml('https://shellnail.com.ua/reviews/', '', 'monthly', '0.6');
+			$i++;
+			$out[$i] = $this->xml('https://shellnail.com.ua/vseakciy/', '', 'monthly', '0.6');
+			$i++;
+			$out[$i] = $this->xml('https://shellnail.com.ua/brands/', '', 'monthly', '0.6');
+			$i++;
 			$lines = $out;
 			
 			foreach ($lines as $line) {
@@ -1912,7 +1916,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 			$this->config->set('config_language_id', $config_language_id);
 
 
-			file_put_contents(DIR_DOWNLOAD .'fx_sitemap.xml', $output);		
+			file_put_contents($_SERVER["DOCUMENT_ROOT"] .'/static_sitemap/fx_sitemap.xml', $output);		
 			$end = time();
 			echo $end - $start_time;	
 		}
