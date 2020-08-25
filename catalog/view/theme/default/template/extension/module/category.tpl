@@ -12,7 +12,6 @@
                         <img class="icon-category icon_second hidden" src="<?php echo $category['icon2']; ?>"/>
                         <?php } ?>
                         <span class="name-items"><?php echo $category['name']; ?></span>
-                         <span class="arrow-category"></span>
                     </a>
                 </li>
       
