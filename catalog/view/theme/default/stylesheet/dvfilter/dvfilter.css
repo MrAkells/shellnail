@@ -373,7 +373,7 @@ input::-webkit-inner-spin-button {
     }
     
     #dvfilter{
-        display: block;
+        display: none;
     }
 /*    .option-values {
         display: none;

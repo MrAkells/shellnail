@@ -383,19 +383,20 @@
                                         <?php echo $product['name']; ?>
                                     </a>
                                 </h4>
-
-                                <?php if($product['sku']){ ?>
-                                <p class="artikul"><span><?php echo $text_artikul; ?>:</span> <span><?php echo $product['sku']; ?></span></p>
-                                <?php } ?>
-                                <?php if($product['quantity']>0){ ?>
-                                <p class="produc-status"><i class="fa fa-check"></i>
-                                    <?php echo $text_instock; ?>
-                                </p>
-                                <?php }else{ ?>
-                                <p class="produc-status is_not_present">
-                                    <?php echo $text_outstock; ?>
-                                </p>
-                                <?php } ?>
+                                <div class="product_art_stat">
+                                    <?php if($product['sku']){ ?>
+                                    <p class="artikul"><span><?php echo $text_artikul; ?>:</span> <span><?php echo $product['sku']; ?></span></p>
+                                    <?php } ?>
+                                    <?php if($product['quantity']>0){ ?>
+                                    <p class="produc-status"><i class="fa fa-check"></i>
+                                        <?php echo $text_instock; ?>
+                                    </p>
+                                    <?php }else{ ?>
+                                    <p class="produc-status is_not_present">
+                                        <?php echo $text_outstock; ?>
+                                    </p>
+                                    <?php } ?>
+                                </div>
 
 
                                 <?php if ($product['rating']) { ?>
