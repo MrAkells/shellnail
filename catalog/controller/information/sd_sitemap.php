@@ -48,6 +48,7 @@ class ControllerInformationSdSitemap extends Controller {
 		$data['categories'] =$this->model_catalog_sd_sitemap->get($filter_data);
 
 		$data['special'] = $this->url->link('product/special');
+		$data['search'] = $this->url->link('product/search');
 		$data['contact'] = $this->url->link('information/contact');
 
 		$this->load->model('catalog/information');
