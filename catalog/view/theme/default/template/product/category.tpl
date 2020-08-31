@@ -5,14 +5,26 @@
         <div id="content" class="col-xs-12 col-sm-12 col-md-9">
             <?php echo $content_top; ?>
 
-            <ul class="hidden-xs hidden-sm breadcrumbs list-inline" itemscope itemtype="http://schema.org/BreadcrumbList">
+
+            <ul class="hidden-xs hidden-sm breadcrumbs list-inline" itemscope itemtype="https://schema.org/BreadcrumbList">
                 <?php $i=0; ?>
-                <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="crumb" href="<?php echo $breadcrumb['href']; ?>"><span itemprop="name"><?php echo $breadcrumb['text']; ?></span></a>
-                    <meta itemprop="position" content="<?php echo $i++; ?>">
-                </li>
+                <?php foreach ($breadcrumbs as $i => $breadcrumb) { ?>
+                    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                        <?php if($i+1 < count($breadcrumbs)) { ?>
+                            <a class="crumb" itemscope itemtype="https://schema.org/Thing" itemprop="item" href="<?php echo $breadcrumb['href']; ?>">
+                                <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
+                            </a>
+                            <meta itemprop="position" content="<?php echo $i+1; ?>" /> 
+                        <?php } else { ?>
+                            <span class="crumb" itemscope itemtype="https://schema.org/Thing" itemprop="item" href="<?php echo $breadcrumb['href']; ?>">
+                                <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
+                            </span>
+                            <meta itemprop="position" content="<?php echo $i+1; ?>" /> 
+                        <?php } ?>
+                    </li>
                 <?php } ?>
             </ul>
+
             <h1 itemprop="name">
                 <?php echo $heading_title; ?>
             </h1>
@@ -348,7 +360,7 @@
             </div>
             <div class="row">
                 <?php foreach ($products as $product) { ?>
-                <div class="product-layout product-list col-xs-12 grid-product js_infscrl">
+                <div class="product-layout product-list col-xs-6 grid-product js_infscrl">
                     <ul class="list-inline bts-wish-compare">
                         <?php if($product['video_link']){ ?>
                         <li class='magni_youtube'>
@@ -371,19 +383,20 @@
                                         <?php echo $product['name']; ?>
                                     </a>
                                 </h4>
-
-                                <?php if($product['sku']){ ?>
-                                <p class="artikul"><span><?php echo $text_artikul; ?>:</span> <span><?php echo $product['sku']; ?></span></p>
-                                <?php } ?>
-                                <?php if($product['quantity']>0){ ?>
-                                <p class="produc-status"><i class="fa fa-check"></i>
-                                    <?php echo $text_instock; ?>
-                                </p>
-                                <?php }else{ ?>
-                                <p class="produc-status is_not_present">
-                                    <?php echo $text_outstock; ?>
-                                </p>
-                                <?php } ?>
+                                <div class="product_art_stat">
+                                    <?php if($product['sku']){ ?>
+                                    <p class="artikul"><span><?php echo $text_artikul; ?>:</span> <span><?php echo $product['sku']; ?></span></p>
+                                    <?php } ?>
+                                    <?php if($product['quantity']>0){ ?>
+                                    <p class="produc-status"><i class="fa fa-check"></i>
+                                        <?php echo $text_instock; ?>
+                                    </p>
+                                    <?php }else{ ?>
+                                    <p class="produc-status is_not_present">
+                                        <?php echo $text_outstock; ?>
+                                    </p>
+                                    <?php } ?>
+                                </div>
 
 
                                 <?php if ($product['rating']) { ?>

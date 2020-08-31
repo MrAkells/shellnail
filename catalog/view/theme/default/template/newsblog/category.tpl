@@ -13,7 +13,7 @@
         </li>
         <?php } ?>
       </ul>
-      <h2 class="title-article" itemprop="name"><?php echo $heading_title; ?></h2>
+      <h1 class="title-article" itemprop="name"><?php echo $heading_title; ?></h1>
     
    
       <?php if ($articles) { ?>
