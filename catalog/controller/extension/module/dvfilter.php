@@ -164,7 +164,7 @@ class ControllerExtensionModuleDVFilter extends Controller {
             }
 
             foreach ($option['values'] as $value) {
-                if ($value['keyword']) {
+                if (isset($value['keyword']) && $value['keyword'] != '') {
                     $value_keywords[$option['option_id'] . '-' . $value['value_id']] = $value['keyword'];
                 } else {
                     $value_keywords[$option['option_id'] . '-' . $value['value_id']] = $value['value_id'];
@@ -1346,7 +1346,7 @@ class ControllerExtensionModuleDVFilter extends Controller {
                     $values_name .= $value['name'];
                 }
 
-                if ($values_name) {
+                if ($values_name || $values_name == 0) {
                     $filter_title .= $option['name'] . ' ' . $values_name;
                 }
             }
