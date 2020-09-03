@@ -4245,6 +4245,16 @@ header {
 	height: 76px;
 	overflow: hidden;
 }
+.product-thumb .price {
+	min-height: 40px;
+}
+.product-thumb .price-new,
+.product-thumb .price-old {
+	display: block;
+}
+.product-thumb .price-old {
+	margin-left: 0;
+}
 /*---News-articles-and-reviews*/
 .casing-article{
 	width: 100%;
@@ -4271,7 +4281,7 @@ header {
     padding-right: 10px;
 }
 .mini-catalog-product{
-	margin: -10px auto 15px;
+	margin: 0 auto 15px;
 }
 .col-middle-product{
 	width: 100%;
