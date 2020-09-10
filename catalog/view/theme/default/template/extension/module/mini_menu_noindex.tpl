@@ -1,7 +1,7 @@
 <div id="nofolow_mini_category_menu">
   
         <nav id="menu">
-            <label for="tm" id="toggle-menu"><?php echo $heading_title; ?><span class="drop-icon">▾</span></label>
+            <label for="tm" id="toggle-menu"><?php echo $heading_title; ?></label>
             <input type="checkbox" id="tm">
             <ul class="main-menu clearfix">
             <?php $count = 1; ?>

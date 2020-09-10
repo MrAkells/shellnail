@@ -4245,6 +4245,16 @@ header {
 	height: 76px;
 	overflow: hidden;
 }
+.product-thumb .price {
+	min-height: 40px;
+}
+.product-thumb .price-new,
+.product-thumb .price-old {
+	display: block;
+}
+.product-thumb .price-old {
+	margin-left: 0;
+}
 /*---News-articles-and-reviews*/
 .casing-article{
 	width: 100%;
@@ -4271,7 +4281,7 @@ header {
     padding-right: 10px;
 }
 .mini-catalog-product{
-	margin: -10px auto 15px;
+	margin: 0 auto 15px;
 }
 .col-middle-product{
 	width: 100%;
@@ -5761,11 +5771,13 @@ aside#column-left{
 }
 
 #menu .sub-menu {
-  background-color: #f7f3f8;
-  border-width: 1px 1px 0;
-  margin: 0 1em;
+  background-color: #fbfbfb;
+  border-width: 0;
+  margin: 0;
 }
-
+#menu .sub-menu .sub-menu  {
+	background-color: #EAEAEA;
+}
 #menu .sub-menu li:last-child {
   border-width: 0;
 }
@@ -5805,7 +5817,7 @@ aside#column-left{
 
 #toggle-menu, 
 #menu a {
-  padding: 1em 1.5em;
+  padding: 1em 2em 1em 1.5em;
 }
 
 #menu a {
@@ -5815,7 +5827,7 @@ aside#column-left{
 
 #menu a:hover {
   background-color: white;
-  color: #09c;
+  color: #410043;
 }
 
 #menu .sub-menu {
@@ -5833,7 +5845,7 @@ aside#column-left{
 #toggle-menu .drop-icon, 
 #menu li label.drop-icon {
   position: absolute;
-  right: 1.5em;
+  right: 1em;
   top: 1.25em;
 }
 
