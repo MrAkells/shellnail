@@ -55,17 +55,19 @@ class ModelToolNewMail extends Model
     
     private function updateWarehouses($data)
     {
-        
         if(!empty($data))
         {
             $this->db->query("TRUNCATE " . DB_PREFIX . "newmail_office");
             
             foreach ($data as $office){
+                if($office->DescriptionRu == '') $office->DescriptionRu = $office->Description;
+                if($office->ShortAddressRu == '') $office->ShortAddressRu = $office->ShortAddress;
+                if($office->CityDescriptionRu == '') $office->CityDescriptionRu = $office->CityDescription;
                 $this->db->query(
                     "INSERT INTO " . DB_PREFIX . "newmail_office SET site_key = '" . (int)$office->SiteKey . "', number = '" . (int)$this->Number . "',"
                     . " ref = '" . $this->db->escape($office->Ref) . "', city_ref = '" . $this->db->escape($office->CityRef) . "',"
-                    . " city_description = '" . $this->db->escape($office->CityDescriptionRu) . "', city_description_ru = '" . $this->db->escape($office->CityDescriptionRu) . "',"
-                    . " description = '" . $this->db->escape($office->DescriptionRu) . "', description_ru = '" . $this->db->escape($office->DescriptionRu) . "',"
+                    . " city_description = '" . $this->db->escape($office->CityDescription) . "', city_description_ru = '" . $this->db->escape($office->CityDescriptionRu) . "',"
+                    . " description = '" . $this->db->escape($office->Description) . "', description_ru = '" . $this->db->escape($office->DescriptionRu) . "',"
                     . " short_address = '" . $this->db->escape($office->ShortAddress) . "', short_address_ru = '" . $this->db->escape($office->ShortAddressRu) . "',"
                     . " phone = '" . $this->db->escape($office->Phone) . "', typeof_warehouse = '" . $this->db->escape($office->TypeOfWarehouse) . "',"
                     . " longitude = '" . $this->db->escape($office->Longitude) . "', latitude = '" . $this->db->escape($office->Latitude) . "',"
