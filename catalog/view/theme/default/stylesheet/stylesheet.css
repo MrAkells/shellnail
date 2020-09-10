@@ -5771,7 +5771,7 @@ aside#column-left{
 }
 
 #menu .sub-menu {
-  background-color: #fbfbfb;
+  background-color: #f8f8f8;
   border-width: 0;
   margin: 0;
 }
@@ -5834,8 +5834,12 @@ aside#column-left{
   display: none;
 }
 
-#menu input[type="checkbox"]:checked + .sub-menu {
+#menu input[type="checkbox"]:checked + a + .sub-menu {
   display: block;
+}
+
+#menu input[type="checkbox"]:checked + a > label.drop-icon {
+	transform: rotate(90deg);
 }
 
 #menu .sub-menu a:hover {
@@ -5846,17 +5850,18 @@ aside#column-left{
 #menu li label.drop-icon {
   position: absolute;
   right: 1em;
-  top: 1.25em;
+  top: 4px;
 }
 
 #menu label.drop-icon, #toggle-menu span.drop-icon {
-  border-radius: 50%;
-  width: 1em;
-  height: 1em;
+  border-radius: 6px;
+  width: 40px;
+  height: 40px;
   text-align: center;
-  background-color: #410043;
+  background-color: #f0f0f0;
   text-shadow: 0 0 0 transparent;
-  color: rgba(255, 255, 255, .75);
+	color: #410043;
+	padding-top: 13px;
 }
 
 #menu .drop-icon {

@@ -10,16 +10,17 @@
                     <li><a href="<?php echo $category['href'] ?>"><?php echo $category['name']; ?></a></li>
                 <?php } else { ?>
                     <li>
+                    <input type="checkbox" id="sm<?php echo $count; ?>">
                         <a href="<?php echo $category['href'] ?>"><?php echo $category['name'] ?> 
                             <span class="drop-icon">▾</span>
-                            <label title="Toggle Drop-down" class="drop-icon" for="sm<?php echo $count; ?>">▾</label>
+                            <label title="Toggle Drop-down" class="drop-icon" for="sm<?php echo $count; ?>">&#10095;</label>
                         </a>
-                        <input type="checkbox" id="sm<?php echo $count; ?>">
+                        
                         <ul class="sub-menu">
                         <?php $subcount = 1; ?>
                             <?php foreach($category['children'] as $child){ ?>
-                                <?php if($child['level3']){ ?>
-                                    <li>
+                                <?php // if($child['level3']){ ?>
+                                    <!-- <li>
                                         <a href="<?php echo $child['href'] ?>"><?php echo $child['name']; ?>
                                             <span class="drop-icon">▾</span>
                                             <label title="Toggle Drop-down" class="drop-icon" for="sm-с<?php echo $count; ?><?php echo $subcount; ?>">▾</label>
@@ -30,13 +31,13 @@
                                                 <li><a href="<?php echo $grandchild['href'] ?>"><?php echo $grandchild['name'];  ?></a></li>
                                             <?php } ?>
                                         </ul>
-                                    </li>
+                                    </li> -->
                                     <?php $subcount++ ; ?>
-                                <?php } else{ ?>
+                                <?php // } else{ ?>
                                     <li>
                                         <a href="<?php echo $child['href'] ?>"><?php echo $child['name']; ?></a>
                                     </li>
-                                <?php } ?>
+                                <?php // } ?>
                                 
                             <?php } ?> 
                             
