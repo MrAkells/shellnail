@@ -4004,7 +4004,7 @@ header {
 	width: 274px;
 }
 #content h1 {
-	margin: 8px 0 0;
+	margin: 8px 0;
 }
 .buy-one-click {
     width: 26%;
@@ -5856,7 +5856,7 @@ aside#column-left{
 }
 
 #menu label.drop-icon, #toggle-menu span.drop-icon {
-  border-radius: 6px;
+  border-radius: 4px;
   width: 30px;
   height: 30px;
   text-align: center;
