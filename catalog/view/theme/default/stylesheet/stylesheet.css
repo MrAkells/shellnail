@@ -5771,7 +5771,7 @@ aside#column-left{
 }
 
 #menu .sub-menu {
-  background-color: #f8f8f8;
+  /* background-color: #f8f8f8; */
   border-width: 0;
   margin: 0;
 }
@@ -5840,6 +5840,7 @@ aside#column-left{
 
 #menu input[type="checkbox"]:checked + a > label.drop-icon {
 	transform: rotate(90deg);
+	background-color: #976ba8;
 }
 
 #menu .sub-menu a:hover {
@@ -5850,18 +5851,19 @@ aside#column-left{
 #menu li label.drop-icon {
   position: absolute;
   right: 1em;
-  top: 4px;
+  top: 9px;
 }
 
 #menu label.drop-icon, #toggle-menu span.drop-icon {
   border-radius: 6px;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   text-align: center;
-  background-color: #f0f0f0;
+  background-color: #c7abcf;
   text-shadow: 0 0 0 transparent;
-	color: #410043;
-	padding-top: 13px;
+	color: #f4f4f4;
+	padding-top: 7px;
+	font-size: 16px;
 }
 
 #menu .drop-icon {
