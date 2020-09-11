@@ -5817,7 +5817,8 @@ aside#column-left{
 
 #toggle-menu, 
 #menu a {
-  padding: 1em 2em 1em 1.5em;
+  padding: 1em 40px 1em 10px;
+}
 }
 
 #menu a {
@@ -5850,7 +5851,7 @@ aside#column-left{
 #toggle-menu .drop-icon, 
 #menu li label.drop-icon {
   position: absolute;
-  right: 1em;
+  right: 5px;
   top: 9px;
 }
 
