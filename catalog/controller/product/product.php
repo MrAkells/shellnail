@@ -215,6 +215,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				'href' => $data['product_link'] = $this->url->link('product/product', $url . '&product_id=' . $this->request->get['product_id'])
 			);
 
+
 			if ($product_info['meta_title']) {
 				$this->document->setTitle($product_info['meta_title']);
 			} else {

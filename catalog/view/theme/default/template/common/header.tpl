@@ -50,6 +50,119 @@
 <script src="<?php echo $script; ?>" type="text/javascript"></script>
 <?php } ?>
 
+<?php if (isset($ishome)) {?>
+    <script type="application/ld+json">
+    { 
+    "@context": "http://schema.org",
+    "@type": "LocalBusiness",
+    "url": "https://shellnail.com.ua/",
+    "priceRange": "$",
+    "name": "Интернет-магазин товаров для ногтей ShellNail",
+    "logo": "https://shellnail.com.ua/image/catalog/Logo/ximg-logo.png.pagespeed.ic.bwiMBPQSMS.png",
+    "image": [
+    "https://shellnail.com.ua/image/cache/catalog/xsale-callus-20-861x331.jpg.pagespeed.ic.KdxraCQtZW.webp",
+    "https://shellnail.com.ua/image/cache/catalog/xcanni-sale-861x331.jpg.pagespeed.ic.s90o3T5KTl.webp",
+    "https://shellnail.com.ua/image/cache/catalog/xedlen-3-1-akciya-861x331.jpg.pagespeed.ic.G6Q7w86bi-.webp"
+    ],
+    "sameAs": [
+    "https://www.instagram.com/shellnail_shop/?hl=ru", 
+    "https://www.facebook.com/groups/shellnail/", 
+    "https://www.youtube.com/c/Shellnailshop"
+    ],
+    "currenciesAccepted": "UAH",
+    "paymentAccepted": "cash, credit card",
+    "hasMap": "https://g.page/shopshellnail?share",
+    "address": {
+    "@type": "PostalAddress",
+    "@id": "https://shellnail.com.ua/contacts.html",
+    "name": "ShellNail, Краматорск", 
+    "addressRegion": "Донецкая область",
+    "addressLocality": "Краматорск",     
+    "postalCode": "84313",
+    "streetAddress": "ул.Парковая, 3",
+    "telephone": "+38 066 807 70 50",
+    "email": "shopshellnail@gmail.com",
+    "addressCountry": "UA"
+    },
+    "contactPoint": [
+    { "@type": "ContactPoint",
+    "telephone": "+38(066) 807 70 50",
+    "contactType": "customer support"
+    }],
+    "openingHoursSpecification": [
+    {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    ],
+    "opens": "09:00",
+    "closes": "18:00"
+    }
+    ]
+    }
+</script>
+<?php } ?>
+
+<?php if (!empty($is_product)) { ?>
+    <script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "Product",
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5", 
+        "reviewCount": "2" 
+    },
+    "description": "Купить белый гель-лак ГО (GO) 001 5,8 мл с быстрой, да ещё и бесплатной от определённой суммы (см. в магазине) доставкой удобно в интернет-магазине shellnail.com.ua. Подарок для ногтей в каждом заказе - пользуйтесь возможностью разнообразить свой маникюр!",
+    "name": "Гель-лак GO 001 5,8 мл белый, эмаль",
+    "image": "https://shellnail.com.ua/image/cache/catalog/Trade/GO/gel-laki/xgo-1-228x228.jpg.pagespeed.ic.ZFxNeZiZUW.jpg",
+    "brand": "GO by Naomi",
+    "sku": "3127",
+    "gtin8": "3127",
+    "offers": {
+        "@type": "Offer",
+        "availability": "http://schema.org/InStock",
+        "price": "65",
+        "priceCurrency": "UAH", 
+        "url": "https://shellnail.com.ua/gel-laki/gel-lak-go-by-naomy/go-classic-collection/gel-lak-go-1.html",
+        "priceValidUntil": "2025-06-07" 
+    },
+    "review": [
+        {
+        "@type": "Review",
+        "author": "Ирина",
+        "datePublished": "2017-09-28", 
+        "description": "плотный гель-лак, неожиданно!",
+        "reviewRating": {
+            "@type": "Rating",
+            "bestRating": "5", 
+            "ratingValue": "5", 
+            "worstRating": "1" 
+        }
+        },
+        {
+        "@type": "Review",
+        "author": "Арина",
+        "datePublished": "2017-09-24", 
+        "description": "ложится хорошо понравился. Цвет классический в следующий раз возьму сразу больше. Спасибо за подарочек ))
+    ",
+        "reviewRating": {
+            "@type": "Rating",
+            "bestRating": "5", 
+            "ratingValue": "5", 
+            "worstRating": "1" 
+        }
+        }
+    ]
+    }
+    </script>
+<?php } ?>
+
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-59209923-1"></script>
 <script>
