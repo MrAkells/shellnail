@@ -7,6 +7,7 @@ class Document {
 	private $styles = array();
 	private $scripts = array();
 	private $og_image;
+	private $json_ld;
 
 	public function setTitle($title) {
 		$this->title = $title;
@@ -73,5 +74,13 @@ class Document {
 
 	public function getOgImage() {
 		return $this->og_image;
+	}
+
+	public function setJsonLd($json_ld) {
+		$this->json_ld = '<script type="application/ld+json">' . $json_ld . '</script>';
+	}
+
+	public function getJsonLd() {
+		return $this->json_ld;
 	}
 }

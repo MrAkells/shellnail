@@ -582,6 +582,49 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				}
 			}
 
+			$results_reviews = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], 0, 5);
+            $reviews=[];
+                
+			foreach ($results_reviews as $review) {
+				$reviews[] = array(
+					"@type" 		=> "Review",
+					'author'     	=> $review['author'],
+					"datePublished" => date($this->language->get('date_format_short'), strtotime($review['date_added'])),
+					'description'	=> nl2br($review['text']),
+					"reviewRating" => [
+						"@type" => "Rating",
+						"bestRating" => 5, // Максимальная оценка
+						"ratingValue" => $review['rating'], // Оценка пользователя
+						"worstRating" => 1 // Минимальная оценка
+					]
+				);
+			}
+
+			$json_ld = [
+				"@context" => "http://schema.org",
+				"aggregateRating" => [
+					"@type" => "AggregateRating",
+					"ratingValue" => $data['rating'], 
+					"reviewCount" => $product_info['reviews'] 
+				],
+				"description" => $meta_description,
+				"image" => 	$data['thumb'],
+				"brand" => 	$data['sku'],
+				"sku" 	=> 	$data['sku'],
+				"gtin8" => "3127",
+				"offers"	=> [
+					"@type" => "Offer",
+					"availability" => "http://schema.org/InStock",
+					"price" => ($product_info['special'] ? $product_info['special'] : $product_info['price']),
+					"priceCurrency" => "UAH", 
+					"url" => "https://shellnail.com.ua/gel-laki/gel-lak-go-by-naomy/go-classic-collection/gel-lak-go-1.html",
+					"priceValidUntil" => date('Y-m-d') 
+				],
+				"review" => $reviews
+			];
+
+			$this->document->setJsonLd(json_encode($json_ld));
+
 			$data['recurrings'] = $this->model_catalog_product->getProfiles($this->request->get['product_id']);
 
 			$this->model_catalog_product->updateViewed($this->request->get['product_id']);

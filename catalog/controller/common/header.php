@@ -100,6 +100,7 @@ class ControllerCommonHeader extends Controller {
 		$data['og_url'] = (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1')) ? HTTPS_SERVER : HTTP_SERVER) . substr($this->request->server['REQUEST_URI'], 1, (strlen($this->request->server['REQUEST_URI'])-1));
 
 		$data['og_image'] = $this->document->getOgImage();
+		$data['json_ld'] = $this->document->getJsonLd();
 
 		$data['text_home'] = $this->language->get('text_home');
 
