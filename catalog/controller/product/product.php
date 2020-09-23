@@ -582,6 +582,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				}
 			}
 
+			// Json_ld
 			$results_reviews = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], 0, 5);
             $reviews=[];
                 
@@ -589,7 +590,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				$reviews[] = array(
 					"@type" 		=> "Review",
 					'author'     	=> $review['author'],
-					"datePublished" => date($this->language->get('date_format_short'), strtotime($review['date_added'])),
+					"datePublished" => date("Y-m-d", strtotime($review['date_added'])),
 					'description'	=> nl2br($review['text']),
 					"reviewRating" => [
 						"@type" => "Rating",
@@ -624,6 +625,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			];
 
 			$this->document->setJsonLd(json_encode($json_ld));
+			// END Json_ld
 
 			$data['recurrings'] = $this->model_catalog_product->getProfiles($this->request->get['product_id']);
 
