@@ -621,9 +621,11 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 					"priceCurrency" => "UAH", 
 					"url" => "https://shellnail.com.ua/gel-laki/gel-lak-go-by-naomy/go-classic-collection/gel-lak-go-1.html",
 					"priceValidUntil" => date('Y-m-d') 
-				],
-				"review" => $reviews
+				]
 			];
+			if($reviews){
+				$json_ld['review'] = $reviews;
+			}
 
 			$this->document->setJsonLd(json_encode($json_ld));
 			// END Json_ld
