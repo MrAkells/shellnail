@@ -603,6 +603,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 
 			$json_ld = [
 				"@context" => "http://schema.org",
+				"@type" => "Product",
 				"aggregateRating" => [
 					"@type" => "AggregateRating",
 					"ratingValue" => $data['rating'], 
