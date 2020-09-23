@@ -50,7 +50,7 @@
 <script src="<?php echo $script; ?>" type="text/javascript"></script>
 <?php } ?>
 
-<?php if (isset($ishome)) {?>
+<?php if (isset($ishome)) { ?>
     <script type="application/ld+json">
     { 
     "@context": "http://schema.org",
@@ -106,6 +106,20 @@
     ]
     }
 </script>
+
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "url": "https://shellnail.com.ua/",
+    "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://shellnail.com.ua/search/?search={search_term_string}",
+    "query-input": "required name=search_term_string" }
+    }
+</script>
+
+
 <?php } ?>
 
 <?php if (!empty($is_product)) { ?>
