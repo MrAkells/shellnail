@@ -610,6 +610,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 					"reviewCount" => $product_info['reviews'] 
 				],
 				"description" => $meta_description,
+				"name"	=> $data['heading_title'],
 				"image" => 	$data['thumb'],
 				"brand" => 	$data['sku'],
 				"sku" 	=> 	$data['sku'],
