@@ -8,9 +8,9 @@
             case 'newsblog/article':
                 echo "itemscope itemtype='http://schema.org/Article'";
                 break;
-            case 'product/product':
-                echo "itemscope itemtype='http://schema.org/Product'";
-                break;
+            // case 'product/product':
+            //     echo "itemscope itemtype='http://schema.org/Product'";
+            //     break;
         }?> >
 <!--<![endif]-->
 <head>

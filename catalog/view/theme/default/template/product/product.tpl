@@ -74,7 +74,7 @@
           <?php if ($thumb || $images) { ?>
           <ul class="thumbnails product-images">
             <?php if ($thumb) { ?>
-            <li class="big-product-images"><a class="mfp-image thumbnail" href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>"><img itemprop="image" src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" /></a></li>
+            <li class="big-product-images"><a class="mfp-image thumbnail" href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>"><img src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" /></a></li>
             <?php } ?>
             <div class="pack-image-additional">
                  <?php if(isset($product_video['video']) && $product_video['video']){ ?>
@@ -94,10 +94,10 @@
         <!-- Начало блока с кодом, ценой, производителем, страной и т.д  -->
             
             <div class="col-sm-5 col-xs-6 col-middle-product">
-            <div class="col-sm-12 col-title-goods"><h1 class="title-goods-cart" itemprop="name"><?php echo $heading_title; ?></h1></div>
+            <div class="col-sm-12 col-title-goods"><h1 class="title-goods-cart" ><?php echo $heading_title; ?></h1></div>
                 <div>
                     <?php if($sku){ ?>
-                    <p class="product-code" itemprop="model"> <?php echo $text_model; ?> <?php echo $sku; ?></p>
+                    <p class="product-code" > <?php echo $text_model; ?> <?php echo $sku; ?></p>
                     <?php } ?>
                      <?php if($quantity>0){ ?>
                     <p class="produc-status"><i class="fa fa-check"></i> <?php echo $text_instock; ?></p>
@@ -135,7 +135,7 @@
                 <div class="product-manufacture" >
                        <?php if ($manufacturer) { ?>
                   <div>
-                    <span > <?php echo $text_manufacturer; ?></span> <span itemprop="manufacturer"><?php echo $manufacturer; ?></span>
+                    <span > <?php echo $text_manufacturer; ?></span> <span ><?php echo $manufacturer; ?></span>
                   </div>    
                     <?php } ?>
                     <?php if ($vendorcountry) { ?>
@@ -147,11 +147,9 @@
                 
                 
             <?php if ($price) { ?>
-            <p class="price" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
-            <meta itemprop="itemCondition" content="new"/>
-            <meta itemprop="priceCurrency" content="UAH"/>
-            <meta itemprop="price" content="<?php echo $intprice; ?>"/>     
-             <meta itemprop="availability" content="<?php echo (!$quantity || $quantity<1) ? 'OutOfStock' : 'InStock' ; ?>"/>      
+            <p class="price">
+            <meta content="<?php echo $intprice; ?>"/>     
+             <meta content="<?php echo (!$quantity || $quantity<1) ? 'OutOfStock' : 'InStock' ; ?>"/>      
             <?php if (!$special) { ?>
             
               <h2><?php echo $price; ?></h2>
