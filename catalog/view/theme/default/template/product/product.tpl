@@ -29,26 +29,29 @@
     <ul class="hidden-xs hidden-sm breadcrumbs list-inline" itemscope itemtype="http://schema.org/BreadcrumbList">
         <?php $i=0; ?>
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="crumb" href="<?php echo $breadcrumb['href']; ?>"><span itemprop="name"><?php echo $breadcrumb['text']; ?></span></a>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" class="crumb" href="<?php echo $breadcrumb['href']; ?>">
+           <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
+          </a>
         <meta itemprop="position" content="<?php echo $i++; ?>">
         </li>
         <?php } ?>
       </ul>
 
-      <ul class="breadcrumbs breadcrumbs--phone list-inline hidden-md hidden-lg" itemscope itemtype="https://schema.org/BreadcrumbList">
+      <ul class="breadcrumbs breadcrumbs--phone list-inline hidden-md hidden-lg">
         <?php $i=0; ?>
         <?php foreach ($breadcrumbs as $i => $breadcrumb) { ?>
-            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <li>
                 <?php if($i+1 < count($breadcrumbs)) { ?>
-                    <a class="crumb" itemscope itemtype="https://schema.org/Thing" itemprop="item" href="<?php echo $breadcrumb['href']; ?>">
-                        <span class="p-hidden" itemprop="name"><?php echo $breadcrumb['text']; ?></span>
+                    <a class="crumb" href="<?php echo $breadcrumb['href']; ?>">
+                        <span class="p-hidden" ><?php echo $breadcrumb['text']; ?></span>
                     </a>
-                    <meta itemprop="position" content="<?php echo $i+1; ?>" /> 
+                    <meta content="<?php echo $i+1; ?>" /> 
                 <?php } else { ?>
-                    <span class="crumb" itemscope itemtype="https://schema.org/Thing" itemprop="item" >
-                        <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
+                    <span class="crumb" >
+                        <span ><?php echo $breadcrumb['text']; ?></span>
                     </span>
-                    <meta itemprop="position" content="<?php echo $i+1; ?>" /> 
+                    <meta content="<?php echo $i+1; ?>" /> 
                 <?php } ?>
             </li>
         <?php } ?>
