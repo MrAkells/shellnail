@@ -621,7 +621,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 					"price" => ($product_info['special'] ? $product_info['special'] : $product_info['price']),
 					"priceCurrency" => "UAH", 
 					"url" => "https://shellnail.com.ua/gel-laki/gel-lak-go-by-naomy/go-classic-collection/gel-lak-go-1.html",
-					"priceValidUntil" => date('Y-m-d',strtotime("+365 day")) 
+					"priceValidUntil" => date('Y-m-d',strtotime("+1095 day")) 
 				]
 			];
 			if($reviews){
