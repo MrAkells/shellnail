@@ -57,7 +57,7 @@
     "@type": "LocalBusiness",
     "url": "https://shellnail.com.ua/",
     "priceRange": "$",
-    "name": "Интернет-магазин товаров для ногтей ShellNail",
+    "name": "Товары для ногтей и красоты. Интернет-магазин для маникюра ShellNail Украина",
     "logo": "https://shellnail.com.ua/image/catalog/Logo/ximg-logo.png.pagespeed.ic.bwiMBPQSMS.png",
     "image": [
     "https://shellnail.com.ua/image/cache/catalog/xsale-callus-20-861x331.jpg.pagespeed.ic.KdxraCQtZW.webp",
