@@ -606,8 +606,8 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				"@type" => "Product",
 				"aggregateRating" => [
 					"@type" => "AggregateRating",
-					"ratingValue" => $data['rating'], 
-					"reviewCount" => $product_info['reviews'] 
+					"ratingValue" => ($data['rating'] ? $data['rating'] : 5), 
+					"reviewCount" => ($product_info['reviews'] ? $product_info['reviews'] : 1) 
 				],
 				"description" => $meta_description,
 				"name"	=> $data['heading_title'],
