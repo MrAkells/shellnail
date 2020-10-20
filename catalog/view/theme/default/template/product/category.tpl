@@ -11,12 +11,12 @@
                 <?php foreach ($breadcrumbs as $i => $breadcrumb) { ?>
                     <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <?php if($i+1 < count($breadcrumbs)) { ?>
-                            <a class="crumb" itemscope itemtype="https://schema.org/Thing" itemprop="item" href="<?php echo $breadcrumb['href']; ?>">
+                            <a class="crumb" itemprop="item" href="<?php echo $breadcrumb['href']; ?>">
                                 <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
                             </a>
                             <meta itemprop="position" content="<?php echo $i+1; ?>" /> 
                         <?php } else { ?>
-                            <span class="crumb" itemscope itemtype="https://schema.org/Thing" itemprop="item" href="<?php echo $breadcrumb['href']; ?>">
+                            <span class="crumb" >
                                 <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
                             </span>
                             <meta itemprop="position" content="<?php echo $i+1; ?>" /> 
