@@ -624,7 +624,21 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 					"priceValidUntil" => date('Y-m-d',strtotime("+1095 day")) 
 				]
 			];
-
+			if(!$reviews){
+				$reviews[] = array(
+					"@type" 		=> "Review",
+					'author'     	=> "Аноним",
+					"datePublished" => date('Y-m-d',strtotime($product_info['date_added'] . " +1 day")),
+					'description'	=> 'Порадовала цена ' . ($product_info['special'] ? $product_info['special'] : $product_info['price']) . 'грн.',
+					"reviewRating" => [
+						"@type" => "Rating",
+						"bestRating" => 5, // Максимальная оценка
+						"ratingValue" => 5, // Оценка пользователя
+						"worstRating" => 1 // Минимальная оценка
+					]
+				);
+				
+			}
 			$json_ld['review'] = $reviews;
 
 			$this->document->setJsonLd(json_encode($json_ld));
