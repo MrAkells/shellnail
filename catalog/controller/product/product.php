@@ -624,9 +624,8 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 					"priceValidUntil" => date('Y-m-d',strtotime("+1095 day")) 
 				]
 			];
-			if($reviews){
-				$json_ld['review'] = $reviews;
-			}
+
+			$json_ld['review'] = $reviews;
 
 			$this->document->setJsonLd(json_encode($json_ld));
 			// END Json_ld
