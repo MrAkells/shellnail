@@ -583,7 +583,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			}
 
 			// Json_ld
-			$results_reviews = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], 0, 5);
+			$results_reviews = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], 0, 20);
             $reviews=[];
                 
 			foreach ($results_reviews as $review) {
