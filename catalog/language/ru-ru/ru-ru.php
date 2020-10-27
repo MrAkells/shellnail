@@ -74,7 +74,7 @@ $_['error_curl']            = 'CURL: Код ошибки(%s): %s';
 
 $_['text_artikul']='Код';
 $_['text_reviews_number']='отзывов';
-$_['text_shellnail']='Shellnail';
+$_['text_shellnail']='ShellNail';
 $_['text_buy_one_click']='Купить в один клик';
 $_['text_instock']                            = 'В наличии';
 $_['text_outstock']                            = 'Нет в наличии';

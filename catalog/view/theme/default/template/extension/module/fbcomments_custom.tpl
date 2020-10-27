@@ -9,10 +9,12 @@
 <div class="fb-comments" data-mobile="true"  data-href="http://shellnail.com.ua/" data-width="auto" data-numposts="<?php echo $comments_number; ?>" data-order-by="reverse_time"></div>
 </div>
 
-<div class="visible-xs visible-sm">
-    <h3 class="title-common-news"><?php echo $text_shellnail; ?></h3>
+<?php if (isset($ishome)) { ?>
+<div class="visible-xs visible-sm ">
+    <h3 class="title-common-news title-common-news--center"><?php echo $text_shellnail; ?></h3>
      <div class="description-text"><?php echo $shop_text; ?></div>
 </div>
+<?php } ?>
 
   <script type="text/javascript">     
       

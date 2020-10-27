@@ -14,10 +14,10 @@ class ControllerCommonColumnLeft extends Controller {
 		if ($route == 'product/category' && isset($this->request->get['path'])) {
 			$this->load->model('catalog/category');
 
-                        $tpl='third_column_left.tpl';   
-                        
-                        $data['mini_header_catalog']=$this->config->get('mini_header_catalog');
-                        $data['category_breadcrumbs']=$this->config->get('category_breadcrumbs');
+			$tpl='third_column_left.tpl';   
+			
+			$data['mini_header_catalog']=$this->config->get('mini_header_catalog');
+			$data['category_breadcrumbs']=$this->config->get('category_breadcrumbs');
                         
 			$path = explode('_', (string)$this->request->get['path']);
 
@@ -27,19 +27,18 @@ class ControllerCommonColumnLeft extends Controller {
 		if ($route == 'product/product' && isset($this->request->get['product_id'])) {
 			$this->load->model('catalog/product');
                         
-                        $tpl='second_column_left.tpl';    
+			$tpl='second_column_left.tpl';    
                         
 			$layout_id = $this->model_catalog_product->getProductLayoutId($this->request->get['product_id']);
 		}
 
-                if($route == 'account/logout' || $route ==  'account/forgotten' || $route ==  'common/success' ||  $route == "account/reset" || $route=="checkout/success" || $route=="account/login" || $route=="information/information"){
-                     $tpl='forth_column_left.tpl';   
-                }
-                
-                
-                if ($route == 'features/reviews' || $route == 'product/manufacturer/info') {
+		if($route == 'account/logout' || $route ==  'account/forgotten' || $route ==  'common/success' ||  $route == "account/reset" || $route=="checkout/success" || $route=="account/login" || $route=="information/information"){
+			$tpl='forth_column_left.tpl'; 
+		}
+		
+		if ($route == 'features/reviews' || $route == 'product/manufacturer/info') {
 
-                        $tpl='second_column_left.tpl';    
+			$tpl='second_column_left.tpl';    
 
 		}
                 
@@ -88,10 +87,10 @@ class ControllerCommonColumnLeft extends Controller {
 		}
                 
 
-                if(!$tpl){
-                    return $this->load->view('common/column_left', $data);
-                }else{
-                     return $this->load->view('common/'.$tpl, $data);
-                }
+		if(!$tpl){
+				return $this->load->view('common/column_left', $data);
+		}else{
+					return $this->load->view('common/'.$tpl, $data);
+		}
 	}
 }

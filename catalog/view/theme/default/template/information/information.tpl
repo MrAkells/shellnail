@@ -1,7 +1,8 @@
 <?php echo $header; ?>
 <div class="container">
   
-  <div class="row"><?php echo $column_left; ?>
+  <div class="row">
+  <?php echo $column_left; ?>
    
     <div id="content" class="col-md-9">
         <ul class="breadcrumbs list-inline">

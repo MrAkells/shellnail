@@ -19,8 +19,14 @@ class ControllerExtensionModuleFbcomments extends Controller {
                     $data=$this->$method($data);
                 }
             }
+
+            if (!isset($this->request->get['route']) || $this->request->get['route'] == 'common/home'){
+                $data['ishome']=1;
+            }
+            
                         
             return $this->load->view('extension/module/'.$template, $data);
+            
                        
 	}
         

@@ -115,6 +115,8 @@ select.form-control, textarea.form-control, input[type="text"].form-control, inp
 }
 #mobile_top_links .dropdown-menu>li>a{
 	border-bottom: 1px solid #ddd!important;
+	font-size: 16px;
+	padding: 8px 20px;
 }
 .input-group input, .input-group select, .input-group .dropdown-menu, .input-group .popover {
 	font-size: 12px;
@@ -1943,6 +1945,9 @@ h2.title-promotions{
     font-family: 'Roboto Bold';
     color: #161616;
 }
+.title-common-news--center {
+	text-align: center;
+}
 .description-text{
 	font-size: 13px;
 	text-align: justify;
@@ -3760,6 +3765,20 @@ tr.one_order{
 	#additional_field {
 	margin-bottom:1em;
 	}
+	.product-btns.product-btns-first {
+		display: flex;
+		justify-content: flex-start;
+		align-items: flex-start;
+	}
+	.product-btns.product-btns-first .btn-pack {
+		margin-right: 15px;
+	}
+	.product-btns.product-btns-first .btn-pack > button > span {
+		display: none;
+	}
+	.pack-share {
+    height: auto;
+	}
 }
 
 /*---Адаптив--*/
@@ -4999,6 +5018,10 @@ header {
 header {
     margin-bottom: 10px;
 }
+#header_search {
+	margin-bottom: 10px;
+}
+    
 .logo-feature {
      width: auto;
 }

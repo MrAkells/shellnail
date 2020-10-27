@@ -506,12 +506,12 @@ class ControllerProductCategory extends Controller {
 
 			$data['continue'] = $this->url->link('common/home');
 
-                        $mini_header_catalog=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
-                        $this->config->set('mini_header_catalog',$mini_header_catalog);
-                        $this->config->set('category_breadcrumbs',$data['breadcrumbs']);
-                       
-                        $this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
-                        $this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
+			$mini_header_catalog=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
+			$this->config->set('mini_header_catalog',$mini_header_catalog);
+			$this->config->set('category_breadcrumbs',$data['breadcrumbs']);
+			
+			$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
+			$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
                      
                         
 			$data['column_left'] = $this->load->controller('common/column_left');
