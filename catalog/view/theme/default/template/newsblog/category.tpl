@@ -13,6 +13,7 @@
         </li>
         <?php } ?>
       </ul>
+      <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>
       <h1 class="title-article" itemprop="name"><?php echo $heading_title; ?></h1>
     
    

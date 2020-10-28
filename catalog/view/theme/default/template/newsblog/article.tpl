@@ -10,7 +10,7 @@
         </li>
         <?php } ?>
       </ul>
-          
+      <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>    
             <meta itemprop="datePublished" content="<?php echo $datePublished; ?>" />
             <meta itemprop="dateModified" content="<?php echo $micro_date_modified; ?>" />
             <meta itemprop="author" content="Екатерина Дорошенко" />

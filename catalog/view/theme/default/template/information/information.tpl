@@ -10,7 +10,8 @@
                 <li><a class="crumb" href="<?php echo $breadcrumb['href']; ?>"><span ><?php echo $breadcrumb['text']; ?></span></a>
                 </li>
                 <?php } ?>
-            </ul>
+        </ul>
+        <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>
         <?php echo $content_top; ?>
       <h1 itemprop="name" class="text-center"><?php echo $heading_title; ?></h1>
       <?php echo $description; ?><?php echo $content_bottom; ?></div>

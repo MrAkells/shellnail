@@ -20,6 +20,7 @@ class ControllerNewsBlogCategory extends Controller {
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/home')
 		);
+		$data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
 
 		if (isset($this->request->get['newsblog_path'])) {
 			$path = '';

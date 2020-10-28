@@ -16,7 +16,12 @@ class ControllerFeaturesPromotions extends Controller {
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/home')
+                );
+                $data['breadcrumbs'][] = array(
+			'text' => $data['heading_title'],
+			'href' => $this->url->link('features/promotions')
 		);
+                $data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
 
                 $promo_ids= $this->config->get('active_promos_width_prod_ids');
           

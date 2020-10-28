@@ -29,7 +29,8 @@ class ControllerFeaturesReviews extends Controller {
 			'text' => $this->language->get('text_ourreviews'),
 			'href' => $this->url->link('features/reviews')
 		);
-                
+        $data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
+        
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');

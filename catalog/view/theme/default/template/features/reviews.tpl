@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 <div class="container">
   <div class="row">
-  <?php echo $column_left; ?>
+  <?php //echo $column_left; ?>
   
     <div id="content" class="col-xs-12 col-md-9">
       <ul class="breadcrumbs list-inline" itemscope itemtype="http://schema.org/BreadcrumbList">
@@ -12,7 +12,9 @@
         </li>
         <?php } ?>
       </ul>
-        
+    <div class="hidden-md hidden-lg mini-catalog-сategory">
+        <?php echo $mini_catalog; ?>
+    </div>        
             <h1 itemprop="name"><?php echo $heading_title; ?></h1>
             <div class="text-shopreview">
                 <p><?php echo $text_greetings; ?></p>

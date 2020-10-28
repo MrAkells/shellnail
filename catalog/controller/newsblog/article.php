@@ -11,6 +11,7 @@ class ControllerNewsBlogArticle extends Controller {
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/home')
 		);
+		$data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
 
 		$this->load->model('newsblog/category');
 
