@@ -3,7 +3,7 @@
   <div class="row">
   <div id="content" class="col-xs-12">
         <?php echo $content_top; ?>
-        <ul class="hidden-xs hidden-sm breadcrumbs list-inline" itemscope itemtype="http://schema.org/BreadcrumbList">
+      <ul class="breadcrumbs list-inline" itemscope itemtype="http://schema.org/BreadcrumbList">
            <?php $i=0; ?>
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="crumb" href="<?php echo $breadcrumb['href']; ?>"><span itemprop="name"><?php echo $breadcrumb['text']; ?></span></a>
@@ -11,6 +11,9 @@
         </li>
         <?php } ?>
       </ul>
+      <div class="hidden-md hidden-lg mini-catalog-сategory">
+          <?php echo $mini_catalog; ?>
+      </div>     
          <h1 itemprop="name" class="title-promotion-group"><?php echo $title; ?></h1>
         <div class="description-promotion-group"><?php echo $description; ?></div>
         <!--<div><img src="<?php echo $main_thumb; ?>"></div>
