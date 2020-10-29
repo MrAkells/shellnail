@@ -707,8 +707,8 @@ class ControllerExtensionModuleDVFilter extends Controller {
 
                 $name = html_entity_decode($value['name'], ENT_QUOTES, 'UTF-8');
 
-                if (false === strpos($value['value_id'], '-') && mb_strlen($name, 'UTF-8') > 20) {
-                    $name = mb_substr($value['name'], 0, 20, 'UTF-8');
+                if (false === strpos($value['value_id'], '-') && mb_strlen($name, 'UTF-8') > 30) { // было 20
+                   $name = mb_substr($value['name'], 0, 30, 'UTF-8');
                 }
 
                 $values[] = array(
