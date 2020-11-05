@@ -1,5 +1,6 @@
 <?php
 // Text
+$_['text_shellnail']  		= 'ShellNail';
 $_['text_more']  		= 'Смотреть все статьи';
 $_['text_all_articles']  		= 'Статьи, новости, обзоры';
 

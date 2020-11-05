@@ -240,7 +240,9 @@
                 </div>
                 
             </div>
-             <div class='col-xs-6 col-attribute visible-xs' id="specification">
+
+
+         <div class='col-xs-6 col-attribute visible-xs' id="specification">
            <?php if ($attribute_groups) { ?>
             <table class="product-attribute">
                   <tr>
@@ -292,10 +294,9 @@
               <?php } ?>
            
               <?php } ?>
-              
-              
-                   
         </div>
+
+
         <div class="col-xs-12 visible-xs">
           <div class="product-btns product-btns-second"> 
                   <div class="btn-pack">
@@ -306,7 +307,7 @@
                     <button type="button" data-toggle="tooltip" class="btn-transparent btn-product-share" title="<?php echo $button_compare; ?>" onclick="compare.add('<?php echo $product_id; ?>');"><img src="catalog/view/theme/default/image/icon-small-share.png" alt="Compare"><span><?php echo $button_share; ?></span></button></div>
                 </div>
         </div>
-        <!-- Начало преимуществ --> 
+        <!-- Начало преимуществ 
          <div class="advantage-pack advantage-pack-xs visible-xs">
             <div class="advantage-product">
               <div class="advantage-product-img">
@@ -339,7 +340,7 @@
               
               <div class="advantage-product-content"><?php echo $text_4_advantage; ?></div>
             </div>       
-          </div>
+          </div> --> 
             </div>
             <div class="row">
             <div class="col-sm-12 col-product-tab">
@@ -493,7 +494,7 @@
               
               </div>
                            <!-- Начало преимуществ --> 
-         <div class="advantage-pack advantage-desctop hidden-xs">
+         <div class="advantage-pack advantage-desctop- hidden-xs-">
             
         <div class="advantage-product">
            <div class="advantage-product-img">

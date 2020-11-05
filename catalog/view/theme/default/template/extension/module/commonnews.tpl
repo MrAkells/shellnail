@@ -1,8 +1,10 @@
 <div class='row common-news'>
 <div class='col-lg-8 col-md-7 col-sm-12'>
-<?php if ($heading_title) { ?>
+<!-- <?php if ($heading_title) { ?>
 <h2 class="title-common-news hidden-xs hidden-sm"><?php echo $heading_title; ?></h2>
-<?php } ?>
+<?php } ?> -->
+<h2 class="title-common-news hidden-xs hidden-sm"><?php echo $text_shellnail; ?></h2>
+
 
     <?php if (isset($shop_description)) { ?> 
         <div class="hidden-xs hidden-sm description-text">

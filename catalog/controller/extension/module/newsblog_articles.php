@@ -19,9 +19,9 @@ class ControllerExtensionModuleNewsBlogArticles extends Controller {
 		}
 
 		$data['text_more'] = $this->language->get('text_more');
-                $data['text_all_articles'] = $this->language->get('text_all_articles');
-                
+    $data['text_all_articles'] = $this->language->get('text_all_articles');
 		$data['text_date_added'] = $this->language->get('text_date_added');
+		$data['text_shellnail'] = $this->language->get('text_shellnail');
 
 		$data['articles'] = array();
 
