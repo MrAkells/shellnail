@@ -54,11 +54,14 @@ function prepare_fbq_purchase(value) {
 $(document).ready(function() {
 
   $('#popupcart_extended').load('index.php?route=extension/module/popupcart', function() {
-					$('#popupcart_extended').popup('show');
-                                        console.log('hi');
-					
-				});
-    
+		$('#popupcart_extended').popup('show');
+		console.log('hi');
+	});
+		
+	$('#tab-description>.view-more-description').click(function(){
+		$('#tab-description>.box-description').addClass('show');
+		$('#tab-description>.view-more-description').addClass('hide');
+  });
     
 	// Highlight any found errors
 	$('.text-danger').each(function() {

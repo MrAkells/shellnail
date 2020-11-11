@@ -38,7 +38,7 @@
         <?php } ?>
       </ul>
 
-      <ul class="breadcrumbs breadcrumbs--phone list-inline hidden-md hidden-lg">
+      <ul class="breadcrumbs breadcrumbs--phone breadcrumbs--product list-inline hidden-md hidden-lg">
         <?php $i=0; ?>
         <?php foreach ($breadcrumbs as $i => $breadcrumb) { ?>
             <li>
@@ -59,7 +59,7 @@
 
 
       
-      <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>
+      <div class="hidden-md hidden-lg mini-catalog-product"><?php echo $mini_catalog; ?></div>
       <div class="row goods-cart">
 
       
@@ -150,42 +150,39 @@
                 
                 
             <?php if ($price) { ?>
-            <p class="price">
-            <meta content="<?php echo $intprice; ?>"/>     
-             <meta content="<?php echo (!$quantity || $quantity<1) ? 'OutOfStock' : 'InStock' ; ?>"/>      
-            <?php if (!$special) { ?>
-            
-              <h2><?php echo $price; ?></h2>
-            
-            <?php } else { ?>
-               
-            <span class="price-new"><?php echo $special; ?></span>
-             <span class="price-old"><?php echo $price; ?></span>
-            <?php if($active_promos){ ?>
-            <a href="<?php echo $active_promos['href']; ?>" title="<?php echo $active_promos['title']; ?>">
-                <img src="catalog/view/theme/default/image/stiker-promotional-price.png" class="stiker-product"/>
-            </a>
+            <div class="price">
+              <meta content="<?php echo $intprice; ?>"/>     
+              <meta content="<?php echo (!$quantity || $quantity<1) ? 'OutOfStock' : 'InStock' ; ?>"/>      
+              <?php if (!$special) { ?>
+                <h2><?php echo $price; ?></h2>
+              <?php } else { ?>
+                <span class="price-new"><?php echo $special; ?></span>
+                <span class="price-old"><?php echo $price; ?></span>
+                <?php if($active_promos){ ?>
+                  <a href="<?php echo $active_promos['href']; ?>" title="<?php echo $active_promos['title']; ?>">
+                      <img src="catalog/view/theme/default/image/stiker-promotional-price.png" class="stiker-product"/>
+                  </a>
+                <?php } ?>
+              <?php } ?>
+              <ul class="list-unstyled">
+                <?php if ($tax) { ?>
+                <li><?php echo $text_tax; ?> <?php echo $tax; ?></li>
+                <?php } ?>
+                <?php if ($points) { ?>
+                <li><?php echo $text_points; ?> <?php echo $points; ?></li>
+                <?php } ?>
+                <?php if ($discounts) { ?>
+                <li>
+                  <hr>
+                </li>
+                <?php foreach ($discounts as $discount) { ?>
+                <li><?php echo $discount['quantity']; ?><?php echo $text_discount; ?><?php echo $discount['price']; ?></li>
+                <?php } ?>
+                <?php } ?>
+              </ul>
+            </div>
             <?php } ?>
-            
-            <?php } ?>
-            <ul class="list-unstyled">
-            <?php if ($tax) { ?>
-            <li><?php echo $text_tax; ?> <?php echo $tax; ?></li>
-            <?php } ?>
-            <?php if ($points) { ?>
-            <li><?php echo $text_points; ?> <?php echo $points; ?></li>
-            <?php } ?>
-            <?php if ($discounts) { ?>
-            <li>
-              <hr>
-            </li>
-            <?php foreach ($discounts as $discount) { ?>
-            <li><?php echo $discount['quantity']; ?><?php echo $text_discount; ?><?php echo $discount['price']; ?></li>
-            <?php } ?>
-            <?php } ?>
-          </ul>
-          </p>
-          <?php } ?>
+          
                   <div class="qty-pack">
                     <div class="block-qty">
                       <span class="new-qty">
@@ -352,7 +349,11 @@
             <?php } ?>
           </ul>
           <div class="tab-content">
-            <div class="tab-pane active" id="tab-description" itemprop="description"><?php echo $description; ?></div>
+            <div class="tab-pane active" id="tab-description" itemprop="description">
+              <div class="box-description"><?php echo $description; ?></div>
+              <span class="view-more-description">Ещё</span>
+              
+            </div>
            
             <?php if ($review_status) { ?>
             <div class="tab-pane" id="tab-review" >
