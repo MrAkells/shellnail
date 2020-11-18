@@ -241,19 +241,28 @@
 
          <div class='col-xs-6 col-attribute visible-xs' id="specification">
            <?php if ($attribute_groups) { ?>
-            <table class="product-attribute">
+            <?php $i=0; $attr_limit=5; ?>
+            <?php foreach ($attribute_groups as $attribute_group) { ?>
+                <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
+                  <?php $i++; ?>
+                <?php } ?>
+            <?php } ?>
+            <?php if($i>$attr_limit){ 
+              $hideshadow = '';
+              } else { 
+                $hideshadow = 'hideshadow';
+              } ?>
+            <div class="product-attribute-box <?php echo $hideshadow; ?>">
+            <table class="product-attribute ">
               <tr>
                 <td class="product-attribute-title" colspan="2">
                   <?php echo $tab_attribute;?>:
                 </td>
               </tr>
-                <?php /* $i=0; $attr_limit=5; */ ?>
-            <?php foreach ($attribute_groups as $attribute_group) { ?>
-            
-                <?php /* foreach ($attribute_group['attribute'] as $attribute) { ?>
                 
-                  <?php $i++; ?>
-                    <?php if($i<=$attr_limit){ ?>
+            <?php foreach ($attribute_groups as $attribute_group) { ?>
+                
+                <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
                     <tr>
                       <td>
                             <?php if($attribute['name']=='color'){ ?>
@@ -266,55 +275,18 @@
                         <span><?php echo $attribute['text']; ?></span>
                       </td>
                     </tr>
-                      <?php }else{ ?>
-                          <tr class="hide_more_attr_xs" style="display: none">
-                        <td>
-                            <?php if($attribute['name']=='color'){ ?>
-                                <span>Цвет</span>
-                            <?php }else{ ?>
-                                  <span><?php echo $attribute['name']; ?></span>
-                            <?php } ?>
-                        </td>
-                        <td>
-                        <span><?php echo $attribute['text']; ?></span>
-                      </td>
-                    </tr>
-                      <?php } ?>
-                <?php } */ ?>
-
-              <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
-                  <tr>
-                    <td>
-                          <?php if($attribute['name']=='color'){ ?>
-                              <span>Цвет</span>
-                          <?php }else{ ?>
-                                <span><?php echo $attribute['name']; ?></span>
-                          <?php } ?>
-                      </td>
-                    <td>
-                      <span><?php echo $attribute['text']; ?></span>
-                    </td>
-                  </tr>
-              <?php } ?>
+                <?php } ?>
             <?php } ?>
             </table>
+            </div>
 
+            <?php if($i>$attr_limit){ ?>
               <div class="product-more-detailed">
                 <span>Подробнее</span>
               </div>
             <?php } ?>
-           
-            <?php /* if($i>$attr_limit){ ?>
-              <div class="product-more-detailed">
-                <a onclick="$('.hide_more_attr_xs').slideToggle();  
-                if($(this).html()!='Свернуть'){ 
-                  $(this).html('Свернуть'); 
-                } else { 
-                  $(this).html('Подробнее') 
-                }"><?php echo $btn_more_detailed; ?></a>
-              </div>
-              <?php } */ ?>
-           
+
+            <?php } ?>
             
         </div>
 

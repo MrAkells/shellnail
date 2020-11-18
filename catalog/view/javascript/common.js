@@ -64,7 +64,7 @@ $(document).ready(function() {
 	});
 	
 	$('.product-more-detailed>span').click(function(){
-		$('table.product-attribute').addClass('show');
+		$('.product-attribute-box').addClass('show');
 		$('.product-more-detailed').addClass('hide');
   });
     
