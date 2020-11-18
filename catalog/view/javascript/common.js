@@ -61,6 +61,11 @@ $(document).ready(function() {
 	$('#tab-description>.view-more-description').click(function(){
 		$('#tab-description>.box-description').addClass('show');
 		$('#tab-description>.view-more-description').addClass('hide');
+	});
+	
+	$('.product-more-detailed>span').click(function(){
+		$('table.product-attribute').addClass('show');
+		$('.product-more-detailed').addClass('hide');
   });
     
 	// Highlight any found errors

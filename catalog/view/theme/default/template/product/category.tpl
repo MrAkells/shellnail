@@ -253,7 +253,7 @@
                         <button type="button" id="grid-view" class="btn btn-default" data-toggle="tooltip" title="<?php echo $button_grid; ?>"><i class="fa fa-th"></i></button>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-5 col-sm-5 col-xs-12 sort-different">
+                <div class="col-lg-6 col-md-5 col-sm-5 col-xs-4 sort-different">
                     <div class="form-group input-group input-group-sm">
                         <label class="input-group-addon" for="input-sort"><?php echo $text_sort; ?></label>
                         <ul class="new-sorting list-inline visible-lg">
@@ -302,7 +302,7 @@
                         <span class="form-control customSelect transparentSelect  hidden-lg" style="display: inline-block; width: 120px;"><span class="customSelectInner" style="width: 120px; display: inline-block;">9</span></span>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6 sort-price">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5 sort-price">
                     <div class="form-group input-group input-group-sm">
                         <label class="input-group-addon" for="isort-price">Цена:</label>
                         <ul class="new-sorting list-inline visible-lg">
@@ -342,7 +342,7 @@
                         <span class="form-control customSelect transparentSelect  hidden-lg" style="display: inline-block; width: 100px;"><span class="customSelectInner" style="width: 100px; display: inline-block;">9</span></span>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6 sort-number ">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 sort-number ">
                     <div class="form-group input-group input-group-sm">
                         <label class="input-group-addon" for="input-limit"><?php echo $text_limit; ?></label>
                         <select id="input-limit" class="form-control" onchange="location = this.value;" style="width: 60px; position: absolute; opacity: 0; height: 34px; font-size: 12px; z-index: 5;">
