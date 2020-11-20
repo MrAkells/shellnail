@@ -342,14 +342,14 @@ class ControllerProductCategory extends Controller {
 				} else {
 					$rating = false;
 				}
-				$result['name'] = (mb_strlen($result['name']) > 80 ? utf8_substr($result['name'], 0, 80) . '..' : $result['name']);
+				$result['name'] = (mb_strlen($result['name']) > 60 ? utf8_substr($result['name'], 0, 60) . '...' : $result['name']);
 				                                
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
-                    'sku'       => $result['sku'],
-					'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '..',
+          'sku'       => $result['sku'],
+					'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '...',
 					'price'       => $price,
                     'intprice'       => $result['price'],
 					'special'     => $special,

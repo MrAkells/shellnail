@@ -1750,7 +1750,7 @@ h2.title-feature{
 .name-product{
 	margin-bottom: 0px;
 	height: 58px;
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 .artikul{
 	color: #adadad;
@@ -6037,9 +6037,13 @@ aside#column-left{
 	border-color: #5f2e73;
 }
 
-.caption .name-product {
+/* .caption .name-product {
 	height: 76px;
 	overflow: hidden;
+} */
+
+.product_art_stat {
+	height: 40px;
 }
 
 
