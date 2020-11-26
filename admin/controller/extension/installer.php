@@ -226,7 +226,7 @@ class ControllerExtensionInstaller extends Controller {
 		// Sanitize the filename
 		$file = DIR_UPLOAD . $this->request->post['path'] . '/upload.zip';
 
-		if (!is_file($file) || substr(str_replace('\\', '/', realpath($file)), 0, strlen(DIR_UPLOAD)) != DIR_UPLOAD) {
+		if (!is_file($file) || strtolower(substr(str_replace('\\', '/', realpath($file)), 0, strlen(DIR_UPLOAD))) != DIR_UPLOAD) {
 			$json['error'] = $this->language->get('error_file');
 		}
 
@@ -374,7 +374,7 @@ class ControllerExtensionInstaller extends Controller {
 
 		$file = DIR_UPLOAD . $this->request->post['path'] . '/install.sql';
 
-		if (!is_file($file) || substr(str_replace('\\', '/', realpath($file)), 0, strlen(DIR_UPLOAD)) != DIR_UPLOAD) {
+		if (!is_file($file) || strtolower(substr(str_replace('\\', '/', realpath($file)), 0, strlen(DIR_UPLOAD))) != DIR_UPLOAD) {
 			$json['error'] = $this->language->get('error_file');
 		}
 
@@ -419,7 +419,7 @@ class ControllerExtensionInstaller extends Controller {
 
 		$file = DIR_UPLOAD . $this->request->post['path'] . '/install.xml';
 
-		if (!is_file($file) || substr(str_replace('\\', '/', realpath($file)), 0, strlen(DIR_UPLOAD)) != DIR_UPLOAD) {
+		if (!is_file($file) || strtolower(substr(str_replace('\\', '/', realpath($file)), 0, strlen(DIR_UPLOAD))) != DIR_UPLOAD) {
 			$json['error'] = $this->language->get('error_file');
 		}
 
@@ -515,7 +515,7 @@ class ControllerExtensionInstaller extends Controller {
 
 		$file = DIR_UPLOAD . $this->request->post['path'] . '/install.php';
 
-		if (!is_file($file) || substr(str_replace('\\', '/', realpath($file)), 0, strlen(DIR_UPLOAD)) != DIR_UPLOAD) {
+		if (!is_file($file) || strtolower(substr(str_replace('\\', '/', realpath($file)), 0, strlen(DIR_UPLOAD))) != DIR_UPLOAD) {
 			$json['error'] = $this->language->get('error_file');
 		}
 
@@ -542,7 +542,7 @@ class ControllerExtensionInstaller extends Controller {
 
 		$directory = DIR_UPLOAD . $this->request->post['path'];
 		
-		if (!is_dir($directory) || substr(str_replace('\\', '/', realpath($directory)), 0, strlen(DIR_UPLOAD)) != DIR_UPLOAD) {
+		if (!is_dir($directory) || strtolower(substr(str_replace('\\', '/', realpath($directory)), 0, strlen(DIR_UPLOAD))) != DIR_UPLOAD) {
 			$json['error'] = $this->language->get('error_directory');
 		}
 

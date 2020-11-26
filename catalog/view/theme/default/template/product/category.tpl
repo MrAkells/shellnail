@@ -281,10 +281,12 @@
                             <?php } else{ ?>
                             <li><a onclick="location='<?php echo $sorts['p.viewed-DESC']['href']; ?>';">Популярные</a></li>
                             <?php } ?>
-
-
-
                         </ul>
+                        <?php 
+                        unset($sorts['p.viewed-ASC']);
+                        unset($sorts['p.sort_order-DESC']);
+                        unset($sorts['p.date_added-ASC']);
+                        ?>
                         <select id="input-sort" class="form-control hidden-lg" onchange="location = this.value;" style="width: 120px; position: absolute; opacity: 0; height: 34px; font-size: 12px; z-index: 5;">
               <?php foreach ($sorts as $key=>$sortss) { ?>
               
