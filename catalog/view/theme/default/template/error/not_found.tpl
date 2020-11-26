@@ -1,13 +1,21 @@
 <?php echo $header; ?>
 <div class="container">
- <ul class="breadcrumbs list-inline">
-    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-      <li><a class="crumb" href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
-    <?php } ?>
-  </ul>
+
   <div class="row">
-      <div class="col-sm-3 hidden-xs"></div>
-    <div id="content" class="col-sm-6"><?php echo $content_top; ?>
+    <?php echo $column_left; ?>
+    <!-- <div class="col-sm-3 hidden-xs"></div> -->
+    <div id="content" class="col-sm-6">
+
+      <ul class="breadcrumbs list-inline">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+          <li><a class="crumb" href="<?php echo $breadcrumb['href']; ?>"><span ><?php echo $breadcrumb['text']; ?></span></a>
+          </li>
+          <?php } ?>
+        </ul>
+
+        <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>
+
+      <?php echo $content_top; ?>
       <h1><?php echo $heading_title; ?></h1>
       <p style="font-size: 1.5em;"><?php echo $text_error; ?></p>
       

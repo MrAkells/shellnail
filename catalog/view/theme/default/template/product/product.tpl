@@ -281,9 +281,7 @@
             </div>
 
             <?php if($i>$attr_limit){ ?>
-              <div class="product-more-detailed">
-                <span>Подробнее</span>
-              </div>
+              <div class="product-more-detailed">Eщё</div>
             <?php } ?>
 
             <?php } ?>
