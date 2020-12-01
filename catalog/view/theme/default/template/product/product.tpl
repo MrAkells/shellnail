@@ -550,6 +550,11 @@
   <div class="item product-layout">
      
       <ul class="list-inline bts-wish-compare">
+        <?php if($product['video_link']){ ?>
+          <li class='magni_youtube'>
+              <img onclick="create_frame_popup($(this))" data-video_link="<?php echo $product['video_link']; ?>" style='width: 24px; cursor:pointer;' src="image/video-tovara-youtube.png" alt="youtube">
+          </li>
+        <?php } ?>
         <li>
           <button class="btn-transparent" data-product_id="<?php echo $product['product_id']; ?>" onclick="compare.add($(this))"><img src="catalog/view/theme/default/image/icon-small-compare.png" alt="Compare"></button>
         </li>
@@ -867,13 +872,22 @@ $(document).ready(function() {
     else{
       $(".last-five-review").removeClass('hidden');
       }
-  
 }
   $(".nav-tabs li").click(function(){
       setTimeout(
     inspection, 50);
     });
-  
-  
+</script>
+
+<script type="text/javascript">
+  function create_frame_popup(elem) {
+      var link = elem.data('video_link');
+      $.magnificPopup.open({
+          items: {
+              src: link
+          },
+          type: 'iframe'
+      });
+  }
 </script>
 <?php echo $footer; ?>
