@@ -33,7 +33,7 @@ $_['text_limit']        = 'Показывать:';
 $_['text_po_poryadku_desc']        = 'С конца списка';
 $_['text_po_poryadku_asc']        = 'По порядку ';
 
-$_['text_most_viewed_desc']        = 'Популярные (по убыванию)';
+$_['text_most_viewed_desc']        = 'Популярные';
 $_['text_most_viewed_asc']        = 'Популярные (по возрастанию)';
 
 //$_['text_price_desc']        = 'По цене ';
