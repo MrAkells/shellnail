@@ -133,7 +133,7 @@ class ModelExtensionModuleDelovod extends Model
 
 		$query_sms = $this->db->query("SELECT sms.product_id, sms.name as user_name, sms.phone as user_phone, pd.name as product_name, isbn FROM " . DB_PREFIX . "product p JOIN sms ON (p.product_id=sms.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON(p.product_id=pd.product_id) WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
 		$waiters = [];
-		foreach ($query_sms as $row) {
+		foreach ($query_sms->rows as $row) {
 			if (isset($waiters[$row['isbn']])) {
 				$waiters[$row['isbn']][] = $row;
 			} else {
