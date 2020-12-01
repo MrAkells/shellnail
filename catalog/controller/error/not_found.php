@@ -27,10 +27,10 @@ class ControllerErrorNotFound extends Controller {
 				$url = '&' . urldecode(http_build_query($url_data, '', '&'));
 			}
 
-//			$data['breadcrumbs'][] = array(
-//				'text' => $this->language->get('heading_title'),
-//				'href' => $this->url->link($route, $url, isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1')))
-//			);
+			$data['breadcrumbs'][] = array(
+				'text' => $this->language->get('heading_title_error'),
+				'href' => $this->url->link($route, $url, isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1')))
+			);
 		}
 
 		$data['heading_title'] = $this->language->get('heading_title');
@@ -47,6 +47,8 @@ class ControllerErrorNotFound extends Controller {
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
+
+		$data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
 
 		$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 

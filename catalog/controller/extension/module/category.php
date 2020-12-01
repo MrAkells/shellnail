@@ -11,7 +11,7 @@ class ControllerExtensionModuleCategory extends Controller {
 		$data['categories'] = array();
 
 		$this->load->model("extension/module/menu");
-                $data['categories']=$this->model_extension_module_menu->createCategoryMenu();
+    $data['categories']=$this->model_extension_module_menu->createCategoryMenu();
                 
 		return $this->load->view('extension/module/category', $data);
 	}

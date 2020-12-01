@@ -63,7 +63,7 @@ $(document).ready(function() {
 		$('#tab-description>.view-more-description').addClass('hide');
 	});
 	
-	$('.product-more-detailed>span').click(function(){
+	$('.product-more-detailed').click(function(){
 		$('.product-attribute-box').addClass('show');
 		$('.product-more-detailed').addClass('hide');
   });
