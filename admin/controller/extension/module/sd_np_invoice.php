@@ -36,6 +36,10 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 
 		$data['entry_status'] = $this->language->get('entry_status');
 		$data['entry_np_key'] = $this->language->get('entry_np_key');
+		$data['entry_np_sender'] = $this->language->get('entry_np_sender');
+		$data['entry_np_сontact_sender'] = $this->language->get('entry_np_сontact_sender');
+		$data['entry_np_ref_city'] = $this->language->get('entry_np_ref_city');
+		$data['entry_np_ref_sender_address'] = $this->language->get('entry_np_ref_sender_address');
 
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
@@ -80,12 +84,30 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 			$data['sd_np_key'] = $this->config->get('sd_np_key');
 		}
 
+		if (isset($this->request->post['sd_np_сontact_phone'])) {
+			$data['sd_np_сontact_phone'] = $this->request->post['sd_np_сontact_phone'];
+		} else {
+			$data['sd_np_сontact_phone'] = $this->config->get('sd_np_сontact_phone');
+		}
+
+		if (isset($this->request->post['sd_np_ref_city'])) {
+			$data['sd_np_ref_city'] = $this->request->post['sd_np_ref_city'];
+		} else {
+			$data['sd_np_ref_city'] = $this->config->get('sd_np_ref_city');
+		}
+
+		if (isset($this->request->post['sd_np_ref_sender_address'])) {
+			$data['sd_np_ref_sender_address'] = $this->request->post['sd_np_ref_sender_address'];
+		} else {
+			$data['sd_np_ref_sender_address'] = $this->config->get('sd_np_ref_sender_address');
+		}
+
 		if (isset($this->request->post['sd_np_status'])) {
 			$data['sd_np_status'] = $this->request->post['sd_np_status'];
 		} else {
 			$data['sd_np_status'] = $this->config->get('sd_np_status');
 		}
-
+		$data['token'] = $this->session->data['token'];
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
@@ -334,38 +356,88 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 			$this->model_extension_module_sd_np_invoice->setOrderPackage($this->request->get);
 		}
 	}
-	public function add_invoice()
+
+	public function add_invoices()
+	{
+		$type = 0;
+		$json = [];
+		if ($this->config->get('sd_np_status')) {
+
+			$this->load->model('sale/order');
+			$this->load->model('catalog/product');
+			$this->load->model('extension/module/sd_np_invoice');
+
+			if (isset($this->request->post['selected'])) {
+				$orders = $this->request->post['selected'];
+			} elseif (isset($this->request->get['order_id'])) {
+				$type = 1;
+				$orders[] = $this->request->get['order_id'];
+			}
+			$json['total'] = count($orders);
+			$errors = '';
+			foreach ($orders as $order_id) {
+				$json = $this->add_invoice($order_id);
+				if($json['err'] && isset($json['errors'])){
+					$errors .= $order_id . ': ' . $json['errors'] . '<br>';
+				}
+
+			}
+		}
+		if ($type) {
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+		} else {
+
+			if($errors) $this->session->data['warning'] = '<br>' . $errors;
+
+			$this->response->redirect($this->url->link('sale/order', 'token=' . $this->session->data['token'], true));
+		}
+	}
+
+	private function add_invoice($order_id)
 	{
 		$json = array();
 		$json['err'] = true;
-		$re = '/№(\d+)/';
+		$is_warning = false;
 
-		if ($this->config->get('sd_np_status') && $this->request->get['order_id'] > 0) {
-			$order_id = $this->request->get['order_id'];
-			$this->load->model('sale/order');
-			$this->load->model('catalog/product');
+		if ($order_id > 0) {
+			$ttn = $this->model_extension_module_sd_np_invoice->getInvoiceOrder($order_id);
+			if ($ttn && $ttn['np_number']) {
+				$json['errors'] = 'ТТН уже существует, №' . $ttn['np_number'];
+				return $json;
+			}
+
 			$order_info = $this->model_sale_order->getOrder($order_id);
 
-			if ($order_info && $order_info['shipping_code'] == 'new_mail.new_mail') {
-				$this->load->model('catalog/product');
-				$weight = 0;
+			if ($order_info && ($order_info['shipping_code'] == 'new_mail.new_mail' || $order_info['shipping_code'] == 'couriernp.couriernp')) {
 
-				$this->load->model('extension/module/sd_np_invoice');
-
-				$volumeGeneral = 1;
-				$packaging_id = 0;
+				$volumeGeneral = 0;
 				$packaging_id = $this->model_extension_module_sd_np_invoice->getPackageOrder($order_id);
-				if($packaging_id){
+				if ($packaging_id) {
 					$packaging = $this->model_extension_module_sd_np_invoice->getPackage($packaging_id);
-					if($packaging) {
+					if ($packaging) {
 						$volumeGeneral = $packaging['volume'];
 					}
+				} else {
+					$json['errors'] = 'Необходимо выбрать упаковку!';
+					return $json;
 				}
+
 				$shippingCost = $this->model_extension_module_sd_np_invoice->getShippingCostOrder($order_id);
 				
-				preg_match_all($re, $order_info['shipping_address_2'], $matches, PREG_SET_ORDER, 0);
-				if($matches){
-					$warehouse = $matches[0][1];
+				$payer_type = "Sender";
+				if($order_info['payment_code'] == 'privat' && $order_info['shipping_code'] == 'new_mail.new_mail' && $shippingCost > 0) {
+					$payer_type = "Recipient";
+				}
+				$ref_city = $this->model_extension_module_sd_np_invoice->getRefCity($order_info['shipping_city']);
+				if($ref_city == '') {
+					$ref_city = $this->config->get('sd_np_ref_city');
+					$is_warning = true;
+				}
+				if($order_info['telephone']){
+					$customer_phone = preg_replace('/\D/', '', $order_info['telephone']);
+				} else if ($order_info['shipping_custom_field']) {
+					if(isset($order_info['shipping_custom_field'][1])) $customer_phone = preg_replace('/\D/', '', $order_info['shipping_custom_field'][1]);
 				}
 
 				$data = [
@@ -374,46 +446,164 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 					"calledMethod" => "save",
 					"methodProperties" => [
 						"NewAddress" => "1",
-						"PayerType" => ($shippingCost > 0 ? "Recipient" :"Sender"),
-						"PaymentMethod" => ($shippingCost > 0 ? "Cash" :"NonCash"),
+						"PayerType" => $payer_type,
+						"PaymentMethod" => ($payer_type == "Recipient" ? "Cash" : "NonCash"),
 						"CargoType" => "Parcel",
 						"VolumeGeneral" => $volumeGeneral,
 						"Weight" => $this->model_extension_module_sd_np_invoice->getWeightOrder($order_id),
-						"ServiceType" => "WarehouseWarehouse",
+						"ServiceType" => ($order_info['shipping_code'] == 'new_mail.new_mail' ? 'WarehouseWarehouse' : 'WarehouseDoors'),
 						"SeatsAmount" => 1,
 						"Description" => "Косметика, косметологічне обладнання",
-						"Cost" => ($order_info['payment_code'] == 'privat'? 200 : $order_info['total']),
-						"CitySender" => "db5c8927-391c-11dd-90d9-001a92567626",
-						"Sender" => "02ce79aa-7659-11e9-9937-005056881c6b",
-						"SenderAddress" => "2bb8cec2-e1c2-11e3-8c4a-0050568002cf",
-						"ContactSender" => "07e5ea95-7659-11e9-9937-005056881c6b",
-						"SendersPhone" => "380668077050",
-						"RecipientCityName" => $order_info['shipping_city'],
+						"Cost" => ($order_info['payment_code'] == 'privat' ? 200 : ceil($order_info['total'])),
+						"CitySender" => $this->config->get('sd_np_ref_city'),
+						"Sender" => $this->config->get('sd_np_sender'),
+						"SenderAddress" => $this->config->get('sd_np_ref_sender_address'),
+						"ContactSender" => $this->config->get('sd_np_сontact_sender'),
+						"SendersPhone" => $this->config->get('sd_np_сontact_phone'),
+						"CityRecipient" => $ref_city,
 						"RecipientArea" => "",
 						"RecipientAreaRegions" => "",
-						"RecipientAddressName" => $warehouse,
-						"RecipientHouse" => "",
-						"RecipientFlat" => "",
-						"RecipientName" => ucfirst($order_info['firstname']) . ' ' .ucfirst( $order_info['lastname']),
+						"RecipientName" => ucfirst($order_info['payment_firstname']) . ($order_info['shipping_code'] == 'couriernp.couriernp' ? ' ОТЧЕСТВО ' : ' ') . ucfirst($order_info['payment_lastname']),
 						"RecipientType" => "PrivatePerson",
-						"RecipientsPhone" => preg_replace('/\D/', '', $order_info['telephone']),
-						"DateTime" => date('d.m.Y', strtotime("+1 day"))
+						"RecipientsPhone" => $customer_phone,
+						"DateTime" => date('d.m.Y')
 					]
 				];
 
-				$response =  $this->sendRequest($data);
-				if ($response) {
-					$res = json_decode($response);
-					if($res->success){
-						$this->model_extension_module_sd_np_invoice->setInvoiceOrder($order_id,$res->data[0]->IntDocNumber,$packaging_id);
-						$json['invoice'] = $res->data[0]->IntDocNumber;
-						$json['err'] = false;
-						
+				$adress = strip_tags($order_info['shipping_address_2']);
+				if ($order_info['shipping_code'] == 'new_mail.new_mail') {
+					$adress = mb_substr($adress, 23);
+
+					$data['methodProperties']['RecipientAddress'] = $this->model_extension_module_sd_np_invoice->getRefOffice($adress);
+					if(!$data['methodProperties']['RecipientAddress']){ // if not found Office
+						$data['methodProperties']['RecipientAddress'] = $this->config->get('sd_np_ref_sender_address');
+						$is_warning = true;
 					}
-					$json['response'] = $response;
+				} else {
+					$ar_adress = explode(",", $adress);
+					if(count($ar_adress) > 1){
+						$address_name = (isset($ar_adress[1]) ? trim($ar_adress[1]) : $adress);
+						preg_match_all('/\s(\d+)\,*\s*?(\d+)*/', $adress, $matches, PREG_SET_ORDER, 0);
+
+						if ($matches) {
+							$data['methodProperties']["RecipientAddressName"] = $address_name;
+							$data['methodProperties']["RecipientHouse"] = (isset($matches[0][1]) ? $matches[0][1] : '');
+							$data['methodProperties']["RecipientFlat"] = (isset($matches[1][1]) ? $matches[1][1] : '');
+						} else {
+							$is_warning = true;
+							$data['methodProperties']["RecipientAddressName"] = 'вул. Олекси Тихого';
+							$data['methodProperties']["RecipientHouse"] = '70';
+						}
+					} else {
+						$is_warning = true;
+						$data['methodProperties']["RecipientAddressName"] = 'вул. Олекси Тихого';
+						$data['methodProperties']["RecipientHouse"] = '70';						
+					}
+
+				}
+
+				$res =  $this->sendRequest($data);
+				if ($res) {
+					if ($res->success) {
+						$this->model_extension_module_sd_np_invoice->setInvoiceOrder($order_id, $res->data[0]->IntDocNumber, $packaging_id, $is_warning);
+						$json['invoice'] = $res->data[0]->IntDocNumber;
+						$json['is_warning'] = $is_warning;
+
+						$json['err'] = false;
+					} else {
+						$json['errors'] = '';
+						foreach ($res->errors as $error) {
+							$json['errors'] .= $error . ' ';
+						}
+						//$json['data'] = $data;
+					}
+				}
+
+			}
+		}
+
+		return $json;
+	}
+
+	/**
+	 * Загрузить список Контрагентов отправителей/получателей/третье лицо
+	 * @return json
+	 */
+	public function get_senders()
+	{
+		$json = array();
+		$json['err'] = true;
+		$data = [
+			"apiKey" => $this->config->get('sd_np_key'),
+			"modelName" => "Counterparty",
+			"calledMethod" => "getCounterparties",
+			"methodProperties" => [
+				"CounterpartyProperty" => "Sender",
+				"Page" => "1"
+			]
+		];
+		$res =  $this->sendRequest($data);
+		if ($res) {
+			if ($res->success) {
+				$json['senders'] = '';
+				foreach ($res->data as $sender) {
+					$json['senders'] .= '<option value="' . $sender->Ref . '" ' . ($this->config->get('sd_np_sender') == $sender->Ref ? 'selected="selected"' : '') . '>' . $sender->Description . '</option>';
+				}
+				$json['err'] = false;
+			} else {
+				$json['errors'] = '';
+				foreach ($res->errors as $error) {
+					$json['errors'] .= $error . ' ';
 				}
 			}
 		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	/**
+	 * Загрузить список контактных лиц Контрагента
+	 * @return json
+	 */
+	public function get_contacts()
+	{
+		$json = array();
+		$json['err'] = true;
+		if($this->config->get('sd_np_sender')){
+			$data = [
+				"apiKey" => $this->config->get('sd_np_key'),
+				"modelName" => "Counterparty",
+				"calledMethod" => "getCounterpartyContactPersons",
+				"methodProperties" => [
+					"Ref"=> $this->config->get('sd_np_sender'),
+					"Page" => "1"
+				]
+			];
+			$res =  $this->sendRequest($data);
+			if ($res) {
+				if ($res->success) {
+					$json['contacts'] = '';
+					$json['contact_phone'] = '';
+					foreach ($res->data as $contact) {
+						if($this->config->get('sd_np_сontact_sender') == $contact->Ref){
+							$json['contacts'] .= '<option value="' . $contact->Ref . '" selected="selected" data-phone="' . $contact->Phones . '">' . $contact->Description . '</option>';
+							$json['contact_phone'] = $contact->Phones;
+						} else {
+							if($json['contact_phone'] == '') $json['contact_phone'] = $contact->Phones;
+							$json['contacts'] .= '<option value="' . $contact->Ref . '" data-phone="' . $contact->Phones . '">' . $contact->Description . '</option>';
+						}
+						
+					}
+					$json['err'] = false;
+				} else {
+					$json['errors'] = '';
+					foreach ($res->errors as $error) {
+						$json['errors'] .= $error . ' ';
+					}
+				}
+			}
+		}
+
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
@@ -440,7 +630,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 
 			curl_close($ch);
 
-			return $response;
+			return json_decode($response);
 		} catch (\Exception $e) {
 			return false;
 		}

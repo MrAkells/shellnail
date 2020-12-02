@@ -12,6 +12,10 @@ $_['text_list']        = 'Список Упаковок';
 $_['text_packaging']   = 'Упаковка';
 // Entry
 $_['entry_np_key']     = 'API ключ НП';
+$_['entry_np_sender']  = 'Контрагент';
+$_['entry_np_сontact_sender']  = 'Контакт';
+$_['entry_np_ref_city']  = 'CitySender';
+$_['entry_np_ref_sender_address']  = 'SenderAddress';
 $_['entry_status']     = 'Статус';
 $_['entry_title']      = 'Название упаковки';
 $_['entry_volume']     = 'Объем';
