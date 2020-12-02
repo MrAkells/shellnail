@@ -1750,7 +1750,11 @@ h2.title-feature{
 .name-product{
 	margin-bottom: 0px;
 	height: 58px;
-	/* overflow: hidden; */
+	max-height: 58px;
+	-webkit-line-clamp: 3; /* Число отображаемых строк */
+  display: -webkit-box; /* Включаем флексбоксы */
+  -webkit-box-orient: vertical; /* Вертикальная ориентация */
+  overflow: hidden;
 }
 .artikul{
 	color: #adadad;

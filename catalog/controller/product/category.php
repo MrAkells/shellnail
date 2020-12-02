@@ -342,7 +342,7 @@ class ControllerProductCategory extends Controller {
 				} else {
 					$rating = false;
 				}
-				$result['name'] = (mb_strlen($result['name']) > 60 ? utf8_substr($result['name'], 0, 60) . '...' : $result['name']);
+				//$result['name'] = (mb_strlen($result['name']) > 60 ? utf8_substr($result['name'], 0, 60) . '...' : $result['name']);
 				                                
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
