@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 <div class="container">
   <div class="row">
-  <?php //echo $column_left; ?>
+  <?php echo $column_left; ?>
   
     <div id="content" class="col-xs-12 col-md-9">
       <ul class="breadcrumbs list-inline" itemscope itemtype="http://schema.org/BreadcrumbList">
