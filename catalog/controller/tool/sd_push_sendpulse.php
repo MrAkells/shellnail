@@ -27,7 +27,7 @@ class ControllerToolSdPushSendpulse extends Controller {
 								'id' 		=> $results['product_id'],
 								'name'  	=> $results['name'],
 								'url'  		=> $this->url->link('product/product', 'product_id=' . $product['product_id']),
-								'price'   	=> round($results['price'],2),
+								'price'   	=> round(($results['special'] ? $results['special'] : $results['price']),2),
 								'img_url' 	=> $image,
 							];
 						}
