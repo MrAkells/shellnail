@@ -91,6 +91,7 @@ class ControllerExtensionModuleVisitedproduct extends Controller {
                                         'reviews'     =>$reviews,
 					'tax'         => $tax,
 					'rating'      => $rating,
+					'video_link'  => $product_info['video'],
 					'href'        => $this->url->link('product/product', 'product_id=' . $product_info['product_id'])
 				);
 			}

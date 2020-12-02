@@ -5,10 +5,13 @@ class ControllerExtensionModuleFeatured extends Controller {
 		$this->load->language('extension/module/featured');
 
 		//$data['heading_title'] = $this->language->get('heading_title');
-                $data['heading_title'] =  $setting['name'];
+        $data['heading_title'] =  $setting['name'];
               
-                $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.carousel.css');
-		$this->document->addScript('catalog/view/javascript/jquery/owl-carousel/owl.carousel.min.js');
+        $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.carousel.css');
+        $this->document->addScript('catalog/view/javascript/jquery/owl-carousel/owl.carousel.min.js');
+        
+        $this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
+		$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
                 
 		$data['text_tax'] = $this->language->get('text_tax');
     $data['button_notify_availability'] = $this->language->get('button_notify_availability');
@@ -100,6 +103,7 @@ class ControllerExtensionModuleFeatured extends Controller {
                         'special' => $special,
                         'tax' => $tax,
                         'rating' => $rating,
+                        'video_link'  => $product_info['video'],
                         'href' => $this->url->link('product/product', 'product_id=' . $product_info['product_id'])
                     );
                 }

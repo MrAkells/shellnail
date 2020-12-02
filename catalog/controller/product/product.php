@@ -541,6 +541,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $rating,
+					'video_link'  => $result['video'],
 					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id'])
 				);
 			}
