@@ -515,7 +515,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						foreach ($res->errors as $error) {
 							$json['errors'] .= $error . ' ';
 						}
-						//$json['data'] = $data;
+						$json['data'] = $data;
 					}
 				}
 

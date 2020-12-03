@@ -97,13 +97,13 @@ class ModelExtensionModuleSdNpInvoice extends Model
 
     public function getRefCity($city)
     {
-        $query = $this->db->query("SELECT `ref` FROM `oc_newmail_city` WHERE `description_ru` = '" . $city ."'" );
+        $query = $this->db->query("SELECT `ref` FROM `oc_newmail_city` WHERE `description` = '" . $city ."' OR `description_ru` = '" . $city ."'" );
         return ($query->num_rows ? $query->row['ref']: '');
     }
 
     public function getRefOffice($office)
     {
-        $query = $this->db->query("SELECT `ref` FROM `oc_newmail_office` WHERE `description_ru` = '" . $office ."'" );
+        $query = $this->db->query("SELECT `ref` FROM `oc_newmail_office` WHERE `description` = '" . $office ."' OR `description_ru` = '" . $office ."'" );
         return ($query->num_rows ? $query->row['ref']: '');
     }
 }
