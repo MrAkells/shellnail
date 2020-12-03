@@ -454,7 +454,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"ServiceType" => ($order_info['shipping_code'] == 'new_mail.new_mail' ? 'WarehouseWarehouse' : 'WarehouseDoors'),
 						"SeatsAmount" => 1,
 						"Description" => "Косметика, косметологічне обладнання",
-						"Cost" => ($order_info['payment_code'] == 'privat' ? 200 : ceil($order_info['total'])),
+						"Cost" => ($order_info['payment_code'] == 'privat' ? 200 : round($order_info['total'])),
 						"CitySender" => $this->config->get('sd_np_ref_city'),
 						"Sender" => $this->config->get('sd_np_sender'),
 						"SenderAddress" => $this->config->get('sd_np_ref_sender_address'),
