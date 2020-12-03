@@ -64,17 +64,18 @@ class ControllerExtensionModuleVisitedproduct extends Controller {
 				} else {
 					$rating = false;
 				}
-				if(utf8_strlen($product_info['name']) < 80){
-					$sub_name = $product_info['name'];
-				}else{
-					$sub_name = utf8_substr($product_info['name'], 0, 80) . '..';
-				}
+				// if(utf8_strlen($product_info['name']) < 80){
+				// 	$sub_name = $product_info['name'];
+				// }else{
+				// 	$sub_name = utf8_substr($product_info['name'], 0, 80) . '..';
+				// }
+				$sub_name = $product_info['name'];
                                 
-                                $this->load->model('catalog/review');
-                                $reviews = $this->model_catalog_review->getTotalReviewsByProductId($product_info_id);
-                                if(!$reviews){
-                                    $reviews='0';
-                                }
+				$this->load->model('catalog/review');
+				$reviews = $this->model_catalog_review->getTotalReviewsByProductId($product_info_id);
+				if(!$reviews){
+						$reviews='0';
+				}
                                 
                                 
 				$data['products'][] = array(
