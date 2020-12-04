@@ -359,6 +359,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 
 	public function add_invoices()
 	{
+		unset($this->session->data['warning']);
 		$type = 0;
 		$json = [];
 		if ($this->config->get('sd_np_status')) {
