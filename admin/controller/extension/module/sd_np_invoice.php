@@ -469,6 +469,8 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"DateTime" => date('d.m.Y')
 					]
 				];
+				//Формирование запроса на создание «ЭН» с услугой «Контроль оплаты»
+				if($order_info['payment_code'] == 'cod') $data['methodProperties']['AfterpaymentOnGoodsCost'] = round($order_info['total']);
 
 				$adress = strip_tags($order_info['shipping_address_2']);
 				if ($order_info['shipping_code'] == 'new_mail.new_mail') {
