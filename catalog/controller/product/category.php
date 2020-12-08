@@ -225,7 +225,8 @@ class ControllerProductCategory extends Controller {
 				$data['categories'][] = array(
 					'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
 					'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url),
-                                        'categ_image' => $categ_image
+										'categ_image' => $categ_image,
+										'sort_order' => $result['sort_order']
 				);
 			}
 				if(isset($extra_links[$category_id])){
@@ -238,11 +239,16 @@ class ControllerProductCategory extends Controller {
                                $data['categories'][] = array(
                                     'name'        => $link['title'],
                                     'href'        => $link['link'],
-                                    'categ_image'        => $image_extra
+									'categ_image'        => $image_extra,
+									'sort_order' => $link['sort_order']
                                 );
                             
                             }
-                          
+							$cat_sort=[];
+							foreach($data['categories']  as $key=>$value){
+								$cat_sort[$key]=$value['sort_order'];
+							}
+							array_multisort($cat_sort, SORT_ASC, $data['categories']);    
                             
                         }
                         
