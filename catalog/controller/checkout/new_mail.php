@@ -106,8 +106,7 @@ class ControllerCheckoutNewMail extends Controller {
     }
     
     public function setOffice(){
-        $office=$this->request->get['office'];
-        
+        $office= htmlspecialchars_decode($this->request->get['office']);
         if($this->request->server['REQUEST_METHOD'] == 'POST'){
             $this->session->data['newmail_office']=$office;
             $this->response->setOutput(json_encode(['success'=>true]));

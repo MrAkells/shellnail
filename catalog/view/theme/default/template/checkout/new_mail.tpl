@@ -32,22 +32,20 @@
     $(document).ready(function(){
 
         $('#new_mail_office').change(function(){
-            var office=$(this).val();
-            
-             $.ajax({
-            url: 'index.php?route=checkout/new_mail/setoffice&office='+encodeURIComponent(office),
-            type: 'POST',
-            dataType: 'json',
-            success: function(json) {
-		if (json.success) {
-                   
-                   //$('input[name="shipping_method"]').change(); 
-		}
-            }
-           
-            // $('input[id="payment_address_address_1"]').val(office); 
-            // $('input[id="payment_address_address_1"]').change();
-        });
+            //var office=$(this).val();
+            var office = $('#new_mail_office option:selected' ).text();
+            $.ajax({
+                url: 'index.php?route=checkout/new_mail/setoffice&office='+encodeURIComponent(office),
+                type: 'POST',
+                dataType: 'json',
+                success: function(json) {
+                    if (json.success) {
+                            //$('input[name="shipping_method"]').change(); 
+                    }
+                }
+                    // $('input[id="payment_address_address_1"]').val(office); 
+                    // $('input[id="payment_address_address_1"]').change();
+            });
             
     });
        
