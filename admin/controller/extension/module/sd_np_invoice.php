@@ -434,10 +434,17 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 					$ref_city = $this->config->get('sd_np_ref_city');
 					$is_warning = true;
 				}
-				if($order_info['telephone']){
-					$customer_phone = preg_replace('/\D/', '', $order_info['telephone']);
-				} else if ($order_info['shipping_custom_field']) {
+				// if($order_info['telephone']){
+				// 	$customer_phone = preg_replace('/\D/', '', $order_info['telephone']);
+				// } else if ($order_info['shipping_custom_field']) {
+				// 	if(isset($order_info['shipping_custom_field'][1])) $customer_phone = preg_replace('/\D/', '', $order_info['shipping_custom_field'][1]);
+				// }
+				$customer_phone = ''; 
+				if ($order_info['shipping_custom_field']) {
 					if(isset($order_info['shipping_custom_field'][1])) $customer_phone = preg_replace('/\D/', '', $order_info['shipping_custom_field'][1]);
+				
+				} else if($order_info['telephone']){
+					$customer_phone = preg_replace('/\D/', '', $order_info['telephone']);
 				}
 
 				$data = [
