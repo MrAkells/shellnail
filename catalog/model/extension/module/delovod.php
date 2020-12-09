@@ -60,6 +60,19 @@ class ModelExtensionModuleDelovod extends Model
 
 		return $totals;
 	}
+
+	/**
+	 * get order sub_total by products total
+	 * @method getOrderSubTotal
+	 * @param  $id
+	 * @return float order sub_total
+	 */
+	public function getOrderSubTotal($id)
+	{
+		$query = $this->db->query("SELECT sum(`total`) as sub_total FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . $id);
+		return (isset($query->row['sub_total']) ? $query->row['sub_total'] : 0);
+	}
+
 	/**
 	 * get order_status_id by name
 	 * @method getOrderStatusIdByName

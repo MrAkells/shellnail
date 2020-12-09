@@ -478,17 +478,20 @@ class ControllerExtensionModuleDelovod extends Controller
 						}
 					}
 
-					// change total
-					if ($order_products || ($change && $totals)) {
-						$total = $totals['total'] + $data->header->amountCur - $totals['sub_total'];
-						$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], $data->header->amountCur, $total);
-						$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $total);
-						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update totals.' . "\n", FILE_APPEND);
-					}
 					// delete Product from Order
 					if ($order_products) {
 						$this->model_extension_module_delovod->deleteProductsFromOrder($order_products);
+						// get new sub_total by products
+						$sub_total = $this->model_extension_module_delovod->getOrderSubTotal($order['order_id']);
 						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Delete products.' . "\n", FILE_APPEND);
+					}
+					// change total
+					if ($order_products && $sub_total && isset($totals['sub_total']) &&  $sub_total != $totals['sub_total']) {
+						
+						$total = $totals['total'] + $sub_total - $totals['sub_total'];
+						$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], $sub_total, $total);
+						$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $total);
+						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update totals.' . "\n", FILE_APPEND);
 					}
 
 					// add to OrderHistory
