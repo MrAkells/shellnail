@@ -178,7 +178,7 @@ class ControllerExtensionModuleDelovod extends Controller
 					//Добавление услуг
 					$totals = $this->model_extension_module_delovod->getOrderTotal($order_id);
 					// если сумма заказа < 400 грн. и способ оплаты "Оплата банковским переводом", а доставка "В отделение Новой почты",  то в Деловод не добавляем доставку
-					if (isset($this->services[$order_info['shipping_code']]) && !($totals["sub_total"] < 400 && $order_info['payment_code'] == "privat" && $order_info['shipping_code'] == "new_mail.new_mail")){ // Доставка
+					if (isset($this->services[$order_info['shipping_code']]) && !($totals["sub_total"] < 400 && $order_info['payment_code'] == "privat" && $order_info['shipping_code'] == "new_mail.new_mail")) { // Доставка
 						$price_ser = (isset($totals["shipping"]) ? $totals["shipping"] : 0);
 						$packet["params"]['tableParts']['tpGoods'][] = [
 							"rowNum" 	=> ++$i,
@@ -190,18 +190,18 @@ class ControllerExtensionModuleDelovod extends Controller
 							"amountCur" => $price_ser,
 						];
 					}
-					if(isset($totals["aftershipping"])){ // Комиссия в случае оплаты наложенным платежом
+					if (isset($totals["aftershipping"])) { // Комиссия в случае оплаты наложенным платежом
 						$aftershipping = round($totals["aftershipping"]);
 						$packet["params"]['tableParts']['tpGoods'][] = [
 							"rowNum" 	=> ++$i,
 							"good" 		=> $this->services["cod"]["id"],
 							"goodType"	=> $this->services["cod"]["goodType"],
 							"unit"		=> $this->services["cod"]["unit"],
-							"qty" 		=> 1, 
+							"qty" 		=> 1,
 							"price" 	=> $aftershipping,
 							"amountCur" => $aftershipping,
 						];
-					}					
+					}
 
 					$delovod_order_id = $this->saveObject($packet, $time);
 					if ($delovod_order_id) {
@@ -451,7 +451,7 @@ class ControllerExtensionModuleDelovod extends Controller
 					foreach ($data->tableParts->tpGoods as $key => $good) {
 						$check = 0;
 						// Пропускать доставку
-						if (in_array($good->good, ["1100300000004217","1100300000003062","1100300000003068","1100300000004929"])) continue;
+						if (in_array($good->good, ["1100300000004217", "1100300000003062", "1100300000003068", "1100300000004929"])) continue;
 
 						foreach ($order_products as $key => $product) {
 							$check = 0;
@@ -487,9 +487,23 @@ class ControllerExtensionModuleDelovod extends Controller
 					}
 					// change total
 					if ($order_products && $sub_total && isset($totals['sub_total']) &&  $sub_total != $totals['sub_total']) {
-						
+						$new_totals = [];
+
 						$total = $totals['total'] + $sub_total - $totals['sub_total'];
-						$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], $sub_total, $total);
+
+ 						//накопительная скидка
+						if (isset($totals['coupon']) && $order['customer_id'] && !$this->model_extension_module_delovod->isUseCoupon($order['order_id'])) {
+							$accumulative_discount = $this->getAccumulativeDiscount($order['customer_id'], $order['order_id']);
+							if ($accumulative_discount != $totals['coupon']) {
+								$total = $total + $accumulative_discount - $totals['coupon'];
+								$new_totals['coupon'] = $accumulative_discount;
+							}
+						}
+						
+						$new_totals['sub_total'] = $sub_total;
+						$new_totals['total'] = $total;
+						$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], $new_totals);
+
 						$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $total);
 						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update totals.' . "\n", FILE_APPEND);
 					}
@@ -503,6 +517,30 @@ class ControllerExtensionModuleDelovod extends Controller
 				}
 			}
 		}
+	}
+	/**
+	 * накопительная скидка
+	 */
+	public function getAccumulativeDiscount($customer_id, $order_id)
+	{
+		$accumulative_discount = 0;
+		$this->load->model("account/order");
+		$percent = $this->model_account_order->getCustomerSpecial($customer_id);
+		if ($percent) {
+			$active_promos_products = $this->config->get('active_promos_products_as_keys');
+			$order_products = $this->model_extension_module_delovod->getOrderProducts($order_id);
+			if ($active_promos_products && $order_products) {
+				foreach ($order_products as $product) {
+					// накопительная скидка только для неакционных товаров
+					if ($product["price"] == $product["base_price"] && !(isset($active_promos_products["3"]) && isset($active_promos_products["3"][$product["product_id"]]))) {
+						$accumulative_discount += $product["price"];
+					}
+				}
+			}
+			$accumulative_discount = $accumulative_discount * ($percent / 100);
+		}
+
+		return $accumulative_discount;
 	}
 
 	/**

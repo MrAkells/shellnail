@@ -22,7 +22,8 @@ class ModelExtensionModuleDelovod extends Model
 
 		if ($order_query->num_rows) {
 			return array(
-				'order_id' 					=> $order_query->row['order_id'],
+				'order_id' 			=> $order_query->row['order_id'],
+				'customer_id' 		=> $order_query->row['customer_id'],
 				'delovod_order_id' 	=> $order_query->row['delovod_order_id'],
 				'total'							=> $order_query->row['total'],
 				'order_status_id'   => $order_query->row['order_status_id'],
@@ -128,11 +129,12 @@ class ModelExtensionModuleDelovod extends Model
 		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `order_status_id` = '" . (int) $order_status_id . "', `total` = '" . (float) $total . "' WHERE `order_id` = '" . (int) $order_id . "'");
 	}
 
-	public function updateOrderTotals($order_id, $sub_total, $total)
+	public function updateOrderTotals($order_id, $totals)
 	{
-		//print_r('updateOrderTotals'.$order_id.'-'.$sub_total.'-'.$total.'<br>');
-		$this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET `value` = '" . (float) $sub_total . "' WHERE `order_id` = '" . (int) $order_id . "' AND code = 'sub_total'");
-		$this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET `value` = '" . (float) $total . "' WHERE `order_id` = '" . (int) $order_id . "' AND code = 'total'");
+		foreach ($totals as $key => $value) {
+			$this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET `value` = '" . (float) $value . "' WHERE `order_id` = '" . (int) $order_id . "' AND code = '" . $key . "'");
+		}
+		
 	}
 
 	public function updateBalance($data)
@@ -186,6 +188,18 @@ class ModelExtensionModuleDelovod extends Model
 
 			$this->db->query("DELETE FROM sms WHERE product_id = '" . (int) $product_id . "'");
 		}
+	}
+
+	/**
+	 * Is use Coupon in order
+	 * @method isUseCoupon
+	 * @param  $order_id
+	 * @return boolean
+	 */
+	public function isUseCoupon($order_id)
+	{
+		$query = $this->db->query("SELECT coupon_id FROM `" . DB_PREFIX . "coupon_history` WHERE order_id = " . (int)$order_id);
+		return ($query->rows ? true : false);
 	}
 
 	public function sendSms($data)
