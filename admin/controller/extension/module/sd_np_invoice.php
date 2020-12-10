@@ -377,10 +377,9 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 			$errors = '';
 			foreach ($orders as $order_id) {
 				$json = $this->add_invoice($order_id);
-				if($json['err'] && isset($json['errors'])){
+				if ($json['err'] && isset($json['errors'])) {
 					$errors .= $order_id . ': ' . $json['errors'] . '<br>';
 				}
-
 			}
 		}
 		if ($type) {
@@ -388,7 +387,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 			$this->response->setOutput(json_encode($json));
 		} else {
 
-			if($errors) $this->session->data['warning'] = '<br>' . $errors;
+			if ($errors) $this->session->data['warning'] = '<br>' . $errors;
 
 			$this->response->redirect($this->url->link('sale/order', 'token=' . $this->session->data['token'], true));
 		}
@@ -424,13 +423,13 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 				}
 
 				$shippingCost = $this->model_extension_module_sd_np_invoice->getShippingCostOrder($order_id);
-				
+
 				$payer_type = "Sender";
-				if($order_info['payment_code'] == 'privat' && $order_info['shipping_code'] == 'new_mail.new_mail' && $shippingCost > 0) {
+				if ($order_info['payment_code'] == 'privat' && $order_info['shipping_code'] == 'new_mail.new_mail' && $shippingCost > 0) {
 					$payer_type = "Recipient";
 				}
 				$ref_city = $this->model_extension_module_sd_np_invoice->getRefCity($order_info['shipping_city']);
-				if($ref_city == '') {
+				if ($ref_city == '') {
 					$ref_city = $this->config->get('sd_np_ref_city');
 					$is_warning = true;
 				}
@@ -439,13 +438,18 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 				// } else if ($order_info['shipping_custom_field']) {
 				// 	if(isset($order_info['shipping_custom_field'][1])) $customer_phone = preg_replace('/\D/', '', $order_info['shipping_custom_field'][1]);
 				// }
-				$customer_phone = ''; 
+				$customer_phone = '';
 				if ($order_info['shipping_custom_field']) {
-					if(isset($order_info['shipping_custom_field'][1])) $customer_phone = preg_replace('/\D/', '', $order_info['shipping_custom_field'][1]);
-				
-				} else if($order_info['telephone']){
-					$customer_phone = preg_replace('/\D/', '', $order_info['telephone']);
+					if (isset($order_info['shipping_custom_field'][1])) {
+						$customer_phone = $order_info['shipping_custom_field'][1];
+					} else if ($customer_phone == '' && isset($order_info['shipping_custom_field']['phone'])) {
+						$customer_phone =  $order_info['shipping_custom_field']['phone'];
+					}
 				}
+				if ($customer_phone == '' && $order_info['telephone']) {
+					$customer_phone = $order_info['telephone'];
+				}
+				if($customer_phone) $customer_phone = preg_replace('/\D/', '', $customer_phone);
 
 				$data = [
 					"apiKey" => $this->config->get('sd_np_key'),
@@ -477,20 +481,20 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 					]
 				];
 				//Формирование запроса на создание «ЭН» с услугой «Контроль оплаты»
-				if($order_info['payment_code'] == 'cod') $data['methodProperties']['AfterpaymentOnGoodsCost'] = round($order_info['total']);
+				if ($order_info['payment_code'] == 'cod') $data['methodProperties']['AfterpaymentOnGoodsCost'] = round($order_info['total']);
 
 				$adress = strip_tags($order_info['shipping_address_2']);
 				if ($order_info['shipping_code'] == 'new_mail.new_mail') {
 					$adress = mb_substr($adress, 23);
 
 					$data['methodProperties']['RecipientAddress'] = $this->model_extension_module_sd_np_invoice->getRefOffice($adress);
-					if(!$data['methodProperties']['RecipientAddress']){ // if not found Office
+					if (!$data['methodProperties']['RecipientAddress']) { // if not found Office
 						$data['methodProperties']['RecipientAddress'] = $this->config->get('sd_np_ref_sender_address');
 						$is_warning = true;
 					}
 				} else {
 					$ar_adress = explode(",", $adress);
-					if(count($ar_adress) > 1){
+					if (count($ar_adress) > 1) {
 						$address_name = (isset($ar_adress[1]) ? trim($ar_adress[1]) : $adress);
 						preg_match_all('/\s(\d+)\,*\s*?(\d+)*/', $adress, $matches, PREG_SET_ORDER, 0);
 
@@ -506,9 +510,8 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 					} else {
 						$is_warning = true;
 						$data['methodProperties']["RecipientAddressName"] = 'вул. Олекси Тихого';
-						$data['methodProperties']["RecipientHouse"] = '70';						
+						$data['methodProperties']["RecipientHouse"] = '70';
 					}
-
 				}
 
 				$res =  $this->sendRequest($data);
@@ -527,7 +530,6 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						$json['data'] = $data;
 					}
 				}
-
 			}
 		}
 
@@ -578,13 +580,13 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 	{
 		$json = array();
 		$json['err'] = true;
-		if($this->config->get('sd_np_sender')){
+		if ($this->config->get('sd_np_sender')) {
 			$data = [
 				"apiKey" => $this->config->get('sd_np_key'),
 				"modelName" => "Counterparty",
 				"calledMethod" => "getCounterpartyContactPersons",
 				"methodProperties" => [
-					"Ref"=> $this->config->get('sd_np_sender'),
+					"Ref" => $this->config->get('sd_np_sender'),
 					"Page" => "1"
 				]
 			];
@@ -594,14 +596,13 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 					$json['contacts'] = '';
 					$json['contact_phone'] = '';
 					foreach ($res->data as $contact) {
-						if($this->config->get('sd_np_сontact_sender') == $contact->Ref){
+						if ($this->config->get('sd_np_сontact_sender') == $contact->Ref) {
 							$json['contacts'] .= '<option value="' . $contact->Ref . '" selected="selected" data-phone="' . $contact->Phones . '">' . $contact->Description . '</option>';
 							$json['contact_phone'] = $contact->Phones;
 						} else {
-							if($json['contact_phone'] == '') $json['contact_phone'] = $contact->Phones;
+							if ($json['contact_phone'] == '') $json['contact_phone'] = $contact->Phones;
 							$json['contacts'] .= '<option value="' . $contact->Ref . '" data-phone="' . $contact->Phones . '">' . $contact->Description . '</option>';
 						}
-						
 					}
 					$json['err'] = false;
 				} else {
