@@ -494,6 +494,7 @@ class ControllerExtensionModuleDelovod extends Controller
  						//накопительная скидка
 						if (isset($totals['coupon']) && $order['customer_id'] && !$this->model_extension_module_delovod->isUseCoupon($order['order_id'])) {
 							$accumulative_discount = $this->getAccumulativeDiscount($order['customer_id'], $order['order_id']);
+							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Accumulative_discount:' . $accumulative_discount . "\n", FILE_APPEND);
 							if ($accumulative_discount != $totals['coupon']) {
 								$total = $total + $accumulative_discount - $totals['coupon'];
 								$new_totals['coupon'] = $accumulative_discount;
@@ -502,6 +503,8 @@ class ControllerExtensionModuleDelovod extends Controller
 						
 						$new_totals['sub_total'] = $sub_total;
 						$new_totals['total'] = $total;
+						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($totals,true) . "\n", FILE_APPEND);
+						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($new_totals,true) . "\n", FILE_APPEND);
 						$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], $new_totals);
 
 						$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $total);
@@ -540,7 +543,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			$accumulative_discount = $accumulative_discount * ($percent / 100);
 		}
 
-		return $accumulative_discount;
+		-$accumulative_discount;
 	}
 
 	/**
