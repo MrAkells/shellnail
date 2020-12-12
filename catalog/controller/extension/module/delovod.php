@@ -501,7 +501,7 @@ class ControllerExtensionModuleDelovod extends Controller
 							}
 						}
 						if (isset($totals['aftershipping'])){
-							$new_totals['aftershipping'] = (float)((float)($this->config->get('new_mail_nalozhniy_percent')/100)*(float)$sub_total);
+							$new_totals['aftershipping'] = $this->config->get('new_mail_nalozhniy_fee') + (float)((float)($this->config->get('new_mail_nalozhniy_percent')/100)*(float)$sub_total);
 							$total = $total + $new_totals['aftershipping'] - $totals['aftershipping'];
 						}
 
