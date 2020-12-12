@@ -500,6 +500,11 @@ class ControllerExtensionModuleDelovod extends Controller
 								$new_totals['coupon'] = $accumulative_discount;
 							}
 						}
+						if (isset($totals['aftershipping'])){
+							$new_totals['aftershipping'] = (float)((float)($this->config->get('new_mail_nalozhniy_percent')/100)*(float)$sub_total);
+							$total = $total + $new_totals['aftershipping'] - $totals['aftershipping'];
+						}
+
 						
 						$new_totals['sub_total'] = $sub_total;
 						$new_totals['total'] = $total;
