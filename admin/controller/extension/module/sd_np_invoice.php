@@ -618,6 +618,20 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 		$this->response->setOutput(json_encode($json));
 	}
 
+	public function fix_invoices()
+	{
+		$json = [];
+		$json['err'] = true;
+		$this->load->model('extension/module/sd_np_invoice');
+
+		if (isset($this->request->get['ttn'])) {
+			$this->model_extension_module_sd_np_invoice->setCheckInvoiceOrder($this->request->get['ttn']);
+			$json['err'] = false;
+		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
 	/**
 	 * @param $data
 	 * @return bool|mixed

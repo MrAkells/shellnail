@@ -106,4 +106,9 @@ class ModelExtensionModuleSdNpInvoice extends Model
         $query = $this->db->query("SELECT `ref` FROM `oc_newmail_office` WHERE `description` = '" . $office ."' OR `description_ru` = '" . $office ."'" );
         return ($query->num_rows ? $query->row['ref']: '');
     }
+    public function setCheckInvoiceOrder($ttn)
+    {
+        $this->db->query("UPDATE " . DB_PREFIX . "np_invoices  SET  is_warning=0 WHERE np_number='".$ttn."'");
+
+    }
 }
