@@ -37,13 +37,14 @@ class ModelExtensionModuleDelovod extends Model
 	public function getOrdersForSync()
 	{
 		$order = [];
-		$query = $this->db->query("SELECT order_id, delovod_order_id, total, order_status_id FROM `" . DB_PREFIX . "order` WHERE `order_status_id` in (1,2,3,11) AND `delovod_order_id` <> ''");
+		$query = $this->db->query("SELECT order_id, delovod_order_id, customer_id, total, order_status_id FROM `" . DB_PREFIX . "order` WHERE `order_status_id` in (1,2,3,11) AND `delovod_order_id` <> ''");
 
 		foreach ($query->rows as $result) {
 			$order[] = [
-				'order_id' 					=> $result['order_id'],
+				'order_id' 			=> $result['order_id'],
 				'delovod_order_id' 	=> $result['delovod_order_id'],
-				'total'							=> $result['total'],
+				'customer_id' 		=> $result['customer_id'],
+				'total'				=> $result['total'],
 				'order_status_id'   => $result['order_status_id']
 			];
 		}
@@ -134,7 +135,6 @@ class ModelExtensionModuleDelovod extends Model
 		foreach ($totals as $key => $value) {
 			$this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET `value` = '" . (float) $value . "' WHERE `order_id` = '" . (int) $order_id . "' AND code = '" . $key . "'");
 		}
-		
 	}
 
 	public function updateBalance($data)
