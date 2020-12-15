@@ -541,7 +541,7 @@ class ControllerExtensionModuleDelovod extends Controller
 				foreach ($order_products as $product) {
 					// накопительная скидка только для неакционных товаров
 					if ($product["price"] == $product["base_price"] && !(isset($active_promos_products["3"]) && isset($active_promos_products["3"][$product["product_id"]]))) {
-						$accumulative_discount += $product["price"];
+						$accumulative_discount += $product["price"]*$product["quantity"];
 					}
 				}
 			}
