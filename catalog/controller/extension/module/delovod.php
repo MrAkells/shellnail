@@ -548,7 +548,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			$accumulative_discount = $accumulative_discount * ($percent / 100);
 		}
 
-		-$accumulative_discount;
+		return -$accumulative_discount;
 	}
 
 	/**
