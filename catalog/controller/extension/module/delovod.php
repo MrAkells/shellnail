@@ -480,41 +480,49 @@ class ControllerExtensionModuleDelovod extends Controller
 
 					// delete Product from Order
 					if ($order_products) {
+						$change = 1;
 						$this->model_extension_module_delovod->deleteProductsFromOrder($order_products);
+						
+					}
+					// change total
+					if($change){ 
+
 						// get new sub_total by products
 						$sub_total = $this->model_extension_module_delovod->getOrderSubTotal($order['order_id']);
 						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Delete products.' . "\n", FILE_APPEND);
-					}
-					// change total
-					if ($order_products && $sub_total && isset($totals['sub_total']) &&  $sub_total != $totals['sub_total']) {
-						$new_totals = [];
 
-						$total = $totals['total'] + $sub_total - $totals['sub_total'];
+						if ($order_products && $sub_total && isset($totals['sub_total']) &&  $sub_total != $totals['sub_total']) {
+							$new_totals = [];
 
- 						//накопительная скидка
-						if (isset($totals['coupon']) && $order['customer_id'] && !$this->model_extension_module_delovod->isUseCoupon($order['order_id'])) {
-							$accumulative_discount = $this->getAccumulativeDiscount($order['customer_id'], $order['order_id']);
-							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Accumulative_discount:' . $accumulative_discount . "\n", FILE_APPEND);
-							if ($accumulative_discount != $totals['coupon']) {
-								$total = $total + $accumulative_discount - $totals['coupon'];
-								$new_totals['coupon'] = $accumulative_discount;
+							$total = $totals['total'] + $sub_total - $totals['sub_total'];
+
+							//накопительная скидка
+							if (isset($totals['coupon']) && $order['customer_id'] && !$this->model_extension_module_delovod->isUseCoupon($order['order_id'])) {
+								$accumulative_discount = $this->getAccumulativeDiscount($order['customer_id'], $order['order_id']);
+								file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Accumulative_discount:' . $accumulative_discount . "\n", FILE_APPEND);
+								if ($accumulative_discount != $totals['coupon']) {
+									$total = $total + $accumulative_discount - $totals['coupon'];
+									$new_totals['coupon'] = $accumulative_discount;
+								}
 							}
-						}
-						if (isset($totals['aftershipping'])){
-							$new_totals['aftershipping'] = $this->config->get('new_mail_nalozhniy_fee') + (float)((float)($this->config->get('new_mail_nalozhniy_percent')/100)*(float)$sub_total);
-							$total = $total + $new_totals['aftershipping'] - $totals['aftershipping'];
+							if (isset($totals['aftershipping'])){
+								$new_totals['aftershipping'] = $this->config->get('new_mail_nalozhniy_fee') + (float)((float)($this->config->get('new_mail_nalozhniy_percent')/100)*(float)$sub_total);
+								$total = $total + $new_totals['aftershipping'] - $totals['aftershipping'];
+							}
+
+							
+							$new_totals['sub_total'] = $sub_total;
+							$new_totals['total'] = $total;
+							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($totals,true) . "\n", FILE_APPEND);
+							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($new_totals,true) . "\n", FILE_APPEND);
+							$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], $new_totals);
+
+							$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $total);
+							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update totals.' . "\n", FILE_APPEND);
 						}
 
-						
-						$new_totals['sub_total'] = $sub_total;
-						$new_totals['total'] = $total;
-						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($totals,true) . "\n", FILE_APPEND);
-						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($new_totals,true) . "\n", FILE_APPEND);
-						$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], $new_totals);
-
-						$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $total);
-						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update totals.' . "\n", FILE_APPEND);
 					}
+
 
 					// add to OrderHistory
 					if ($order['order_status_id'] != $order_status_id) {
