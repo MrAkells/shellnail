@@ -461,6 +461,7 @@ class ControllerExtensionModuleDelovod extends Controller
 								if ($product['quantity'] != $good->qty || $product['price'] != $good->price) {
 									$change = 1;
 									$this->model_extension_module_delovod->updateProductToOrder($product['order_product_id'], $good->price, $good->qty, $good->priceAmount);
+									file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Product ' . $good->good . ' new qty: ' . $good->qty . "\n", FILE_APPEND);
 								}
 								unset($order_products[$key]);
 								break;
@@ -482,16 +483,17 @@ class ControllerExtensionModuleDelovod extends Controller
 					if ($order_products) {
 						$change = 1;
 						$this->model_extension_module_delovod->deleteProductsFromOrder($order_products);
-						
+						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Delete products.' . "\n", FILE_APPEND);
 					}
+								
 					// change total
 					if($change){ 
 
 						// get new sub_total by products
 						$sub_total = $this->model_extension_module_delovod->getOrderSubTotal($order['order_id']);
-						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Delete products.' . "\n", FILE_APPEND);
 
-						if ($order_products && $sub_total && isset($totals['sub_total']) &&  $sub_total != $totals['sub_total']) {
+
+						if ($sub_total && isset($totals['sub_total']) &&  $sub_total != $totals['sub_total']) {
 							$new_totals = [];
 
 							$total = $totals['total'] + $sub_total - $totals['sub_total'];
@@ -534,6 +536,17 @@ class ControllerExtensionModuleDelovod extends Controller
 			}
 		}
 	}
+	// public function testOrder()
+	// {
+	// 	$order = [
+	// 		'order_id' 			=> 17103,
+	// 		'delovod_order_id' 	=> '1109100000015199',
+	// 		'customer_id' 		=> 782,
+	// 		'total'				=> '1187.0720',
+	// 		'order_status_id'   => 7
+	// 	];
+	// 	$this->syncOrder($order);
+	// }
 	/**
 	 * накопительная скидка
 	 */
