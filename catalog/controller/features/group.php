@@ -9,18 +9,26 @@ class ControllerFeaturesGroup extends Controller {
                 $this->document->addStyle('catalog/view/theme/default/stylesheet/group_promo.css?ver1.6');
  
 		$data['heading_title']=$this->language->get('heading_title');
-                
-		$data['breadcrumbs'] = array();
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
-        $data['breadcrumbs'][] = array(
-			'text' => $data['heading_title'],
-			'href' => $this->url->link('features/group')
-		);
-        $data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
+        if(isset($input_data['breadcrumbs'])) {
+            $data['breadcrumbs'] = $input_data['breadcrumbs'];
+        } else {
+            $data['breadcrumbs'] = array();
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('text_home'),
+                'href' => $this->url->link('common/home')
+            );
+            $data['breadcrumbs'][] = array(
+                'text' => 'Акции',
+                'href' => $this->url->link('features/promotions')
+            );
+            $data['breadcrumbs'][] = array(
+                'text' => $data['heading_title'],
+            );
+        }    
 
+        
+        $data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
+        $data['mini_catalog_category']=$this->load->controller('extension/module/category');
                 $this->load->model('tool/online');
                 
                 $super_promotion=$this->model_catalog_promotions->getPromotion($promo_id);

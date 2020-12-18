@@ -254,14 +254,21 @@ class ControllerProductCategory extends Controller {
                         
                      if($category_info['parent_id']==197){
                          
-                         $data['breadcrumbs'] = array();
+                        $data['breadcrumbs'] = array();
 
                         $data['breadcrumbs'][] = array(
                             'text' => $this->language->get('text_home'),
                             'href' => $this->url->link('common/home')
-                        );
-                         
-                         
+						);
+						$data['breadcrumbs'][] = array(
+							'text' => 'Акции',
+							'href' => $this->url->link('features/promotions')
+						);						
+						$data['breadcrumbs'][] = array(
+							'text' => $category_info['name'],
+							'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'])
+						); 
+
                         $data['text_promo_product']=$this->language->get('text_promo_product');
                         $data['text_look_over']=$this->language->get('text_look_over');
                         $data['text_day']=$this->language->get('text_day');
@@ -273,7 +280,7 @@ class ControllerProductCategory extends Controller {
                         $promotion=$this->model_catalog_promotions->getPromotion($category_id, false);
                    
                         if($promotion['hierarchy'] == 1){
-                            $this->load->controller('features/group', ['promo_id'=>$category_id]);
+                            $this->load->controller('features/group', ['promo_id'=>$category_id, 'breadcrumbs'=>$data['breadcrumbs']]);
                             return;
                         }
                
