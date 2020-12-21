@@ -484,10 +484,14 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 				if ($order_info['payment_code'] == 'cod') $data['methodProperties']['AfterpaymentOnGoodsCost'] = round($order_info['total']);
 
 				$adress = strip_tags($order_info['shipping_address_2']);
+				if(!$adress){
+					$adress = strip_tags($order_info['shipping_address_1']);
+				}
+
 				if ($order_info['shipping_code'] == 'new_mail.new_mail') {
 					$adress = mb_substr($adress, 23);
 
-					$data['methodProperties']['RecipientAddress'] = $this->model_extension_module_sd_np_invoice->getRefOffice($adress);
+					$data['methodProperties']['RecipientAddress'] = $this->model_extension_module_sd_np_invoice->getRefOffice($adress,$ref_city);
 					if (!$data['methodProperties']['RecipientAddress']) { // if not found Office
 						$data['methodProperties']['RecipientAddress'] = $this->config->get('sd_np_ref_sender_address');
 						$is_warning = true;
