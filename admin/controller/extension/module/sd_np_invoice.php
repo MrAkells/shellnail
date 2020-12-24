@@ -494,6 +494,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 					$data['methodProperties']['RecipientAddress'] = $this->model_extension_module_sd_np_invoice->getRefOffice($adress,$ref_city);
 					if (!$data['methodProperties']['RecipientAddress']) { // if not found Office
 						$data['methodProperties']['RecipientAddress'] = $this->config->get('sd_np_ref_sender_address');
+						$data['methodProperties']['CityRecipient'] = $this->config->get('sd_np_ref_city');
 						$is_warning = true;
 					}
 				} else {
