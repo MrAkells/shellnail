@@ -427,6 +427,17 @@ class ControllerExtensionModuleDelovod extends Controller
 		}
 	}
 
+	// public function testOrder()
+	// {
+	// 	//$data = $this->getObject('1109100000015132', 'delovod_orders_sync.log');
+	// 	//print_r($data);
+	// 	// $this->load->model('extension/module/delovod');
+	// 	// $order = $this->model_extension_module_delovod->getOrder('1109100000015287');
+	// 	// if ($order) {
+	// 	// 	$this->syncOrder($order);
+	// 	// }
+	// }
+
 	/**
 	 * Order synchronization from delovod
 	 * @method syncOrder
@@ -445,13 +456,20 @@ class ControllerExtensionModuleDelovod extends Controller
 				$totals = $this->model_extension_module_delovod->getOrderTotal($order['order_id']);
 				$order_status_id = $this->model_extension_module_delovod->getOrderStatusIdByName($data->header->state->pr);
 
-				if ($order_status_id && ($order_status_id != $order['order_status_id'] || $totals['sub_total'] != $data->header->amountCur)) {
+				if ($order_status_id && ($order_status_id != $order['order_status_id'] || $totals['total'] != $data->header->amountCur)) {
 					$order_products = $this->model_extension_module_delovod->getOrderProducts($order['order_id']);
 					$change = 0;
 					foreach ($data->tableParts->tpGoods as $key => $good) {
 						$check = 0;
 						// Пропускать доставку
-						if (in_array($good->good, ["1100300000004217", "1100300000003062", "1100300000003068", "1100300000004929"])) continue;
+						if (in_array($good->good, ["1100300000004217", "1100300000003062", "1100300000003068", "1100300000004929"])) {
+							if($good->good == "1100300000004929") {
+								$aftershipping = $good->price;
+							} else {
+								$shipping_cost = $good->price;
+							}
+							continue;
+						}
 
 						foreach ($order_products as $key => $product) {
 							$check = 0;
@@ -496,30 +514,38 @@ class ControllerExtensionModuleDelovod extends Controller
 						if ($sub_total && isset($totals['sub_total']) &&  $sub_total != $totals['sub_total']) {
 							$new_totals = [];
 
-							$total = $totals['total'] + $sub_total - $totals['sub_total'];
+							//$total = $totals['total'] + $sub_total - $totals['sub_total'];
 
-							//накопительная скидка
+							//Накопительная скидка
 							if (isset($totals['coupon']) && $order['customer_id'] && !$this->model_extension_module_delovod->isUseCoupon($order['order_id'])) {
 								$accumulative_discount = $this->getAccumulativeDiscount($order['customer_id'], $order['order_id']);
 								file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Accumulative_discount:' . $accumulative_discount . "\n", FILE_APPEND);
 								if ($accumulative_discount != $totals['coupon']) {
-									$total = $total + $accumulative_discount - $totals['coupon'];
+									//$total = $total + $accumulative_discount - $totals['coupon'];
 									$new_totals['coupon'] = $accumulative_discount;
 								}
 							}
+							//Комиссия в случае оплаты наложенным платежом
 							if (isset($totals['aftershipping'])){
 								$new_totals['aftershipping'] = $this->config->get('new_mail_nalozhniy_fee') + (float)((float)($this->config->get('new_mail_nalozhniy_percent')/100)*(float)$sub_total);
-								$total = $total + $new_totals['aftershipping'] - $totals['aftershipping'];
+								//$total = $total + $new_totals['aftershipping'] - $totals['aftershipping'];
 							}
 
+							// Shipping
+							if($order['shipping_code'] == 'new_mail.new_mail'){
+								if( $sub_total >= $this->config->get('new_mail_freetotal')){
+									$new_totals['shipping'] = 0;
+									//$total = $total - $totals['shipping'];
+								}
+							}
 							
 							$new_totals['sub_total'] = $sub_total;
-							$new_totals['total'] = $total;
+							$new_totals['total'] = $data->header->amountCur;//$total;
 							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($totals,true) . "\n", FILE_APPEND);
 							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($new_totals,true) . "\n", FILE_APPEND);
 							$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], $new_totals);
 
-							$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $total);
+							$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $new_totals['total']);
 							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update totals.' . "\n", FILE_APPEND);
 						}
 

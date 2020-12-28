@@ -25,7 +25,8 @@ class ModelExtensionModuleDelovod extends Model
 				'order_id' 			=> $order_query->row['order_id'],
 				'customer_id' 		=> $order_query->row['customer_id'],
 				'delovod_order_id' 	=> $order_query->row['delovod_order_id'],
-				'total'							=> $order_query->row['total'],
+				'total'				=> $order_query->row['total'],
+				'shipping_code'	=> $order_query->row['shipping_code'],
 				'order_status_id'   => $order_query->row['order_status_id'],
 				'order_status'      => $order_query->row['order_status']
 			);
@@ -37,7 +38,7 @@ class ModelExtensionModuleDelovod extends Model
 	public function getOrdersForSync()
 	{
 		$order = [];
-		$query = $this->db->query("SELECT order_id, delovod_order_id, customer_id, total, order_status_id FROM `" . DB_PREFIX . "order` WHERE `order_status_id` in (1,2,3,11) AND `delovod_order_id` <> ''");
+		$query = $this->db->query("SELECT order_id, delovod_order_id, customer_id, total, shipping_code, order_status_id FROM `" . DB_PREFIX . "order` WHERE `order_status_id` in (1,2,3,11) AND `delovod_order_id` <> ''");
 
 		foreach ($query->rows as $result) {
 			$order[] = [
@@ -45,6 +46,7 @@ class ModelExtensionModuleDelovod extends Model
 				'delovod_order_id' 	=> $result['delovod_order_id'],
 				'customer_id' 		=> $result['customer_id'],
 				'total'				=> $result['total'],
+				'shipping_code'	=> $result['shipping_code'],
 				'order_status_id'   => $result['order_status_id']
 			];
 		}
