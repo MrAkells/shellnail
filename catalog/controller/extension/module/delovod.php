@@ -427,16 +427,16 @@ class ControllerExtensionModuleDelovod extends Controller
 		}
 	}
 
-	// public function testOrder()
-	// {
-	// 	//$data = $this->getObject('1109100000015132', 'delovod_orders_sync.log');
-	// 	//print_r($data);
-	// 	// $this->load->model('extension/module/delovod');
-	// 	// $order = $this->model_extension_module_delovod->getOrder('1109100000015287');
-	// 	// if ($order) {
-	// 	// 	$this->syncOrder($order);
-	// 	// }
-	// }
+	public function testOrder()
+	{
+		//$data = $this->getObject('1109100000015507', 'delovod_orders_sync.log');
+		//print_r($data);
+		// $this->load->model('extension/module/delovod');
+		// $order = $this->model_extension_module_delovod->getOrder('1109100000015507');
+		// if ($order) {
+		// 	$this->syncOrder($order);
+		// }
+	}
 
 	/**
 	 * Order synchronization from delovod
@@ -476,6 +476,7 @@ class ControllerExtensionModuleDelovod extends Controller
 							if ($product['isbn'] == $good->good) {
 								$check = 1;
 								// Проверка изм состава заказа
+								//if ($product['quantity'] != $good->qty || $product['price'] != $good->price) {
 								if ($product['quantity'] != $good->qty || $product['price'] != $good->price) {
 									$change = 1;
 									$this->model_extension_module_delovod->updateProductToOrder($product['order_product_id'], $good->price, $good->qty, $good->priceAmount);
@@ -549,6 +550,11 @@ class ControllerExtensionModuleDelovod extends Controller
 							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update totals.' . "\n", FILE_APPEND);
 						}
 
+					} else if($data->header->discountPercent && $totals['total'] != $data->header->amountCur){ // Add discount
+						$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], ['total' => $data->header->amountCur]);
+						
+						$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $data->header->amountCur);
+						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update total. Add Discount.' . "\n", FILE_APPEND);					
 					}
 
 
