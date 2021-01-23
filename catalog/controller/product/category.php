@@ -288,8 +288,14 @@ class ControllerProductCategory extends Controller {
                             $image = $this->model_tool_image->resize($promotion['image'], 861, 331);
                         } else {
                             $image = $this->model_tool_image->resize('placeholder.png', 861, 331);
-                        }
-                    
+						}
+						
+                        if ($promotion['image_m']) {
+                            $image_m = $this->model_tool_image->resize($promotion['image_m'], 861, 331);
+                        } else {
+                            $image_m = $this->model_tool_image->resize('placeholder.png', 861, 331);
+						}
+						                    
                         $this->load->model('tool/online');
                         $observers=$this->model_tool_online->getTotalCustomersOnline($promotion['promo_id']);
                         
@@ -301,7 +307,8 @@ class ControllerProductCategory extends Controller {
                             'endtime'=> $ends,
                             'description'=> html_entity_decode($promotion['description']),
                             'date_end'=>$date_end,
-                            'thumb'=>$image,
+							'thumb'=>$image,
+							'thumb_m'=>$image_m,
                             'href'=>$this->url->link('product/category', 'category_id=' . $promotion['promo_id']),
                             'count'=>$promotion['products'],
                             'observers'=>$observers
