@@ -42,7 +42,11 @@ class ControllerFeaturesPromotions extends Controller {
                     } else {
 			$image = $this->model_tool_image->resize('placeholder.png', 861, 331);
                     }
-
+                    if ($promotion['image_m']) {
+			$image_m = $this->model_tool_image->resize($promotion['image_m'], 861, 331);
+                    } else {
+			$image_m = $this->model_tool_image->resize('placeholder.png', 861, 331);
+                    }
                     $observers=$this->model_tool_online->getTotalCustomersOnline($promo_id);
        
                     $ends=strtotime($promotion['date_end']);
@@ -54,6 +58,7 @@ class ControllerFeaturesPromotions extends Controller {
                         'description'=> utf8_substr(strip_tags(html_entity_decode($promotion['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '..',
                         'date_end'=>$date_end,
                         'thumb'=>$image,
+                        'thumb_m'=>$image_m,
                         'href'=>$this->url->link('product/category', 'category_id=' . $promotion['promo_id']),
                         'count'=>$promotion['products'],
                         'observers'=>$observers
