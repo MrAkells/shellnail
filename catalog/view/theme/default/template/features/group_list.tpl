@@ -34,7 +34,10 @@
               <div class="col-md-4 col-sm-6 item-promotion-group">
                 <a href="<?php echo $promo['href']; ?>">
                 <!--<div><?php echo $promo['description']; ?></div>-->
-                  <div><img src="<?php echo $promo['thumb']; ?>" class="img-responsive"/></div>
+                  <div>
+                    <img src="<?php echo $promo['thumb_m']; ?>" class="promotion-img-top"/>
+                    <img src="<?php echo $promo['thumb']; ?>" class="promotion-img-bg"/>
+                  </div>
                   <div class="item-promotion-title"><?php echo $promo['title']; ?></div>
                 </a>
                </div>
