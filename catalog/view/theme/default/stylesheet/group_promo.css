@@ -8,7 +8,7 @@
 	font-size: 16px;
 	margin-bottom: 30px;
 }
-.item-promotion-group{
+.item-promotion-group {
 	margin-bottom: 30px;
 }
 .item-promotion-title{
@@ -18,4 +18,13 @@
     padding: 10px 0;
     text-transform: uppercase;
     font-size: 14px;
+}
+.item-promotion-group-bg {
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	text-align: center;
+}
+.item-promotion-group-img {
+	width: 100%;
 }
