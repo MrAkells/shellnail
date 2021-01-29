@@ -189,7 +189,9 @@ $(document).ready(function(){
     });
  </script>
         </div>
-        <div class="crop"><img src="<?php echo $promo['thumb']; ?>" class="image-promotions" /></div>
+        <div class="crop" style="background-image:url(<?php echo $promo['thumb']; ?>);">
+			<img src="<?php echo $promo['thumb_m']; ?>" class="image-promotions-top" />
+		</div>
     </div>       	
             	
             	

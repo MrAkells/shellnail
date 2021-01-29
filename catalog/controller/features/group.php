@@ -46,9 +46,9 @@ class ControllerFeaturesGroup extends Controller
 
         $data['description'] = html_entity_decode($super_promotion['description'], ENT_QUOTES, 'UTF-8');
         if ($super_promotion['image']) {
-            $main_image = $this->model_tool_image->resize($super_promotion['image'], 861, 331);
+            $main_image = $this->model_tool_image->resize($super_promotion['image'], 848, 326);
         } else {
-            $main_image = $this->model_tool_image->resize('placeholder.png', 861, 331);
+            $main_image = $this->model_tool_image->resize('placeholder.png', 848, 326);
         }
         $data['main_thumb'] = $main_image;
 
@@ -59,14 +59,14 @@ class ControllerFeaturesGroup extends Controller
         foreach ($promo_group as $promo_id) {
             $promotion = $this->model_catalog_promotions->getPromotion($promo_id, false);
             if ($promotion['image']) {
-                $image = $this->model_tool_image->resize($promotion['image'], 861, 331);
+                $image = $this->model_tool_image->resize($promotion['image'], 848, 326);
             } else {
-                $image = $this->model_tool_image->resize('placeholder.png', 861, 331);
+                $image = $this->model_tool_image->resize('placeholder.png', 848, 326);
             }
             if ($promotion['image_m']) {
-                $image_m = $this->model_tool_image->resize($promotion['image_m'], 861, 331);
+                $image_m = $this->model_tool_image->resize($promotion['image_m'], 424, 326);
             } else {
-                $image_m = $this->model_tool_image->resize('placeholder.png', 861, 331);
+                $image_m = $this->model_tool_image->resize('placeholder.png', 424, 326);
             }
             $observers = $this->model_tool_online->getTotalCustomersOnline($promo_id);
 

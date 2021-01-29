@@ -285,15 +285,15 @@ class ControllerProductCategory extends Controller {
                         }
                
                         if ($promotion['image']) {
-                            $image = $this->model_tool_image->resize($promotion['image'], 861, 331);
+                            $image = $this->model_tool_image->resize($promotion['image'], 848, 326);
                         } else {
-                            $image = $this->model_tool_image->resize('placeholder.png', 861, 331);
+                            $image = $this->model_tool_image->resize('placeholder.png', 848, 326);
 						}
 						
                         if ($promotion['image_m']) {
-                            $image_m = $this->model_tool_image->resize($promotion['image_m'], 861, 331);
+                            $image_m = $this->model_tool_image->resize($promotion['image_m'], 424, 326);
                         } else {
-                            $image_m = $this->model_tool_image->resize('placeholder.png', 861, 331);
+                            $image_m = $this->model_tool_image->resize('placeholder.png', 424, 326);
 						}
 						                    
                         $this->load->model('tool/online');

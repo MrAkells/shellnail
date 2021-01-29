@@ -92,7 +92,9 @@
                     <div id="end_of_promo<?php echo $promo['promo_id']; ?>" data-seconds="<?php echo $promo['endtime']; ?>"></div>
                 </div>
                 <div class="col-sm-6 right-promotion">
-                    <div class="crop"><img src="<?php echo $promo['thumb']; ?>" class="image-promotions-more" /></div>
+                    <div class="promotion-crop-cat" style="background-image:url(<?php echo $promo['thumb']; ?>);">
+                        <img src="<?php echo $promo['thumb_m']; ?>" class="promotion-crop-cat-img" />
+                    </div>
                     <p class="period-promotion">
                         Акция до
                         <?php echo $promo['date_end']; ?>
