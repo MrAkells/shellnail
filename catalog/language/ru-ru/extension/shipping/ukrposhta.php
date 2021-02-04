@@ -1,4 +1,4 @@
 <?php
 // Text
-$_['text_title']       = 'Укрпочта SmartBox';
-$_['text_description'] = 'Укрпочта SmartBox: доставка 2-5 дней, %s грн.';
+$_['text_title']       = 'Укрпочта';
+$_['text_description'] = 'Укрпочта: доставка 2-5 дней, %s грн.';

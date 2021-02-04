@@ -112,9 +112,10 @@ $(document).ready(function(){
         <div class="page-promotipns">
             <?php foreach($promotions as $promo){ ?>
             <div class="one_promo">
+
+			<a href="<?php echo $promo['href']; ?>" class="promo-img-link">
             	<div class="promo-img">
             		     		
-            	
             	<div class="promo-content">
             		<p class="title-stoke">
                 	<?php echo $promo['title']; ?>
@@ -150,7 +151,7 @@ $(document).ready(function(){
             	</p>
             	<div class="more-eye">
             		<div class="promo-more">
-              			<a href="<?php echo $promo['href']; ?>" class="btn-promo-more">Подробнее</a>
+              			<span class="btn-promo-more">Подробнее</span>
               		</div>
               		<div class="look-over">
               			<img src="catalog/view/theme/default/image/icon-eye.png" alt="Avatar" class="img-avatar"> <?php echo $text_look_over; ?> <?php echo $promo['observers']; ?> человека
@@ -159,42 +160,41 @@ $(document).ready(function(){
 
                 <div id="end_of_promo<?php echo $promo['promo_id']; ?>" data-seconds="<?php echo $promo['endtime']; ?>"></div>
  
-            <script>  
-                
-                $(document).ready(function(){
-                
-                var d=new Date();
-                var seconds_now=Math.round(d.getTime()/1000);
-                var end=$('#end_of_promo<?php echo $promo['promo_id']; ?>').data('seconds');
-                
-                var seconds_to_end=end-seconds_now;
-                var days=Math.floor(seconds_to_end/(3600*24));
-                var hour=Math.floor((seconds_to_end-(days*3600*24))/3600);
-                var minutes=Math.floor((seconds_to_end-(days*3600*24)-(hour*3600))/60);
-                var seconds=seconds_to_end-(days*3600*24)-(hour*3600)-(minutes*60);
-   
-     
-    $('#simple-timer<?php echo $promo['promo_id']; ?>').simpletimer({
-        day: days,
-        dayDom: '.timer-day<?php echo $promo['promo_id']; ?>',
-        hour: hour,
-        hourDom: '.timer-hour<?php echo $promo['promo_id']; ?>',
-        minute: minutes,
-        minuteDom: '.timer-minute<?php echo $promo['promo_id']; ?>',
-        second: seconds,
-        secondDom: '.timer-second<?php echo $promo['promo_id']; ?>'
-    });
-    
-    
-    });
- </script>
-        </div>
-        <div class="crop" style="background-image:url(<?php echo $promo['thumb']; ?>);">
-			<img src="<?php echo $promo['thumb_m']; ?>" class="image-promotions-top" />
-		</div>
-    </div>       	
-            	
-            	
+				<script>  
+					
+					$(document).ready(function(){
+					
+					var d=new Date();
+					var seconds_now=Math.round(d.getTime()/1000);
+					var end=$('#end_of_promo<?php echo $promo['promo_id']; ?>').data('seconds');
+					
+					var seconds_to_end=end-seconds_now;
+					var days=Math.floor(seconds_to_end/(3600*24));
+					var hour=Math.floor((seconds_to_end-(days*3600*24))/3600);
+					var minutes=Math.floor((seconds_to_end-(days*3600*24)-(hour*3600))/60);
+					var seconds=seconds_to_end-(days*3600*24)-(hour*3600)-(minutes*60);
+	
+		
+					$('#simple-timer<?php echo $promo['promo_id']; ?>').simpletimer({
+						day: days,
+						dayDom: '.timer-day<?php echo $promo['promo_id']; ?>',
+						hour: hour,
+						hourDom: '.timer-hour<?php echo $promo['promo_id']; ?>',
+						minute: minutes,
+						minuteDom: '.timer-minute<?php echo $promo['promo_id']; ?>',
+						second: seconds,
+						secondDom: '.timer-second<?php echo $promo['promo_id']; ?>'
+					});
+					
+					
+					});
+				</script>
+				</div>
+				<div class="crop" style="background-image:url(<?php echo $promo['thumb']; ?>);">
+					<img src="<?php echo $promo['thumb_m']; ?>" class="image-promotions-top" />
+				</div>
+				</div>       	
+			</a>
             	
             </div>
             <?php } ?>

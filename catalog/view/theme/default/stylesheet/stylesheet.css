@@ -2078,6 +2078,11 @@ button.form_send{
 	color: #161616;
 	margin-bottom: 20px;
 }
+.promo-img-link,
+.promo-img-link:hover {
+	text-decoration: none;
+	color: #161616;
+}
 .promo-img{
 	position: relative;
 	z-index: 20;
@@ -2099,7 +2104,7 @@ button.form_send{
 
  .page-promotipns .crop .image-promotions-top {
 	width: auto;
-	max-width: 50%;
+	/* max-width: 50%; */
  }
 .promo-content{
 	position: absolute;
@@ -4308,7 +4313,7 @@ header {
 	width: 90%;
 }
 .sorting-tools{
-	margin: 0 -15px 10px;
+	margin: 15px -15px 10px;
 }
 /* .sort-different{
 	padding-left: 5px;
