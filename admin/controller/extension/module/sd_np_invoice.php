@@ -489,14 +489,20 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 				}
 
 				if ($order_info['shipping_code'] == 'new_mail.new_mail') {
-					$adress = mb_substr($adress, 23);
+					//if set office_ref
+					if($order_info['shipping_code']['custom_field'] && isset($order_info['shipping_code']['custom_field']['newmail_office_ref'])){
+						$data['methodProperties']['RecipientAddress'] = $order_info['shipping_code']['custom_field']['newmail_office_ref'];
+					} else { // not set office_ref
+						$adress = mb_substr($adress, 23);
 
-					$data['methodProperties']['RecipientAddress'] = $this->model_extension_module_sd_np_invoice->getRefOffice($adress,$ref_city);
-					if (!$data['methodProperties']['RecipientAddress']) { // if not found Office
-						$data['methodProperties']['RecipientAddress'] = $this->config->get('sd_np_ref_sender_address');
-						$data['methodProperties']['CityRecipient'] = $this->config->get('sd_np_ref_city');
-						$is_warning = true;
+						$data['methodProperties']['RecipientAddress'] = $this->model_extension_module_sd_np_invoice->getRefOffice($adress,$ref_city);
+						if (!$data['methodProperties']['RecipientAddress']) { // if not found Office
+							$data['methodProperties']['RecipientAddress'] = $this->config->get('sd_np_ref_sender_address');
+							$data['methodProperties']['CityRecipient'] = $this->config->get('sd_np_ref_city');
+							$is_warning = true;
+						}
 					}
+
 				} else {
 					$ar_adress = explode(",", $adress);
 					if (count($ar_adress) > 1) {
