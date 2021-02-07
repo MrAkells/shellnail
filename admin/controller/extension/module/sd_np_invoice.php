@@ -644,6 +644,55 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 	}
 
 	/**
+	 * Загрузить список контактных лиц Контрагента
+	 * @return json
+	 */
+	public function send_invoices()
+	{
+		$this->load->language('extension/module/sd_np_invoice');
+
+		$comment = $this->language->get('text_comment');
+		$errors = '';
+		$order_status = 1;
+		$count = 0;
+		
+		if ($this->config->get('sd_np_status')) {
+
+			$this->load->model('sale/order');
+			$this->load->model('extension/module/sd_np_invoice');
+
+			$this->load_model('checkout/order');
+			$this->load_model('account/customer');
+			$this->load_model('extension/extension');
+
+			if (isset($this->request->post['selected'])) {
+				$orders = $this->request->post['selected'];
+				foreach ($orders as $order_id) {
+					$order_info = $this->model_sale_order->getOrder($order_id);
+					if($order_info['order_status_id'] != 1){
+						$number = $this->model_extension_module_sd_np_invoice->getInvoiceOrder($order_id);
+						if($number && $number['np_number']){
+							$comment_order = sprintf($comment, $number['np_number']);
+							$this->model_checkout_order->addOrderHistory($order_id, $order_status, $comment_order, 1, 0);
+							$count++;
+						} else {
+							$errors .= $order_id . ' нет ТТН<br>';
+						}
+					} else {
+						$errors .= $order_id . ' ' .$order_info['order_status_id']. ' <br>';
+					}
+				}
+			}
+		}
+
+		if ($errors) $this->session->data['warning'] = $errors;
+		if($count) $this->session->data['success'] = sprintf($this->language->get('text_success_send'), $count);
+		
+		$this->response->redirect($this->url->link('sale/order', 'token=' . $this->session->data['token'], true));
+
+	}
+
+	/**
 	 * @param $data
 	 * @return bool|mixed
 	 */
@@ -669,5 +718,20 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 		} catch (\Exception $e) {
 			return false;
 		}
+	}
+
+	private function load_model($model) {
+		require(DIR_CATALOG.'model/'.$model.'.php');
+		$model_path = 'model_'.str_replace('/', '_', $model);
+		$model_name = $this->create_model_name($model);
+		$this->$model_path = new $model_name( $this->registry );
+	}
+	private function create_model_name($model) {
+		$m_expl = explode('/', $model);
+		foreach($m_expl as $m) {
+		  $m_UC[] = ucfirst($m);
+		}
+
+		return 'Model'.implode('', $m_UC);
 	}
 }
