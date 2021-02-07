@@ -644,8 +644,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 	}
 
 	/**
-	 * Загрузить список контактных лиц Контрагента
-	 * @return json
+	 * Отправить ТТН клиенту
 	 */
 	public function send_invoices()
 	{
