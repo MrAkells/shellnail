@@ -652,14 +652,15 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 
 		$comment = $this->language->get('text_comment');
 		$errors = '';
-		$order_status = 1;
+		$order_status = 1; // Отправлен
 		$count = 0;
 		
 		if ($this->config->get('sd_np_status')) {
 
 			$this->load->model('sale/order');
 			$this->load->model('extension/module/sd_np_invoice');
-
+			
+			// load model from CATALOG
 			$this->load_model('checkout/order');
 			$this->load_model('account/customer');
 			$this->load_model('extension/extension');
@@ -719,6 +720,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 		}
 	}
 
+	// Load model from CATALOG
 	private function load_model($model) {
 		require(DIR_CATALOG.'model/'.$model.'.php');
 		$model_path = 'model_'.str_replace('/', '_', $model);
