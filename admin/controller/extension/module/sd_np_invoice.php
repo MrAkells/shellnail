@@ -490,8 +490,8 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 
 				if ($order_info['shipping_code'] == 'new_mail.new_mail') {
 					//if set office_ref
-					if($order_info['shipping_code']['custom_field'] && isset($order_info['shipping_code']['custom_field']['newmail_office_ref']) && strlen($order_info['shipping_code']['custom_field']['newmail_office_ref']) > 25){
-						$data['methodProperties']['RecipientAddress'] = $order_info['shipping_code']['custom_field']['newmail_office_ref'];
+					if($order_info['custom_field'] && isset($order_info['custom_field']['newmail_office_ref']) && strlen($order_info['custom_field']['newmail_office_ref']) > 25){
+						$data['methodProperties']['RecipientAddress'] = $order_info['custom_field']['newmail_office_ref'];
 					} else { // not set office_ref
 						$adress = mb_substr($adress, 23);
 
