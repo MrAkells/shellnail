@@ -584,4 +584,11 @@ class ModelCatalogProduct extends Model {
 
 		return $product_data;
 	}
+
+	public function getProductFilters($product_id) {
+
+        $query = $this->db->query("SELECT o.keyword as option_keyword, od.name as option_name, ov.keyword as value_keyword, ovd.name as value_name FROM " . DB_PREFIX . "dvfilter_option_value_to_product oov2p LEFT JOIN " . DB_PREFIX . "dvfilter_option o on (oov2p.option_id = o.option_id) LEFT JOIN " . DB_PREFIX . "dvfilter_option_description od on (oov2p.option_id = od.option_id AND od.language_id = " . (int)$this->config->get('config_language_id') . ") LEFT JOIN " . DB_PREFIX . "dvfilter_option_value ov on (oov2p.value_id = ov.value_id) LEFT JOIN " . DB_PREFIX . "dvfilter_option_value_description ovd on (oov2p.value_id = ovd.value_id AND ovd.language_id = " . (int)$this->config->get('config_language_id') . ") WHERE oov2p.product_id = '" . (int) $product_id . "' order by od.name");
+		return $query->rows;
+    }
+
 }

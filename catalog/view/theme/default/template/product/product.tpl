@@ -229,11 +229,17 @@
                         <div class="plusone" title="Поделиться ссылкой в Гугл-плюсе"><i class="fa fa-google-plus"></i></div>
                         <div class="pinterest" title="Поделиться картинкой на Пинтересте" data-media=""><i class="fa fa-pinterest-p"></i></div>
                     </div>
+                    <?php if ($product_filters) { ?>
+                      <table class="product-filters">
+                        <h3>Фильтры:</h3>
+                      <?php foreach ($product_filters as $filter) { ?>
+                      <tr><td><?php echo $filter['option'] ?>:</td><td><a href="<?php echo $filter['href']; ?>"><?php echo $filter['value']; ?></a></td></tr>
+                      <?php } ?>
+                    </table>
+                    <?php } ?>
                     
                 </div>
-                    
-                    
-                    
+                 
                 </div>
                 
             </div>

@@ -645,6 +645,20 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			$this->document->setJsonLd(json_encode($json_ld));
 			// END Json_ld
 
+			// Get option filters for product
+			$data['product_filters'] = [];
+			$filters = $this->model_catalog_product->getProductFilters($this->request->get['product_id']);
+			if($filters){
+				$filter_href = rtrim ($this->url->link('product/category', 'path=' . $this->request->get['path']), "/") . '_';
+				foreach ($filters as $value) {
+					$data['product_filters'][] = [
+						'option' => $value['option_name'],
+						'value' => $value['value_name'],
+						'href' => $filter_href . $value['option_keyword']. '_' . $value['value_keyword'],
+					];
+				}
+			}
+
 			$data['recurrings'] = $this->model_catalog_product->getProfiles($this->request->get['product_id']);
 
 			$this->model_catalog_product->updateViewed($this->request->get['product_id']);
