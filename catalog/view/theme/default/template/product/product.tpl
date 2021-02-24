@@ -242,8 +242,12 @@
                         </tr>
                       <?php foreach ($product_filters as $filter) { ?>
                         <tr>
-                          <td><?php echo $filter['option'] ?>:</td>
-                          <td><a href="<?php echo $filter['href']; ?>"><?php echo $filter['value']; ?></a></td>
+                          <td><?php echo $filter['option'] ?></td>
+                          <td>
+                            <?php foreach ($filter['values'] as $key => $value) { ?>
+                              <?php if($key) echo "/"; ?><a href="<?php echo $value[1]; ?>"><?php echo $value['0']; ?></a>
+                            <?php } ?>
+                          </td>
                         </tr>
                       <?php } ?>
                     </table>

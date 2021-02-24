@@ -651,11 +651,15 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			if($filters){
 				$filter_href = rtrim ($this->url->link('product/category', 'path=' . $this->request->get['path']), "/") . '_';
 				foreach ($filters as $value) {
-					$data['product_filters'][] = [
-						'option' => $value['option_name'],
-						'value' => $value['value_name'],
-						'href' => $filter_href . $value['option_keyword']. '_' . $value['value_keyword'],
-					];
+					if(isset($data['product_filters'][$value['option_id']])){
+						$data['product_filters'][$value['option_id']]['values'][] = [$value['value_name'],$filter_href . $value['option_keyword']. '_' . $value['value_keyword']];
+					} else {
+						$data['product_filters'][$value['option_id']] = [
+							'option' => $value['option_name'],
+							'values' => [[$value['value_name'],$filter_href . $value['option_keyword']. '_' . $value['value_keyword']]],
+							//'href' => $filter_href . $value['option_keyword']. '_' . $value['value_keyword'],
+						];
+					}
 				}
 			}
 
