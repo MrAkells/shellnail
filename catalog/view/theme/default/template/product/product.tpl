@@ -229,18 +229,26 @@
                         <div class="plusone" title="Поделиться ссылкой в Гугл-плюсе"><i class="fa fa-google-plus"></i></div>
                         <div class="pinterest" title="Поделиться картинкой на Пинтересте" data-media=""><i class="fa fa-pinterest-p"></i></div>
                     </div>
-                    <?php if ($product_filters) { ?>
-                      <table class="product-filters">
-                        <h3>Фильтры:</h3>
-                      <?php foreach ($product_filters as $filter) { ?>
-                      <tr><td><?php echo $filter['option'] ?>:</td><td><a href="<?php echo $filter['href']; ?>"><?php echo $filter['value']; ?></a></td></tr>
-                      <?php } ?>
-                    </table>
-                    <?php } ?>
                     
                 </div>
                  
                 </div>
+
+                <?php if ($product_filters) { ?>
+                  <div class="filter-links">
+                      <table class="product-filters product-attribute">
+                        <tr>
+                          <td class="product-attribute-title" colspan="2">Фильтры:</td>
+                        </tr>
+                      <?php foreach ($product_filters as $filter) { ?>
+                        <tr>
+                          <td><?php echo $filter['option'] ?>:</td>
+                          <td><a href="<?php echo $filter['href']; ?>"><?php echo $filter['value']; ?></a></td>
+                        </tr>
+                      <?php } ?>
+                    </table>
+                    </div>
+                  <?php } ?>
                 
             </div>
 
@@ -265,24 +273,23 @@
                   <?php echo $tab_attribute;?>:
                 </td>
               </tr>
-                
-            <?php foreach ($attribute_groups as $attribute_group) { ?>
-                
-                <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
-                    <tr>
-                      <td>
-                            <?php if($attribute['name']=='color'){ ?>
-                                <span>Цвет</span>
-                            <?php }else{ ?>
-                                  <span><?php echo $attribute['name']; ?></span>
-                            <?php } ?>
+              <?php foreach ($attribute_groups as $attribute_group) { ?>
+                  
+                  <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
+                      <tr>
+                        <td>
+                              <?php if($attribute['name']=='color'){ ?>
+                                  <span>Цвет</span>
+                              <?php }else{ ?>
+                                    <span><?php echo $attribute['name']; ?></span>
+                              <?php } ?>
+                          </td>
+                        <td>
+                          <span><?php echo $attribute['text']; ?></span>
                         </td>
-                      <td>
-                        <span><?php echo $attribute['text']; ?></span>
-                      </td>
-                    </tr>
-                <?php } ?>
-            <?php } ?>
+                      </tr>
+                  <?php } ?>
+              <?php } ?>
             </table>
             </div>
 
