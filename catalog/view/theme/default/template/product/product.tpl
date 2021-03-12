@@ -236,10 +236,18 @@
               
             </div>
 
-
          <div class='col-xs-6 col-attribute visible-xs' id="specification">
-            <?php if ($product_filters) { ?>  
-            <div class="product-attribute-box">
+            <?php if ($product_filters) { ?>
+              <?php 
+                $count_f = 0;
+                foreach ($product_filters as $filter) {
+                  foreach ($filter['values'] as $key => $value) {
+                    $count_f++;
+                  }
+                } 
+                
+              ?>    
+            <div class="product-attribute-box <?php echo ($count_f > 5 ? 'hideshadow' : ''); ?>">
               <table class="product-filters product-attribute">
                   <tr>
                     <td class="product-attribute-title" colspan="2"><?php echo $tab_attribute;?></td>
@@ -256,6 +264,9 @@
                 <?php } ?>
               </table>
             </div>
+            <?php if($count_f > 5){ ?>
+              <div class="product-more-detailed">Eщё</div>
+            <?php } ?>
             <?php } ?>
             
         </div>
