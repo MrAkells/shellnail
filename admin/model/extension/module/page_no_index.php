@@ -11,7 +11,7 @@ class ModelExtensionModulePageNoIndex extends Model
             "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "page_no_index ("
                 . " page_id INT(11) NOT NULL AUTO_INCREMENT, "
                 . " url VARCHAR(255) NOT NULL, "
-                . " description text"
+                . " description text, "
                 . " PRIMARY KEY (page_id) , KEY `url` (`url`)"
                 . ") COLLATE='utf8_general_ci' ENGINE=MyISAM"
         );

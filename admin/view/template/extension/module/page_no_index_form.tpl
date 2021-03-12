@@ -56,6 +56,8 @@
       </div>
     </div>
   </div>
-
+  <script type="text/javascript"><!--
+    ckeditorInit('input-description', getURLVar('token'));
+  //--></script>
 </div>
 <?php echo $footer; ?>
