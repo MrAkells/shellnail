@@ -16,7 +16,7 @@ $_['text_success_send']   = 'Успешно отправленно: %d';
 $_['entry_status']     = 'Статус';
 $_['entry_url']      = 'URL';
 $_['entry_name']     = 'URL';
-
+$_['entry_description']     = 'Описание';
 // Error
 $_['error_permission']  = 'У вас нет прав для управления этим модулем!';
 $_['error_url']         = 'URL обязательно!';

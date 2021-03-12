@@ -11,6 +11,7 @@ class ModelExtensionModulePageNoIndex extends Model
             "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "page_no_index ("
                 . " page_id INT(11) NOT NULL AUTO_INCREMENT, "
                 . " url VARCHAR(255) NOT NULL, "
+                . " description text"
                 . " PRIMARY KEY (page_id) , KEY `url` (`url`)"
                 . ") COLLATE='utf8_general_ci' ENGINE=MyISAM"
         );
@@ -62,14 +63,14 @@ class ModelExtensionModulePageNoIndex extends Model
 
     public function add($data)
     {
-        $this->db->query("INSERT INTO ".DB_PREFIX."page_no_index SET url='". $this->db->escape($data['url'])."'");
+        $this->db->query("INSERT INTO ".DB_PREFIX."page_no_index SET url='". $this->db->escape($data['url']) . "', description = '" . $this->db->escape($data['description']) . "'");
 
         return $this->db->getLastId();
     }
 
     public function edit($id, $data)
     {
-        $this->db->query("UPDATE " . DB_PREFIX . "page_no_index  SET  url='".$this->db->escape($data['url'])."' WHERE page_id='".(int)$id."'");
+        $this->db->query("UPDATE " . DB_PREFIX . "page_no_index  SET  url='".$this->db->escape($data['url']) ."', description = '" . $this->db->escape($data['description']) . "' WHERE page_id='".(int)$id."'");
 
     }
 

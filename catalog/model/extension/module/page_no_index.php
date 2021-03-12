@@ -13,4 +13,14 @@ class ModelExtensionModulePageNoIndex extends Model
         }
         return false;
     }
+    public function getDescription()
+    {
+         if(isset($this->request->server['REQUEST_URI'])){
+            $sql = "SELECT `description` FROM  " . DB_PREFIX . "page_no_index WHERE url = '" . $this->request->server['REQUEST_URI'] . "'";
+
+            $query = $this->db->query($sql);
+            return ($query->row ? $query->row['description'] : '');
+        }
+        return '';
+    }
 }
