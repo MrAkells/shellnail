@@ -233,74 +233,29 @@
                 </div>
                  
                 </div>
-
-                <?php if ($product_filters) { ?>
-                  <div class="filter-links">
-                      <table class="product-filters product-attribute">
-                        <tr>
-                          <td class="product-attribute-title" colspan="2">Фильтры:</td>
-                        </tr>
-                      <?php foreach ($product_filters as $filter) { ?>
-                        <tr>
-                          <td><?php echo $filter['option'] ?></td>
-                          <td>
-                            <?php foreach ($filter['values'] as $key => $value) { ?>
-                              <?php if($key) echo "/"; ?><a href="<?php echo $value[1]; ?>"><?php echo $value['0']; ?></a>
-                            <?php } ?>
-                          </td>
-                        </tr>
-                      <?php } ?>
-                    </table>
-                    </div>
-                  <?php } ?>
-                
+              
             </div>
 
 
          <div class='col-xs-6 col-attribute visible-xs' id="specification">
-           <?php if ($attribute_groups) { ?>
-            <?php $i=0; $attr_limit=5; ?>
-            <?php foreach ($attribute_groups as $attribute_group) { ?>
-                <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
-                  <?php $i++; ?>
+            <?php if ($product_filters) { ?>  
+            <div class="product-attribute-box">
+              <table class="product-filters product-attribute">
+                  <tr>
+                    <td class="product-attribute-title" colspan="2"><?php echo $tab_attribute;?></td>
+                  </tr>
+                <?php foreach ($product_filters as $filter) { ?>
+                  <tr>
+                    <td><?php echo $filter['option'] ?></td>
+                    <td>
+                      <?php foreach ($filter['values'] as $key => $value) { ?>
+                        <?php if($key) echo "/"; ?><a href="<?php echo $value[1]; ?>"><?php echo $value['0']; ?></a>
+                      <?php } ?>
+                    </td>
+                  </tr>
                 <?php } ?>
-            <?php } ?>
-            <?php if($i>$attr_limit){ 
-              $hideshadow = '';
-              } else { 
-                $hideshadow = 'hideshadow';
-              } ?>
-            <div class="product-attribute-box <?php echo $hideshadow; ?>">
-            <table class="product-attribute ">
-              <tr>
-                <td class="product-attribute-title" colspan="2">
-                  <?php echo $tab_attribute;?>:
-                </td>
-              </tr>
-              <?php foreach ($attribute_groups as $attribute_group) { ?>
-                  
-                  <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
-                      <tr>
-                        <td>
-                              <?php if($attribute['name']=='color'){ ?>
-                                  <span>Цвет</span>
-                              <?php }else{ ?>
-                                    <span><?php echo $attribute['name']; ?></span>
-                              <?php } ?>
-                          </td>
-                        <td>
-                          <span><?php echo $attribute['text']; ?></span>
-                        </td>
-                      </tr>
-                  <?php } ?>
-              <?php } ?>
-            </table>
+              </table>
             </div>
-
-            <?php if($i>$attr_limit){ ?>
-              <div class="product-more-detailed">Eщё</div>
-            <?php } ?>
-
             <?php } ?>
             
         </div>
@@ -450,61 +405,25 @@
             
             <div class='col-sm-4 col-attribute' id="specification">
            <div class="hidden-xs">
-           <?php if ($attribute_groups) { ?>
-           
-            <table class="product-attribute">
-                  <tr>
-                  <td class="product-attribute-title" colspan="2">
-                    <?php echo $tab_attribute;?>:
-                  </td></tr>
-                  <?php $i=0; $attr_limit=10; ?>
-                <?php foreach ($attribute_groups as $attribute_group) { ?>
-                    
-                    <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
-                        <?php $i++; ?>
-                        <?php if($i<=$attr_limit){ ?>
-                        <tr>
-                          <td>
-                             <?php if($attribute['name']=='color'){ ?>
-                                   <span>Цвет</span>
-                                <?php }else{ ?>
-                                     <span><?php echo $attribute['name']; ?></span>
-                               <?php } ?>
-                          </td>
-                          <td>
-                            <span><?php echo $attribute['text']; ?></span>
-                          </td>
-                        </tr>
-                        <?php }else{ ?>
-                       <tr class="hide_more_attr" style="display: none">
-                          <td>
-                             <?php if($attribute['name']=='color'){ ?>
-                                   <span>Цвет</span>
-                                <?php }else{ ?>
-                                     <span><?php echo $attribute['name']; ?></span>
-                               <?php } ?>
-                          </td>
-                          <td>
-                            <span><?php echo $attribute['text']; ?></span>
-                          </td>
-                        </tr>
-                       
+            <?php if ($product_filters) { ?>  
+              <div class="product-attribute">
+                <table class="product-filters product-attribute">
+                    <tr>
+                      <td class="product-attribute-title" colspan="2"><?php echo $tab_attribute;?></td>
+                    </tr>
+                  <?php foreach ($product_filters as $filter) { ?>
+                    <tr>
+                      <td><?php echo $filter['option'] ?></td>
+                      <td>
+                        <?php foreach ($filter['values'] as $key => $value) { ?>
+                          <?php if($key) echo "/"; ?><a href="<?php echo $value[1]; ?>"><?php echo $value['0']; ?></a>
                         <?php } ?>
-                    <?php } ?>
-            
-                <?php } ?>
-                    </table>
-           
-            <?php if($i>$attr_limit){ ?>
-              <div class="product-more-detailed">
-                <a onclick="$('.hide_more_attr').slideToggle();  if($(this).html()!='Свернуть'){ $(this).html('Свернуть'); }else{ $(this).html('Подробнее') }"><?php echo $btn_more_detailed; ?></a>
+                      </td>
+                    </tr>
+                  <?php } ?>
+                </table>
               </div>
               <?php } ?>
-           
-              <?php } ?>
-              
-             
-              
               </div>
                            <!-- Начало преимуществ --> 
          <div class="advantage-pack advantage-desctop- hidden-xs-">
