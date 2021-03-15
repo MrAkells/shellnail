@@ -247,7 +247,7 @@
                 } 
                 
               ?>    
-            <div class="product-attribute-box <?php echo ($count_f > 5 ? 'hideshadow' : ''); ?>">
+            <div class="product-attribute-box <?php echo ($count_f < 5 ? 'hideshadow' : ''); ?>">
               <table class="product-filters product-attribute">
                   <tr>
                     <td class="product-attribute-title" colspan="2"><?php echo $tab_attribute;?></td>

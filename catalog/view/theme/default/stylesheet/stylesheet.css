@@ -2582,11 +2582,14 @@ ul.new-sorting li{
 	font-size: 18px;
 	border-bottom: none;
 }
-.product-attribute tr{
+/* .product-attribute tr{
 	border-bottom: 1px solid #d7d7d7;
+} */
+.product-attribute td {
+	padding: 5px 5px 5px 0;
 }
-.product-attribute td{
-	padding: 5px 5px;
+.product-attribute td a {
+	border-bottom: 1px dotted #1771b9;
 }
 .col-attribute{
 	padding-left: 30px;

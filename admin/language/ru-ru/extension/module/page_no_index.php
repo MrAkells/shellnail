@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']    = 'NoIndex pages';
+$_['heading_title']    = 'Page no index + Text';
 
 // Text
 $_['text_add']         = 'Добавление url';
