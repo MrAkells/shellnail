@@ -285,6 +285,8 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		$data['text_form'] = !isset($this->request->get['page_id']) ? $this->language->get('text_add') : $this->language->get('text_edit_url');
 
 		$data['entry_url'] = $this->language->get('entry_url');
+		$data['entry_noindex'] = $this->language->get('entry_noindex');
+
 		$data['entry_description'] = $this->language->get('entry_description');
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
@@ -327,6 +329,13 @@ class ControllerExtensionModulePageNoIndex extends Controller
 			$data['url'] = $url_info['url'];
 		} else {
 			$data['url'] = '';
+		}
+		if (isset($this->request->post['is_noindex'])) {
+			$data['is_noindex'] = $this->request->post['is_noindex'];
+		} elseif (isset($this->request->get['page_id'])) {
+			$data['is_noindex'] = $url_info['is_noindex'];
+		} else {
+			$data['is_noindex'] = 0;
 		}
 		if (isset($this->request->post['description'])) {
 			$data['description'] = $this->request->post['description'];

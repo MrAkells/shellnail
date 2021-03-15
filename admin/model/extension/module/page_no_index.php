@@ -10,6 +10,7 @@ class ModelExtensionModulePageNoIndex extends Model
         $this->db->query(
             "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "page_no_index ("
                 . " page_id INT(11) NOT NULL AUTO_INCREMENT, "
+                . " is_noindex BOOLEAN NOT NULL DEFAULT FALSE, "
                 . " url VARCHAR(255) NOT NULL, "
                 . " description text, "
                 . " PRIMARY KEY (page_id) , KEY `url` (`url`)"
@@ -63,14 +64,14 @@ class ModelExtensionModulePageNoIndex extends Model
 
     public function add($data)
     {
-        $this->db->query("INSERT INTO ".DB_PREFIX."page_no_index SET url='". $this->db->escape($data['url']) . "', description = '" . $this->db->escape($data['description']) . "'");
+        $this->db->query("INSERT INTO ".DB_PREFIX."page_no_index SET  is_noindex= '" . (isset($data['is_noindex']) ? (int)$data['is_noindex'] : 0) . "', url='". $this->db->escape($data['url']) . "', description = '" . $this->db->escape($data['description']) . "'");
 
         return $this->db->getLastId();
     }
 
     public function edit($id, $data)
     {
-        $this->db->query("UPDATE " . DB_PREFIX . "page_no_index  SET  url='".$this->db->escape($data['url']) ."', description = '" . $this->db->escape($data['description']) . "' WHERE page_id='".(int)$id."'");
+        $this->db->query("UPDATE " . DB_PREFIX . "page_no_index  SET  is_noindex= '" . (isset($data['is_noindex']) ? (int)$data['is_noindex'] : 0) . "', url='".$this->db->escape($data['url']) ."', description = '" . $this->db->escape($data['description']) . "' WHERE page_id='".(int)$id."'");
 
     }
 

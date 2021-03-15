@@ -47,6 +47,20 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-is_noindex"><?php echo $entry_noindex; ?></label>
+            <div class="col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <?php if ($is_noindex) { ?>
+                  <input type="checkbox" name="is_noindex" value="1" checked="checked" id="input-is_noindex" />
+                  <?php } else { ?>
+                  <input type="checkbox" name="is_noindex" value="1" id="input-is_noindex" />
+                  <?php } ?>
+                  &nbsp; </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-description"><?php echo $entry_description; ?></label>
             <div class="col-sm-10">
               <textarea name="description" placeholder="<?php echo $entry_description; ?>" id="input-description" class="form-control summernote"><?php echo $description; ?></textarea>
