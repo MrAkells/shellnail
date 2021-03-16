@@ -4296,8 +4296,8 @@ header {
    margin-bottom: 20px;
 }
 .row-daughter-category {
-    margin-left: -15px!important;
-    margin-right: -15px!important;
+    /* margin-left: -15px!important;
+    margin-right: -15px!important; */
 }
 .col-refine{
 	padding-right: 0px;
