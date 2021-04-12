@@ -177,8 +177,8 @@ class ControllerExtensionModuleDelovod extends Controller
 					}
 					//Добавление услуг
 					$totals = $this->model_extension_module_delovod->getOrderTotal($order_id);
-					// если сумма заказа < 400 грн. и способ оплаты "Оплата банковским переводом", а доставка "В отделение Новой почты",  то в Деловод не добавляем доставку
-					if (isset($this->services[$order_info['shipping_code']]) && !($totals["sub_total"] < 400 && $order_info['payment_code'] == "privat" && $order_info['shipping_code'] == "new_mail.new_mail")) { // Доставка
+					// если сумма заказа < config new_mail_freetotal грн. и способ оплаты "Оплата банковским переводом", а доставка "В отделение Новой почты",  то в Деловод не добавляем доставку
+					if (isset($this->services[$order_info['shipping_code']]) && !($totals["sub_total"] < $this->config->get('new_mail_freetotal') && $order_info['payment_code'] == "privat" && $order_info['shipping_code'] == "new_mail.new_mail")) { // Доставка
 						$price_ser = (isset($totals["shipping"]) ? $totals["shipping"] : 0);
 						$packet["params"]['tableParts']['tpGoods'][] = [
 							"rowNum" 	=> ++$i,
