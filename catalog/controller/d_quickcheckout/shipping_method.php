@@ -37,7 +37,7 @@
 
             $this->load->language('checkout/shipping_options');
             $data['another_shipping']=$this->language->get('another_shipping');
-            $data['free_shipping']=$this->language->get('free_shipping');
+            $data['free_shipping']= sprintf($this->language->get('free_shipping'), $this->config->get('owner_free_shipping_sum'));
             
             return $this->load->view($template, $data);
         }
