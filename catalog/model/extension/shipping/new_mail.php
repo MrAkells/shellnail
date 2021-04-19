@@ -22,9 +22,8 @@ class ModelExtensionShippingNewMail extends Model
                             // $text_cost=$this->currency->format($cost, $this->session->data['currency']);
                         }
                         
-                        if(!$cost){
-                                $cost=40;
-                            }
+                        if(!$cost) $cost = $this->config->get('new_mail_min_cost');
+
                     }
                     
                     if($this->cart->getSubTotal()>=$this->config->get('new_mail_freetotal')){

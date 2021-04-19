@@ -127,12 +127,17 @@ class ControllerExtensionShippingNewMail extends Controller {
 			$data['new_mail_sort_order'] = $this->config->get('new_mail_sort_order');
 		}
 
-                if (isset($this->request->post['new_mail_freetotal'])) {
+        if (isset($this->request->post['new_mail_freetotal'])) {
 			$data['new_mail_freetotal'] = $this->request->post['new_mail_freetotal'];
 		} else {
 			$data['new_mail_freetotal'] = $this->config->get('new_mail_freetotal');
 		}
-                
+
+		if (isset($this->request->post['new_mail_min_cost'])) {
+			$data['new_mail_min_cost'] = $this->request->post['new_mail_min_cost'];
+		} else {
+			$data['new_mail_min_cost'] = $this->config->get('new_mail_min_cost');
+		}                
                 if (isset($this->request->post['new_mail_nalozhniy_percent'])) {
 			$data['new_mail_nalozhniy_percent'] = $this->request->post['new_mail_nalozhniy_percent'];
 		} else {

@@ -66,13 +66,18 @@
             </div>
           </div>
             
-             <div class="form-group">
+          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-freetotal"><?php echo $min_free_total; ?></label>
             <div class="col-sm-10">
               <input type="number" name="new_mail_freetotal" value="<?php echo $new_mail_freetotal; ?>"  id="input-freetotal" class="form-control" />
             </div>
           </div>
-            
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-mincost">Минимальная стоимость доставки НП</label>
+            <div class="col-sm-10">
+              <input type="number" name="new_mail_min_cost" value="<?php echo $new_mail_min_cost; ?>"  id="input-mincost" class="form-control" />
+            </div>
+          </div>            
             
                <div class="form-group">
             <label class="col-sm-6 control-label" for="input-fee"><?php echo $entry_fee; ?></label>
