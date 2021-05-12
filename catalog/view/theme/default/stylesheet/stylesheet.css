@@ -2587,6 +2587,7 @@ ul.new-sorting li{
 } */
 .product-attribute td {
 	padding: 5px 5px 5px 0;
+	border-bottom: 1px solid #d7d7d7;
 }
 .product-attribute td a {
 	border-bottom: 1px dotted #1771b9;
