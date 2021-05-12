@@ -264,7 +264,7 @@
                 <?php } ?>
               </table>
             </div>
-            <?php if($count_f > 5){ ?>
+            <?php if($count_f >= 5){ ?>
               <div class="product-more-detailed">Eщё</div>
             <?php } ?>
             <?php } ?>
