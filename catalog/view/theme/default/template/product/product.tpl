@@ -427,7 +427,7 @@
                       <td><?php echo $filter['option'] ?></td>
                       <td>
                         <?php foreach ($filter['values'] as $key => $value) { ?>
-                          <?php if($key) echo "/"; ?><a href="<?php echo $value[1]; ?>"><?php echo $value['0']; ?></a>
+                          <?php if($key) echo "/"; ?><?php echo $value['0']; ?>
                         <?php } ?>
                       </td>
                     </tr>
