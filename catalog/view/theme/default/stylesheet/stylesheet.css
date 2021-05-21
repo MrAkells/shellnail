@@ -6102,6 +6102,28 @@ aside#column-left{
 	height: 40px;
 }
 
+@media(max-width: 1200px) {
+	.col-middle-product .buy-one-click, .col-middle-product .btn-add-cart {
+		width: 137px;
+		display: block;
+		float: none;
+		margin-top: 10px;
+	}
+	.qty-pack {
+		margin-bottom: 10px;
+	}
+	.btn-product-wislist span {
+		margin-left: 13px;
+	}
+	.btn-product-compare span {
+		margin-left: 6px;
+	}
+	.btn-product-share span {
+		margin-left: 14px;
+	}
+}
+
+
 
 @media(max-width: 992px) {
 	.breadcrumbs--product {
@@ -6186,6 +6208,16 @@ aside#column-left{
 	}
 	#dvfilter-mobile {
 		margin-top: 14px;
+	}
+
+	.btn-product-wislist span {
+		margin-left: 7px;
+	}
+	.btn-product-compare span {
+		margin-left: 7px;
+	}
+	.btn-product-share span {
+		margin-left: 7px;
 	}
 }
 
