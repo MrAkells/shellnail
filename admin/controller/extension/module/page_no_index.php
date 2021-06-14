@@ -288,6 +288,9 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		$data['entry_noindex'] = $this->language->get('entry_noindex');
 
 		$data['entry_description'] = $this->language->get('entry_description');
+		$data['entry_meta_title'] = $this->language->get('entry_meta_title');
+		$data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
+		$data['entry_meta_description'] = $this->language->get('entry_meta_description');
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
 
@@ -303,8 +306,6 @@ class ControllerExtensionModulePageNoIndex extends Controller
 			'href' => $this->url->link('extension/module/page_no_index/urls', 'token=' . $this->session->data['token'], true)
 		);
 
-
-
 		if (!isset($this->request->get['page_id'])) {
 			$data['action'] = $this->url->link('extension/module/page_no_index/add', 'token=' . $this->session->data['token'], true);
 		} else {
@@ -316,6 +317,11 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		$data['cancel'] = $this->url->link('extension/module/page_no_index/urls', 'token=' . $this->session->data['token'], true);
 
 		$data['token'] = $this->session->data['token'];
+
+		$this->load->model('localisation/language');
+		$data['languages'] = $this->model_localisation_language->getLanguages();
+
+		$data['lang'] = $this->language->get('lang');
 
 		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];
@@ -337,6 +343,15 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		} else {
 			$data['is_noindex'] = 0;
 		}
+
+		if (isset($this->request->post['page_description'])) {
+			$data['page_description'] = $this->request->post['page_description'];
+		} elseif (isset($this->request->get['page_id'])) {
+			$data['page_description'] = $this->model_extension_module_page_no_index->getPageDescriptions($this->request->get['page_id']);
+		} else {
+			$data['page_description'] = array();
+		}
+
 		if (isset($this->request->post['description'])) {
 			$data['description'] = $this->request->post['description'];
 		} elseif (isset($this->request->get['page_id'])) {
