@@ -12,10 +12,20 @@ class ModelExtensionModulePageNoIndex extends Model
                 . " page_id INT(11) NOT NULL AUTO_INCREMENT, "
                 . " is_noindex BOOLEAN NOT NULL DEFAULT FALSE, "
                 . " url VARCHAR(255) NOT NULL, "
-                . " description text, "
                 . " PRIMARY KEY (page_id) , KEY `url` (`url`)"
                 . ") COLLATE='utf8_general_ci' ENGINE=MyISAM"
         );
+        $this->db->query(
+            "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "page_no_index_description ("
+                . " page_id INT(11) NOT NULL, "
+                . " language_id int(11) NOT NULL,"
+                . " description text, "
+                . " meta_title varchar(255),"
+                . " meta_description varchar(255),"
+                . " meta_keyword varchar(255),"
+                . " PRIMARY KEY (page_id, language_id)"
+                . ") COLLATE='utf8_general_ci' ENGINE=MyISAM"
+        );        
     }
 
     public function getUrl($id)
@@ -24,6 +34,23 @@ class ModelExtensionModulePageNoIndex extends Model
 
         return $query->row;
     }
+
+	public function getPageDescriptions($page_id) {
+		$page_description_data = array();
+
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "page_no_index_description WHERE page_id = '" . (int)$page_id . "'");
+
+		foreach ($query->rows as $result) {
+			$page_description_data[$result['language_id']] = array(
+				'meta_title'       => $result['meta_title'],
+				'meta_description' => $result['meta_description'],
+				'meta_keyword'     => $result['meta_keyword'],
+				'description'      => $result['description']
+			);
+		}
+
+		return $page_description_data;
+	}    
 
 	public function getUrls($data){
         $sql = "SELECT * FROM " . DB_PREFIX . "page_no_index ";
@@ -64,15 +91,26 @@ class ModelExtensionModulePageNoIndex extends Model
 
     public function add($data)
     {
-        $this->db->query("INSERT INTO ".DB_PREFIX."page_no_index SET  is_noindex= '" . (isset($data['is_noindex']) ? (int)$data['is_noindex'] : 0) . "', url='". $this->db->escape($data['url']) . "', description = '" . $this->db->escape($data['description']) . "'");
+        $this->db->query("INSERT INTO ".DB_PREFIX."page_no_index SET  is_noindex= '" . (isset($data['is_noindex']) ? (int)$data['is_noindex'] : 0) . "', url='". $this->db->escape($data['url']) . "'");
+        $id = $this->db->getLastId();
 
-        return $this->db->getLastId();
+        foreach ($data['page_description'] as $language_id => $value) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "page_no_index_description SET page_id = '" . (int)$id . "', language_id = '" . (int)$language_id . "', description = '" . $this->db->escape($value['description']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
+		}
+
+        return $id;
     }
 
     public function edit($id, $data)
     {
-        $this->db->query("UPDATE " . DB_PREFIX . "page_no_index  SET  is_noindex= '" . (isset($data['is_noindex']) ? (int)$data['is_noindex'] : 0) . "', url='".$this->db->escape($data['url']) ."', description = '" . $this->db->escape($data['description']) . "' WHERE page_id='".(int)$id."'");
+        $this->db->query("UPDATE " . DB_PREFIX . "page_no_index  SET  is_noindex= '" . (isset($data['is_noindex']) ? (int)$data['is_noindex'] : 0) . "', url='".$this->db->escape($data['url']) ."' WHERE page_id='".(int)$id."'");
+		
+        $this->db->query("DELETE FROM " . DB_PREFIX . "page_no_index_description WHERE page_id = '" . (int)$id . "'");
 
+        foreach ($data['page_description'] as $language_id => $value) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "page_no_index_description SET page_id = '" . (int)$id . "', language_id = '" . (int)$language_id . "', description = '" . $this->db->escape($value['description']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
+		}
+    
     }
 
     public function delete($ids)
