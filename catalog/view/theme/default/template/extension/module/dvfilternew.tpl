@@ -345,8 +345,8 @@ $(function() {
 <style>
     .custom_popover{
         position: relative;
-        top: -2px;
-        right: -6px;
+        top: -7px;
+        right: -9px;
         padding: 2px 10px;
         background-color: #976ba8;
         color: #fff;
