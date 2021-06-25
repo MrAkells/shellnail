@@ -166,6 +166,19 @@ class ControllerProductCategory extends Controller {
 			$data['button_list'] = $this->language->get('button_list');
 			$data['button_grid'] = $this->language->get('button_grid');
 
+			$data['text_po_poryadku_asc'] = $this->language->get('text_po_poryadku_asc');
+			$data['text_most_viewed_desc'] = $this->language->get('text_most_viewed_desc');
+			$data['text_newest_desc'] = $this->language->get('text_newest_desc');
+			$data['text_btn_fb_share'] = $this->language->get('text_btn_fb_share');
+			$data['text_people'] = $this->language->get('text_people');
+			$data['text_action_do'] = $this->language->get('text_action_do');
+			$data['text_cheaper'] = $this->language->get('text_cheaper');
+			$data['text_more_expensive'] = $this->language->get('text_more_expensive');
+			$data['text_not_chosen'] = $this->language->get('text_not_chosen');
+			$data['text_buy_one_click'] = $this->language->get('text_buy_one_click');
+
+
+
 			// Set the last category breadcrumb
 			$data['breadcrumbs'][] = array(
 				'text' => $category_info['name'],

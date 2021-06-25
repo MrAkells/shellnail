@@ -1240,6 +1240,19 @@ aside#column-left{
 .block-fb-like, #for_google_plus{
 	display: inline-block;
 }
+.block-fb-like {
+	width: 100%;
+	height: 60px;
+}
+.block-fb-like .fb_iframe_widget {
+	width: 100%;
+}
+.block-fb-like .fb_iframe_widget span {
+	width: 100%;
+}
+.block-fb-like .fb_iframe_widget span iframe {
+	width: 100%;
+}
 .express-sympathy{
 	margin-top: 25px;
 
@@ -6233,11 +6246,11 @@ aside#column-left{
 	}
 }
 
-
+/* 
 .fb-like span {
 	width: 90px !important;
 	height: 20px !important;
 }
 .fb-like span iframe {
 	width: 90px !important;
-}
+} */

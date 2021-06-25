@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']     = 'Виробники';
+$_['heading_title']     = 'Список виробників';
 
 // Text
 $_['text_brand']        = 'Виробник';
@@ -26,3 +26,17 @@ $_['text_model_asc']    = 'За кодом товару (А - Я)';
 $_['text_model_desc']   = 'За колом товару (Я - А)';
 $_['text_limit']        = 'На сторінці:';
 $_['text_benefits']     = 'Переваги:';
+
+$_['text_po_poryadku_desc']        = 'З кінця списку';
+$_['text_po_poryadku_asc']        = 'По порядку ';
+
+$_['text_most_viewed_desc']        = 'Популярные';
+$_['text_most_viewed_asc']        = 'Популярні (по зростанню)';
+
+$_['text_newest_desc']        = 'Новинки';
+$_['text_newest_asc']        = 'За датою (по зростанню)';
+
+$_['btn_more_detailed']        = 'Докладніше';
+$_['btn_less_detailed']        = 'Свернуть';
+
+$_['load_more_products']        = 'Завантажити наступні %s товарів';

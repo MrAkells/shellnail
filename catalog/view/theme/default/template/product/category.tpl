@@ -75,7 +75,7 @@
                     <div class="look-over">
                         <img src="catalog/view/theme/default/image/icon-eye.png" alt="Avatar" class="img-avatar">
                         <?php echo $text_look_over; ?>
-                        <?php echo $promo['observers']; ?> человека
+                        <?php echo $promo['observers']; ?> <?php echo $text_people ?>
                     </div>
                     <!--<div class="new-popover">Показано 5</div>-->
                     <div style="clear: left"></div>
@@ -87,7 +87,7 @@
 
                     <div class="fb-like" data-href="<?php echo $promo['href']; ?>" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>
 
-                    <div class="fb-share-button" data-href="<?php echo $promo['href']; ?>" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Поделиться</a></div>
+                    <div class="fb-share-button" data-href="<?php echo $promo['href']; ?>" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore"><?php echo $text_btn_fb_share ?></a></div>
 
                     <div id="end_of_promo<?php echo $promo['promo_id']; ?>" data-seconds="<?php echo $promo['endtime']; ?>"></div>
                 </div>
@@ -96,7 +96,7 @@
                         <img src="<?php echo $promo['thumb_m']; ?>" class="promotion-crop-cat-img" />
                     </div>
                     <p class="period-promotion">
-                        Акция до
+                        <?php echo $text_action_do; ?>
                         <?php echo $promo['date_end']; ?>
                     </p>
                     <div id="simple-timer<?php echo $promo['promo_id']; ?>" class="simple-timer">
@@ -261,27 +261,27 @@
                         <ul class="new-sorting list-inline visible-lg">
 
                             <?php if ('p.sort_order-ASC' == $sort . '-' . $order) { ?>
-                            <li class='selected_sort'><span class="sort-signal sort-up"><i class="fa fa-sort-amount-asc"></i></span><a onclick="location = '<?php echo $sorts['p.sort_order-DESC']['href']; ?>';">По порядку</a></li>
+                            <li class='selected_sort'><span class="sort-signal sort-up"><i class="fa fa-sort-amount-asc"></i></span><a onclick="location = '<?php echo $sorts['p.sort_order-DESC']['href']; ?>';"><?php echo $text_po_poryadku_asc; ?></a></li>
                             <?php }else if('p.sort_order-DESC' == $sort . '-' . $order){ ?>
-                            <li class='selected_sort'><span class="sort-signal sort-up"><i class="fa fa-sort-amount-desc"></i></span><a onclick="location = '<?php echo $sorts['p.sort_order-ASC']['href']; ?>';">По порядку</a></li>
+                            <li class='selected_sort'><span class="sort-signal sort-up"><i class="fa fa-sort-amount-desc"></i></span><a onclick="location = '<?php echo $sorts['p.sort_order-ASC']['href']; ?>';"><?php echo $text_po_poryadku_asc; ?></a></li>
                             <?php } else{ ?>
                             <li><a onclick="location = '<?php echo $sorts['p.sort_order-ASC']['href']; ?>';">По порядку </a></li>
                             <?php } ?>
 
 
                             <?php if('p.date_added-DESC' == $sort . '-' . $order){ ?>
-                            <li class='selected_sort'><a onclick="location = '<?php echo $sorts['p.date_added-ASC']['href']; ?>';">Новинки</a></li>
+                            <li class='selected_sort'><a onclick="location = '<?php echo $sorts['p.date_added-ASC']['href']; ?>';"><?php echo $text_newest_desc; ?></a></li>
                             <?php } else{ ?>
-                            <li><a onclick="location='<?php echo $sorts['p.date_added-DESC']['href']; ?>';">Новинки</a></li>
+                            <li><a onclick="location='<?php echo $sorts['p.date_added-DESC']['href']; ?>';"><?php echo $text_newest_desc; ?></a></li>
                             <?php } ?>
 
 
 
 
                             <?php if('p.viewed-DESC' == $sort . '-' . $order){ ?>
-                            <li class='selected_sort'><a onclick="location='<?php echo $sorts['p.viewed-ASC']['href']; ?>';">Популярные</a></li>
+                            <li class='selected_sort'><a onclick="location='<?php echo $sorts['p.viewed-ASC']['href']; ?>';"><?php echo $text_most_viewed_desc; ?></a></li>
                             <?php } else{ ?>
-                            <li><a onclick="location='<?php echo $sorts['p.viewed-DESC']['href']; ?>';">Популярные</a></li>
+                            <li><a onclick="location='<?php echo $sorts['p.viewed-DESC']['href']; ?>';"><?php echo $text_most_viewed_desc; ?></a></li>
                             <?php } ?>
                         </ul>
                         <?php 
@@ -308,19 +308,19 @@
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5 sort-price">
                     <div class="form-group input-group input-group-sm">
-                        <label class="input-group-addon" for="isort-price">Цена:</label>
+                        <label class="input-group-addon" for="isort-price"><?php echo $text_price; ?></label>
                         <ul class="new-sorting list-inline visible-lg">
 
                             <?php if ('p.price-ASC' == $sort . '-' . $order) { ?>
-                            <li class='selected_sort'><a onclick="location='<?php echo $sorts['p.price-ASC']['href']; ?>';">Дешевле</a></li>
+                            <li class='selected_sort'><a onclick="location='<?php echo $sorts['p.price-ASC']['href']; ?>';"><?php echo $text_cheaper; ?></a></li>
                             <?php } else{ ?>
-                            <li><a onclick="location='<?php echo $sorts['p.price-ASC']['href']; ?>';">Дешевле</a></li>
+                            <li><a onclick="location='<?php echo $sorts['p.price-ASC']['href']; ?>';"><?php echo $text_cheaper; ?></a></li>
                             <?php } ?>
 
                             <?php if ('p.price-DESC' == $sort . '-' . $order) { ?>
-                            <li class='selected_sort'><a onclick="location='<?php echo $sorts['p.price-DESC']['href']; ?>';">Дороже</a></li>
+                            <li class='selected_sort'><a onclick="location='<?php echo $sorts['p.price-DESC']['href']; ?>';"><?php echo $text_more_expensive; ?></a></li>
                             <?php } else{ ?>
-                            <li><a onclick="location='<?php echo $sorts['p.price-DESC']['href']; ?>';">Дороже</a></li>
+                            <li><a onclick="location='<?php echo $sorts['p.price-DESC']['href']; ?>';"><?php echo $text_more_expensive; ?></a></li>
                             <?php } ?>
 
 
@@ -329,18 +329,18 @@
                         <select id="sort-price" class="form-control hidden-lg" style="width: 100px; position: absolute; opacity: 0; height: 34px; font-size: 12px; z-index: 5;" onChange="location=this.value;">
                
               <?php if('p.price-ASC' == $sort . '-' . $order){ ?> 
-              <option value="<?php echo $sorts['p.price-ASC']['href']; ?>" selected>Дешевле</option>
+              <option value="<?php echo $sorts['p.price-ASC']['href']; ?>" selected><?php echo $text_cheaper; ?></option>
             <?php }else{ ?>
-            <option value="<?php echo $sorts['p.price-ASC']['href']; ?>" >Дешевле</option>
+            <option value="<?php echo $sorts['p.price-ASC']['href']; ?>" ><?php echo $text_cheaper; ?></option>
             <?php } ?>
             
              <?php if('p.price-DESC' == $sort . '-' . $order){ ?> 
-              <option value="<?php echo $sorts['p.price-DESC']['href']; ?>" selected>Дороже</option>
+              <option value="<?php echo $sorts['p.price-DESC']['href']; ?>" selected><?php echo $text_more_expensive; ?></option>
               <?php }else{ ?>
-              <option value="<?php echo $sorts['p.price-DESC']['href']; ?>">Дороже</option>
+              <option value="<?php echo $sorts['p.price-DESC']['href']; ?>"><?php echo $text_more_expensive; ?></option>
               <?php } ?>
               <?php if('p.price-ASC' != $sort . '-' . $order && 'p.price-DESC' != $sort . '-' . $order){ ?>
-              <option value="" selected>Не выбрано</option>
+              <option value="" selected><?php echo $text_not_chosen; ?></option>
               <?php } ?>
             </select>
                         <span class="form-control customSelect transparentSelect  hidden-lg" style="display: inline-block; width: 100px;"><span class="customSelectInner" style="width: 100px; display: inline-block;">9</span></span>
@@ -449,7 +449,7 @@
                             <div class="btn-two">
                                 <button type="button" class="btn-add-cart" data-fbq_sku="<?php echo $product['sku']; ?>" data-fbq_name="<?php echo $product['name']; ?>" data-fbq_price="<?php echo $product['intprice']; ?>" onclick="prepare_fbq($(this)); cart.add('<?php echo $product['product_id']; ?>');"><img src="catalog/view/theme/default/image/icon-small-cart.png" alt="New"> <span class=""><?php echo $button_cart; ?></span></button>
                                 <button type="button" class="buy-one-click order" data-toggle="modal" data-target="#order" data-fbq_sku="<?php echo $product['sku']; ?>" data-fbq_name="<?php echo $product['name']; ?>" data-fbq_price="<?php echo $product['intprice']; ?>" data-product_id="<?php echo $product['product_id']; ?>"
-                                    data-product="<?php echo $product['name']; ?>" data-product_url="<?php echo $product['href']; ?>" data-product_img="<?php echo $product['thumb']; ?>" data-product_price="<?php echo $product['price']; ?>" onclick="prepare_fbq($(this));"><img src="catalog/view/theme/default/image/icon-small-phone.png" alt="New"> <span class="title-one-click">Купить в один клик</span></button>
+                                    data-product="<?php echo $product['name']; ?>" data-product_url="<?php echo $product['href']; ?>" data-product_img="<?php echo $product['thumb']; ?>" data-product_price="<?php echo $product['price']; ?>" onclick="prepare_fbq($(this));"><img src="catalog/view/theme/default/image/icon-small-phone.png" alt="New"> <span class="title-one-click"><?php echo $text_buy_one_click; ?></span></button>
                             </div>
 
                             <?php } ?>
