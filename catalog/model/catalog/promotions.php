@@ -31,6 +31,16 @@ class ModelCatalogPromotions extends Model {
                 return $return;
 	}
 
+    public function getPromoDescription($promo_id)
+    {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "promotion_description WHERE promo_id = '" . (int)$promo_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+        if ($query->num_rows) {
+			return $query->row;
+		} else {
+			return [];
+		}
+    }
+
 	public function getActivePromotions() {
 		
             $query = $this->db->query("SELECT promo_id FROM " . DB_PREFIX . "promotions WHERE status=1 AND date_start<=NOW() AND date_end>=NOW() AND parent_id=0 ORDER BY hierarchy DESC, sort_order");

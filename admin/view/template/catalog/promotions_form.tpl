@@ -40,76 +40,93 @@
 
                     <input id="promo_id" class="hidden" name='promo_id' value="<?php echo $promo_id; ?>" />
                     <div class="form-group">
-                        <label class="col-sm-3 control-label" for="input-title">
-                            <?php echo $entry_title; ?>
+                        <label class="col-sm-3 control-label" for="input-keyword">
+                            <?php echo $entry_keyword; ?>
                         </label>
                         <div class="col-sm-8">
-                            <input name="title" value="<?php echo $title; ?>" class="form-control">
+                            <input name="keyword" value="<?php echo $keyword; ?>" class="form-control">
                         </div>
                     </div>
+                    <ul class="nav nav-tabs" id="language">
+                        <?php foreach ($languages as $language) { ?>
+                        <li><a href="#language<?php echo $language['language_id']; ?>" data-toggle="tab"><img
+                                    src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png"
+                                    title="<?php echo $language['name']; ?>" />
+                                <?php echo $language['name']; ?>
+                            </a></li>
+                        <?php } ?>
+                    </ul>
+                    <div class="tab-content">
+                        <?php foreach ($languages as $language) { ?>
+                        <div class="tab-pane" id="language<?php echo $language['language_id']; ?>">
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="input-short_title">
-                            <?php echo $entry_short_title; ?>
-                        </label>
-                        <div class="col-sm-8">
-                            <input name="short_title" value="<?php echo $short_title; ?>" class="form-control">
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="input-title">
+                                    <?php echo $entry_title; ?>
+                                </label>
+                                <div class="col-sm-8">
+                                    <input name="promo_description[<?php echo $language['language_id']; ?>][title]" value="<?php echo isset($promo_description[$language['language_id']]) && isset($promo_description[$language['language_id']]['title']) ? $promo_description[$language['language_id']]['title'] : ''; ?>" class="form-control">
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-9">
-                            <span class="btn btn-default" data-toggle="collapse" data-target="#seo_fields">SEO
-                                настройки</span>
-                        </div>
-                    </div>
-                    <div id="seo_fields" class="col-sm-12 collapse">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="input-keyword">
-                                <?php echo $entry_keyword; ?>
-                            </label>
-                            <div class="col-sm-8">
-                                <input name="keyword" value="<?php echo $keyword; ?>" class="form-control">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="input-short_title">
+                                    <?php echo $entry_short_title; ?>
+                                </label>
+                                <div class="col-sm-8">
+                                    <input name="promo_description[<?php echo $language['language_id']; ?>][short_title]" value="<?php echo isset($promo_description[$language['language_id']]) && isset($promo_description[$language['language_id']]['short_title']) ? $promo_description[$language['language_id']]['short_title'] : ''; ?>" class="form-control">
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="input-metat_title">Meta-title</label>
-                            <div class="col-sm-8">
-                                <input name="meta_title" value="<?php echo $meta_title; ?>" class="form-control">
+                            <div class="form-group">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-9">
+                                    <span class="btn btn-default" data-toggle="collapse" data-target="#seo_fields<?php echo $language['language_id']; ?>">SEO
+                                        настройки</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="input-meta_h1">Meta-H1</label>
-                            <div class="col-sm-8">
-                                <input name="meta_h1" value="<?php echo $meta_h1; ?>" class="form-control">
+                            <div id="seo_fields<?php echo $language['language_id']; ?>" class="col-sm-12 collapse">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="input-metat_title">Meta-title</label>
+                                    <div class="col-sm-8">
+                                        <input name="promo_description[<?php echo $language['language_id']; ?>][meta_title]" value="<?php echo isset($promo_description[$language['language_id']]) && isset($promo_description[$language['language_id']]['meta_title']) ? $promo_description[$language['language_id']]['meta_title'] : ''; ?>""
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="input-meta_h1">Meta-H1</label>
+                                    <div class="col-sm-8">
+                                        <input name="promo_description[<?php echo $language['language_id']; ?>][meta_h1]" value="<?php echo isset($promo_description[$language['language_id']]) && isset($promo_description[$language['language_id']]['meta_h1']) ? $promo_description[$language['language_id']]['meta_h1'] : ''; ?>" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label"
+                                        for="input-meta_description">Meta-description</label>
+                                    <div class="col-sm-8">
+                                        <textarea id="input-meta_description" name="promo_description[<?php echo $language['language_id']; ?>][meta_description]"
+                                            class="form-control"><?php echo isset($promo_description[$language['language_id']]) && isset($promo_description[$language['language_id']]['meta_description']) ? $promo_description[$language['language_id']]['meta_description'] : ''; ?></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="input-meta_keywords">Keywords</label>
+                                    <div class="col-sm-8">
+                                        <textarea id="input-meta_keywords" name="promo_description[<?php echo $language['language_id']; ?>][meta_keywords]"
+                                            class="form-control"><?php echo isset($promo_description[$language['language_id']]) && isset($promo_description[$language['language_id']]['meta_keywords']) ? $promo_description[$language['language_id']]['meta_keywords'] : ''; ?></textarea>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="input-meta_description">Meta-description</label>
-                            <div class="col-sm-8">
-                                <textarea id="input-meta_description" name="meta_description"
-                                    class="form-control"><?php echo $meta_description; ?></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="input-meta_keywords">Keywords</label>
-                            <div class="col-sm-8">
-                                <textarea id="input-meta_keywords" name="meta_keywords"
-                                    class="form-control"><?php echo $meta_keywords; ?></textarea>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="input-description">
-                            <?php echo $entry_description; ?>
-                        </label>
-                        <div class="col-sm-8">
-                            <textarea id="input-description" name="description"
-                                class="form-control"><?php echo $description; ?></textarea>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="input-description">
+                                    <?php echo $entry_description; ?>
+                                </label>
+                                <div class="col-sm-8">
+                                    <textarea id="input-description<?php echo $language['language_id']; ?>" name="promo_description[<?php echo $language['language_id']; ?>][description]"
+                                        class="form-control"><?php echo isset($promo_description[$language['language_id']]) && isset($promo_description[$language['language_id']]['description']) ? $promo_description[$language['language_id']]['description'] : ''; ?></textarea>
+                                </div>
+                            </div>
                         </div>
+                        <?php } ?>
                     </div>
 
                     <div class="form-group">
@@ -126,8 +143,8 @@
                         <label class="col-sm-3 control-label">
                             <?php echo $entry_image; ?>
                         </label>
-                        <div class="col-sm-8"><a href="" id="thumb-image-m" data-toggle="image" class="img-thumbnail"><img
-                                    src="<?php echo $thumb_image_m; ?>" alt="" title="" /></a>
+                        <div class="col-sm-8"><a href="" id="thumb-image-m" data-toggle="image"
+                                class="img-thumbnail"><img src="<?php echo $thumb_image_m; ?>" alt="" title="" /></a>
                             <input type="hidden" name="image_m" value="<?php echo $image_m; ?>" id="input-image-m" />
                         </div>
                     </div>
@@ -753,6 +770,11 @@
 
 
 </script>
-
+<script type="text/javascript"><!--
+    <?php foreach ($languages as $language) { ?>
+        ckeditorInit('input-description<?php echo $language['language_id']; ?>', getURLVar('token'));
+    <?php } ?>
+    $('#language a:first').tab('show');
+  //--></script>
 
 <?php echo $footer; ?>

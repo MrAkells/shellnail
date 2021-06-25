@@ -7,3 +7,5 @@ $_['text_day'] = 'дней';
 $_['text_hour'] = 'час';
 $_['text_minute'] = 'мин';
 $_['text_second'] = 'сек';
+$_['text_more_details'] = 'Подробнее';
+$_['text_promotion_until'] = 'Акция до';

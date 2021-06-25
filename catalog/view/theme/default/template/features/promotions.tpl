@@ -144,14 +144,14 @@ $(document).ready(function(){
                     </div>
                 </div>
             	<p class="period-promotion">
-                	Акция до <?php echo $promo['date_end']; ?>
+                	<?php echo $text_promotion_until .' ' . $promo['date_end']; ?>
             	</p>
             	<p class="promo-description hidden-xs">
                 <?php echo $promo['description']; ?>
             	</p>
             	<div class="more-eye">
             		<div class="promo-more">
-              			<span class="btn-promo-more">Подробнее</span>
+              			<span class="btn-promo-more"><?php echo $text_more_details; ?></span>
               		</div>
               		<div class="look-over">
               			<img src="catalog/view/theme/default/image/icon-eye.png" alt="Avatar" class="img-avatar"> <?php echo $text_look_over; ?> <?php echo $promo['observers']; ?> человека

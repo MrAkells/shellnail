@@ -38,6 +38,9 @@ class ControllerFeaturesPromotions extends Controller {
                         continue;
                    }
                     $promotion=$this->model_catalog_promotions->getPromotion($promo_id, false);
+
+                    $promotion_description = $this->model_catalog_promotions->getPromoDescription($promo_id);
+
                     if ($promotion['image']) {
 			$image = $this->model_tool_image->resize($promotion['image'], 848, 326);
                     } else {
@@ -54,9 +57,9 @@ class ControllerFeaturesPromotions extends Controller {
                     $date_end=date('d.m.Y',$ends);
                     $data['promotions'][]=array(
                         'promo_id'=>$promotion['promo_id'],
-                        'title'=>$promotion['title'],
+                        'title'=>$promotion_description ? $promotion_description['title'] : "",
                         'endtime'=> $ends,
-                        'description'=> utf8_substr(strip_tags(html_entity_decode($promotion['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '..',
+                        'description'=> $promotion_description ? utf8_substr(strip_tags(html_entity_decode($promotion_description['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '..' : '',
                         'date_end'=>$date_end,
                         'thumb'=>$image,
                         'thumb_m'=>$image_m,
@@ -79,8 +82,9 @@ class ControllerFeaturesPromotions extends Controller {
 		$data['text_hour']=$this->language->get('text_hour');
 		$data['text_minute']=$this->language->get('text_minute');
 		$data['text_second']=$this->language->get('text_second');
-                
-                
+                $data['text_more_details']=$this->language->get('text_more_details');
+                $data['text_promotion_until']=$this->language->get('text_promotion_until');
+
 		$this->response->setOutput($this->load->view('features/promotions', $data));
 		
 	}
