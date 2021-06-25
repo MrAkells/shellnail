@@ -3,7 +3,7 @@ class ModelExtensionModuleMenu extends Model {
     
     public function createCategoryMenu(){  
         
-        $cache_data=$this->cache->get('menushka');
+        $cache_data=$this->cache->get('menushka_' . $this->config->get('config_language_id'));
         if($cache_data){
             return $cache_data;
         }
@@ -211,7 +211,7 @@ class ModelExtensionModuleMenu extends Model {
                         unset($extra_links[0]);
                 }
         
-            $this->cache->set('menushka', $full_category_data);
+            $this->cache->set('menushka_' . $this->config->get('config_language_id'), $full_category_data);
             
             return $full_category_data;
     }
