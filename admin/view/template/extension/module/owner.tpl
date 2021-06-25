@@ -64,67 +64,81 @@
                     <input type="text" name="owner_sсhedule" value="<?php echo $schedule; ?>" placeholder="<?php echo $text_sсhedule; ?>"  class="form-control" />
                 </div>
             </div>
-            <div class="form-group">
+
+            <ul class="nav nav-tabs" id="language">
+              <?php foreach ($languages as $language) { ?>
+              <li><a href="#language<?php echo $language['language_id']; ?>" data-toggle="tab"><img src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a></li>
+              <?php } ?>
+            </ul>
+          <div class="tab-content">
+            <?php foreach ($languages as $language) { ?>
+            <div class="tab-pane" id="language<?php echo $language['language_id']; ?>">
+              <div class="form-group">
                 <label class="col-sm-4 control-label"><?php echo $text_shop_description; ?></label>
                 <div class="col-sm-8">
-                    <textarea rows="10" type="text" name="owner_shop_description" id="shop_desc_text" placeholder="<?php echo $text_shop_description; ?>"  data-lang="ru" class="form-control summernote" /><?php echo $shop_description; ?></textarea>
-                </div>
-            </div>
-            <hr/>
-            
-             <h3 class="text-center">Хедер</h3>
-            
-            <div class="form-group">
-                <label class="col-sm-4 control-label"><?php echo $text_moto; ?></label>
-                <div class="col-sm-8">
-                    <input type="text" name="owner_moto" value="<?php echo $moto; ?>" placeholder="<?php echo $text_moto; ?>"  class="form-control" />
-                </div>
-            </div>
-            <hr/>
-            
-            <h3 class="text-center">Футер</h3>
-            
-            <div class="form-group">
-                <label class="col-sm-4 control-label"><?php echo $text_moto_footer; ?></label>
-                <div class="col-sm-8">
-                    <input type="text" name="owner_moto_footer" value="<?php echo $moto_footer; ?>" placeholder="<?php echo $text_moto_footer; ?>"  class="form-control" />
-                </div>
-            </div>
-            
-             <div class="form-group">
-                <label class="col-sm-4 control-label"><?php echo $text_second_block_title; ?></label>
-                <div class="col-sm-8">
-                    <input type="text" name="owner_second_block_title" value="<?php echo $second_block_title; ?>" placeholder="<?php echo $text_second_block_title; ?>"  class="form-control" />
-                </div>
-            </div>
-            
-              <div class="form-group">
-                <label class="col-sm-4 control-label"><?php echo $text_second_block; ?></label>
-                <div class="col-sm-8">
-                    <textarea type="text" name="owner_second_block"  placeholder="<?php echo $text_second_block; ?>"  class="form-control" /><?php echo $second_block; ?></textarea>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="col-sm-4 control-label"><?php echo $entry_icons; ?></label>
-                <div class="col-sm-4"><a href="" id="thumb-icon" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb_brands_icon; ?>" alt="" title="" /></a>
-                  <input type="hidden" name="owner_brands_icon" value="<?php echo $brands_icon; ?>" id="input-icon" />
-                </div>
-                <div class="col-sm-4"><a href="" id="thumb-icon2" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb_brands_icon2; ?>" alt="" title="" /></a>
-                  <input type="hidden" name="owner_brands_icon2" value="<?php echo $brands_icon2; ?>" id="input-icon2" />
-                </div>
-            </div>
-            
-             <div class="form-group">
-                <label class="col-sm-3 control-label"><?php echo $entry_brands_name; ?></label>
-                <div class="col-sm-3">
-                  <input name="owner_brands_name" value="<?php echo $brands_name; ?>"  />
-                </div>
-                <label class="col-sm-3 control-label"><?php echo $entry_brands_sort_order; ?></label>
-                <div class="col-sm-3">
-                  <input name="owner_brands_sort_order" value="<?php echo $brands_sort_order; ?>"  />
+                    <textarea rows="10" type="text" name="owner_description[<?php echo $language['language_id']; ?>][description]" id="input-description<?php echo $language['language_id']; ?>" placeholder="<?php echo $text_shop_description; ?>"  data-lang="<?php echo $lang; ?>" class="form-control summernote"><?php echo isset($owner_description[$language['language_id']]) ? $owner_description[$language['language_id']]['description'] : ''; ?></textarea>
                 </div>
               </div>
+
+              <hr/>
+            
+              <h3 class="text-center">Хедер</h3>
+              
+              <div class="form-group">
+                  <label class="col-sm-4 control-label"><?php echo $text_moto; ?></label>
+                  <div class="col-sm-8">
+                      <input type="text" name="owner_description[<?php echo $language['language_id']; ?>][moto]" value="<?php echo isset($owner_description[$language['language_id']]['moto']) ? $owner_description[$language['language_id']]['moto'] : ''; ?>" placeholder="<?php echo $text_moto; ?>"  class="form-control" />
+                  </div>
+              </div>
+              <hr/>
+              
+              <h3 class="text-center">Футер</h3>
+              
+              <div class="form-group">
+                  <label class="col-sm-4 control-label"><?php echo $text_moto_footer; ?></label>
+                  <div class="col-sm-8">
+                      <input type="text" name="owner_description[<?php echo $language['language_id']; ?>][moto_footer]" value="<?php echo isset($owner_description[$language['language_id']]['moto_footer']) ? $owner_description[$language['language_id']]['moto_footer'] : ''; ?>" placeholder="<?php echo $text_moto_footer; ?>"  class="form-control" />
+                  </div>
+              </div>
+              
+              <div class="form-group">
+                  <label class="col-sm-4 control-label"><?php echo $text_second_block_title; ?></label>
+                  <div class="col-sm-8">
+                      <input type="text" name="owner_description[<?php echo $language['language_id']; ?>][second_block_title]" value="<?php echo isset($owner_description[$language['language_id']]['second_block_title']) ? $owner_description[$language['language_id']]['second_block_title'] : ''; ?>" placeholder="<?php echo $text_second_block_title; ?>"  class="form-control" />
+                  </div>
+              </div>
+              
+                <div class="form-group">
+                  <label class="col-sm-4 control-label"><?php echo $text_second_block; ?></label>
+                  <div class="col-sm-8">
+                      <textarea type="text" name="owner_description[<?php echo $language['language_id']; ?>][second_block]"  placeholder="<?php echo $text_second_block; ?>"  class="form-control" /><?php echo isset($owner_description[$language['language_id']]['second_block']) ? $owner_description[$language['language_id']]['second_block'] : ''; ?></textarea>
+                  </div>
+              </div>
+
+              <hr/>
+
+              <h3 class='text-center'>Акции</h3>
+              <div class="form-group">
+                 <label class="col-sm-4 control-label"><?php echo $entry_promotions_meta_title; ?></label>
+                 <div class="col-sm-8">
+                     <input type="text" name="owner_description[<?php echo $language['language_id']; ?>][promotions_meta_title]" value="<?php echo isset($owner_description[$language['language_id']]['promotions_meta_title']) ? $owner_description[$language['language_id']]['promotions_meta_title'] : ''; ?>" placeholder="<?php echo $entry_promotions_meta_title; ?>"  class="form-control" />
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-4 control-label"><?php echo $entry_promotions_meta_description; ?></label>
+                 <div class="col-sm-8">
+                     <textarea type="text" name="owner_description[<?php echo $language['language_id']; ?>][promotions_meta_description]"  placeholder="<?php echo $entry_promotions_meta_description; ?>"  class="form-control" /><?php echo isset($owner_description[$language['language_id']]['promotions_meta_description']) ? $owner_description[$language['language_id']]['promotions_meta_description'] : ''; ?></textarea>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-4 control-label"><?php echo $entry_promotions_meta_keywords; ?></label>
+                 <div class="col-sm-8">
+                     <textarea type="text" name="owner_description[<?php echo $language['language_id']; ?>][promotions_meta_keywords]"  placeholder="<?php echo $entry_promotions_meta_keywords; ?>"  class="form-control" /><?php echo isset($owner_description[$language['language_id']]['promotions_meta_keywords']) ? $owner_description[$language['language_id']]['promotions_meta_keywords'] : ''; ?></textarea>
+                  </div>
+             </div>                                        
+            </div>
+            <?php } ?>
+          </div>               
             
             <hr/>
             <h3 class='text-center'>Дополнительный логотип</h3>
@@ -143,34 +157,16 @@
                     <input type="number" name="owner_free_shipping_sum" value="<?php echo $owner_free_shipping_sum; ?>"   class="form-control" />
                 </div>
             </div>
-             <h3 class='text-center'>Акции</h3>
-             <div class="form-group">
-                <label class="col-sm-4 control-label"><?php echo $entry_promotions_meta_title; ?></label>
-                <div class="col-sm-8">
-                    <input type="text" name="owner_promotions_meta_title" value="<?php echo $promotions_meta_title; ?>" placeholder="<?php echo $entry_promotions_meta_title; ?>"  class="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label"><?php echo $entry_promotions_meta_description; ?></label>
-                <div class="col-sm-8">
-                    <textarea type="text" name="owner_promotions_meta_description"  placeholder="<?php echo $entry_promotions_meta_description; ?>"  class="form-control" /><?php echo $promotions_meta_description; ?></textarea>
-                </div>
-            </div>
-               <div class="form-group">
-                <label class="col-sm-4 control-label"><?php echo $entry_promotions_meta_keywords; ?></label>
-                <div class="col-sm-8">
-                    <textarea type="text" name="owner_promotions_meta_keywords"  placeholder="<?php echo $entry_promotions_meta_keywords; ?>"  class="form-control" /><?php echo $promotions_meta_keywords; ?></textarea>
-                </div>
-            </div>
-            
         </form>
       </div>
     </div>
   </div>
 </div>
-<script type="text/javascript">
-<?php if ($ckeditor) { ?>
-        ckeditorInit('shop_desc_text', getURLVar('token'));
+
+<script type="text/javascript"><!--
+    <?php foreach ($languages as $language) { ?>
+        ckeditorInit('input-description<?php echo $language['language_id']; ?>', getURLVar('token'));
     <?php } ?>
-</script>
+    $('#language a:first').tab('show');
+  //--></script>
 <?php echo $footer; ?>

@@ -102,7 +102,7 @@ class ControllerExtensionModuleNewsBlogArticles extends Controller {
         if ($setting['template']) {
             $template=$setting['template'];
             if($template=='commonnews'){
-                $data['shop_description']=html_entity_decode($this->config->get("owner_shop_description"), ENT_QUOTES, 'UTF-8'); 
+                $data['shop_description']=html_entity_decode($this->config->get('owner_description')[$this->config->get('config_language_id')]['description'], ENT_QUOTES, 'UTF-8'); 
             }
         }
 

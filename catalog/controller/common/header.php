@@ -207,7 +207,8 @@ class ControllerCommonHeader extends Controller {
                 );
                 
                 
-                $data['shop_feature']=$this->config->get('owner_moto');
+                $data['shop_feature']=$this->config->get('owner_description')[$this->config->get('config_language_id')]['moto'];
+                
                 
                 $data['phone1']=$this->config->get('owner_phone1');
                 $data['phone2']=$this->config->get('owner_phone2');
