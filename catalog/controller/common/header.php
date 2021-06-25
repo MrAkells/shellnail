@@ -3,6 +3,8 @@ class ControllerCommonHeader extends Controller {
 	public function index() {
 		// Analytics
 		$this->load->model('extension/extension');
+
+		$data['language'] = $this->load->controller('common/language');
              
 		$data['analytics'] = array();
 
@@ -39,7 +41,12 @@ class ControllerCommonHeader extends Controller {
 
                 // Обратный звонок
                 //$this->document->addScript( "https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js");
-               
+
+		if(isset($this->session->data['user_id']) && $this->session->data['user_id']){
+			$data['is_admin'] = 1;
+		}else{
+			$data['is_admin'] = 0;
+		}
 		
 		if (!$this->customer->isLogged()) {
                     $this->document->addScript('https://ulogin.ru/js/ulogin.js');
