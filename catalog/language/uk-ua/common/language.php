@@ -1,3 +1,3 @@
 <?php
 // Text
-$_['text_language'] = 'Українська';
+$_['text_language'] = 'Ua';

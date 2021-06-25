@@ -196,6 +196,11 @@ div.required .control-label:after {
 	transform: translateY(-2px);
     margin-right: 3px;
 }
+.top-d-flex {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
 /* logo */
 #logo {
 	margin: 0 0 10px 0;

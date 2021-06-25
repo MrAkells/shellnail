@@ -11,7 +11,7 @@ $_['decimal_point']         = '.';
 $_['thousand_point']        = ' ';
 
 // Text
-$_['text_home']             = '<i class="fa fa-home"></i>';
+$_['text_home']             = 'Головна';
 $_['text_yes']              = 'Так';
 $_['text_no']               = 'Ні';
 $_['text_none']             = ' --- Не обрано --- ';
@@ -26,12 +26,12 @@ $_['text_new']              = 'Новинка';
 $_['button_address_add']    = 'Додати адресу';
 $_['button_back']           = 'Назад';
 $_['button_continue']       = 'Продовжити';
-$_['button_cart']           = 'До кошика';
+$_['button_cart']           = 'Купити';
 $_['button_cancel']         = 'Скасувати';
 $_['button_compare']        = 'До порівняння';
 $_['button_wishlist']       = 'В закладки';
 $_['button_checkout']       = 'Оформлення замовлення';
-$_['button_confirm']        = 'Підтвердження замовлення';
+$_['button_confirm']        = 'ПіДТВЕРДЖЕННЯ ЗАМОВЛЕННЯ';
 $_['button_coupon']         = 'Застосувати купон';
 $_['button_delete']         = 'Видалити';
 $_['button_download']       = 'Завантажити';
@@ -55,7 +55,7 @@ $_['button_view']           = 'Перегляд';
 $_['button_voucher']        = 'Застосувати сертифікат';
 $_['button_upload']         = 'Завантажити файл';
 $_['button_reward']         = 'Застосувати бонусні бали';
-$_['button_quote']          = 'Отримати котирування';
+$_['button_quote']          = 'Розрахувати вартість';
 $_['button_list']           = 'Перелік';
 $_['button_grid']           = 'Сітка';
 $_['button_map']            = 'Подивитися на Google картах';
@@ -70,3 +70,14 @@ $_['error_upload_6']        = 'Не знайдено тимчасову папк
 $_['error_upload_7']        = 'Невдала спроба запису файлу на диск';
 $_['error_upload_8']        = 'Завантаження файлу було скасовано';
 $_['error_upload_999']      = 'Код помилки недоступний';
+
+$_['error_curl']            = 'CURL: Код ошибки(%s): %s';
+
+$_['text_artikul']='Код';
+$_['text_reviews_number']='відгуків';
+$_['text_shellnail']='ShellNail';
+$_['text_buy_one_click']='Купити в один клік';
+$_['text_instock']                            = 'В наявності';
+$_['text_outstock']                            = 'Немає в наявності';
+
+$_['error_field_required'] = 'Дане поле обов`язково до заповнення';
