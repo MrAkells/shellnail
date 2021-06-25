@@ -352,14 +352,6 @@ class ControllerExtensionModulePageNoIndex extends Controller
 			$data['page_description'] = array();
 		}
 
-		if (isset($this->request->post['description'])) {
-			$data['description'] = $this->request->post['description'];
-		} elseif (isset($this->request->get['page_id'])) {
-			$data['description'] = $url_info['description'];
-		} else {
-			$data['description'] = '';
-		}
-
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
