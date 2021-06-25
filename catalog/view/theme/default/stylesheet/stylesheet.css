@@ -189,6 +189,13 @@ div.required .control-label:after {
 #top-links a + a {
 	margin-left: 15px;
 }
+.top-lang .btn {
+	padding: 0 5px;
+}
+.top-lang .btn img {
+	transform: translateY(-2px);
+    margin-right: 3px;
+}
 /* logo */
 #logo {
 	margin: 0 0 10px 0;
