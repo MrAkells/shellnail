@@ -10,7 +10,7 @@
                         </div>
                         <div>
                             <div class="caption">
-                                <h4><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4>
+                                <dev><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></dev>
                                 <p><?php echo $product['description']; ?></p>
                                 <?php if ($product['price']) { ?>
                                 <p class="price">

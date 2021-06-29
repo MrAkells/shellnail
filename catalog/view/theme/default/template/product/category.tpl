@@ -382,11 +382,11 @@
                         <div class="image"><a href="<?php echo $product['href']; ?>"><img class="<?php echo $product['quantity']>0?'':'colorless'; ?>" src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a></div>
                         <div>
                             <div class="caption">
-                                <h4 class="name-product">
+                                <div class="name-product">
                                     <a href="<?php echo $product['href']; ?>">
                                         <?php echo $product['name']; ?>
                                     </a>
-                                </h4>
+                                </div>
                                 <div class="product_art_stat">
                                     <?php if($product['sku']){ ?>
                                     <p class="artikul"><span><?php echo $text_artikul; ?>:</span> <span><?php echo $product['sku']; ?></span></p>

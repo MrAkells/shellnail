@@ -1680,6 +1680,8 @@ header .phone-star:before {
 	width: 40%;
 	line-height: 1.2;
 	margin-bottom: 0px;
+	margin-top: 20px;
+	font-weight: 500;
 }
 .h2_second_piece{
 	display: block;
@@ -1779,6 +1781,21 @@ h2.title-feature{
   display: -webkit-box; /* Включаем флексбоксы */
   -webkit-box-orient: vertical; /* Вертикальная ориентация */
   overflow: hidden;
+}
+.product-tab-title {
+	font-family: 'Roboto Bold';
+    font-size: 18px;
+	line-height: 1.4;
+	margin: 0;
+}
+.h2title {
+	font-size: 22px;
+    font-family: 'Roboto Bold';
+    color: #161616;
+	margin-top: 20px;
+    margin-bottom: 10px;
+	font-weight: 500;
+    line-height: 1.1;
 }
 .artikul{
 	color: #adadad;

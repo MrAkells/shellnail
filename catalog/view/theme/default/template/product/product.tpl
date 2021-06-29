@@ -250,7 +250,9 @@
             <div class="product-attribute-box <?php echo ($count_f < 5 ? 'hideshadow' : ''); ?>">
               <table class="product-filters product-attribute">
                   <tr>
-                    <td class="product-attribute-title" colspan="2"><?php echo $tab_attribute;?></td>
+                    <td class="product-attribute-title" colspan="2">
+                     <h2 class="product-tab-title"><?php echo $tab_attribute;?></h2>
+                    </td>
                   </tr>
                 <?php foreach ($product_filters as $filter) { ?>
                   <tr>
@@ -321,9 +323,13 @@
             <div class="col-sm-12 col-product-tab">
               <!-- Начало табов -->
           <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab-description" data-toggle="tab"><?php echo $tab_description; ?></a></li>
+            <li class="active"><a href="#tab-description" data-toggle="tab">
+            <h2 class="product-tab-title"><?php echo $tab_description; ?></h2>
+            </a></li>
             <?php if ($review_status) { ?>
-            <li id="tab-product-review"><a href="#tab-review" data-toggle="tab"><?php echo $tab_review; ?></a></li>
+            <li id="tab-product-review"><a href="#tab-review" data-toggle="tab">
+              <h2 class="product-tab-title"><?php echo $tab_review; ?></h2>
+            </a></li>
             <?php } ?>
           </ul>
           <div class="tab-content">
@@ -337,7 +343,7 @@
             <div class="tab-pane" id="tab-review" >
               <form class="form-horizontal" id="form-review">
                 <div id="review"></div>
-                <h2 id="review_fields"><?php echo $text_write; ?></h2>
+                <div class="h2title" id="review_fields"><?php echo $text_write; ?></div>
                 <?php if ($review_guest) { ?>
                 <div class="form-group required">
                   <div class="col-sm-12">
@@ -420,7 +426,9 @@
               <div class="product-attribute">
                 <table class="product-filters product-attribute">
                     <tr>
-                      <td class="product-attribute-title" colspan="2"><?php echo $tab_attribute;?></td>
+                      <td class="product-attribute-title" colspan="2">
+                        <h2 class="product-tab-title"><?php echo $tab_attribute;?></h2>
+                      </td>
                     </tr>
                   <?php foreach ($product_filters as $filter) { ?>
                     <tr>
