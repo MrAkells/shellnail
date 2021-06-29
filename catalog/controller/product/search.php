@@ -8,6 +8,8 @@ class ControllerProductSearch extends Controller {
 		$this->load->model('catalog/product');
 
 		$this->load->model('tool/image');
+		
+		$this->document->setNoindex(true);
 
 		if (isset($this->request->get['search'])) {
 			$search = $this->request->get['search'];
