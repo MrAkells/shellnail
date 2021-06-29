@@ -328,11 +328,16 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 
 			if ($product_info['quantity'] <= 0) {
 				$data['stock'] = $product_info['stock_status'];
+				
+				// Noindex if quantity < 0
+				if(time() > strtotime( "+1 month", strtotime( $product_info['date_modified'] )) ) $this->document->setNoindex(true);
+
 			} elseif ($this->config->get('config_stock_display')) {
 				$data['stock'] = $product_info['quantity'];
 			} else {
 				$data['stock'] = $this->language->get('text_instock');
 			}
+
 
                      
                         $data['text_vendorcountry'] =$this->language->get('text_vendorcountry');
