@@ -1,6 +1,10 @@
 <?php
 class ControllerCommonHeader extends Controller {
 	public function index() {
+
+		// !!!!! Удалить после настройки Уа
+		if((int)$this->config->get('config_language_id') == 3) $this->document->setNoindex(true);
+
 		// Analytics
 		$this->load->model('extension/extension');
 
