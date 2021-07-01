@@ -1881,20 +1881,23 @@ h2.title-feature{
 }
 .buy-one-click, .btn-add-cart {
     width: 49%;
-    display: inline-block;
+    display: inline-flex;
+	justify-content: center;
+	align-items: center;
+ }
+ .buy-one-click img, .btn-add-cart img {
+	 margin-right: 5px;
  }
  .buy-one-click span, .btn-add-cart span{
     vertical-align: middle;
-
  }
 .col-title-goods .btn-add-cart span{
     margin-left: 5px;
-    
  }
- .buy-one-click img{
+ /* .buy-one-click img{
   	float: left;
   	margin-right: 5px;
- }
+ } */
  .btn-two{
  	padding:0 15px 15px;
  }

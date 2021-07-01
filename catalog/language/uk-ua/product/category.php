@@ -29,7 +29,7 @@ $_['text_error_description']  = 'Швидше за все - це неробоч�
 $_['text_po_poryadku_desc']        = 'З кінця списку';
 $_['text_po_poryadku_asc']        = 'По порядку ';
 
-$_['text_most_viewed_desc']        = 'Популярные';
+$_['text_most_viewed_desc']        = 'Популярні';
 $_['text_most_viewed_asc']        = 'Популярні (по зростанню)';
 
 $_['text_newest_desc']        = 'Новинки';

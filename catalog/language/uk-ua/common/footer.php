@@ -20,10 +20,10 @@ $_['text_newsletter']   = 'Розсилка новин';
 $_['text_powered']      = '&copy; 2014-';
 $_['text_search']       = 'Пошук товарів';
 
-$_['text_schedule']      = 'График работы';
-$_['text_useful_info']      = 'Полезная информация';
-$_['text_articles']      = 'Статьи и обзоры';
+$_['text_schedule']      = 'Графік роботи';
+$_['text_useful_info']      = 'Корисна інформація';
+$_['text_articles']      = 'Статті та огляди';
 $_['text_promotions']      = 'Акции';
-$_['text_reviews']      = 'Отзывы покупателей';
-$_['text_our_public']   = 'Наши паблики';
+$_['text_reviews']      = 'Відгуки покупців';
+$_['text_our_public']   = 'Наші паблік';
 $_['text_email']   		= 'Email:';
