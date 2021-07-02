@@ -39,7 +39,7 @@
           <?php $count = count($selecteds);
           $selected = $selecteds;
           $first = array_shift($selected); ?>
-          <?php if ($count > 1 || count($first['values']) > 1) { ?>
+          <?php if ($count >= 1 || count($first['values']) >= 1) { ?>
             <button type="button" onclick="location = '<?php echo $link; ?>';" class="btn-transparent resel-all" style="border-radius: 0;"><?php echo $text_cancel_all; ?></button>
           <?php } ?>
         </div>
