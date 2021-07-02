@@ -510,6 +510,22 @@ class ModelCatalogDVFilter extends Model {
         return $dvfilter_counter_data;
     }
 
+    public function getCategoryByOptions($filter_dvfilter) {
+        $category_id = 0;
+        $params = decodeParamsFromString($filter_dvfilter, $this->config);
+        if($params && count($params) == 1){
+            $values = array_shift($params);
+            if($values && count($values) == 1){
+                $query = $this->db->query("SELECT category_id FROM " . DB_PREFIX . "dvfilter_option_value WHERE value_id = '" . (int) $values[0] . "'");
+
+                if ($query->num_rows) {
+                    $category_id = $query->row['category_id'];
+                }  
+            }
+        }
+        return $category_id;
+    }
+
     private function getCategoryCounterSQL($data) {
         $sql = "SELECT c.category_id AS value_id, 'c' AS option_id, COUNT( p.product_id) AS total FROM " . DB_PREFIX . "category c"
                 . " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (c.category_id = p2c.category_id)"

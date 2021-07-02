@@ -158,7 +158,20 @@
 		              	<input type="hidden" name="dvfilter_option_value[update][<?php echo $value['value_id']; ?>][image]" value="<?php echo $value['image']; ?>" />
 		                <input type="hidden" name="dvfilter_option_value[update][<?php echo $value['value_id']; ?>][color]" value="<?php echo $value['color']; ?>" />
 		              	<input type="hidden" name="dvfilter_option_value[update][<?php echo $value['value_id']; ?>][sort_order]" value="<?php echo $value['sort_order']; ?>" />
-		                <?php foreach ($languages as $language) { ?>
+						
+						<select name="dvfilter_option_value[update][<?php echo $value['value_id']; ?>][category_id]" class="form-control">
+							<option value="0" selected="selected"><?php echo $text_none; ?></option>
+							<?php foreach ($categories as $category) { ?>
+							<?php if ($category['category_id'] == $value['category_id']) { ?>
+							<option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
+							<?php } else { ?>
+							<option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
+							<?php } ?>
+							<?php } ?>
+						</select>
+
+						<br> 
+						<?php foreach ($languages as $language) { ?>
 		                <label><input type="text" class="value-name" name="dvfilter_option_value[update][<?php echo $value['value_id']; ?>][language][<?php echo $language['language_id']; ?>][name]" value="<?php echo (isset($value['language'][$language['language_id']]) ? $value['language'][$language['language_id']]['name'] : ''); ?>" size="80" />&nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></label>
 		                <?php } ?>
 		              </div>

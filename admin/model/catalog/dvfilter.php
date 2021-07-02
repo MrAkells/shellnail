@@ -25,7 +25,7 @@ class ModelCatalogDVFilter extends Model {
 
         if (isset($data['dvfilter_option_value']['insert'])) {
             foreach ($data['dvfilter_option_value']['insert'] as $value) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "dvfilter_option_value SET option_id = '" . (int) $option_id . "', sort_order = '" . (int) $value['sort_order'] . "', `keyword` = '" . $this->db->escape($this->translit($value['language'][$this->config->get('config_language_id')]['name'])) . "', color = '" . $this->db->escape($value['color']) . "', image = '" . $this->db->escape($value['image']) . "'");
+                $this->db->query("INSERT INTO " . DB_PREFIX . "dvfilter_option_value SET option_id = '" . (int) $option_id . "', sort_order = '" . (int) $value['sort_order'] . "', `keyword` = '" . $this->db->escape($this->translit($value['language'][$this->config->get('config_language_id')]['name'])) . "', category_id = '" . $this->db->escape($value['category_id']) . "', color = '" . $this->db->escape($value['color']) . "', image = '" . $this->db->escape($value['image']) . "'");
 
                 $value_id = $this->db->getLastId();
 
@@ -76,7 +76,7 @@ class ModelCatalogDVFilter extends Model {
         if (isset($data['dvfilter_option_value'])) {
             if (isset($data['dvfilter_option_value']['update'])) {
                 foreach ($data['dvfilter_option_value']['update'] as $value_id => $value) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "dvfilter_option_value SET option_id = '" . (int) $option_id . "', value_id = '" . (string) $value_id . "', sort_order = '" . (int) $value['sort_order'] . "', `keyword` = '" . $this->db->escape($this->translit($value['language'][$this->config->get('config_language_id')]['name'])) . "', color = '" . $this->db->escape($value['color']) . "', image = '" . $this->db->escape($value['image']) . "'");
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "dvfilter_option_value SET option_id = '" . (int) $option_id . "', value_id = '" . (string) $value_id . "', sort_order = '" . (int) $value['sort_order'] . "', `keyword` = '" . $this->db->escape($this->translit($value['language'][$this->config->get('config_language_id')]['name'])) . "', category_id = '" . $this->db->escape($value['category_id']) . "', color = '" . $this->db->escape($value['color']) . "', image = '" . $this->db->escape($value['image']) . "'");
 
                     foreach ($value['language'] as $language_id => $language) {
                         $this->db->query("INSERT INTO " . DB_PREFIX . "dvfilter_option_value_description SET value_id = '" . (string) $value_id . "', option_id = '" . (int) $option_id . "', language_id = '" . (int) $language_id . "', name = '" . $this->db->escape($language['name']) . "'");
