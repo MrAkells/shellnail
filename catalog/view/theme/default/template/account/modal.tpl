@@ -6,7 +6,7 @@
 
 			<div class="modal-header header-avtorization">
                             <button class="close close-icon" type="button" data-dismiss="modal"><span></span></button>
-                            <h2 class="modal-title title-login"><?php echo $heading_title; ?></h2>
+                            <div class="h2title modal-title title-login"><?php echo $heading_title; ?></div>
 			</div>
                   
                         <div class="modal-body body-avtorization"> 

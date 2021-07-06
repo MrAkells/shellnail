@@ -154,7 +154,7 @@
               <meta content="<?php echo $intprice; ?>"/>     
               <meta content="<?php echo (!$quantity || $quantity<1) ? 'OutOfStock' : 'InStock' ; ?>"/>      
               <?php if (!$special) { ?>
-                <h2><?php echo $price; ?></h2>
+                <div class="h2title"><?php echo $price; ?></div>
               <?php } else { ?>
                 <span class="price-new"><?php echo $special; ?></span>
                 <span class="price-old"><?php echo $price; ?></span>
