@@ -211,20 +211,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <?php } ?>
 
                 <!-- Личный кабинет-->
-                  <?php if ($logged) { ?>
                     <ul class="dropdown-menu">
-                        <li class="dropdown">
-                            <a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" ><img src="catalog/view/theme/default/image/icon-avatar.png" alt="Avatar" class="img-avatar"> <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_account; ?></span></a>
-                            <?php } else { ?>
-                                <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" data-toggle="dropdown"><img src="catalog/view/theme/default/image/icon-avatar.png" alt="Avatar" class="img-avatar"> <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_account; ?></span></a>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="<?php echo $register; ?>"><?php echo $text_register; ?></a></li>
-                                        <li><span type="button" onclick = "$('#login_modal').modal('show')" class="authorization"><span><?php echo $text_login; ?></span></span></li>
-                                    </ul>
-                            <?php } ?>
-                        </li>
+                        <?php if ($logged) { ?>
+                            <li class="dropdown">
+                                <a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" ><img src="catalog/view/theme/default/image/icon-avatar.png" alt="Avatar" class="img-avatar"> <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_account; ?></span></a>
+                        <?php } else { ?>
+                            <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" data-toggle="dropdown"><img src="catalog/view/theme/default/image/icon-avatar.png" alt="Avatar" class="img-avatar"> <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_account; ?></span></a>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a href="<?php echo $register; ?>"><?php echo $text_register; ?></a></li>
+                                    <li><span type="button" onclick = "$('#login_modal').modal('show')" class="authorization"><span><?php echo $text_login; ?></span></span></li>
+                                </ul>
+                            </li>
+                        <?php } ?>
                     </ul>
                 <!-- конец личного кабинета -->
+                
                 </div>
 
             </div>

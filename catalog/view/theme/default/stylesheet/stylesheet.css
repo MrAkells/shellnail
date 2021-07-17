@@ -2474,6 +2474,11 @@ ul.new-sorting li{
 	align-items: center;
 	font-size: 14px;
 }
+.dvfilter #color_hook + a .custom_popover {
+	top: 0;
+} {
+
+}
 /*---End-Filter---*/
 
 
@@ -5776,9 +5781,10 @@ aside#column-left{
     width: 85%;
 }
 .col-middle-product .buy-one-click, .col-middle-product .btn-add-cart {
-    width: 47%;
-		display: inline-block;
-		padding: 3px;
+    width: 49%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 .goods-cart .thumbnails .image-additional {
     display: block;
