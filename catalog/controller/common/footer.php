@@ -19,7 +19,9 @@ class ControllerCommonFooter extends Controller {
 		}
 
                 $data['owner_moto_footer'] = $this->config->get('owner_description')[$this->config->get('config_language_id')]['moto_footer'];
+
                 $data['second_block_title'] = $this->config->get('owner_description')[$this->config->get('config_language_id')]['second_block_title'];
+
 				$data['second_block'] = $this->config->get('owner_description')[$this->config->get('config_language_id')]['second_block'];
 
                 $data['phone1'] = $this->config->get('owner_phone1');

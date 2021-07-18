@@ -201,6 +201,9 @@ div.required .control-label:after {
 	justify-content: space-between;
 	align-items: center;
 }
+.top-d-flex.top-d-flex--right {
+	justify-content: flex-end;
+}
 /* logo */
 #logo {
 	margin: 0 0 10px 0;
