@@ -103,7 +103,7 @@ class ModelExtensionModuleSdNpInvoice extends Model
 
     public function getRefOffice($office, $ref_city)
     {
-        $query = $this->db->query("SELECT `ref` FROM `oc_newmail_office` WHERE `city_ref` = '" . $ref_city ."' AND (`description` = '" . $office ."' OR `description_ru` = '" . $office ."')" );
+        $query = $this->db->query("SELECT `ref` FROM `oc_newmail_office` WHERE `city_ref` = '" . $ref_city ."' AND (`description` = '" . $this->db->escape($office) ."' OR `description_ru` = '" . $this->db->escape($office) ."')" );
         return ($query->num_rows ? $query->row['ref']: '');
     }
     public function setCheckInvoiceOrder($ttn)
