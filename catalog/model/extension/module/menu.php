@@ -165,7 +165,7 @@ class ModelExtensionModuleMenu extends Model {
                         }
                 
                   $full_category_data[] = array(
-                            'name'        => $this->config->get('owner_brands_name'),
+                            'name'        => $this->config->get('owner_description')[$this->config->get('config_language_id')]['brands_name'],
                             'icon'=> $icon_manuf,
                             'icon2'=>$icon_manuf2,
                             'cols'=> 2,
