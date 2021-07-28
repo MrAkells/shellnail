@@ -83,11 +83,15 @@
                     <p class="promo-description">
                         <?php echo $promo['description']; ?>
                     </p>
-                    <div class="fb-save" data-uri="<?php echo $promo['href']; ?>" data-size="small"></div>
 
-                    <div class="fb-like" data-href="<?php echo $promo['href']; ?>" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>
+                    <div class="promo-fb-line">
+                        <?php $datafbsave = $promo['href']; ?>
+                        <div class="fb-save" data-uri="<?php echo $datafbsave; ?>" data-size="small"></div>
 
-                    <div class="fb-share-button" data-href="<?php echo $promo['href']; ?>" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore"><?php echo $text_btn_fb_share ?></a></div>
+                        <div class="fb-like" data-href="<?php echo $promo['href']; ?>" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>
+
+                        <div class="fb-share-button" data-href="<?php echo $promo['href']; ?>" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore"><?php echo $text_btn_fb_share ?></a></div>
+                    </div>
 
                     <div id="end_of_promo<?php echo $promo['promo_id']; ?>" data-seconds="<?php echo $promo['endtime']; ?>"></div>
                 </div>
