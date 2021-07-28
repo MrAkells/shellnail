@@ -6,10 +6,10 @@
 <html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" <?php 
         switch ($route) {
             case 'newsblog/article':
-                echo "itemscope itemtype='http://schema.org/Article'";
+                echo "itemscope itemtype='https://schema.org/Article'";
                 break;
             // case 'product/product':
-            //     echo "itemscope itemtype='http://schema.org/Product'";
+            //     echo "itemscope itemtype='https://schema.org/Product'";
             //     break;
         }?> >
 <!--<![endif]-->
@@ -53,7 +53,7 @@
 <?php if (isset($ishome)) { ?>
     <script type="application/ld+json">
     { 
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "url": "https://shellnail.com.ua/",
     "priceRange": "$",
@@ -109,7 +109,7 @@
 
 <script type="application/ld+json">
     {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "WebSite",
     "url": "https://shellnail.com.ua/",
     "potentialAction": {
@@ -291,9 +291,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div> 
         <div id="shop_feature" class="header_element hidden-md hidden-sm hidden-xs">
             <?php if ($home == $og_url) { ?>
-            <h1 id='h1_shop_feature' itemprop="name"><?php echo $shop_feature; ?></h1>
+                <h1 id='h1_shop_feature' itemprop="name"><?php echo $shop_feature; ?></h1>
             <?php }else{ ?>
-            <p><?php echo $shop_feature; ?></p>
+                <p class="header_shop_feature"><?php echo $shop_feature; ?></p>
             <?php } ?> 
         </div>
     </div>

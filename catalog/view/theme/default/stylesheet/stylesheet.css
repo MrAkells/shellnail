@@ -925,8 +925,10 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
     padding-right: 10px;
     padding-left: 5px;
 }
-#h1_shop_feature{
+#h1_shop_feature,
+.header_shop_feature {
 	font-size: 12px;
+	line-height: 14px;
 	margin-top: 0px;
 	margin-left: 5px;
 	font-family: 'Roboto Light Italic'!important;
@@ -3017,7 +3019,7 @@ ul.new-sorting li{
 }
 /*---End-Wish-list---*/
 /*---More-detailed-promotion---*/
-.more-detailed-promotion{
+.more-detailed-promotion {
 	margin-bottom: -10px;
 }
 .more-detailed-promotion .title-stoke{
@@ -3072,6 +3074,17 @@ ul.new-sorting li{
 }
 .more-detailed-promotion .fb-save, .more-detailed-promotion .fb-like{
 	margin-right: 10px;
+}
+.promo-fb-line {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+.promo-fb-line .fb-like {
+	margin: 0 7px 0 0;
+}
+.promo-fb-line .fb-like > span {
+	height: 20px !important;
 }
 @media(min-width: 768px){
 .right-promotion{
