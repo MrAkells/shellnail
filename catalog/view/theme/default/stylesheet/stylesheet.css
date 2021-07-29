@@ -3079,6 +3079,7 @@ ul.new-sorting li{
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
+	padding-top: 10px;
 }
 .promo-fb-line .fb-like {
 	margin: 0 7px 0 0;
@@ -5387,9 +5388,9 @@ header {
 .more-detailed-promotion .period-promotion {
     padding: 10px 12px;
 }
-.more-detailed-promotion .fb-share-button{
+/* .more-detailed-promotion .fb-share-button{
 	margin-top: 10px;
-}
+} */
 /*---End-More-detailed-promotion---*/
 /*---Page-search---*/
 .block-search-sub{
@@ -5636,9 +5637,9 @@ aside#column-left{
 .more-detailed-promotion .period-promotion {
     padding: 10px 12px;
 }
-.more-detailed-promotion .fb-share-button{
+/* .more-detailed-promotion .fb-share-button{
 	margin-top: 10px;
-}
+} */
 /*---End-More-detailed-promotion---*/
 /*---Page-account---*/
 .nav-account>li.active>a, .nav-account>li.active>a:focus, .nav-account>li.active>a:hover {
