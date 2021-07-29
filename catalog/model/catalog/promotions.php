@@ -12,7 +12,7 @@ class ModelCatalogPromotions extends Model {
                 }
                 
                 if($with_products){
-                $products_query=$this->db->query("SELECT  ptc.product_id, pd.name FROM " . DB_PREFIX . "product_to_category ptc LEFT JOIN ".DB_PREFIX."product_description pd ON(ptc.product_id=pd.product_id) WHERE pd.language_id=1 AND ptc.category_id = '" . (int)$promo_id . "'");
+                $products_query=$this->db->query("SELECT  ptc.product_id, pd.name FROM " . DB_PREFIX . "product_to_category ptc LEFT JOIN ".DB_PREFIX."product_description pd ON(ptc.product_id=pd.product_id) WHERE pd.language_id='" . (int)$this->config->get('config_language_id') . "' AND ptc.category_id = '" . (int)$promo_id . "'");
                 $products=array();
                 foreach($products_query->rows as $row){
                     
@@ -23,7 +23,7 @@ class ModelCatalogPromotions extends Model {
                 $return['products']=$products;
                            
                 }else{
-                    $products_query=$this->db->query("SELECT  COUNT(ptc.product_id) as count FROM " . DB_PREFIX . "product_to_category ptc LEFT JOIN ".DB_PREFIX."product_description pd ON(ptc.product_id=pd.product_id) WHERE pd.language_id=1 AND ptc.category_id IN (SELECT DISTINCT promo_id FROM ".DB_PREFIX."promotions WHERE promo_id ='".(int)$promo_id."' OR parent_id='".(int)$promo_id."')");
+                    $products_query=$this->db->query("SELECT  COUNT(ptc.product_id) as count FROM " . DB_PREFIX . "product_to_category ptc LEFT JOIN ".DB_PREFIX."product_description pd ON(ptc.product_id=pd.product_id) WHERE pd.language_id='" . (int)$this->config->get('config_language_id') . "' AND ptc.category_id IN (SELECT DISTINCT promo_id FROM ".DB_PREFIX."promotions WHERE promo_id ='".(int)$promo_id."' OR parent_id='".(int)$promo_id."')");
                     $return['products']=$products_query->row['count'];
                 }
                 
