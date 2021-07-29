@@ -135,11 +135,34 @@
                  <div class="col-sm-8">
                      <textarea type="text" name="owner_description[<?php echo $language['language_id']; ?>][promotions_meta_keywords]"  placeholder="<?php echo $entry_promotions_meta_keywords; ?>"  class="form-control" /><?php echo isset($owner_description[$language['language_id']]['promotions_meta_keywords']) ? $owner_description[$language['language_id']]['promotions_meta_keywords'] : ''; ?></textarea>
                   </div>
-             </div>                                        
+             </div>
+             <div class="form-group">
+              <label class="col-sm-4 control-label"><?php echo $entry_brands_name; ?></label>
+              <div class="col-sm-8">
+                <input name="owner_description[<?php echo $language['language_id']; ?>][brands_name]" value="<?php echo isset($owner_description[$language['language_id']]['moto_footer']) ? $owner_description[$language['language_id']]['brands_name'] : ''; ?>"  />
+              </div>
+             </div>                                      
             </div>
             <?php } ?>
-          </div>               
-            
+          </div>
+
+          <hr/>              
+          <div class="form-group">
+            <label class="col-sm-4 control-label"><?php echo $entry_icons; ?></label>
+            <div class="col-sm-4"><a href="" id="thumb-icon" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb_brands_icon; ?>" alt="" title="" /></a>
+              <input type="hidden" name="owner_brands_icon" value="<?php echo $brands_icon; ?>" id="input-icon" />
+            </div>
+            <div class="col-sm-4"><a href="" id="thumb-icon2" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb_brands_icon2; ?>" alt="" title="" /></a>
+              <input type="hidden" name="owner_brands_icon2" value="<?php echo $brands_icon2; ?>" id="input-icon2" />
+            </div>
+          </div>
+        
+          <div class="form-group">
+            <label class="col-sm-3 control-label"><?php echo $entry_brands_sort_order; ?></label>
+            <div class="col-sm-3">
+              <input name="owner_brands_sort_order" value="<?php echo $brands_sort_order; ?>"  />
+            </div>
+          </div>            
             <hr/>
             <h3 class='text-center'>Дополнительный логотип</h3>
             
