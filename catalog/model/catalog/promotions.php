@@ -4,7 +4,7 @@ class ModelCatalogPromotions extends Model {
 	public function getPromotion($promo_id, $with_products=true) {
                 $this->load->model('catalog/product');
                 
-		$query = $this->db->query("SELECT DISTINCT *, (date_start<=NOW() AND date_end>=NOW()) as ongoing FROM " . DB_PREFIX . "promotions WHERE promo_id = '" . (int)$promo_id . "'");
+		$query = $this->db->query("SELECT DISTINCT pd.*, p.image, p.image_m, p.date_start, p.date_end, p.hierarchy, (date_start<=NOW() AND date_end>=NOW()) as ongoing FROM " . DB_PREFIX . "promotions p LEFT JOIN ". DB_PREFIX ."promotion_description pd ON (p.promo_id=pd.promo_id AND pd.language_id='" . (int)$this->config->get('config_language_id') . "') WHERE p.promo_id = '" . (int)$promo_id . "'");
                
                 $return=[];
                 foreach($query->row as $key=>$value){
