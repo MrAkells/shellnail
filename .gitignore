@@ -3,6 +3,7 @@ robots.txt
 .htaccess
 config.php
 admin/config.php
+*.xml
 !/system/library/config.php
 
 # Image File
