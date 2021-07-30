@@ -367,9 +367,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>  
                     <p class="bnt-order-bell"> <?php echo $phone_call_back['button']; ?> </p>
                     <div style="clear: both"></div>
+
                     <div class="shedule-block">
                         <div class="schedule-work"> <?php echo $text_schedule; ?> </div>
                         <div class="schedule-work"> <?php echo $schedule; ?> </div>
+                        <div class="schedule-work"> Сб. 10.00-16.00</div>
                     </div>
                 </div> 
             </div>
@@ -377,9 +379,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div id="schedule" class="header_element hidden-xs">
             <p class="schedule-work"> <?php echo $text_schedule; ?> </p>
             <div class="schedule-work"> <?php echo $schedule; ?> </div>
-             <div class="block-skype" ><span class="skype">   </span><?php echo $skype; ?></div>
+            <div class="schedule-work"> Сб. 10.00-16.00</div>
+            <!-- <div class="block-skype" ><span class="skype">   </span><?php echo $skype; ?></div> -->
         </div>
-        
        
             <div id="call_me_back" class="header_element hidden-xs">
             <p class="bnt-order-bell"> <?php echo $phone_call_back['button']; ?> </p>
