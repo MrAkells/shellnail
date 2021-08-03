@@ -167,7 +167,7 @@ class ModelCatalogPromotions extends Model
     public function getPromotions($data = array())
     {
 
-        $sql = "SELECT *, (date_start<=NOW() AND date_end>=NOW()) as ongoing FROM " . DB_PREFIX . "promotions ";
+        $sql = "SELECT p.promo_id,p.sort_order,p.parent_id,p.status,pd.title, (date_start<=NOW() AND date_end>=NOW()) as ongoing FROM " . DB_PREFIX . "promotions p LEFT JOIN ". DB_PREFIX ."promotion_description pd ON (p.promo_id=pd.promo_id AND pd.language_id='" . (int)$this->config->get('config_language_id') . "')";
 
         if (isset($data['without_children']) && $data['without_children']) {
             $sql .= " WHERE hierarchy IN(1,0) ";
