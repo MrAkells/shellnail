@@ -395,8 +395,11 @@ class ControllerCatalogColors extends Controller {
                 if(isset($this->request->get['name'])){
                     $name=$this->request->get['name'];
                 }
-                
-                $results=$this->model_catalog_colors->getEligibleColors($name);
+                if(isset($this->request->get['language_id'])){
+                    $language_id=$this->request->get['language_id'];
+                } else $language_id = 1;
+
+                $results=$this->model_catalog_colors->getEligibleColors($name, $language_id);
                 $colors=array();
                 
                 foreach($results as $color){
