@@ -5,8 +5,16 @@ class ControllerExtensionModuleFbcomments extends Controller {
             $this->document->addScript('catalog/view/javascript/fbwidgets.js');
             $this->document->addScript('catalog/view/javascript/jquery/simplebar.js');
             $this->document->addStyle('catalog/view/theme/default/stylesheet/simplebar.css');
-                  
+            
             $data['heading_title']=$setting['name'];
+            if(isset($setting['name_front'])){
+                $name_front = json_decode($setting['name_front'],true);
+                if($name_front){
+                    $data['heading_title']= $name_front[$this->config->get('config_language_id')];
+                }
+                
+            }
+
             $data['width']=$setting['width'];
             $data['comments_number']=$setting['comments_number'];
             $data['comments_height']=$setting['comments_height'];
