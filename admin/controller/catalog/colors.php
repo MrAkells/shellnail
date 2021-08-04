@@ -117,7 +117,7 @@ class ControllerCatalogColors extends Controller {
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
-			$sort = 'name';
+			$sort = 'cd.name';
 		}
 
 		if (isset($this->request->get['order'])) {
@@ -290,6 +290,7 @@ class ControllerCatalogColors extends Controller {
 			$data['error_name'] = array();
 		}
 
+
 		if (isset($this->error['code'])) {
 			$data['error_code'] = $this->error['code'];
 		} else {
@@ -337,18 +338,21 @@ class ControllerCatalogColors extends Controller {
 
 		$data['token'] = $this->session->data['token'];
 
+		$this->load->model('localisation/language');
+		$data['languages'] = $this->model_localisation_language->getLanguages();
+
 		if (isset($this->request->get['color_id'])) {
 			$data['color_id'] = $this->request->get['color_id'];
 		} else {
 			$data['color_id'] = 0;
 		}
 
-		if (isset($this->request->post['name'])) {
-			$data['name'] = $this->request->post['name'];
-		} elseif (!empty($color_info)) {
-			$data['name'] = $color_info['name'];
+		if (isset($this->request->post['color_description'])) {
+			$data['color_description'] = $this->request->post['color_description'];
+		} elseif (isset($this->request->get['color_id'])) {
+			$data['color_description'] = $this->model_catalog_colors->getColorDescription($this->request->get['color_id']);
 		} else {
-			$data['name'] = '';
+			$data['color_description'] = array();
 		}
 
 		if (isset($this->request->post['code'])) {

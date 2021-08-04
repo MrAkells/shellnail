@@ -313,7 +313,7 @@ class ControllerExtensionModuleDVFilter extends Controller {
         
   
   
-        $query_colors = $this->db->query("SELECT * FROM " . DB_PREFIX . "colors");
+        $query_colors = $this->db->query("SELECT c.color_id,c.code,cd.name FROM " . DB_PREFIX . "colors c LEFT JOIN ". DB_PREFIX ."colors_description cd ON (c.color_id=cd.color_id AND cd.language_id='" . (int)$this->config->get('config_language_id') . "')");
         $data['filter_colors_array']=array();
             foreach($query_colors->rows as $row){
                 $data['filter_colors_array'][$row['name']]=$row['code'];
