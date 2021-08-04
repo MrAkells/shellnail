@@ -94,7 +94,7 @@ class ModelCatalogColors extends Model {
 	}
         
         public function getEligibleColors($part, $language_id = 1) {
-		$query = $this->db->query("SELECT c.code, cd.name FROM " . DB_PREFIX . "colors c LEFT JOIN ". DB_PREFIX ."colors_description cd ON (c.color_id=cd.color_id AND cd.language_id='" . (int)$language_id . "') WHERE cd.name LIKE '%".$part."%'");
+		$query = $this->db->query("SELECT c.code, cd.name FROM " . DB_PREFIX . "colors c LEFT JOIN ". DB_PREFIX ."colors_description cd ON (c.color_id=cd.color_id AND cd.language_id='" . (int)$language_id . "') WHERE cd.name LIKE '%".$part."%' order by cd.name");
 
 		return $query->rows;
 	}
