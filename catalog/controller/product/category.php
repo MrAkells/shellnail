@@ -112,6 +112,8 @@ class ControllerProductCategory extends Controller {
 		$category_info = $this->model_catalog_category->getCategory($category_id);
 
 		if ($category_info) {
+			$text_page = $this->language->get('text_page');
+			
 			$meta_description = (mb_detect_encoding($category_info['meta_description']) == 'UTF-8' ? $category_info['meta_description'] :mb_convert_encoding($category_info['meta_description'],'utf-8', "HTML-ENTITIES"));
 			if ($page == 1) {
 			if ($category_info['meta_title']) {
@@ -120,18 +122,17 @@ class ControllerProductCategory extends Controller {
 				$this->document->setTitle($category_info['name']);
 			}
 
-			
 			$this->document->setDescription($meta_description);
 			$this->document->setKeywords($category_info['meta_keyword']);
 			}else{
 					if ($category_info['meta_title']) {
-				$this->document->setTitle($category_info['meta_title'].' - стр. '.$page);
+				$this->document->setTitle($category_info['meta_title'].$text_page.$page);
 			} else {
-				$this->document->setTitle($category_info['name'].' - стр. '.$page);
+				$this->document->setTitle($category_info['name'].$text_page.$page);
 			}
 
-			$this->document->setDescription($meta_description.' - стр. '.$page);
-			$this->document->setKeywords($category_info['meta_keyword'].' - стр. '.$page);
+			$this->document->setDescription($meta_description.$text_page.$page);
+			$this->document->setKeywords($category_info['meta_keyword'].$text_page.$page);
 			}
 		
 

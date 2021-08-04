@@ -36,10 +36,14 @@ $_['text_most_viewed_asc']        = 'Популярные (по возраста
 //$_['text_price_desc']        = 'По цене ';
 //$_['text_price_asc']        = 'По цене ';
 
-$_['text_newest_desc']        = 'Новинки';
+$_['text_newest_desc']       = 'Новинки';
 $_['text_newest_asc']        = 'По дате (по возрастанию)';
+$_['text_page']              = ' - стр. ';
+$_['text_meta_title']        = ' купить, цена в Украине';
+$_['text_meta_description1']        = ' купить в Украине';
+$_['text_meta_description2']        = ' Подарок в каждом заказе ⚡ Выгодная цена ❤️ Товары для ногтей и красоты в ShellNail';
 
-$_['load_more_products']        = 'Загрузить следующие %s товаров';
+$_['load_more_products']     = 'Загрузить следующие %s товаров';
 
 $_['text_promo_product'] = 'Акционных товаров:';
 $_['text_look_over'] = 'Сейчас просматривают:';

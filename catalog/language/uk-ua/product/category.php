@@ -34,6 +34,11 @@ $_['text_most_viewed_asc']        = 'Популярні (по зростанню
 
 $_['text_newest_desc']        = 'Новинки';
 $_['text_newest_asc']        = 'За датою (по зростанню)';
+$_['text_page']               = ' - стор. ';
+$_['text_meta_title']        = ' купити, ціна в Україні';
+$_['text_meta_description1']        = ' купити в Україні';
+$_['text_meta_description2']        = ' Подарунок в кожному замовленні ⚡ Вигідна ціна ❤️ Товари для нігтів і краси в ShellNail';
+
 
 $_['btn_more_detailed']        = 'Докладніше';
 $_['btn_less_detailed']        = 'Свернуть';
