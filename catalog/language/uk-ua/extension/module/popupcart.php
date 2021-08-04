@@ -1,15 +1,14 @@
 <?php
-$_['text_foto'] = 'Фотография';
-$_['text_name'] = 'Наименование';
-$_['text_manufacturer'] = 'Бренд';
-$_['text_quantity'] = 'Кол-во';
-$_['text_price'] = 'Стоимость';
-$_['text_total'] = 'Итого: ';
-$_['text_empty'] = 'В вашей корзине пусто!';
-$_['text_in_stock'] = 'На нашем складе';
-$_['text_left'] = 'осталось';
-$_['text_left1'] = 'осталась';
-$_['text_just'] = 'всего';
+$_['text_foto'] = 'Зображення';
+$_['text_name'] = 'Назва';
+$_['text_manufacturer'] = 'Виробник';
+$_['text_quantity'] = 'Кількість';
+$_['text_price'] = 'Вартість';
+$_['text_total'] = 'Сума: ';
+$_['text_empty'] = 'У вашому кошику немає товарів';
+$_['text_in_stock'] = 'В наявності';
+$_['text_left'] = 'залишилось';
+$_['text_left1'] = 'залишилось';
+$_['text_just'] = 'всього';
 $_['text_pcs'] = 'шт.';
-$_['text_your_order'] = 'Ваш заказ';
-
+$_['text_your_order'] = 'Ваше замовлення';
