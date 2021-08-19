@@ -162,7 +162,7 @@ function visual_loading(){
             <div class="advantage-body">
                 <span class="title-advantage"><?php echo $first_advantage; ?></span>
                 <div class="advantage-content">
-                    <?php echo $text_1_advantage;; ?>
+                    <?php echo $text_1_advantage; ?>
                 </div>
             </div>
         </div> 
