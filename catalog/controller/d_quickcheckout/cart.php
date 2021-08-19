@@ -25,7 +25,7 @@ class ControllerDQuickcheckoutCart extends Controller {
         $data['row'] = $config['account']['guest']['cart']['row'];
 
         $data['button_confirm'] = $this->language->get('button_confirm');
-      
+        $data['button_shopping'] = $this->language->get('button_shopping');
         
         
         $data['column_image'] = $this->language->get('column_image');

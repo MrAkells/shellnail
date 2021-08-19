@@ -7,7 +7,7 @@
 				<span class="text"><%= model.config.title %></span>
 			</h4>
 			<div class="continue-shopping">
-				<a href="#">Продолжить покупки</a>
+				<a href="#"><?php echo $button_shopping; ?></a>
 			</div>
 			<div style="clear: left"></div>
 		</div>
