@@ -21,9 +21,9 @@ $_['text_powered']      = '&copy; 2014-';
 $_['text_search']       = 'Пошук товарів';
 
 $_['text_schedule']      = 'Графік роботи';
-$_['text_useful_info']      = 'Корисна інформація';
+$_['text_useful_info']   = 'Корисна інформація';
 $_['text_articles']      = 'Статті та огляди';
-$_['text_promotions']      = 'Акции';
+$_['text_promotions']    = 'Акції';
 $_['text_reviews']      = 'Відгуки покупців';
-$_['text_our_public']   = 'Наші паблік';
+$_['text_our_public']   = 'Наші пабліки';
 $_['text_email']   		= 'Email:';
