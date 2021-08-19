@@ -17,8 +17,8 @@ class ModelExtensionModuleMenu extends Model {
             $categories = $this->model_catalog_category->getCategories(0);
             $extra_links=$this->model_catalog_extralinks->getExtralinks();
             if ( $_SERVER['REMOTE_ADDR'] == '82.207.90.222') {
-        var_dump($extra_links); die;        
-        }
+            var_dump($extra_links); die;        
+            }
             foreach ($categories as $category) {
                
                 $children_data = array();
