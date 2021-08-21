@@ -383,7 +383,7 @@
                         </li>
                     </ul>
                     <div class="product-thumb">
-                        <div class="image"><a href="<?php echo $product['href']; ?>"><img class="<?php echo $product['quantity']>0?'':'colorless'; ?>" src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a></div>
+                        <div class="image"><a href="<?php echo $product['href']; ?>"><img class="<?php echo $product['quantity']>0?'':'colorless'; ?>" src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" width="<?php echo $product['img_width']; ?>" height="<?php echo $product['img_height']; ?>" /></a></div>
                         <div>
                             <div class="caption">
                                 <div class="name-product">
