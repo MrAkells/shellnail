@@ -1916,10 +1916,21 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 			$this->config->set('config_language_id', $config_language_id);
 
 
-			file_put_contents($_SERVER["DOCUMENT_ROOT"] .'/static_sitemap/fx_sitemap.xml', $output);		
+			file_put_contents($_SERVER["DOCUMENT_ROOT"] .'/static_sitemap/fx_sitemap.xml', $output);
+			
+			file_put_contents($_SERVER["DOCUMENT_ROOT"] .'/static_sitemap/fx_sitemap_ua.xml', $this->changeUrl($output));
+			
 			$end = time();
 			echo $end - $start_time;	
 		}
+		
+	}
+
+	protected function changeUrl($output){	
+		$base_url = $this->url->link('common/home', '', 'SSL');
+		$output = str_replace($base_url, $base_url. 'ua/', $output);
+
+		return $output;
 		
 	}
 }

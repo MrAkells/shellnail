@@ -6,14 +6,16 @@ class ModelCatalogSdSitemap extends Model {
 		return $query->row;
 	}
 	public function add($data) {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "sitemap` SET `name` = '" . $this->db->escape($data['name']) . "', `href` = '" . $data['href'] . "', `level` = '" . (int)$data['level'] . "'");
+		$language_id = (int)$this->config->get('config_language_id');
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "sitemap` SET `language_id` = '" . $language_id . "', `name` = '" . $this->db->escape($data['name']) . "', `href` = '" . $data['href'] . "', `level` = '" . (int)$data['level'] . "'");
 	}
 	public function addRows($data) {
 		$values = '';
+		$language_id = (int)$this->config->get('config_language_id');
 		foreach ($data as $value) {
-			$values .= "('" . $this->db->escape($value['name']) . "','" . $value['href'] . "', " . (int)$value['level'] . "),";
+			$values .= "('" . $language_id . "','" . $this->db->escape($value['name']) . "','" . $value['href'] . "', " . (int)$value['level'] . "),";
 		}
-		$query= "INSERT INTO `" . DB_PREFIX . "sitemap` ( `name`, `href`,`level`) VALUES " . mb_substr($values, 0, -1);
+		$query= "INSERT INTO `" . DB_PREFIX . "sitemap` ( `language_id`,`name`, `href`,`level`) VALUES " . mb_substr($values, 0, -1);
 		$this->db->query($query);
 	}
 	public function init() {
@@ -21,7 +23,7 @@ class ModelCatalogSdSitemap extends Model {
 		//$this->editSetting('sd_sitemap',['sd_sitemap_id'=>0,'sd_sitemap_status'=>0]);
 	}
 	public function get($data) {
-		$sql = "SELECT * FROM `" . DB_PREFIX . "sitemap` ";
+		$sql = "SELECT * FROM `" . DB_PREFIX . "sitemap` WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (isset($data['start']) || isset($data['limit'])) {
 			if ($data['start'] < 0) {
@@ -40,7 +42,7 @@ class ModelCatalogSdSitemap extends Model {
 	}
 
 	public function getTotal(){
-		$sql = "SELECT COUNT(DISTINCT id) AS total FROM `" . DB_PREFIX . "sitemap`";
+		$sql = "SELECT COUNT(DISTINCT id) AS total FROM `" . DB_PREFIX . "sitemap` WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		$query = $this->db->query($sql);
 
 		return $query->row['total'];
