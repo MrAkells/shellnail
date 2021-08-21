@@ -299,6 +299,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <?php } ?> 
         </div>
     </div>
+
+        <?php if ( $is_admin == 1) { ?>
+            <div class="top-lang-mobile header_element visible-xs-inline-block"><?php echo $language; ?></div>
+        <?php } ?>
          
         <div id="phone_numbers" class="header_element">
             <div class="hidden-xs">
@@ -416,7 +420,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         
        
-      <div id="cart_element" class="header_element"><?php echo $cart; ?></div>
+        <div id="cart_element" class="header_element"><?php echo $cart; ?></div>
 
         
     </div>

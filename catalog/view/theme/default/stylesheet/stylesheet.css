@@ -1079,6 +1079,9 @@ ul.soc-icon li{
 	list-style: none;
 	margin-right: 10px;
 }
+ul.soc-icon li a:hover {
+	cursor: pointer;
+}
 header .block-mts:before{
 	padding-right: 4px;
 	}
@@ -1472,6 +1475,18 @@ span.icon-bar:nth-child(3){
 	right: 0px;
 	padding: 15px;
 	min-width: 192px!important;
+}
+.top-lang-mobile {
+	text-align: center;
+	margin-top: 4px;
+	margin-left: 10px;
+}
+.top-lang-mobile .pull-left {
+	float: unset !important;
+}
+.top-lang-mobile .btn {
+	border: 1px solid rgba(151, 107, 168, 0.5);
+    border-radius: 3px;
 }
 /*---Darken-the-page---*/
 .pushy-active .site-overlay{
@@ -2430,6 +2445,10 @@ ul.new-sorting li{
 .sort-different .new-sorting:after{
 	content: '|';
 	margin-left: 20px;
+}
+.sort-different .new-sorting.lang_ua:after{
+	content: '|';
+	margin-left: 35px;
 }
 .customSelectInner {
     font-family: 'Roboto-Medium'; 
@@ -3936,7 +3955,7 @@ header {
 	margin-bottom: 10px;
 }
 .logo-feature {
-    width: 53%;
+    width: 43%;
 }
 #mobile_top_links {
     width: 15%;
@@ -3959,8 +3978,12 @@ header {
 #phone_numbers {
     border-right: none;
 }
+.top-lang-mobile {
+	float: left;
+	width: 12%;
+}
 #cart_element, #phone_numbers{
-    width: 14%;
+    width: 12%;
 }
 .img-phone{
 	padding-top: 5px;
@@ -4672,7 +4695,7 @@ header {
 	margin-bottom: 10px;
 }
 .logo-feature {
-    width: 39%;
+    width: 35%;
 }
 #mobile_top_links {
     width: 10%;
@@ -4704,8 +4727,11 @@ header {
 #phone_numbers {
     border-right: none;
 }
-#cart_element, #wishlist_link, #compare_link, #phone_numbers{
-    width: 12%;
+.top-lang-mobile {
+	float: left;
+}
+#cart_element, #wishlist_link, #compare_link, #phone_numbers, .top-lang-mobile {
+    width: 10%;
 }
 .img-phone{
 	padding-top: 5px;
