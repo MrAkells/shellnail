@@ -87,67 +87,16 @@ class ControllerInformationSdSitemap extends Controller {
 	public function update_base()
 	{            
 		$time_start = time();
+
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/sd_sitemap');
 		$this->load->model('catalog/dvfilter');
 
 		if (isset($_GET['auth']) && $_GET['auth'] == '2020')
 		{
-			$categories_1 = $this->model_catalog_category->getCategories(0);
-			// echo $this->config->get('sd_sitemap_id') . ' ' . $this->config->get('sd_sitemap_status');
-			// $status = $this->config->get('sd_sitemap_status');
-			// if($status == 2){
 			$this->model_catalog_sd_sitemap->init();
-			// 	$category_id = 0;
-			// } else if($status == 3){
-			// 	echo 'sitemap greated sus';
-			// 	return;
-			// } else{
-			// 	$category_id = $this->config->get('sd_sitemap_id');
-			// 	$this->model_catalog_sd_sitemap->editSetting('sd_sitemap',['sd_sitemap_status'=>2]);	
-			// }
-			foreach ($categories_1 as $category_1) {
-			//$category_1 = $categories_1[$category_id];
-	
-				$data = [
-					'category_id' => $category_1['category_id'],
-					'name' => $category_1['name'],
-					'meta_h1' => $category_1['meta_h1'],
-					'href' => $this->url->link('product/category', 'path=' . $category_1['category_id']),
-					'level' => 1,
-				];
-	
-				$this->model_catalog_sd_sitemap->add($data);
-	
-				$categories_2 = $this->model_catalog_category->getCategories($category_1['category_id']);
-	
-				foreach ($categories_2 as $category_2) {
-					$data_2 = [
-						'category_id' => $category_2['category_id'],
-						'name' => $category_2['name'],
-						'meta_h1' => $category_2['meta_h1'],
-						'href' => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id']),
-						'level' => 2,
-					];
-					$this->model_catalog_sd_sitemap->add($data_2);
-					$this->addFiltrOptions($data_2);
-					$categories_3 = $this->model_catalog_category->getCategories($category_2['category_id']);
-	
-					foreach ($categories_3 as $category_3) {
-						$data_3 = [
-							'category_id' => $category_3['category_id'],
-							'name' => $category_3['name'],
-							'meta_h1' => $category_3['meta_h1'],
-							'href' => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'] . '_' . $category_3['category_id']),
-							'level' => 2,
-						];
-						$this->model_catalog_sd_sitemap->add($data_3);
-						$this->addFiltrOptions($data_3);
-					}
-	
-				}
-				$this->addFiltrOptions($data);
-			}
+			$this->updateTable(1);
+			$this->updateTable(3);
 				// if(isset($categories_1[$category_id + 1])){
 				// 	$this->model_catalog_sd_sitemap->editSetting('sd_sitemap',['sd_sitemap_id'=>$category_id + 1,'sd_sitemap_status'=>0]);
 				// } else {
@@ -156,6 +105,76 @@ class ControllerInformationSdSitemap extends Controller {
 				echo ' time ' . (time() - $time_start);
 		}
 	}
+
+	private function updateTable($language_id = 1) {
+		$base_url = $this->url->link('common/home');
+
+		$this->config->set('config_language_id', $language_id);
+		$categories_1 = $this->model_catalog_category->getCategories(0);
+		// echo $this->config->get('sd_sitemap_id') . ' ' . $this->config->get('sd_sitemap_status');
+		// $status = $this->config->get('sd_sitemap_status');
+		// if($status == 2){
+		
+		// 	$category_id = 0;
+		// } else if($status == 3){
+		// 	echo 'sitemap greated sus';
+		// 	return;
+		// } else{
+		// 	$category_id = $this->config->get('sd_sitemap_id');
+		// 	$this->model_catalog_sd_sitemap->editSetting('sd_sitemap',['sd_sitemap_status'=>2]);	
+		// }
+		foreach ($categories_1 as $category_1) {
+
+		//$category_1 = $categories_1[$category_id];
+
+			$data = [
+				'category_id' => $category_1['category_id'],
+				'name' => $category_1['name'],
+				'meta_h1' => $category_1['meta_h1'],
+				'href' => $this->fixUrl($this->url->link('product/category', 'path=' . $category_1['category_id']), $base_url, $language_id),
+				'level' => 1,
+			];
+			
+			$this->model_catalog_sd_sitemap->add($data);
+
+			$categories_2 = $this->model_catalog_category->getCategories($category_1['category_id']);
+
+			foreach ($categories_2 as $category_2) {
+				$data_2 = [
+					'category_id' => $category_2['category_id'],
+					'name' => $category_2['name'],
+					'meta_h1' => $category_2['meta_h1'],
+					'href' => $this->fixUrl($this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id']), $base_url, $language_id),
+					'level' => 2,
+				];
+				$this->model_catalog_sd_sitemap->add($data_2);
+				$this->addFiltrOptions($data_2);
+				$categories_3 = $this->model_catalog_category->getCategories($category_2['category_id']);
+
+				foreach ($categories_3 as $category_3) {
+					$data_3 = [
+						'category_id' => $category_3['category_id'],
+						'name' => $category_3['name'],
+						'meta_h1' => $category_3['meta_h1'],
+						'href' => $this->fixUrl($this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'] . '_' . $category_3['category_id']), $base_url, $language_id),
+						'level' => 2,
+					];
+					$this->model_catalog_sd_sitemap->add($data_3);
+					$this->addFiltrOptions($data_3);
+				}
+
+			}
+			$this->addFiltrOptions($data);
+		}
+	}
+
+	private function fixUrl($url, $base_url,$language_id) {
+		if($language_id > 1){
+			$url = str_replace($base_url, $base_url. 'ua/', $url);
+		}
+		return $url;
+	}
+
 	// category + dvfilter options
 	private function addFiltrOptions($data) {
 		$level =$data['level'] + 1;
