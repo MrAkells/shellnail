@@ -9,6 +9,8 @@ class ControllerCommonHeader extends Controller {
 		$this->load->model('extension/extension');
 
 		$data['language'] = $this->load->controller('common/language');
+
+		$data['langcode'] = $this->session->data['language'];
              
 		$data['analytics'] = array();
 

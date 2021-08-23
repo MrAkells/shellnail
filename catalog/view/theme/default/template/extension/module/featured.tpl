@@ -6,7 +6,7 @@
             <?php foreach ($products as $product) { ?>
                 <div class="item">
                     <div class="product-thumb">
-                        <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a>
+                        <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" width="<?php echo $product['img_width']; ?>"  height="<?php echo $product['img_height']; ?>" class="img-responsive" /></a>
                         </div>
                         <div>
                             <div class="caption">
