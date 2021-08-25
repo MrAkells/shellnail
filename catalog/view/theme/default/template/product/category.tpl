@@ -262,7 +262,15 @@
                 <div class="col-lg-6 col-md-5 col-sm-5 col-xs-4 sort-different">
                     <div class="form-group input-group input-group-sm">
                         <label class="input-group-addon" for="input-sort"><?php echo $text_sort; ?></label>
-                        <ul class="new-sorting list-inline visible-lg">
+
+                        <?php if ($langcode == 'uk-ua') {
+                            $current_lang = "lang_ua";
+                        } ?>
+                        <?php if ($langcode == 'ru-ru') {
+                            $current_lang = "lang_ru";
+                        } ?>
+
+                        <ul class="new-sorting list-inline visible-lg <?php echo $current_lang; ?>">
 
                             <?php if ('p.sort_order-ASC' == $sort . '-' . $order) { ?>
                             <li class='selected_sort'><span class="sort-signal sort-up"><i class="fa fa-sort-amount-asc"></i></span><a onclick="location = '<?php echo $sorts['p.sort_order-DESC']['href']; ?>';"><?php echo $text_po_poryadku_asc; ?></a></li>

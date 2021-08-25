@@ -176,19 +176,38 @@ src="https://www.facebook.com/tr?id=1322266524515292&ev=PageView
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W244K4"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-    
- <!-- facebook api element -->
- <div id="fb-root"></div>
- <script>
- (function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v2.5&appId=179241882791748&autoLogAppEvents=1';
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-</script>
- <!-- end facebook api element -->
+
+
+<?php if ($langcode == 'uk-ua') { ?>
+    <!-- facebook api element -->
+    <div id="fb-root"></div>
+     <script>
+     (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/uk_UA/sdk.js#xfbml=1&version=v2.5&appId=179241882791748&autoLogAppEvents=1';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+     <!-- end facebook api element -->
+<?php } ?>
+<?php if ($langcode == 'ru-ru') { ?>
+     <!-- facebook api element -->
+     <div id="fb-root"></div>
+     <script>
+     (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v2.5&appId=179241882791748&autoLogAppEvents=1';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+     <!-- end facebook api element -->
+<?php } ?>
+
+
     
 <!-- Верхние ссылки-->  
 <nav id="top" class="hidden-xs">
@@ -299,6 +318,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <?php } ?> 
         </div>
     </div>
+
+        <?php if ( $is_admin == 1) { ?>
+            <div class="top-lang-mobile header_element visible-xs-inline-block"><?php echo $language; ?></div>
+        <?php } ?>
          
         <div id="phone_numbers" class="header_element">
             <div class="hidden-xs">
@@ -416,7 +439,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         
        
-      <div id="cart_element" class="header_element"><?php echo $cart; ?></div>
+        <div id="cart_element" class="header_element"><?php echo $cart; ?></div>
 
         
     </div>

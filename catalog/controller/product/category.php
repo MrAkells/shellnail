@@ -10,6 +10,9 @@ class ControllerProductCategory extends Controller {
 
 		$this->load->model('tool/image');
 
+		$this->load->language('common/language');
+		$data['langcode'] = $this->session->data['language'];
+
                 
 		if (isset($this->request->get['filter'])) {
 			$filter = $this->request->get['filter'];
