@@ -1881,12 +1881,13 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 					break;
 				}
 			}
+			$base_url = $this->url->link('common/home', '', 'SSL');
 
-			$out[$i] = $this->xml('https://shellnail.com.ua/reviews/', '', 'monthly', '0.6');
+			$out[$i] = $this->xml($base_url . 'reviews/', '', 'monthly', '0.6');
 			$i++;
-			$out[$i] = $this->xml('https://shellnail.com.ua/vseakciy/', '', 'monthly', '0.6');
+			$out[$i] = $this->xml($base_url . 'vseakciy/', '', 'monthly', '0.6');
 			$i++;
-			$out[$i] = $this->xml('https://shellnail.com.ua/brands/', '', 'monthly', '0.6');
+			$out[$i] = $this->xml($base_url . 'brands/', '', 'monthly', '0.6');
 			$i++;
 			$lines = $out;
 			
