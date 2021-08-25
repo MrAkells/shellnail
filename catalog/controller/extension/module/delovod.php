@@ -115,7 +115,7 @@ class ControllerExtensionModuleDelovod extends Controller
 						"currency"	=> "1101200000001001", //грн.
 						"amountCur"			=> $order_info['total'],
 						"paymentForm"		=> (isset($this->paymentForms[$order_info['payment_code']]) ? $this->paymentForms[$order_info['payment_code']] : "1110300000000001"),
-						"deliveryMethod"	=> (isset($this->services[$order_info['shipping_code']]) ? $this->services[$order_info['shipping_code']]['delivery'] : "1110400000000001"),
+						"deliveryMethod_forDel"	=> (isset($this->services[$order_info['shipping_code']]) ? $this->services[$order_info['shipping_code']]['delivery'] : "1110400000000001"),
 						"remark"			=> strip_tags($order_info['payment_method'] . ", " . $shipping_address)
 					];
 					// Get products
@@ -155,7 +155,8 @@ class ControllerExtensionModuleDelovod extends Controller
 							$packet["params"]['tableParts']['tpGoods'][] = [
 								"rowNum" 	=> $i,
 								"good" 		=> $product["isbn"],
-								"goodType"	=> $goodType,
+								//"goodType"	=> $goodType,
+								"gType_forDel"	=> $goodType,
 								"unit"		=>	"1103600000000001", //Штуки
 								"qty" 		=> $product["quantity"],
 								"price" 			=> $product["price"],				//Цена
@@ -183,7 +184,8 @@ class ControllerExtensionModuleDelovod extends Controller
 						$packet["params"]['tableParts']['tpGoods'][] = [
 							"rowNum" 	=> ++$i,
 							"good" 		=> $this->services[$order_info['shipping_code']]["id"],
-							"goodType"	=> $this->services[$order_info['shipping_code']]["goodType"],
+							//"goodType"	=> $this->services[$order_info['shipping_code']]["goodType"],
+							"gType_forDel"	=> $this->services[$order_info['shipping_code']]["goodType"],
 							"unit"		=> $this->services[$order_info['shipping_code']]["unit"],
 							"qty" 		=> 1,
 							"price" 	=> $price_ser,
@@ -195,7 +197,8 @@ class ControllerExtensionModuleDelovod extends Controller
 						$packet["params"]['tableParts']['tpGoods'][] = [
 							"rowNum" 	=> ++$i,
 							"good" 		=> $this->services["cod"]["id"],
-							"goodType"	=> $this->services["cod"]["goodType"],
+							//"goodType"	=> $this->services["cod"]["goodType"],
+							"gType_forDel"	=> $this->services["cod"]["goodType"],
 							"unit"		=> $this->services["cod"]["unit"],
 							"qty" 		=> 1,
 							"price" 	=> $aftershipping,
@@ -236,6 +239,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			"firm"		=> "1100400000001001", //Интернет-магазин shellnail.com.ua
 			"storage"	=> "1100700000000001", //Основной склад
 			"storageTo"	=> "1100700000001001", //Резервный склад
+			"docMode"	=> "1004000000000409", //Перемещение на склад
 		];
 		$packet["params"]['tableParts']['tpGoods'] = $tpGoods;
 		$time = new DateTime('now', new DateTimeZone('UTC'));
@@ -345,8 +349,10 @@ class ControllerExtensionModuleDelovod extends Controller
 		$packet['key'] = $this->config->get('delovod_api_key');
 		$packet['version'] = "0.15";
 
+		//file_put_contents(DIR_LOGS . "delovod_Request.log", print_r($packet,true) . "\n", FILE_APPEND);
+	
 		if ($curl = curl_init()) {
-			curl_setopt($curl, CURLOPT_URL, 'https://delovod.ua/api/');
+			curl_setopt($curl, CURLOPT_URL, 'https://api.delovod.ua');
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, "packet=" . json_encode($packet));
@@ -429,7 +435,8 @@ class ControllerExtensionModuleDelovod extends Controller
 
 	public function testOrder()
 	{
-		//$data = $this->getObject('1109100000015507', 'delovod_orders_sync.log');
+	//	$this->getObjectT();
+		//$data = $this->getObject('1004000000000014', 'delovod_test.log');
 		//print_r($data);
 		// $this->load->model('extension/module/delovod');
 		// $order = $this->model_extension_module_delovod->getOrder('1109100000015507');
@@ -437,7 +444,15 @@ class ControllerExtensionModuleDelovod extends Controller
 		// 	$this->syncOrder($order);
 		// }
 	}
-
+	private function getObjectT()
+	{
+		$packet['action'] = "request";
+		$packet['params']['from']="catalogs.deliveryMethods";
+		$packet['params']['fields']=["id"=>"good","code"=>"code","name"=>"name"];
+		$requestResult = $this->sendRequest($packet);
+		$data = $this->handleResult($requestResult);
+		print_r($data);
+	}
 	/**
 	 * Order synchronization from delovod
 	 * @method syncOrder
