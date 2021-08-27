@@ -1621,7 +1621,11 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 					$date = '';
 					
 					foreach ($products as $product) {
-					
+						// Noindex if quantity < 0
+						if ($product['quantity'] <= 0) {
+							if(time() > strtotime( "+1 month", strtotime( $product['date_modified'] )) ) continue;;
+						}
+						
 						if ($settings['product_lastmod']){
 					
 							$date = date_format( new DateTime($product['date_modified']), 'Y-m-d');

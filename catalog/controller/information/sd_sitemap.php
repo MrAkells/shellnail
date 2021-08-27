@@ -102,6 +102,9 @@ class ControllerInformationSdSitemap extends Controller {
 				// } else {
 				// 	$this->model_catalog_sd_sitemap->editSetting('sd_sitemap',['sd_sitemap_id'=>0,'sd_sitemap_status'=>3]);	
 				// }
+			if($this->config->get('sd_pni_status')){
+				$this->model_catalog_sd_sitemap->delRowsNoIndex();
+			}	
 				echo ' time ' . (time() - $time_start);
 		}
 	}

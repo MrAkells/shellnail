@@ -18,6 +18,16 @@ class ModelCatalogSdSitemap extends Model {
 		$query= "INSERT INTO `" . DB_PREFIX . "sitemap` ( `language_id`,`name`, `href`,`level`) VALUES " . mb_substr($values, 0, -1);
 		$this->db->query($query);
 	}
+
+	public function delRowsNoIndex() {
+		$query = $this->db->query("SELECT `url` FROM `" . DB_PREFIX . "page_no_index` WHERE is_noindex=1");
+
+		foreach ($query->rows as $link){
+            $link['url'];
+			$this->db->query("DELETE  FROM `" . DB_PREFIX . "sitemap` WHERE `href` LIKE '%" . $link['url'] ."'");
+        }
+	}
+
 	public function init() {
 		$this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "sitemap`");
 		//$this->editSetting('sd_sitemap',['sd_sitemap_id'=>0,'sd_sitemap_status'=>0]);
