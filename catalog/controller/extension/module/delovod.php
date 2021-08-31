@@ -13,13 +13,13 @@ class ControllerExtensionModuleDelovod extends Controller
 		"new_mail.new_mail"	=> [ //Доставка Новая почта
 			"id" 		=> "1100300000003062",
 			"goodType"	=> "1004000000000015", //Услуга
-			"delivery" 	=> "1110400000000001",
+			"delivery" 	=> "1110400000001005",
 			"unit"		=> "1103600000000002"	//Услуга
 		],
 		"couriernp.couriernp"	=> [ //Доставка Новая почта курьером
 			"id" 		=> "1100300000003068",
 			"goodType"	=> "1004000000000015", //Услуга
-			"delivery" 	=> "1110400000000001",
+			"delivery" 	=> "1110400000001005",
 			"unit"		=> "1103600000000002"	//Услуга
 		],
 		"inter.inter"	=> [ //Доставка Международная
@@ -110,7 +110,7 @@ class ControllerExtensionModuleDelovod extends Controller
 						"date"		=> $order_info['date_added'],
 						"person"	=> $person_id,
 						"firm"		=> "1100400000001001", //Интернет-магазин shellnail.com.ua
-						"state"		=> "1111500000000008", //В обработке
+						"state"		=> "1111500000001005", //В обработке
 						"storage"	=> "1100700000000001", //Основной склад
 						"currency"	=> "1101200000001001", //грн.
 						"amountCur"			=> $order_info['total'],
@@ -435,8 +435,8 @@ class ControllerExtensionModuleDelovod extends Controller
 
 	public function testOrder()
 	{
-	//	$this->getObjectT();
-		//$data = $this->getObject('1004000000000014', 'delovod_test.log');
+		//$this->getObjectT();
+		//$data = $this->getObject('1109100000014988', 'delovod_test.log');
 		//print_r($data);
 		// $this->load->model('extension/module/delovod');
 		// $order = $this->model_extension_module_delovod->getOrder('1109100000015507');
@@ -447,8 +447,17 @@ class ControllerExtensionModuleDelovod extends Controller
 	private function getObjectT()
 	{
 		$packet['action'] = "request";
-		$packet['params']['from']="catalogs.deliveryMethods";
-		$packet['params']['fields']=["id"=>"good","code"=>"code","name"=>"name"];
+		$packet['params']['from']="catalogs.states";
+		$packet['params']['fields'] = ["id" => "id", "name" => "name", "code" => "code"];
+		// $packet['params']['from'] = "catalogs.goods";
+		// $packet['params']['fields'] = ["id" => "id", "name" => "name", "gType_forDel" => "gType_forDel"];
+		// $packet['params']['filters'] = [
+		// 	[
+		// 		"alias" => "gType_forDel",
+		// 		"operator" => "=",
+		// 		"value" => "1004000000000015"
+		// 	]
+		// ];
 		$requestResult = $this->sendRequest($packet);
 		$data = $this->handleResult($requestResult);
 		print_r($data);
@@ -469,7 +478,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			if ($data) {
 				//print_r($data);
 				$totals = $this->model_extension_module_delovod->getOrderTotal($order['order_id']);
-				$order_status_id = $this->model_extension_module_delovod->getOrderStatusIdByName($data->header->state->pr);
+				$order_status_id = $this->model_extension_module_delovod->getOrderStatusIdByName(str_replace(" new", "", $data->header->state->pr));
 
 				if ($order_status_id && ($order_status_id != $order['order_status_id'] || $totals['total'] != $data->header->amountCur)) {
 					$order_products = $this->model_extension_module_delovod->getOrderProducts($order['order_id']);
