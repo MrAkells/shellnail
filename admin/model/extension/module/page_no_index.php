@@ -55,14 +55,13 @@ class ModelExtensionModulePageNoIndex extends Model
 
 	public function getUrls($data){
         $sql = "SELECT * FROM " . DB_PREFIX . "page_no_index WHERE 1";
-
         if (!empty($data['filter_name'])) {
 			$sql .= " AND url LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
 		}
-        if (!empty($data['filter_noindex'])) {
+        if (isset($data['filter_noindex'])) {
 			$sql .= "  AND  is_noindex = '" . (int)$data['filter_noindex'] . "'";
 		}
-        if (!empty($data['filter_canonical'])) {
+        if (isset($data['filter_canonical'])) {
 			$sql .= "  AND  is_canonical = '" . (int)$data['filter_canonical'] . "'";
 		}
         $sql .= " ORDER BY url ASC";
@@ -78,7 +77,6 @@ class ModelExtensionModulePageNoIndex extends Model
 
 			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 		}
-
         $query = $this->db->query($sql);
 
         return $query->rows;       
