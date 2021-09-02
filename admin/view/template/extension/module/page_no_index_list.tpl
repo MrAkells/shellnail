@@ -39,6 +39,42 @@
             </div>
             <div class="col-sm-4">
               <div class="form-group">
+                <label class="control-label" for="input-noindex"><?php echo $entry_noindex; ?></label>
+                <select name="filter_noindex" id="input-noindex" class="form-control">
+                  <option value="*"></option>
+                  <?php if ($filter_noindex) { ?>
+                  <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                  <?php } else { ?>
+                  <option value="1"><?php echo $text_enabled; ?></option>
+                  <?php } ?>
+                  <?php if (!$filter_noindex && !is_null($filter_noindex)) { ?>
+                  <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                  <?php } else { ?>
+                  <option value="0"><?php echo $text_disabled; ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-canonical"><?php echo $entry_canonical; ?></label>
+                <select name="filter_canonical" id="input-canonical" class="form-control">
+                  <option value="*"></option>
+                  <?php if ($filter_canonical) { ?>
+                  <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                  <?php } else { ?>
+                  <option value="1"><?php echo $text_enabled; ?></option>
+                  <?php } ?>
+                  <?php if (!$filter_canonical && !is_null($filter_canonical)) { ?>
+                  <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                  <?php } else { ?>
+                  <option value="0"><?php echo $text_disabled; ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
                 <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-filter"></i> <?php echo $button_filter; ?></button>
               </div>
             </div>
@@ -99,6 +135,18 @@ $('#button-filter').on('click', function() {
 	if (filter_name) {
 		url += '&filter_name=' + encodeURIComponent(filter_name);
 	}
+
+  var filter_noindex = $('select[name=\'filter_noindex\']').val();
+
+  if (filter_noindex != '*') {
+    url += '&filter_noindex=' + encodeURIComponent(filter_noindex);
+  }
+  var filter_canonical = $('select[name=\'filter_canonical\']').val();
+
+  if (filter_canonical != '*') {
+    url += '&filter_canonical=' + encodeURIComponent(filter_canonical);
+  }
+
   location = url;
 });
 //--></script>
