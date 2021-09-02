@@ -13,12 +13,15 @@ class ModelExtensionModulePageNoIndex extends Model
         }
         return false;
     }
-    
+
     public function isPageCanonical()
     {
         
         if(isset($this->request->server['REQUEST_URI'])){
-            $sql = "SELECT page_id FROM  " . DB_PREFIX . "page_no_index WHERE url = '" . $this->request->server['REQUEST_URI'] . "'  AND is_canonical=1";
+
+            $pattern = '/\?.*/i';
+
+            $sql = "SELECT page_id FROM  " . DB_PREFIX . "page_no_index WHERE url = '" . preg_replace($pattern, '', $this->request->server['REQUEST_URI']) . "'  AND is_canonical=1";
 
             $query = $this->db->query($sql);
 
