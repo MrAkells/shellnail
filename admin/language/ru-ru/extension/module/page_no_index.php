@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']    = 'Page tags, texts, noindex';
+$_['heading_title']    = 'Page tags, texts, noindex, canonical';
 
 // Text
 $_['text_add']         = 'Добавление url';
