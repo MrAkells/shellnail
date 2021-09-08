@@ -708,6 +708,7 @@ footer h5 {
 	margin-top: 5px;
 	width: calc(100% - 10px);
 	max-width: 175px;
+	height: auto;
 }
 .product-grid .product-thumb .image {
 	float: none;
