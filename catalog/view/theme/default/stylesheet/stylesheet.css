@@ -3964,6 +3964,9 @@ header .row {
 	padding-right: 15px;
 	margin-bottom: 10px;
 }
+#logo {
+    margin: 6px 0 0 0;
+}
 .logo-feature {
     width: auto;
 }
@@ -4035,7 +4038,7 @@ header .row {
     font-size: 14px;
 }
 .burgen-top {
-    margin-top: 5px;
+    margin-top: 10px;
 }
 #phone_numbers .img-order-bell{
 	width: 36px;
