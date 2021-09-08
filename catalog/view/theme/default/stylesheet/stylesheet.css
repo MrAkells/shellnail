@@ -3956,6 +3956,9 @@ header .row {
 	display: flex;
 	justify-content: space-between;
 }
+#cart_element {
+	min-width: 48px;
+}
 #header_search{
 	padding-left: 15px;
 	padding-right: 15px;
