@@ -11,6 +11,7 @@ class ModelExtensionModulePageNoIndex extends Model
             "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "page_no_index ("
                 . " page_id INT(11) NOT NULL AUTO_INCREMENT, "
                 . " is_noindex BOOLEAN NOT NULL DEFAULT FALSE, "
+                . " is_canonical BOOLEAN NOT NULL DEFAULT FALSE, "
                 . " url VARCHAR(255) NOT NULL, "
                 . " PRIMARY KEY (page_id) , KEY `url` (`url`)"
                 . ") COLLATE='utf8_general_ci' ENGINE=MyISAM"
@@ -53,12 +54,16 @@ class ModelExtensionModulePageNoIndex extends Model
 	}    
 
 	public function getUrls($data){
-        $sql = "SELECT * FROM " . DB_PREFIX . "page_no_index ";
-
+        $sql = "SELECT * FROM " . DB_PREFIX . "page_no_index WHERE 1";
         if (!empty($data['filter_name'])) {
-			$sql .= " WHERE url LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+			$sql .= " AND url LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
 		}
-
+        if (isset($data['filter_noindex'])) {
+			$sql .= "  AND  is_noindex = '" . (int)$data['filter_noindex'] . "'";
+		}
+        if (isset($data['filter_canonical'])) {
+			$sql .= "  AND  is_canonical = '" . (int)$data['filter_canonical'] . "'";
+		}
         $sql .= " ORDER BY url ASC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -72,7 +77,6 @@ class ModelExtensionModulePageNoIndex extends Model
 
 			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 		}
-
         $query = $this->db->query($sql);
 
         return $query->rows;       
@@ -91,7 +95,7 @@ class ModelExtensionModulePageNoIndex extends Model
 
     public function add($data)
     {
-        $this->db->query("INSERT INTO ".DB_PREFIX."page_no_index SET  is_noindex= '" . (isset($data['is_noindex']) ? (int)$data['is_noindex'] : 0) . "', url='". $this->db->escape($data['url']) . "'");
+        $this->db->query("INSERT INTO ".DB_PREFIX."page_no_index SET  is_noindex= '" . (isset($data['is_noindex']) ? (int)$data['is_noindex'] : 0) . "', is_canonical= '" . (isset($data['is_canonical']) ? (int)$data['is_canonical'] : 0) . "', url='". $this->db->escape($data['url']) . "'");
         $id = $this->db->getLastId();
 
         foreach ($data['page_description'] as $language_id => $value) {
@@ -103,7 +107,7 @@ class ModelExtensionModulePageNoIndex extends Model
 
     public function edit($id, $data)
     {
-        $this->db->query("UPDATE " . DB_PREFIX . "page_no_index  SET  is_noindex= '" . (isset($data['is_noindex']) ? (int)$data['is_noindex'] : 0) . "', url='".$this->db->escape($data['url']) ."' WHERE page_id='".(int)$id."'");
+        $this->db->query("UPDATE " . DB_PREFIX . "page_no_index  SET  is_noindex= '" . (isset($data['is_noindex']) ? (int)$data['is_noindex'] : 0) . "', is_canonical= '" . (isset($data['is_canonical']) ? (int)$data['is_canonical'] : 0) . "', url='".$this->db->escape($data['url']) ."' WHERE page_id='".(int)$id."'");
 		
         $this->db->query("DELETE FROM " . DB_PREFIX . "page_no_index_description WHERE page_id = '" . (int)$id . "'");
 

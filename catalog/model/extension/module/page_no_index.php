@@ -13,6 +13,23 @@ class ModelExtensionModulePageNoIndex extends Model
         }
         return false;
     }
+
+    public function isPageCanonical()
+    {
+        
+        if(isset($this->request->server['REQUEST_URI'])){
+
+            $pattern = '/\?.*/i';
+
+            $sql = "SELECT page_id FROM  " . DB_PREFIX . "page_no_index WHERE url = '" . preg_replace($pattern, '', $this->request->server['REQUEST_URI']) . "'  AND is_canonical=1";
+
+            $query = $this->db->query($sql);
+
+            return ($query->num_rows ? true : false);
+        }
+        return false;
+    }
+
     public function getDescription()
     {
          if(isset($this->request->server['REQUEST_URI'])){

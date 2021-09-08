@@ -1621,7 +1621,11 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 					$date = '';
 					
 					foreach ($products as $product) {
-					
+						// Noindex if quantity < 0
+						if ($product['quantity'] <= 0) {
+							if(time() > strtotime( "+1 month", strtotime( $product['date_modified'] )) ) continue;;
+						}
+						
 						if ($settings['product_lastmod']){
 					
 							$date = date_format( new DateTime($product['date_modified']), 'Y-m-d');
@@ -1881,12 +1885,13 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 					break;
 				}
 			}
+			$base_url = $this->url->link('common/home', '', 'SSL');
 
-			$out[$i] = $this->xml('https://shellnail.com.ua/reviews/', '', 'monthly', '0.6');
+			$out[$i] = $this->xml($base_url . 'reviews/', '', 'monthly', '0.6');
 			$i++;
-			$out[$i] = $this->xml('https://shellnail.com.ua/vseakciy/', '', 'monthly', '0.6');
+			$out[$i] = $this->xml($base_url . 'vseakciy/', '', 'monthly', '0.6');
 			$i++;
-			$out[$i] = $this->xml('https://shellnail.com.ua/brands/', '', 'monthly', '0.6');
+			$out[$i] = $this->xml($base_url . 'brands/', '', 'monthly', '0.6');
 			$i++;
 			$lines = $out;
 			

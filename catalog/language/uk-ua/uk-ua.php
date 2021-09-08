@@ -32,6 +32,7 @@ $_['button_notify_availability']      = 'Повідомити про наявн�
 $_['button_cancel']         = 'Скасувати';
 $_['button_compare']        = 'До порівняння';
 $_['button_wishlist']       = 'В закладки';
+$_['button_share']          = 'Поділиться';
 $_['button_checkout']       = 'Оформлення замовлення';
 $_['button_confirm']        = 'ПіДТВЕРДЖЕННЯ ЗАМОВЛЕННЯ';
 $_['button_coupon']         = 'Застосувати купон';

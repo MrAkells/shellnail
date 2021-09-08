@@ -408,7 +408,7 @@ class ControllerExtensionModuleDVFilter extends Controller {
                     'values' => array(
                         array(
                             'value_id' => 'in',
-                            'name' => 'В наличии'
+                            'name' => $this->language->get('text_in_stock')
                         )
                     )
                 );
