@@ -3999,6 +3999,13 @@ header .row {
 	float: left;
 	width: 12%;
 }
+.top-lang-mobile .dropdown-menu {
+	min-width: unset;
+	padding: 4px 0;
+}
+.top-lang-mobile .dropdown-menu li a {
+	padding: 9px 15px;
+}
 #cart_element, #phone_numbers{
     width: 12%;
 }
