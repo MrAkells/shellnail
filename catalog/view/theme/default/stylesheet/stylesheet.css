@@ -265,6 +265,7 @@ div.required .control-label:after {
 	#cart .dropdown-menu {
 		width: 100%;
 	}
+
 }
 #cart .dropdown-menu table {
 	margin-bottom: 10px;
@@ -707,6 +708,7 @@ footer h5 {
 	margin-top: 5px;
 	width: calc(100% - 10px);
 	max-width: 175px;
+	height: auto;
 }
 .product-grid .product-thumb .image {
 	float: none;
@@ -3933,6 +3935,8 @@ tr.one_order{
 	.pack-share {
     height: auto;
 	}
+
+	
 }
 /*---Адаптив--*/
 @media(min-width: 320px) and (max-width: 480px){
@@ -3949,13 +3953,26 @@ header {
     padding: 15px 15px 0 15px;
     margin-bottom: 0px;
 }
+header .row {
+	display: flex;
+	justify-content: space-between;
+}
+#cart_element {
+	min-width: 48px;
+}
 #header_search{
 	padding-left: 15px;
 	padding-right: 15px;
 	margin-bottom: 10px;
 }
+#logo {
+    margin: 6px 0 0 0;
+}
 .logo-feature {
-    width: 43%;
+    width: auto;
+}
+.top-lang-mobile .btn {
+	padding: 7.5px 5px;
 }
 #mobile_top_links {
     width: 15%;
@@ -4022,7 +4039,7 @@ header {
     font-size: 14px;
 }
 .burgen-top {
-    margin-top: 5px;
+    margin-top: 10px;
 }
 #phone_numbers .img-order-bell{
 	width: 36px;
