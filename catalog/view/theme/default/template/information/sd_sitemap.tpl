@@ -40,7 +40,7 @@
                 <?php foreach ($informations as $information) { ?>
                 <li><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
                 <?php } ?>
-                <li><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
+                <!-- <li><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li> -->
               </ul>
             </li>
           </ul>
