@@ -250,6 +250,8 @@ class ControllerStartupSeoPro extends Controller {
 		} else {
 			$seo_url = $this->config->get('config_url') . $seo_url;
 		}
+		
+		if($route == 'information/contact') $postfix = 1;
 
 		if (isset($postfix)) {
 			$seo_url .= trim($this->config->get('config_seo_url_postfix'));

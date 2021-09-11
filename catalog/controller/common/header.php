@@ -165,7 +165,7 @@ class ControllerCommonHeader extends Controller {
 		$data['logout'] = $this->url->link('account/logout', '', true);
 		$data['shopping_cart'] = $this->url->link('checkout/cart');
 		$data['checkout'] = $this->url->link('checkout/checkout', '', true);
-		$data['contact'] = $this->url->link('information/information', 'information_id=12');
+		$data['contact'] = $this->url->link('information/contact', '', true);
 		$data['telephone'] = $this->config->get('config_telephone');
                 
                 $data['text_contact'] = $this->language->get('text_contact');
