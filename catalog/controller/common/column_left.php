@@ -36,7 +36,7 @@ class ControllerCommonColumnLeft extends Controller {
 			$tpl='forth_column_left.tpl'; 
 		}
 		
-		if ($route == 'features/reviews' || $route == 'product/manufacturer/info') {
+		if ($route == 'features/reviews' || $route == 'product/manufacturer/info' || 'information/contact') {
 
 			$tpl='second_column_left.tpl';    
 
