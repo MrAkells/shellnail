@@ -32,11 +32,11 @@ class ControllerCommonColumnLeft extends Controller {
 			$layout_id = $this->model_catalog_product->getProductLayoutId($this->request->get['product_id']);
 		}
 
-		if($route == 'account/logout' || $route ==  'account/forgotten' || $route ==  'common/success' ||  $route == "account/reset" || $route=="checkout/success" || $route=="account/login" || $route=="information/information" || $route=="error/not_found"){
+		if($route == 'account/logout' || $route ==  'account/forgotten' || $route ==  'common/success' ||  $route == "account/reset" || $route=="checkout/success" || $route=="account/login" || $route=="information/information" || $route=="error/not_found"  || $route=='information/contact'){
 			$tpl='forth_column_left.tpl'; 
 		}
 		
-		if ($route == 'features/reviews' || $route == 'product/manufacturer/info' || 'information/contact') {
+		if ($route == 'features/reviews' || $route == 'product/manufacturer/info') {
 
 			$tpl='second_column_left.tpl';    
 
