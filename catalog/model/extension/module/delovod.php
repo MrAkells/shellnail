@@ -177,7 +177,7 @@ class ModelExtensionModuleDelovod extends Model
 			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '" . (int) $good->qty . "', date_modified = NOW() WHERE `isbn` = '" . $good->id . "'");
 		}
 		if ($i) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0',  date_modified = NOW() WHERE `isbn` <> '' AND `mpn` = '' AND `date_modified` < (NOW() - INTERVAL 50 MINUTE)");
+			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0',  date_modified = NOW() WHERE `isbn` <> '' AND `mpn` = '' AND `quantity` > 0 AND `date_modified` < (NOW() - INTERVAL 50 MINUTE)");
 		}
 	}
 
