@@ -469,7 +469,8 @@ class ControllerProductSearch extends Controller {
 				$this->model_account_search->addSearch($search_data);
 			}
 		}
-
+		$data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
+		
 		$data['search'] = $search;
 		$data['description'] = $description;
 		$data['category_id'] = $category_id;
