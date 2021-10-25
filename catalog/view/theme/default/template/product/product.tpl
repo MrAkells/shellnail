@@ -256,7 +256,7 @@
                   </tr>
                 <?php foreach ($product_filters as $filter) { ?>
                   <tr>
-                    <td><?php echo $filter['option'] ?></td>
+                    <td><?php echo ($filter['option'] != 'color' ? $filter['option'] : 'Цвет') ?></td>
                     <td>
                       <?php foreach ($filter['values'] as $key => $value) { ?>
                         <?php if($key) echo "/"; ?><?php echo $value['0']; ?>
@@ -432,7 +432,7 @@
                     </tr>
                   <?php foreach ($product_filters as $filter) { ?>
                     <tr>
-                      <td><?php echo $filter['option'] ?></td>
+                      <td><?php echo ($filter['option'] != 'color' ? $filter['option'] : 'Цвет') ?></td>
                       <td>
                         <?php foreach ($filter['values'] as $key => $value) { ?>
                           <?php if($key) echo "/"; ?><?php echo $value['0']; ?>
