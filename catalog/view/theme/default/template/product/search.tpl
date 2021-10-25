@@ -1,11 +1,5 @@
 <?php echo $header; ?>
 <div class="container">
-  <ul class="hidden-xs hidden-sm breadcrumbs list-inline">
-    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-      <li><a class="crumb" href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
-    <?php } ?>
-  </ul>
-  <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>
   <div class="row"><?php echo $column_left; ?>
     <?php if ($column_left && $column_right) { ?>
     <?php $class = 'col-sm-6'; ?>
@@ -15,6 +9,12 @@
     <?php $class = 'col-sm-12'; ?>
     <?php } ?>
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
+      <ul class="hidden-xs hidden-sm breadcrumbs list-inline">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+          <li><a class="crumb" href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+      </ul>
+      <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>
       <h1><?php echo $heading_title; ?></h1>
       <label class="control-label" for="input-search"><?php echo $entry_search; ?></label>
       <div class="row row-flex">
