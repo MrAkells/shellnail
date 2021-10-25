@@ -84,7 +84,8 @@ class ControllerCommonHeader extends Controller {
                     "features/reviews",
                     "newsblog/category",
                     "newsblog/article",
-                    "product/product"
+                    "product/product",
+					"product/search"
                 );
                 if(!in_array($this->request->get['route'],$fake_menu)){
                     $data['header_catalog']=$this->load->controller('extension/module/menu');
