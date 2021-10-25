@@ -99,7 +99,7 @@ if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 	# Соединение
 	$db_link = mysqli_connect($db_host, $db_username, $db_password, $db_database);
 	if($decrease_quantity){
-		$update_quantity = mysqli_query($db_link,"UPDATE oc_product SET quantity=quantity-1 WHERE `product_id` = '".(int)$_POST["product_id"]."'");    
+		$update_quantity = mysqli_query($db_link,"UPDATE oc_product SET quantity=quantity-1 WHERE `product_id` = '".(int)$_POST["product_id"]."' AND `subtract` = 1");    
 	}
 	
 	if(isset($save_sms_array)){
