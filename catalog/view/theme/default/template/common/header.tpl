@@ -134,10 +134,20 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-59209923-1');
-  gtag('config', 'AW-CONVERSION_ID');
+  gtag('config', 'UA-59209923-1');  
 </script>
 <!-- End of Global site tag (gtag.js) - Google Analytics -->
+
+<!-- Global site tag (gtag.js) - Google Ads: 969257410 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-969257410"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-969257410');
+</script>
+<!-- End of Global site tag (gtag.js) - Google Ads: 969257410 -->
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -479,5 +489,3 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         echo $login_form;
      } ?>
    <?php echo $phone_call_back['modal']; ?>
-   
-  
