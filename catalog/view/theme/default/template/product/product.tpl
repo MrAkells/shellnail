@@ -11,7 +11,6 @@
 <!--Тег-события-для-Google-merchant-center-->
 <script>
   gtag('event', 'view_item', {
-    'send_to': 'AW-969257410',
     'value': '<?php echo $intprice; ?>',
     'items': [{
       'id': '<?php echo $sku; ?>',
