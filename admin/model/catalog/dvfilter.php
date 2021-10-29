@@ -467,6 +467,8 @@ class ModelCatalogDVFilter extends Model {
             $this->db->query("TRUNCATE `" . DB_PREFIX . "dvfilter_option_description`");
             $this->db->query("TRUNCATE `" . DB_PREFIX . "dvfilter_option_to_category`");
             $this->db->query("TRUNCATE `" . DB_PREFIX . "dvfilter_option_to_store`");
+            $this->db->query("TRUNCATE `" . DB_PREFIX . "dvfilter_option_value_category`");
+            $this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "dvfilter_option_value_category SELECT * FROM " . DB_PREFIX . "dvfilter_option_value");
             $this->db->query("TRUNCATE `" . DB_PREFIX . "dvfilter_option_value`");
             $this->db->query("TRUNCATE `" . DB_PREFIX . "dvfilter_option_value_to_product`");
             $this->db->query("TRUNCATE `" . DB_PREFIX . "dvfilter_option_value_description`");
@@ -609,7 +611,12 @@ class ModelCatalogDVFilter extends Model {
             $this->db->query("UPDATE " . DB_PREFIX . "dvfilter_option_value SET `keyword` = '" . $this->db->escape($this->translit($row['name'])) . "' WHERE value_id = '" . $this->db->escape($row['value_id']) . "'");
         }
 
-        $this->cache->delete('dvfilter');
+        if (!empty($data['copy_truncate']) && !empty($data['copy_attribute'])) {
+            $this->db->query("UPDATE " . DB_PREFIX . "dvfilter_option_value AS o, " . DB_PREFIX . "dvfilter_option_value_category AS oc SET o.category_id = oc.category_id WHERE oc.category_id > 0 AND o.option_id = oc.option_id AND o.keyword = oc.keyword");
+        
+        }
+
+        $this->cache->delete('');
         $this->cache->delete('product');
     }
 
