@@ -13,6 +13,7 @@
   gtag('event', 'view_item', {
     'value': '<?php echo $intprice; ?>',
     'items': [{
+      'ecomm_prodid': '<?php echo $sku; ?>',
       'id': '<?php echo $sku; ?>',
       'google_business_vertical': 'retail'
     }]
