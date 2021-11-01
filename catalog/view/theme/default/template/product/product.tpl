@@ -8,18 +8,6 @@
         value: '<?php echo $intprice; ?>'
     });
 </script>
-<!--Тег-события-для-Google-merchant-center-->
-<script>
-  gtag('event', 'view_item', {
-    'value': '<?php echo $intprice; ?>',
-    'items': [{
-      'ecomm_prodid': '<?php echo $sku; ?>',
-      'id': '<?php echo $sku; ?>',
-      'google_business_vertical': 'retail'
-    }]
-  });
-</script>
-<!--/Тег-события-для-Google-merchant-center-->
 <div class="container">
   <div class="row">
   <?php echo $column_left; ?>

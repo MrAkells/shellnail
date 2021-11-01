@@ -38,6 +38,18 @@ function prepare_fbq(obj) {
 	});
 	console.log('FB pixel AddToCart Event');
     }
+
+	if (typeof gtag === "function") {
+		gtag('event','add_to_cart', {
+			'value': price,
+			'items': [
+				{
+				'ecomm_prodid': sku,
+				'id': sku, 
+				'google_business_vertical': 'retail'
+				}]
+		 });
+	}
 }
 
 function prepare_fbq_purchase(value) {
