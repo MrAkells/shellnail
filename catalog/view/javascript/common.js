@@ -42,12 +42,8 @@ function prepare_fbq(obj) {
 	if (typeof gtag === "function") {
 		gtag('event','add_to_cart', {
 			'value': price,
-			'items': [
-				{
-				'ecomm_prodid': sku,
-				'id': sku, 
-				'google_business_vertical': 'retail'
-				}]
+			'ecomm_prodid': sku,
+			'google_business_vertical': 'retail'
 		 });
 	}
 }
