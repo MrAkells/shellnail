@@ -43,7 +43,11 @@ function prepare_fbq(obj) {
 		gtag('event','add_to_cart', {
 			'value': price,
 			'ecomm_prodid': sku,
-			'google_business_vertical': 'retail'
+			'items': [
+				{
+				'id': sku, 
+				'google_business_vertical': 'retail'
+				}]
 		 });
 	}
 }
