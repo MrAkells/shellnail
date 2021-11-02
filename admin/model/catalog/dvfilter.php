@@ -542,14 +542,18 @@ class ModelCatalogDVFilter extends Model {
                 $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "dvfilter_option_value_description WHERE language_id = '" . (int) $this->config->get('config_language_id') . "' AND TRIM(name) LIKE '%" . $this->db->escape($separator) . "%'");
 
                 foreach ($query->rows as $result) {
+                    $query_l = $this->db->query("SELECT * FROM " . DB_PREFIX . "dvfilter_option_value_description WHERE language_id = '3' AND value_id = '" . (int) $result['value_id'] . "'" );
+
                     $values = explode($separator, $result['name']);
+                    $values_l = explode($separator, $query_l->row['name']);
 
-                    foreach ($values as $value) {
+                    foreach ($values as $key => $value) {
                         $value = $this->utf8_ucfirst(trim($value));
-
+                        
                         if (!$value) {
                             continue;
                         }
+                        $value_l = $this->utf8_ucfirst(trim($values_l[$key]));
 
                         $value_query = $this->db->query("SELECT value_id FROM " . DB_PREFIX . "dvfilter_option_value_description WHERE language_id = '" . (int) $this->config->get('config_language_id') . "' AND option_id = '" . (int) $result['option_id'] . "' AND LCASE(TRIM(name)) = '" . $this->db->escape(utf8_strtolower($value)) . "'");
 
@@ -561,6 +565,8 @@ class ModelCatalogDVFilter extends Model {
                             $value_id = $this->db->getLastId();
 
                             $this->db->query("INSERT INTO " . DB_PREFIX . "dvfilter_option_value_description (option_id, value_id, language_id, name) VALUES ('" . (int) $result['option_id'] . "', '" . $this->db->escape($value_id) . "', '" . (int) $this->config->get('config_language_id') . "', '" . $this->db->escape($value) . "')");
+                            $this->db->query("INSERT INTO " . DB_PREFIX . "dvfilter_option_value_description (option_id, value_id, language_id, name) VALUES ('" . (int) $result['option_id'] . "', '" . $this->db->escape($value_id) . "', '3', '" . $this->db->escape($value_l) . "')");
+                        
                         }
 
                         $this->db->query("INSERT INTO " . DB_PREFIX . "dvfilter_option_value_to_product (product_id, option_id, value_id) SELECT oov2p.product_id, '" . (int) $result['option_id'] . "', '" . $this->db->escape($value_id) . "' FROM " . DB_PREFIX . "dvfilter_option_value_to_product oov2p WHERE oov2p.option_id = '" . (int) $result['option_id'] . "' AND oov2p.value_id = '" . $this->db->escape($result['value_id']) . "'");
@@ -568,7 +574,7 @@ class ModelCatalogDVFilter extends Model {
 
                     if ($values) {
                         $this->db->query("DELETE FROM `" . DB_PREFIX . "dvfilter_option_value` WHERE value_id = '" . $this->db->escape($result['value_id']) . "'");
-                        $this->db->query("DELETE FROM `" . DB_PREFIX . "dvfilter_option_value_description` WHERE language_id = '" . (int) $this->config->get('config_language_id') . "' AND value_id = '" . $this->db->escape($result['value_id']) . "'");
+                        $this->db->query("DELETE FROM `" . DB_PREFIX . "dvfilter_option_value_description` WHERE value_id = '" . $this->db->escape($result['value_id']) . "'");
                         $this->db->query("DELETE FROM `" . DB_PREFIX . "dvfilter_option_value_to_product` WHERE option_id = '" . (int) $result['option_id'] . "' AND value_id = '" . $this->db->escape($result['value_id']) . "'");
                     }
                 }
