@@ -622,7 +622,7 @@ class ModelCatalogDVFilter extends Model {
         
         }
 
-        $this->cache->delete('');
+        $this->cache->delete('dvfilter');
         $this->cache->delete('product');
     }
 
