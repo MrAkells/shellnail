@@ -3,7 +3,7 @@
         <label><?php echo $text_postcode; ?></label>
         <input id='ukrposhta_postcode' class='form-control' value="<?php echo $postcode; ?>" oninput="$(this).change();">
         <div class="text_fill_field text-danger text-center" style="display: none;">
-            Введите Ваш почтовый индекс
+            <?php echo $text_input_postcode; ?>
         </div>
     </div> 
 </div>

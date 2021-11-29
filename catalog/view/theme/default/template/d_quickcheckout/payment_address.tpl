@@ -1,6 +1,6 @@
 <div id="payment_address" class="qc-step" data-col="<?php echo $col; ?>" data-row="<?php echo $row; ?>"></div>
 <script type="text/html" id="payment_address_template">
-<div class="<%= parseInt(model.config.display) ? '' : 'hidden' %>"><h1 class="title-checkout">Оформление заказа</h1>
+<div class="<%= parseInt(model.config.display) ? '' : 'hidden' %>"><h1 class="title-checkout"><?php echo $heading_title; ?></h1>
 	<div class="panel panel-default">
 		<div class="panel-heading">
 
