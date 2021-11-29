@@ -14,6 +14,7 @@ $_['entry_lastname']      = 'Прізвище';
 $_['entry_email']      	  = 'E-Mail';
 $_['entry_telephone']     = 'Телефон';
 $_['entry_fax']           = 'Факс';
+$_['entry_customer_birthday'] = 'Дата народження';
 
 // Error
 $_['error_exists']        = 'Такий E-Mail вже зареєстрований';

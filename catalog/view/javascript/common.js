@@ -332,8 +332,12 @@ var voucher = {
 	}
 }
 
+var _lang = document.documentElement.lang;
+if(_lang == undefined) _lang = 'ru';
+
 var wishlist = {
 	'add': function(elem) {
+
 	    var product_id=elem.data('product_id');
 	   
 		$.ajax({
@@ -349,8 +353,10 @@ var wishlist = {
 
 				if (json['success']) {
 				     var popover_content="<span class='wishlist_span'>Товар добавлен в <br/><a href='index.php?route=account/wishlist'>список желаний</a></span>";
-	    elem.popover({container: 'body', content: popover_content, html: true, placement: "bottom"}); 
-				    elem.popover("show");
+					if(_lang == 'uk') popover_content="<span class='wishlist_span'>Товар доданий в <br/><a href='index.php?route=account/wishlist'>список бажань</a></span>";
+	    
+					elem.popover({container: 'body', content: popover_content, html: true, placement: "bottom"}); 
+					elem.popover("show");
 				    
 				   setTimeout(function(){elem.popover("hide");} ,4000);
 				   
@@ -400,9 +406,10 @@ var compare = {
 			success: function(json) {
 			    
 			    if (json['success']) {	
-                                $('#compare-total').html(json['total']);
+                   $('#compare-total').html(json['total']);
 				   var popover_content="<span class='wishlist_span'>Товар добавлен в <br/><a href='index.php?route=product/compare'>список сравнений</a></span>";
-	    elem.popover({container: 'body', content: popover_content, html: true, placement: "bottom"}); 
+				   if(_lang == 'uk') popover_content="<span class='wishlist_span'>Товар доданий в <br/><a href='index.php?route=product/compare'>список порівнянь</a></span>";
+				   elem.popover({container: 'body', content: popover_content, html: true, placement: "bottom"}); 
 				   elem.popover("show");
 				   setTimeout(function(){elem.popover("hide");} ,4000);
 				 

@@ -19,3 +19,7 @@ $_['text_transaction']   = 'Історія платежів';
 $_['text_newsletter']    = 'Редагувати підписку';
 $_['text_recurring']     = 'Регулярні платежі';
 $_['text_transactions']  = 'Перекази';
+$_['text_leave']         = 'Вихід';
+$_['text_сontact_info']  = 'Контактна інформація';
+$_['text_address_book']  = 'Адресна книга';
+$_['text_your_special']  = "Ваша накопичувальна знижка: %s";
