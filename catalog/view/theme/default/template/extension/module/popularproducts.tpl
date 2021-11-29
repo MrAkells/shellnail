@@ -1,6 +1,6 @@
 <div class="row new-product">
   <div class="col-xs-12 envelope">
-  <h2 class="title-feature"><?php echo $heading_title; ?></h3>
+  <h2 class="title-feature"><?php echo $title; ?></h3>
     <div id="products_<?php echo $tpl; ?>" class="owl-carousel">
   <?php foreach ($products as $product) { ?>
   <div class="item product-layout">
