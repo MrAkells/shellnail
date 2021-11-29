@@ -111,6 +111,17 @@ class ControllerExtensionModuleFeatured extends Controller {
 		} else {
 			$data['name'] = '';
 		}
+		$this->load->model('localisation/language');
+		$data['languages'] = $this->model_localisation_language->getLanguages();
+
+		$data['lang'] = $this->language->get('lang');
+		if (isset($this->request->post['title'])) {
+			$data['title'] = $this->request->post['title'];
+		} elseif (!empty($module_info) && isset($module_info['title'])) {
+			$data['title'] = $module_info['title'];
+		} else {
+			$data['title'] = [];
+		}
 
 		$this->load->model('catalog/product');
 

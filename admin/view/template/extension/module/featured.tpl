@@ -33,8 +33,24 @@
               <div class="text-danger"><?php echo $error_name; ?></div>
               <?php } ?>
             </div>
-          </div>   
-            
+          </div>           
+          <ul class="nav nav-tabs" id="language">
+            <?php foreach ($languages as $language) { ?>
+            <li><a href="#language<?php echo $language['language_id']; ?>" data-toggle="tab"><img src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a></li>
+            <?php } ?>
+          </ul>
+          <div class="tab-content">
+            <?php foreach ($languages as $language) { ?>
+            <div class="tab-pane" id="language<?php echo $language['language_id']; ?>">         
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-title"><?php echo $entry_name; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="title[<?php echo $language['language_id']; ?>]" value="<?php echo (isset($title[$language['language_id']]) ? $title[$language['language_id']] : ''); ?>" placeholder="<?php echo $entry_name; ?>" id="input-title" class="form-control" />
+                </div>
+              </div>  
+            </div> 
+            <?php } ?>
+          </div>            
           
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-product"><span data-toggle="tooltip" title="<?php echo $help_product; ?>"><?php echo $entry_product; ?></span></label>
@@ -131,6 +147,7 @@ $('input[name=\'product_name\']').autocomplete({
 $('#featured-product').delegate('.fa-minus-circle', 'click', function() {
 	$(this).parent().remove();
 });
+$('#language a:first').tab('show');
 </script>
 </div>
 <?php echo $footer; ?>

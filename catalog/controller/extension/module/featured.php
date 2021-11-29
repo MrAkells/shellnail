@@ -6,7 +6,9 @@ class ControllerExtensionModuleFeatured extends Controller {
 
 		//$data['heading_title'] = $this->language->get('heading_title');
         $data['heading_title'] =  $setting['name'];
-              
+
+        $data['title'] =  (isset($setting['title']) && isset($setting['title'][$this->config->get('config_language_id')]) ? $setting['title'][$this->config->get('config_language_id')] : $setting['name']);
+
         $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.carousel.css');
         $this->document->addScript('catalog/view/javascript/jquery/owl-carousel/owl.carousel.min.js');
         
