@@ -78,6 +78,7 @@ class ControllerFeaturesPromotions extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 		$data['text_promo_product']=$this->language->get('text_promo_product');
 		$data['text_look_over']=$this->language->get('text_look_over');
+                $data['text_people'] = $this->language->get('text_people');
 		$data['text_day']=$this->language->get('text_day');
 		$data['text_hour']=$this->language->get('text_hour');
 		$data['text_minute']=$this->language->get('text_minute');

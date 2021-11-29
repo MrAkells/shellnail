@@ -154,7 +154,7 @@ $(document).ready(function(){
               			<span class="btn-promo-more"><?php echo $text_more_details; ?></span>
               		</div>
               		<div class="look-over">
-              			<img src="catalog/view/theme/default/image/icon-eye.png" alt="Avatar" class="img-avatar"> <?php echo $text_look_over; ?> <?php echo $promo['observers']; ?> человека
+              			<img src="catalog/view/theme/default/image/icon-eye.png" alt="Avatar" class="img-avatar"> <?php echo $text_look_over; ?> <?php echo $promo['observers']; ?> <?php echo $text_people ?>
               		</div>
                 </div>
 
