@@ -3,7 +3,7 @@
         <label><?php echo $text_address; ?></label>
         <input id='new_mail_courier_address' class='form-control' value="<?php echo $address; ?>" oninput="$(this).change();">
          <div class="text_fill_field text-danger" style="display: none;">
-            Введите Ваш адрес для курьерской доставки
+            <?php echo $text_input_address; ?>
         </div>
     </div> 
 </div>

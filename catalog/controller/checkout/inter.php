@@ -9,6 +9,7 @@ class ControllerCheckoutInter extends Controller {
         $data['comment_value']='';
      
         $data['text_international']=$this->language->get('text_international');
+        $data['text_input_international']=$this->language->get('text_input_international');
 
         return $this->load->view('checkout/inter', $data);
 	

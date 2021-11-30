@@ -57,12 +57,12 @@
               <?php } ?></td>
             <?php } ?>
           </tr>
-          <tr>
+          <!-- <tr>
             <td><?php echo $text_model; ?></td>
             <?php foreach ($products as $product) { ?>
             <td class="model-table"><?php echo $product['model']; ?></td>
             <?php } ?>
-          </tr>
+          </tr> -->
           <tr>
             <td><?php echo $text_manufacturer; ?></td>
             <?php foreach ($products as $product) { ?>
