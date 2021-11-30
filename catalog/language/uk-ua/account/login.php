@@ -11,6 +11,7 @@ $_['text_register_account']        = 'Створення облікового з
 $_['text_returning_customer']      = 'Я вже зареєстрований';
 $_['text_i_am_returning_customer'] = 'Авторизація';
 $_['text_forgotten']               = 'Забули пароль?';
+$_['text_enter']                   = 'Увійти на сайт';
 
 // Entry
 $_['entry_email']                  = 'E-Mail:';
