@@ -402,9 +402,8 @@ var compare = {
 			    
 			    if (json['success']) {	
                    $('#compare-total').html(json['total']);
-				   var popover_content="<span class='wishlist_span'>Товар добавлен в <br/><a href='index.php?route=product/compare'>список сравнений</a></span>";
-				   if(_lang == 'uk') popover_content="<span class='wishlist_span'>Товар доданий в <br/><a href='index.php?route=product/compare'>список порівнянь</a></span>";
-				   elem.popover({container: 'body', content: popover_content, html: true, placement: "bottom"}); 
+
+				   elem.popover({container: 'body', content: json['success_new'], html: true, placement: "bottom"}); 
 				   elem.popover("show");
 				   setTimeout(function(){elem.popover("hide");} ,4000);
 				 
