@@ -332,9 +332,6 @@ var voucher = {
 	}
 }
 
-var _lang = document.documentElement.lang;
-if(_lang == undefined) _lang = 'ru';
-
 var wishlist = {
 	'add': function(elem) {
 
@@ -352,10 +349,8 @@ var wishlist = {
 				}
 
 				if (json['success']) {
-				     var popover_content="<span class='wishlist_span'>Товар добавлен в <br/><a href='index.php?route=account/wishlist'>список желаний</a></span>";
-					if(_lang == 'uk') popover_content="<span class='wishlist_span'>Товар доданий в <br/><a href='index.php?route=account/wishlist'>список бажань</a></span>";
-	    
-					elem.popover({container: 'body', content: popover_content, html: true, placement: "bottom"}); 
+
+					elem.popover({container: 'body', content: json['success_new'], html: true, placement: "bottom"}); 
 					elem.popover("show");
 				    
 				   setTimeout(function(){elem.popover("hide");} ,4000);
