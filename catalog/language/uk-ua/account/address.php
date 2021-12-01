@@ -11,6 +11,7 @@ $_['text_add']          = 'Адреса доставки додана';
 $_['text_edit']         = 'Адреса доставки змінена';
 $_['text_delete']       = 'Адреса доставки видалена';
 $_['text_empty']        = 'У вашому обліковому запису немає адреси';
+$_['text_main_address']           = 'основний';
 
 // Entry
 $_['entry_firstname']   = 'Ім’я';
@@ -23,6 +24,16 @@ $_['entry_city']        = 'Місто';
 $_['entry_country']     = 'Країна';
 $_['entry_zone']        = 'Область';
 $_['entry_default']     = 'Основна адреса';
+
+$_['entry_street'] = 'Вулиця';
+$_['entry_house'] = 'Будинок';
+$_['entry_flat'] = 'Квартира';
+$_['entry_phone'] = 'Телефон';
+$_['text_save'] = 'Зберегти';
+$_['text_edit_addr'] = 'Редагувати';
+$_['button_new'] = 'Отмена';
+$_['edit_user_address'] = 'Редагувати адрес';
+$_['create_user_address'] = 'Додавання нової адреси';
 
 // Error
 $_['error_delete']      = 'У вас має бути не менше однієї адреси';
