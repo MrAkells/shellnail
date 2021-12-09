@@ -12,6 +12,7 @@ $_['text_show_all']                 	= 'Показати всi';
 $_['text_hide']                				= 'Скрыть';
 $_['text_category']                   = 'Категорії';
 $_['text_category_description']       = 'Виберіть категорію товару';
+$_['text_color']                      = 'Колір';
 $_['text_manufacturer'] 							= 'Виробник';
 $_['text_manufacturer_description'] 	= 'Виберіть виробника товарів';
 $_['text_stock']        							= 'Наявність';

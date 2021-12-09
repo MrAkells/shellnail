@@ -117,7 +117,7 @@
             <div class="list-group-item dvfilter-option" id="option-<?php echo $option['option_id']; ?>">
               <div class="option-name angle_up">
                 <?php if ($option['name'] == 'color') { ?>
-                  <?php echo "<a><span id='color_hook'>Цвет</span></a>"; ?>
+                  <?php echo "<a><span id='color_hook'>" . $text_color . "</span></a>"; ?>
                 <?php } else { ?>
                   <?php echo $option['name']; ?>
                 <?php } ?>

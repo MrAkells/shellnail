@@ -263,6 +263,7 @@ class ControllerExtensionModuleDVFilter extends Controller {
         $data['text_price'] = $this->language->get('text_price');
         $data['text_any'] = $this->language->get('text_any');
         $data['text_cancel_all'] = $this->language->get('text_cancel_all');
+        $data['text_color'] = $this->language->get('text_color');
 
         $data['symbol_left'] = $this->currency->getSymbolLeft($this->session->data['currency']);
         $data['symbol_right'] = $this->currency->getSymbolRight($this->session->data['currency']);
