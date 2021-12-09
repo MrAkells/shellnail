@@ -528,7 +528,7 @@ class ModelCatalogDVFilter extends Model {
               WHERE pa2.language_id = '" . (int) $this->config->get('config_language_id') . "'
               AND pa2.product_id = pa.product_id
               AND pa2.attribute_id = pa.attribute_id LIMIT 1
-            ) AS value_id, '" . (int) $language['language_id'] . "', CONCAT(UCASE(LEFT(TRIM(pa.text), 1)), LCASE(SUBSTRING(TRIM(pa.text), 2)))
+            ) AS value_id, '" . (int) $language['language_id'] . "', TRIM(pa.text) 
           FROM " . DB_PREFIX . "product_attribute pa WHERE pa.language_id = '" . (int) $language['language_id'] . "' GROUP BY pa.attribute_id, CONCAT(UCASE(LEFT(TRIM(pa.text), 1)), LCASE(SUBSTRING(TRIM(pa.text), 2)))");
                 }
             }
