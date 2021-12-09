@@ -30,7 +30,7 @@ $_['text_customer'] = 'Я постійний клієнт';
 $_['try_to_login'] = 'Увійти';
 $_['text_register'] = 'Реєстрація';
 $_['text_contact_details'] = 'Контактні дані';
-$_['text_enter_as'] = 'Ввійти як користувач';
+$_['text_enter_as'] = 'Увійти як користувач';
 $_['text_another_city'] = 'Вибрати іншій город';                                
 
 

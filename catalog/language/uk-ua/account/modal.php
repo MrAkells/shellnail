@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title'] = 'Ввійти в особистий кабінет';
+$_['heading_title'] = 'Увійти в особистий кабінет';
 
 // Text
 $_['text_login1']= 'Авторизація';
@@ -8,9 +8,9 @@ $_['entry_login_email']= 'Email';
 $_['entry_login_password']= 'Пароль';
 
 $_['text_forgotten']= 'Забули пароль?';
-$_['entry_remember']= 'Запомнить';
-$_['text_step_into']='Войти';
-$_['text_enter_as'] = 'Ввійти як користувач';
+$_['entry_remember']= "Запам'ятати";
+$_['text_step_into']='Увійти';
+$_['text_enter_as'] = 'Увійти як користувач';
 
 
 $_['success_login']= 'Вхід до акаунту';
