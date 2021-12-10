@@ -311,7 +311,8 @@ class ControllerExtensionModuleDelovod extends Controller
 					"mainUnit"		=> "1103600000001002", // шт
 					//"goodType" 		=> "1004000000000014", // товар
 					"gType_forDel"	=> "1004000000000014", // товар
-					"isGroup" 		=> false
+					"isGroup" 		=> false,
+					"accPolicy" 	=> "1201200000001002"
 				];
 				if ($product_info['category']) {
 					$category_id = $this->getObjectId('goods', $product_info['category'], "=", true);
