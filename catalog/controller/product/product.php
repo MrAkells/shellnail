@@ -642,7 +642,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			}
 			$json_ld['review'] = $reviews;
 
-			$this->document->setJsonLd(json_encode($json_ld));
+			$this->document->setJsonLd(json_encode($json_ld,JSON_UNESCAPED_UNICODE));
 			// END Json_ld
 
 			// Get option filters for product
