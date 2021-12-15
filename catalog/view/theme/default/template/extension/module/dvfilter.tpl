@@ -307,7 +307,8 @@
             hide: '<?php echo $text_hide; ?>',
             load: '<?php echo $text_load; ?>',
             any: '<?php echo $text_any; ?>',
-            select: '<?php echo $button_select; ?>'
+            select: '<?php echo $button_select; ?>',
+            show_res: '<?php echo $text_show_res; ?>'
           }
         };
 

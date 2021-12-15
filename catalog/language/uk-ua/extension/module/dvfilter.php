@@ -9,6 +9,7 @@ $_['text_any']                        = 'Усi';
 $_['text_price']                      = 'Цена';
 $_['text_cancel_all']                 = 'Cкинути всi';
 $_['text_show_all']                 	= 'Показати всi';
+$_['text_show_res']                 	= 'Показати';
 $_['text_hide']                				= 'Скрыть';
 $_['text_category']                   = 'Категорії';
 $_['text_category_description']       = 'Виберіть категорію товару';
