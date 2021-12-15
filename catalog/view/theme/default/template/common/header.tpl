@@ -231,9 +231,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <?php } else { ?>
                     <div class="top-d-flex top-d-flex--right">
                 <?php } ?>
-                <?php if ( $is_admin == 1) { ?>
-                    <div class="top-lang"><?php echo $language; ?></div>
-                <?php } ?>
+
+                <div class="top-lang"><?php echo $language; ?></div>
+
 
                 <!-- Личный кабинет-->
                 <?php if ($logged) { ?>
@@ -319,9 +319,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
 
-        <?php if ( $is_admin == 1) { ?>
-            <div class="top-lang-mobile header_element visible-xs-inline-block"><?php echo $language; ?></div>
-        <?php } ?>
+        <div class="top-lang-mobile header_element visible-xs-inline-block"><?php echo $language; ?></div>
          
         <div id="phone_numbers" class="header_element">
             <div class="hidden-xs">
