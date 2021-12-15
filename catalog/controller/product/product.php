@@ -590,7 +590,10 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			foreach ($results_reviews as $review) {
 				$reviews[] = array(
 					"@type" 		=> "Review",
-					'author'     	=> $review['author'],
+					"author" => [
+						"@type" => "Person",
+						"name" => $review['author']
+					],
 					"datePublished" => date("Y-m-d", strtotime($review['date_added'])),
 					'description'	=> nl2br($review['text']),
 					"reviewRating" => [
@@ -613,7 +616,10 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				"description" => $meta_description,
 				"name"	=> $data['heading_title'],
 				"image" => 	$data['thumb'],
-				"brand" => 	$product_info['manufacturer'],
+				"brand" => [
+					"@type" => "Brand",
+					"name" => $product_info['manufacturer']
+				],
 				"sku" 	=> 	$data['sku'],
 				"gtin8" => "3127",
 				"offers"	=> [
@@ -628,7 +634,10 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			if(!$reviews){
 				$reviews[] = array(
 					"@type" 		=> "Review",
-					'author'     	=> "Аноним",
+					"author" => [
+						"@type" => "Person",
+						"name" => "Аноним"
+					],
 					"datePublished" => date('Y-m-d',strtotime($product_info['date_added'] . " +1 day")),
 					'description'	=> 'Порадовала цена ' . round(($product_info['special'] ? $product_info['special'] : $product_info['price']),2) . 'грн.',
 					"reviewRating" => [
