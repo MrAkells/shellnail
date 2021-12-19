@@ -7,8 +7,8 @@
 <body style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #000000;">
   <div style="width: 1000px;"><a href="<?php echo $store_url; ?>" title="<?php echo $store_name; ?>"><img src="<?php echo $logo; ?>" alt="<?php echo $store_name; ?>" style="margin-bottom: 20px; border: none;" /></a>
   <p style="margin-top: 0px; margin-bottom: 20px; font-size: 14pt;"><?php echo $text_greeting; ?>
-  <?php if(strip_tags($payment_method) == 'Оплата банковским переводом'){
-    echo 'Вам будут высланы реквизиты для оплаты.';
+  <?php if($payment_code == 'privat' || $payment_cod == 'custom_liqpay'){
+    echo $text_payment_detail;
   } ?>
   </p>
  <?php if ($customer_id && false) { ?>
@@ -119,24 +119,24 @@
   
   <p style="margin-top: 0px; margin-bottom: 20px;"><?php echo $text_footer; ?></p>
 
-  <p style="margin-top: 0px; margin-bottom: 20px;">Спасибо за заказ! Мы будем рады Вашему отзыву!</p>
+  <p style="margin-top: 0px; margin-bottom: 20px;"><?php echo $text_new_footer_greeting; ?></p>
   <br>
   <p style="font-family: georgia; margin-top: 0px; margin-bottom: 20px; font-size: 14pt; font-weight: bold;">Для получения подарка, пожалуйста, уделите минуту и выполните следующее:</p>
   <table style="width: 100%; border-collapse: collapse; border-top: 1px solid #DDDDDD; border-left: 1px solid #DDDDDD; margin-bottom: 20px; font-family: georgia">
     <thead>
       <tr>
           <td width="30%" style="font-size: 14pt; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; background-color: #EFEFEF; font-weight: bold; text-align: center; padding: 7px; color: #222222;">
-              Описание
+            <?php echo $text_new_description; ?>
           </td>
           <td style="font-size: 14pt; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; background-color: #EFEFEF; font-weight: bold; text-align: center; padding: 7px; color: #222222;">
-              Иллюстрация
+            <?php echo $text_new_illustration; ?>
           </td>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td width="30%" style="font-size: 12pt; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: justify; padding: 7px;">
-            <p>В поисковике Google введите в строку поиска «shellnail» и нажмите кнопку поиска или Enter на клавиатуре.</p>
+            <p><?php echo $text_new_google_search; ?></p>
         </td>
         <td style="font-size: 12pt; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: center; padding: 7px;">
             <img style="width: 100%;" src="http://shellnail.com.ua/image/ordermail/googleSearchShellnail.png">
@@ -145,8 +145,7 @@
       
       <tr>
         <td width="30%" style="font-size: 12pt; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: justify; padding: 7px;">
-            <p>Если у Вас есть учётная запись Google – Вам отобразиться карточка интернет-магазина shellnail.com.ua.</p>
-            <p>Нажмите кнопку «Написать отзыв» и напишите Ваше мнение о работе магазина, расскажите что Вы заказывали и можете поблагодарить нас за сюрприз (подарок), который прилагается к Вашему заказу :)</p>
+          <?php echo $text_new_google_login; ?>
         </td>
         <td style="font-size: 12pt; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: center; padding: 7px;">
             <img style="width: 70%;" src="http://shellnail.com.ua/image/ordermail/googleCartShellnail.jpg">
@@ -155,7 +154,7 @@
       
       <tr>
         <td width="30%" style="font-size: 12pt; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: justify; padding: 7px;">
-            <p>Если у Вас нет учетной записи Google, то кликайте по ссылке магазина в поисковой выдаче и переходите на сайт на страницу отзывов. Оставляйте своё мнение на вкладках с отзывами.</p>
+            <p><?php echo $text_new_google_no_login; ?></p>
         </td>
         <td style="font-size: 12pt; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: center; padding: 7px;">
             <p><img style="width: 100%;" src="http://shellnail.com.ua/image/ordermail/googleSearchShellnail-com-ua.png"></p>
@@ -165,7 +164,7 @@
       
       <tr>
         <td width="30%" style="font-size: 12pt; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: justify; padding: 7px;">
-            <p>Также можете подписаться на новости и наш YouTube-канал, где будет много интересного. На главной странице Вы найдёте блок:</p>
+            <p><?php echo $text_new_youtube; ?></p>
         </td>
         <td style="font-size: 12pt; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: center; padding: 7px;">
             <img style="width: 100%;" src="http://shellnail.com.ua/image/ordermail/podpiska.png">
@@ -173,8 +172,8 @@
       </tr>    
     </tbody>    
   </table>
-  <p style="font-family: georgia; font-size: 14pt;">Не забывайте оставлять отзывы на страницах товара. Так Вы поможете другим людям определиться с покупкой.</p>
-  <b style="margin-top: 0px; margin-bottom: 20px; font-size: 14pt">Спасибо за Ваш интерес и доверие к интернет-магазину shellnail.com.ua!</b>
+  <p style="font-family: georgia; font-size: 14pt;"><?php echo $text_new_reviews; ?></p>
+  <b style="margin-top: 0px; margin-bottom: 20px; font-size: 14pt"><?php echo $text_new_reviews_greeting; ?></b>
 </div>
 </body>
 </html>
