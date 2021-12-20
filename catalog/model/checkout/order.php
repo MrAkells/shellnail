@@ -416,6 +416,7 @@ class ModelCheckoutOrder extends Model {
 				$data['text_total'] = $language->get('text_new_total');
 				$data['text_footer'] = $language->get('text_new_footer');
 				$data['text_payment_detail'] = $language->get('text_payment_detail');
+				$data['text_new_get_present'] = $language->get('text_new_get_present');
 				$data['text_new_footer_greeting'] = $language->get('text_new_footer_greeting');
 				$data['text_new_description'] = $language->get('text_new_description');
 				$data['text_new_illustration'] = $language->get('text_new_illustration');
