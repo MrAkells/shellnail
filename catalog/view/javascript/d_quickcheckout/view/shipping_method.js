@@ -15,7 +15,11 @@ qc.ShippingMethodView = qc.View.extend({
 	template: '',
 
 	updateShippingMethod: function(e){
-
+		if(e.currentTarget.id=='new_mail_office'){
+	    
+		}else{
+			$('.js-open').slideToggle(300);
+		}
 		this.model.update($('#shipping_method_form').serializeArray());
 		if(parseInt(config.general.analytics_event)){
 			ga('send', 'event', config.name, 'update', 'shipping_method.'+e.currentTarget.value);
@@ -26,6 +30,7 @@ qc.ShippingMethodView = qc.View.extend({
 	render: function(){
 		this.focusedElementId = $(':focus').attr('id');
 		$(this.el).html(this.template({'model': this.model.toJSON()}));
+		$("#js_checked").slideToggle(1000);
 		$('#' + this.focusedElementId).focus();
 	},
 

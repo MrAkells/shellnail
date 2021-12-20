@@ -312,6 +312,7 @@ class Cart {
 					'option'          => $option_data,
 					'download'        => $download_data,
 					'quantity'        => $cart['quantity'],
+					'stock_quantity'  => $product_query->row['quantity'],
 					'minimum'         => $product_query->row['minimum'],
 					'subtract'        => $product_query->row['subtract'],
 					'stock'           => $stock,

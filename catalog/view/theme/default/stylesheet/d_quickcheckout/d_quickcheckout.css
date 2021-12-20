@@ -244,6 +244,10 @@
   color: #161616;
   font-family: 'Roboto Bold'; 
 }
+#d_quickcheckout #cart_view .save-alert{
+  background-color: #f10000;
+  color: #f6f6f6;
+}
 @media (max-width: 767px) {
  #d_quickcheckout .panel-default {
     border: none; 

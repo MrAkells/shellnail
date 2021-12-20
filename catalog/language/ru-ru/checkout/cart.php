@@ -25,6 +25,7 @@ $_['text_payment_recurring']   = 'Профиль платежа';
 $_['text_trial_description']   = '%s каждый %d %s(s) для %d платежа(ей) тогда';
 $_['text_payment_description'] = '%s каждый %d %s(s) для %d платежа(ей)';
 $_['text_payment_cancel']      = '%s каждый %d %s(s) пока не будет отменено';
+$_['text_stock_quantity']      = 'Доступно: %d шт.';
 
 // Column
 $_['column_image']           = 'Изображение';

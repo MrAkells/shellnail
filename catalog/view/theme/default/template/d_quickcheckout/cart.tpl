@@ -50,9 +50,12 @@
 						<td class="qc-name <%= parseInt(model.config.columns.name) ? '' : 'hidden' %>">
 							<div class="qc-name-info">
 							<a href="<%= product.href %>" <%=  model.config.columns.image ? '' : 'rel="popup" data-help=\'<img src="' + product.image + '"/>\'' %>> 
-								<%= product.name %> <%= product.stock ? '' : '<span class="out-of-stock">***</span>' %>
+								<%= product.stock ? '' : '<span class="out-of-stock">***</span>' %> <%= product.name %>
 							</a>
 							<div class="qc-model-info">
+							<% if(!product.stock){ %>
+								<span class="qc-model hidden-xs"><%= product.stock_quantity %></span>
+							<% } %>	
 							<span class="qc-model hidden-xs <%= parseInt(model.config.columns.model) ? '' : 'hidden' %>"><?php echo $column_model; ?>: </span>
 							<span class="qc-model hidden-xs <%= parseInt(model.config.columns.model) ? '' : 'hidden' %>"><%= product.model %></span></div>
 							<% _.each(product.option, function(option) { %>
