@@ -458,7 +458,7 @@ class ModelCheckoutOrder extends Model {
 //				if ($order_info['payment_address_format']) {
 //					$format = $order_info['payment_address_format'];
 //				} else {
-					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' .  "\n" . '{country}';
+					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}';
 //				}
 
 				$find = array(
@@ -490,7 +490,7 @@ class ModelCheckoutOrder extends Model {
 //				if ($order_info['shipping_address_format']) {
 //					$format = $order_info['shipping_address_format'];
 //				} else {
-					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n"  . '{country}';
+					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}';
 //				}
 
 				$find = array(
