@@ -54,7 +54,7 @@
 							</a>
 							<div class="qc-model-info">
 							<% if(!product.stock){ %>
-								<span class="qc-model hidden-xs sd-red"><%= product.stock_quantity %></span>
+								<span class="qc-model sd-red"><%= product.stock_quantity %></span>
 							<% } %>	
 							<span class="qc-model hidden-xs <%= parseInt(model.config.columns.model) ? '' : 'hidden' %>"><?php echo $column_model; ?>: </span>
 							<span class="qc-model hidden-xs <%= parseInt(model.config.columns.model) ? '' : 'hidden' %>"><%= product.model %></span></div>
