@@ -6357,6 +6357,13 @@ aside#column-left{
 	color: #ff0000 !important;
 }
 
+.checkout-checkout .top-lang,
+.checkout-checkout .top-lang-mobile {
+	display: none !important;
+}
+.checkout-checkout .top-d-flex {
+    justify-content: flex-end;
+}
 
 /* 
 .fb-like span {

@@ -73,13 +73,14 @@
                                                                         
                                                                         
 								</span>
-								<% if(!product.stock){ %>
-									<span class="qc-model sd-red"><%= product.stock_quantity %></span>
-								<% } %>	
+								
 									
 								
 							</div>
 						</div>
+							<% if(!product.stock){ %>
+								<div class="qc-model sd-red"><%= product.stock_quantity %></span>
+							<% } %>	
 							<% if(parseInt(model.config.columns.price) && model.show_price){ %>
 								<div class="qc-name-price visible-xs-block "><span class="text"><%= product.price %></span></div>
 							<% } %>
