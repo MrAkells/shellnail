@@ -160,24 +160,34 @@ class ModelExtensionModuleDelovod extends Model
 				}
 			}
 		}
-
 		// end of auto sms
 
-		$i = 0;
+		// if return need sum qty (2 rows)
+		$goods = [];
 		foreach ($data as $good) {
-			++$i;
-
-			// auto sms code
-			if (isset($waiters[$good->id]) && (int) $good->qty > 0) {
-				$this->notify($waiters[$good->id]);
+			if(isset($goods[$good->id] )) {
+				$goods[$good->id] += $good->qty;
+			} else {
+				$goods[$good->id] = $good->qty;
 			}
-			// end of auto sms            
-
-
-			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '" . (int) $good->qty . "', date_modified = NOW() WHERE `isbn` = '" . $good->id . "'");
 		}
-		if ($i) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0',  date_modified = NOW() WHERE `isbn` <> '' AND `mpn` = '' AND `quantity` > 0 AND `date_modified` < (NOW() - INTERVAL 50 MINUTE)");
+
+		if($goods) {
+			$i = 0;
+			foreach ($goods as $key => $qty) {
+				++$i;
+	
+				// auto sms code
+				if (isset($waiters[$key]) && (int) $qty > 0) {
+					$this->notify($waiters[$key]);
+				}
+				// end of auto sms            
+
+				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '" . (int) $qty . "', date_modified = NOW() WHERE `isbn` = '" . $key . "'");
+			}
+			if ($i) {
+				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0',  date_modified = NOW() WHERE `isbn` <> '' AND `mpn` = '' AND `quantity` > 0 AND `date_modified` < (NOW() - INTERVAL 50 MINUTE)");
+			}
 		}
 	}
 
