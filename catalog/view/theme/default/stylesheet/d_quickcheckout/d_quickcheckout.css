@@ -419,7 +419,7 @@ input:-ms-input-placeholder      { color: #fff; }
   display: table;
    width: 100%;
 }
-.ukrpost-code, .courier-shipping, .addres-new-mail, .addres-new-office{
+.ukrpost-code, .courier-shipping, .addres-new-mail {
    margin-bottom: 45px;
 }
 #another_shipping_option{
@@ -475,7 +475,13 @@ input:-ms-input-placeholder      { color: #fff; }
   }
   #payment_address .panel-body {
     padding-bottom: 10px;
-}
+  }
+  #d_quickcheckout #confirm_comment_input {
+    margin-bottom: 0;
+  }
+  #d_quickcheckout #cart_view .panel-default > .panel-heading {
+    padding-top: 5px;
+  }
 }
 #new_mail_addon .addres-new-mail,
 #courier_addon .courier-shipping {
