@@ -459,7 +459,7 @@ input:-ms-input-placeholder      { color: #fff; }
     padding-top: 10px;
   }
   #d_quickcheckout {
-    margin-top: 10px;
+    margin-top: 0;
   }
   #d_quickcheckout #payment_method_form .panel-body {
     padding-bottom:0;
@@ -469,6 +469,9 @@ input:-ms-input-placeholder      { color: #fff; }
   }
   #payment_address_form .form-group {
     margin-bottom: 20px;
+  }
+  #d_quickcheckout #payment_address .panel-heading {
+    padding-top: 0;
   }
   #payment_address .panel-body {
     padding-bottom: 10px;
