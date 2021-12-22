@@ -263,8 +263,8 @@
     margin-left: -3px;
 }
 #d_quickcheckout .qc-price, #d_quickcheckout .qc-name, #d_quickcheckout .qc-image {
-    padding-top: 20px!important;
-    padding-bottom: 20px!important;
+    padding-top: 7px!important;
+    padding-bottom: 7px!important;
 }
 #d_quickcheckout .qc-checkout-product .label-discont {
     margin-bottom: 15px;
@@ -441,23 +441,42 @@ input:-ms-input-placeholder      { color: #fff; }
 }
 
 @media(max-width: 767px){
-.addres-new-mail, .addres-new-office, .courier-shipping, .ukrpost-code{
-  padding-left: 0px;
+  .addres-new-mail, .addres-new-office, .courier-shipping, .ukrpost-code{
+    padding-left: 0px;
+  }
+  #ukrposhta_addon, #courier_addon, #new_mail_addon {
+      margin-left: 0px;
+  }
+  .radio-custom {
+      margin-left: -27px;
+      margin-right: 5px;
+  }
+  .checkbox label, .radio label {
+    min-height: 20px;
+    padding-left: 25px!important;
+  }
+  #shipping_method_form .panel-heading{
+    padding-top: 10px;
+  }
+  #d_quickcheckout {
+    margin-top: 10px;
+  }
+  #d_quickcheckout #payment_method_form .panel-body {
+    padding-bottom:0;
+  }
+  #d_quickcheckout #confirm_view .panel-body {
+    padding-bottom: 0;
+  }
+  #payment_address_form .form-group {
+    margin-bottom: 20px;
+  }
+  #payment_address .panel-body {
+    padding-bottom: 10px;
 }
-#ukrposhta_addon, #courier_addon, #new_mail_addon {
-    margin-left: 0px;
 }
-.radio-custom {
-     margin-left: -27px;
-    margin-right: 5px;
-}
-.checkbox label, .radio label {
-  min-height: 20px;
-  padding-left: 25px!important;
-}
-#shipping_method_form .panel-heading{
-  padding-top: 10px;
-}
+#new_mail_addon .addres-new-mail,
+#courier_addon .courier-shipping {
+  margin-bottom: 0 !important;
 }
 #shipping_method_form .panel-default{
   margin-bottom: 0px;
@@ -520,8 +539,12 @@ input:-ms-input-placeholder      { color: #fff; }
     border-color: rgba(236, 42, 42, 0.859);
 }
 
-#d_quickcheckout #payment_address .panel {
+#d_quickcheckout #payment_address .panel,
+#d_quickcheckout #payment_method_form .panel {
   margin-bottom: 5px;
+}
+#d_quickcheckout #payment_method_form .panel-body {
+  padding-bottom: 5px;
 }
 #payment_address_form #payment_address_city_input {
   margin-bottom: 0;
