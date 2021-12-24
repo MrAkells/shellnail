@@ -4,7 +4,7 @@ class ModelCatalogPromotions extends Model {
 	public function getPromotion($promo_id, $with_products=true) {
                 $this->load->model('catalog/product');
                 
-		$query = $this->db->query("SELECT DISTINCT *, (date_start<=NOW() AND date_end>=NOW()) as ongoing FROM " . DB_PREFIX . "promotions WHERE promo_id = '" . (int)$promo_id . "'");
+		$query = $this->db->query("SELECT DISTINCT pd.*, p.image, p.image_m, p.date_start, p.date_end, p.hierarchy, (date_start<=NOW() AND date_end>=NOW()) as ongoing FROM " . DB_PREFIX . "promotions p LEFT JOIN ". DB_PREFIX ."promotion_description pd ON (p.promo_id=pd.promo_id AND pd.language_id='" . (int)$this->config->get('config_language_id') . "') WHERE p.promo_id = '" . (int)$promo_id . "'");
                
                 $return=[];
                 foreach($query->row as $key=>$value){
@@ -12,7 +12,7 @@ class ModelCatalogPromotions extends Model {
                 }
                 
                 if($with_products){
-                $products_query=$this->db->query("SELECT  ptc.product_id, pd.name FROM " . DB_PREFIX . "product_to_category ptc LEFT JOIN ".DB_PREFIX."product_description pd ON(ptc.product_id=pd.product_id) WHERE pd.language_id=1 AND ptc.category_id = '" . (int)$promo_id . "'");
+                $products_query=$this->db->query("SELECT  ptc.product_id, pd.name FROM " . DB_PREFIX . "product_to_category ptc LEFT JOIN ".DB_PREFIX."product_description pd ON(ptc.product_id=pd.product_id) WHERE pd.language_id='" . (int)$this->config->get('config_language_id') . "' AND ptc.category_id = '" . (int)$promo_id . "'");
                 $products=array();
                 foreach($products_query->rows as $row){
                     
@@ -23,13 +23,23 @@ class ModelCatalogPromotions extends Model {
                 $return['products']=$products;
                            
                 }else{
-                    $products_query=$this->db->query("SELECT  COUNT(ptc.product_id) as count FROM " . DB_PREFIX . "product_to_category ptc LEFT JOIN ".DB_PREFIX."product_description pd ON(ptc.product_id=pd.product_id) WHERE pd.language_id=1 AND ptc.category_id IN (SELECT DISTINCT promo_id FROM ".DB_PREFIX."promotions WHERE promo_id ='".(int)$promo_id."' OR parent_id='".(int)$promo_id."')");
+                    $products_query=$this->db->query("SELECT  COUNT(ptc.product_id) as count FROM " . DB_PREFIX . "product_to_category ptc LEFT JOIN ".DB_PREFIX."product_description pd ON(ptc.product_id=pd.product_id) WHERE pd.language_id='" . (int)$this->config->get('config_language_id') . "' AND ptc.category_id IN (SELECT DISTINCT promo_id FROM ".DB_PREFIX."promotions WHERE promo_id ='".(int)$promo_id."' OR parent_id='".(int)$promo_id."')");
                     $return['products']=$products_query->row['count'];
                 }
                 
                 
                 return $return;
 	}
+
+    public function getPromoDescription($promo_id)
+    {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "promotion_description WHERE promo_id = '" . (int)$promo_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+        if ($query->num_rows) {
+			return $query->row;
+		} else {
+			return [];
+		}
+    }
 
 	public function getActivePromotions() {
 		

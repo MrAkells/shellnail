@@ -10,6 +10,7 @@ class ControllerExtensionModuleFbcomments extends Controller {
 		$this->load->model('extension/module');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate($this->request->post)) {
+			$this->request->post['name_front'] = json_encode($this->request->post['name_front']);
 			if (!isset($this->request->get['module_id'])) {
 				$this->model_extension_module->addModule('fbcomments', $this->request->post);
 			} else {
@@ -92,6 +93,9 @@ class ControllerExtensionModuleFbcomments extends Controller {
 			);
 		}
 
+		$this->load->model('localisation/language');
+		$data['languages'] = $this->model_localisation_language->getLanguages();
+
 		if (!isset($this->request->get['module_id'])) {
 			$data['action'] = $this->url->link('extension/module/fbcomments', 'token=' . $this->session->data['token'], true);
 		} else {
@@ -110,6 +114,14 @@ class ControllerExtensionModuleFbcomments extends Controller {
 			$data['name'] = $module_info['name'];
 		} else {
 			$data['name'] = '';
+		}
+
+		if (isset($this->request->post['name_front'])) {
+			$data['name_front'] = $this->request->post['name_front'];
+		} elseif (!empty($module_info)) {
+			$data['name_front'] = json_decode($module_info['name_front'],true);
+		} else {
+			$data['name_front'] = '';
 		}
 
 		if (isset($this->request->post['width'])) {
@@ -167,8 +179,12 @@ class ControllerExtensionModuleFbcomments extends Controller {
 		if ((utf8_strlen($data['name']) < 3) || (utf8_strlen($data['name']) > 64)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
+
+		if (!(isset($data['name_front']) && $data['name_front'])) {
+			$this->error['name_front'] = $this->language->get('error_name');
+		}
                 
-                if ($data['comments_number']<1 || $data['comments_number']>50){
+        if ($data['comments_number']<1 || $data['comments_number']>50){
 			$this->error['comments_number'] = $this->language->get('error_comments_number');
 		}
                 

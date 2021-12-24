@@ -39,7 +39,7 @@
           <?php $count = count($selecteds);
           $selected = $selecteds;
           $first = array_shift($selected); ?>
-          <?php if ($count > 1 || count($first['values']) > 1) { ?>
+          <?php if ($count >= 1 || count($first['values']) >= 1) { ?>
             <button type="button" onclick="location = '<?php echo $link; ?>';" class="btn-transparent resel-all" style="border-radius: 0;"><?php echo $text_cancel_all; ?></button>
           <?php } ?>
         </div>
@@ -117,7 +117,7 @@
             <div class="list-group-item dvfilter-option" id="option-<?php echo $option['option_id']; ?>">
               <div class="option-name angle_up">
                 <?php if ($option['name'] == 'color') { ?>
-                  <?php echo "<a><span id='color_hook'>Цвет</span></a>"; ?>
+                  <?php echo "<a><span id='color_hook'>" . $text_color . "</span></a>"; ?>
                 <?php } else { ?>
                   <?php echo $option['name']; ?>
                 <?php } ?>
@@ -307,7 +307,8 @@
             hide: '<?php echo $text_hide; ?>',
             load: '<?php echo $text_load; ?>',
             any: '<?php echo $text_any; ?>',
-            select: '<?php echo $button_select; ?>'
+            select: '<?php echo $button_select; ?>',
+            show_res: '<?php echo $text_show_res; ?>'
           }
         };
 

@@ -474,7 +474,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"CityRecipient" => $ref_city,
 						"RecipientArea" => "",
 						"RecipientAreaRegions" => "",
-						"RecipientName" => ucfirst($order_info['payment_firstname']) . ($order_info['shipping_code'] == 'couriernp.couriernp' ? ' ОТЧЕСТВО ' : ' ') . ucfirst($order_info['payment_lastname']),
+						"RecipientName" => ucfirst($order_info['payment_firstname']) . ($order_info['shipping_code'] == 'couriernp.couriernp' || $payer_type == "Recipient" ? ' ОТЧЕСТВО ' : ' ') . ucfirst($order_info['payment_lastname']),
 						"RecipientType" => "PrivatePerson",
 						"RecipientsPhone" => $customer_phone,
 						"DateTime" => date('d.m.Y')

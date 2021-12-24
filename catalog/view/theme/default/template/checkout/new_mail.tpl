@@ -14,7 +14,7 @@
                     <?php } ?>
             </select>
              <div class="text_fill_field text-danger" style="display: none;">
-            Выберите отделение Новой Почты
+                <?php echo $text_choose; ?>
         </div>
         </div>
     <?php }else{ ?> 
@@ -22,7 +22,7 @@
             <label><?php echo $text_office; ?></label>
             <input id='new_mail_office' class='form-control'>
             <div class="text_fill_field text-danger" style="display: none;">
-            Выберите отделение Новой Почты
+                <?php echo $text_choose; ?>
         </div>
         </div>
     <?php } ?>

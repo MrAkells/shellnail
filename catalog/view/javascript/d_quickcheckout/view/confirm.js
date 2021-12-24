@@ -35,10 +35,10 @@ qc.ConfirmView = qc.View.extend({
 			$('html,body').animate({ scrollTop: $(".has-error").offset().top-60}, 'slow');
 		}
 
-		if($("#d_quickcheckout #cart_view .alert-danger").length){
+		if($("#d_quickcheckout #cart_view .alert-danger,.save-alert").length){
 			valid = false;
 			preloaderStop();
-			$('html,body').animate({ scrollTop: $("#d_quickcheckout #cart_view .alert-danger").offset().top-60}, 'slow');
+			$('html,body').animate({ scrollTop: $("#d_quickcheckout #cart_view .alert-danger,.save-alert").offset().top-60}, 'slow');
 		}
 
 		$("#d_quickcheckout form").each(function(){

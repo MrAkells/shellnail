@@ -38,6 +38,18 @@ function prepare_fbq(obj) {
 	});
 	console.log('FB pixel AddToCart Event');
     }
+
+	if (typeof gtag === "function") {
+		gtag('event','add_to_cart', {
+			'value': price,
+			'ecomm_prodid': sku,
+			'items': [
+				{
+				'id': sku, 
+				'google_business_vertical': 'retail'
+				}]
+		 });
+	}
 }
 
 function prepare_fbq_purchase(value) {
@@ -322,6 +334,7 @@ var voucher = {
 
 var wishlist = {
 	'add': function(elem) {
+
 	    var product_id=elem.data('product_id');
 	   
 		$.ajax({
@@ -336,9 +349,9 @@ var wishlist = {
 				}
 
 				if (json['success']) {
-				     var popover_content="<span class='wishlist_span'>Товар добавлен в <br/><a href='index.php?route=account/wishlist'>список желаний</a></span>";
-	    elem.popover({container: 'body', content: popover_content, html: true, placement: "bottom"}); 
-				    elem.popover("show");
+
+					elem.popover({container: 'body', content: json['success_new'], html: true, placement: "bottom"}); 
+					elem.popover("show");
 				    
 				   setTimeout(function(){elem.popover("hide");} ,4000);
 				   
@@ -388,9 +401,9 @@ var compare = {
 			success: function(json) {
 			    
 			    if (json['success']) {	
-                                $('#compare-total').html(json['total']);
-				   var popover_content="<span class='wishlist_span'>Товар добавлен в <br/><a href='index.php?route=product/compare'>список сравнений</a></span>";
-	    elem.popover({container: 'body', content: popover_content, html: true, placement: "bottom"}); 
+                   $('#compare-total').html(json['total']);
+
+				   elem.popover({container: 'body', content: json['success_new'], html: true, placement: "bottom"}); 
 				   elem.popover("show");
 				   setTimeout(function(){elem.popover("hide");} ,4000);
 				 

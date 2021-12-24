@@ -491,7 +491,7 @@
                         <input class="hiden_attr_id" type="hidden" name="product_attribute[<?php echo $attribute_row; ?>][attribute_id]" value="<?php echo $product_attribute['attribute_id']; ?>" /></td>
                       <td class="text-left"><?php foreach ($languages as $language) { ?>
                         <div class="input-group"><span class="input-group-addon"><img src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png" title="<?php echo $language['name']; ?>" /></span>
-                          <textarea name="product_attribute[<?php echo $attribute_row; ?>][product_attribute_description][<?php echo $language['language_id']; ?>][text]" rows="5" placeholder="<?php echo $entry_text; ?>" class="form-control attr_val_text"><?php echo isset($product_attribute['product_attribute_description'][$language['language_id']]) ? $product_attribute['product_attribute_description'][$language['language_id']]['text'] : ''; ?></textarea>
+                          <textarea name="product_attribute[<?php echo $attribute_row; ?>][product_attribute_description][<?php echo $language['language_id']; ?>][text]" rows="5" data-language="<?php echo $language['language_id']; ?>" placeholder="<?php echo $entry_text; ?>" class="form-control attr_val_text"><?php echo isset($product_attribute['product_attribute_description'][$language['language_id']]) ? $product_attribute['product_attribute_description'][$language['language_id']]['text'] : ''; ?></textarea>
                         </div>
                         <?php } ?></td>
                       <td class="text-left"><button type="button" onclick="$('#attribute-row<?php echo $attribute_row; ?>').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
@@ -995,11 +995,13 @@
         $(document).delegate('.attr_val_text','focus', function(){
             var tr=$(this).parent().parent().parent();
             if(tr.find('.hiden_attr_id').val()=='13'){
-               
+
+               var _language_id = $(this).data('language');
+
                 $(this).autocomplete({
                 'source': function(request, response) {
                     $.ajax({
-			url: 'index.php?route=catalog/colors/autocomplete&token=<?php echo $token; ?>&name=' +  encodeURIComponent(request),
+			url: 'index.php?route=catalog/colors/autocomplete&token=<?php echo $token; ?>&name=' +  encodeURIComponent(request) + '&language_id=' + _language_id,
 			dataType: 'json',
 			success: function(json) {
 				response($.map(json, function(item) {
@@ -1173,7 +1175,7 @@ function addAttribute() {
 	html += '  <td class="text-left" style="width: 20%;"><input type="text" name="product_attribute[' + attribute_row + '][name]" value="" placeholder="<?php echo $entry_attribute; ?>" class="form-control" /><input class="hiden_attr_id" type="hidden" name="product_attribute[' + attribute_row + '][attribute_id]" value="" /></td>';
 	html += '  <td class="text-left">';
 	<?php foreach ($languages as $language) { ?>
-	html += '<div class="input-group"><span class="input-group-addon"><img src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png" title="<?php echo $language['name']; ?>" /></span><textarea name="product_attribute[' + attribute_row + '][product_attribute_description][<?php echo $language['language_id']; ?>][text]" rows="5" placeholder="<?php echo $entry_text; ?>" class="form-control attr_val_text"></textarea></div>';
+	html += '<div class="input-group"><span class="input-group-addon"><img src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png" title="<?php echo $language['name']; ?>" /></span><textarea name="product_attribute[' + attribute_row + '][product_attribute_description][<?php echo $language['language_id']; ?>][text]" rows="5" data-language="<?php echo $language['language_id']; ?>" placeholder="<?php echo $entry_text; ?>" class="form-control attr_val_text"></textarea></div>';
     <?php } ?>
 	html += '  </td>';
 	html += '  <td class="text-left"><button type="button" onclick="$(\'#attribute-row' + attribute_row + '\').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';

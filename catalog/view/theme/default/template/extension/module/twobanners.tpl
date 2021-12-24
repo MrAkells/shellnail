@@ -11,7 +11,7 @@
                         
                         <div class="contents-banner">
                         <a href="<?php echo $banner['link']; ?>">
-                            <h2 class="title-banner">
+                            <div class="title-banner">
                             <?php echo $banner['title']; ?>
                             <!-- Yura start -->
                             <?php if($banner['title2']){ ?>
@@ -20,7 +20,7 @@
                             </span>
                             <?php } ?>
                               <!-- Yura end -->
-                            </h2></a>
+                            </div></a>
                             <div class="more-detailed">
                                 <a class="btn-more-detailed" href="<?php echo $banner['link']; ?>"><?php echo $btn_more_detailed; ?></a>
                             </div>
@@ -30,7 +30,7 @@
                     <?php } else { ?>
                         <img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive img-banner" />
                          <div class="contents-banner">
-                            <h2 class="title-banner">
+                            <div class="title-banner">
                             <?php echo $banner['title']; ?>
                             <!-- Yura start -->
                             <?php if($banner['title2']){ ?>
@@ -39,7 +39,7 @@
                             </span>
                             <?php } ?>
                               <!-- Yura end -->
-                            </h2>
+                            </div>
                             <div class="more-detailed">
                                 <a class="btn-more-detailed" href="<?php echo $banner['link']; ?>"><?php echo $btn_more_detailed; ?></a>
                             </div>
@@ -162,7 +162,7 @@ function visual_loading(){
             <div class="advantage-body">
                 <span class="title-advantage"><?php echo $first_advantage; ?></span>
                 <div class="advantage-content">
-                    <?php echo $text_1_advantage;; ?>
+                    <?php echo $text_1_advantage; ?>
                 </div>
             </div>
         </div> 

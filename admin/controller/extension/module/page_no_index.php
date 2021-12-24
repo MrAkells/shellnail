@@ -96,7 +96,16 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		} else {
 			$filter_name = null;
 		}
-
+		if (isset($this->request->get['filter_noindex'])) {
+			$filter_noindex = $this->request->get['filter_noindex'];
+		} else {
+			$filter_noindex = null;
+		}
+		if (isset($this->request->get['filter_canonical'])) {
+			$filter_canonical = $this->request->get['filter_canonical'];
+		} else {
+			$filter_canonical = null;
+		}
         if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
 		} else {
@@ -107,6 +116,12 @@ class ControllerExtensionModulePageNoIndex extends Controller
 
 		if (isset($this->request->get['filter_name'])) {
 			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+		}
+		if (isset($this->request->get['filter_noindex'])) {
+			$url .= '&filter_noindex=' . $this->request->get['filter_noindex'];
+		}
+		if (isset($this->request->get['filter_canonical'])) {
+			$url .= '&filter_canonical=' . $this->request->get['filter_canonical'];
 		}
 
         if (isset($this->request->get['page'])) {
@@ -140,6 +155,10 @@ class ControllerExtensionModulePageNoIndex extends Controller
         $data['button_filter'] = $this->language->get('button_filter');
         $data['token'] = $this->session->data['token'];
 
+		$data['entry_noindex'] = $this->language->get('entry_noindex');
+		$data['entry_canonical'] = $this->language->get('entry_canonical');
+		$data['text_enabled'] = $this->language->get('text_enabled');
+		$data['text_disabled'] = $this->language->get('text_disabled');
 		$data['text_list'] = $this->language->get('text_list');
 		$data['text_no_results'] = $this->language->get('text_no_results');
 		$data['text_confirm'] = $this->language->get('text_confirm');
@@ -152,6 +171,8 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		$this->load->model('extension/module/page_no_index');
         $filter_data = array(
 			'filter_name'	  => $filter_name,
+			'filter_noindex'	  => $filter_noindex,
+			'filter_canonical'	  => $filter_canonical,
 			'start'           => ($page - 1) * $this->config->get('config_limit_admin'),
 			'limit'           => $this->config->get('config_limit_admin')
 		);
@@ -198,6 +219,8 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		$data['results'] = sprintf($this->language->get('text_pagination'), ($urls_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($urls_total - $this->config->get('config_limit_admin'))) ? $urls_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $urls_total, ceil($urls_total / $this->config->get('config_limit_admin')));
 
 		$data['filter_name'] = $filter_name;
+		$data['filter_noindex'] = $filter_noindex;
+		$data['filter_canonical'] = $filter_canonical;
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
@@ -286,6 +309,7 @@ class ControllerExtensionModulePageNoIndex extends Controller
 
 		$data['entry_url'] = $this->language->get('entry_url');
 		$data['entry_noindex'] = $this->language->get('entry_noindex');
+		$data['entry_canonical'] = $this->language->get('entry_canonical');
 
 		$data['entry_description'] = $this->language->get('entry_description');
 		$data['entry_meta_title'] = $this->language->get('entry_meta_title');
@@ -344,20 +368,20 @@ class ControllerExtensionModulePageNoIndex extends Controller
 			$data['is_noindex'] = 0;
 		}
 
+		if (isset($this->request->post['is_canonical'])) {
+			$data['is_canonical'] = $this->request->post['is_canonical'];
+		} elseif (isset($this->request->get['page_id'])) {
+			$data['is_canonical'] = $url_info['is_canonical'];
+		} else {
+			$data['is_canonical'] = 0;
+		}
+
 		if (isset($this->request->post['page_description'])) {
 			$data['page_description'] = $this->request->post['page_description'];
 		} elseif (isset($this->request->get['page_id'])) {
 			$data['page_description'] = $this->model_extension_module_page_no_index->getPageDescriptions($this->request->get['page_id']);
 		} else {
 			$data['page_description'] = array();
-		}
-
-		if (isset($this->request->post['description'])) {
-			$data['description'] = $this->request->post['description'];
-		} elseif (isset($this->request->get['page_id'])) {
-			$data['description'] = $url_info['description'];
-		} else {
-			$data['description'] = '';
 		}
 
 		$data['header'] = $this->load->controller('common/header');

@@ -25,7 +25,7 @@ class ControllerDQuickcheckoutCart extends Controller {
         $data['row'] = $config['account']['guest']['cart']['row'];
 
         $data['button_confirm'] = $this->language->get('button_confirm');
-      
+        $data['button_shopping'] = $this->language->get('button_shopping');
         
         
         $data['column_image'] = $this->language->get('column_image');
@@ -35,7 +35,7 @@ class ControllerDQuickcheckoutCart extends Controller {
         $data['column_price'] = $this->language->get('column_price'); 
         $data['column_total'] = $this->language->get('column_total');
         $data['text_recurring_item'] = $this->language->get('text_recurring_item');
-        
+
         if(VERSION >= '2.3.0.0'){
             $this->load->language('extension/total/coupon');
         }elseif(VERSION >= '2.1.0.1'){
@@ -240,6 +240,7 @@ class ControllerDQuickcheckoutCart extends Controller {
                 'option'    => $option_data,
                 'recurring' => $recurring,
                 'quantity'  => $product['quantity'],
+                'stock_quantity'  => sprintf($this->language->get('text_stock_quantity'), $product['stock_quantity']),
                 'stock'     => $product['stock'] ? true : !(!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning')),
                 'reward'    => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
                 'price'     => $price,

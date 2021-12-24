@@ -22,7 +22,7 @@ class ControllerCheckoutUkrposhta extends Controller {
         }
         
         $data['text_postcode']=$this->language->get('text_postcode');
-       
+        $data['text_input_postcode']=$this->language->get('text_input_postcode');
         
         return $this->load->view('checkout/ukrposhta', $data);
 	

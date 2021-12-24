@@ -148,6 +148,13 @@ class ControllerInformationContact extends Controller {
 		} else {
 			$data['captcha'] = '';
 		}
+		
+		$data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
+		$this->load->model('catalog/information');
+		$information_info = $this->model_catalog_information->getInformation(12);
+		if ($information_info) {
+			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
+		}
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');

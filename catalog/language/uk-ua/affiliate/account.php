@@ -1,0 +1,14 @@
+<?php
+// Heading 
+$_['heading_title']        = 'Партнерський розділ';
+
+// Text
+$_['text_account']         = 'Кабінет партнера';
+$_['text_my_account']      = 'Обліковий запис';
+$_['text_my_tracking']     = 'Реферали';
+$_['text_my_transactions'] = 'Історія виплат';
+$_['text_edit']            = 'Редагувати обліковий запис';
+$_['text_password']        = 'Змінити пароль';
+$_['text_payment']         = 'Змінити платіжні реквізити';
+$_['text_tracking']        = 'Реферальний код';
+$_['text_transaction']     = 'Перегляд історії виплат';

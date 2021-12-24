@@ -3,19 +3,20 @@ class ControllerFeaturesReviews extends Controller {
 	public function index() {
 		$this->load->language('features/reviews');
 
-                $this->load->model('extension/module/shopreview');
-                
-                $data['review_total'] = $this->model_extension_module_shopreview->getTotalReviews();
-                $this->document->setTitle($this->config->get('shopreview_meta_title'));
+		$this->load->model('extension/module/shopreview');
+		
+		$data['review_total'] = $this->model_extension_module_shopreview->getTotalReviews();
+		$this->document->setTitle($this->config->get('shopreview_meta_title'));
 		$this->document->setDescription($this->config->get('shopreview_meta_description'));  
-                $this->document->setKeywords($this->config->get('shopreview_meta_keywords')); 
-                
+		$this->document->setKeywords($this->config->get('shopreview_meta_keywords')); 
+		
 		$data['heading_title']=$this->language->get('heading_title');
 
-                $data['text_reviews']=$this->language->get('text_reviews');
+		$data['text_reviews']=$this->language->get('text_reviews');
+		$data['text_ourreviews']=$this->language->get('text_ourreviews');
 
-                 $data['text_greetings']=$this->language->get('text_greetings');
-                $data['text_you_can_rate']=$this->language->get('text_you_can_rate');
+		$data['text_greetings']=$this->language->get('text_greetings');
+		$data['text_you_can_rate']=$this->language->get('text_you_can_rate');
 
                 
 		$data['breadcrumbs'] = array();

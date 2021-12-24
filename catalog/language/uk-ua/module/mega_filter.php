@@ -1,0 +1,33 @@
+<?php
+$_['heading_title'] = 'Фільтр товарів';
+$_['name_price'] = 'Ціна';
+$_['name_manufacturers'] = 'Виробники';
+$_['name_rating'] = 'Рейтинг';
+$_['name_search'] = 'Пошук';
+$_['name_stock_status'] = 'Наявність';
+$_['name_location'] = 'Розташування';
+$_['name_length'] = 'Довжина';
+$_['name_width'] = 'Ширина';
+$_['name_height'] = 'Висота';
+$_['name_weight'] = 'вага';
+$_['name_mpn'] = 'MPN';
+$_['name_isbn'] = 'ISBN';
+$_['name_sku'] = 'SKU';
+$_['name_upc'] = 'UPC';
+$_['name_ean'] = 'EAN';
+$_['name_jan'] = 'JAN';
+$_['name_model'] = 'Модель';
+$_['name_tags'] = 'Тег';
+$_['text_button_apply'] = 'Застосувати';
+$_['text_reset_all'] = 'Скинути';
+$_['text_show_more'] = 'Більше (%s)';
+$_['text_show_less'] = 'Менше';
+$_['text_display'] = 'Показати';
+$_['text_grid'] = 'Сітка';
+$_['text_list'] = 'Список';
+$_['text_loading'] = 'Завантаження...';
+$_['text_select'] = 'Оберіть...';
+$_['text_go_to_top'] = 'На початок';
+$_['text_init_filter'] = 'Пошук з фільтрацією';
+$_['text_initializing'] = 'ініціалізація...';
+?>

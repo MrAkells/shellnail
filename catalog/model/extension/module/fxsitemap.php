@@ -44,13 +44,13 @@ private $exclude = false;
     
 	public function getProducts($data = array()) {
 
-		$query = "SELECT product_id, date_added, date_modified FROM " . DB_PREFIX . "product WHERE status = '1' LIMIT ".(int)$data['start'].", ".(int)$data['limit'];
+		$query = "SELECT product_id, quantity, date_added, date_modified FROM " . DB_PREFIX . "product WHERE status = '1' LIMIT ".(int)$data['start'].", ".(int)$data['limit'];
 		
-		$query_m = "SELECT p.product_id, p.date_added, p.date_modified FROM " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT ".(int)$data['start'].", ".(int)$data['limit'];
+		$query_m = "SELECT p.product_id, p.quantity, p.date_added, p.date_modified FROM " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT ".(int)$data['start'].", ".(int)$data['limit'];
 		
 		if ($this->isMulti()) $query = $query_m;
 		
-		if ($this->exclude) $query = "SELECT p.product_id, p.date_added, p.date_modified FROM " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . $this->exclude . " pe ON (p.product_id = pe.pid) WHERE p.status = '1' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND pe.pid IS NULL LIMIT ".(int)$data['start'].", ".(int)$data['limit'];
+		if ($this->exclude) $query = "SELECT p.product_id, p.quantity, p.date_added, p.date_modified FROM " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . $this->exclude . " pe ON (p.product_id = pe.pid) WHERE p.status = '1' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND pe.pid IS NULL LIMIT ".(int)$data['start'].", ".(int)$data['limit'];
 		
 		$result = $this->db->query($query);
 	

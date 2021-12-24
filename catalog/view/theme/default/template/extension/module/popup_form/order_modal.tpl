@@ -3,7 +3,7 @@
     <div class="modal-content modal-order-phone">
       <div class="modal-header">
         <button type="button" class="close close-icon" data-dismiss="modal" aria-label="Close"><span></span></button>
-        <h4 class="modal-title" id="form_order_label"><?= $heading_title; ?></h4>
+        <div class="modal-title" id="form_order_label"><?= $heading_title; ?></div>
       </div>
       <div class="modal-body">
           <form name="order" class="popup_form" action="<?= $action ?>" >

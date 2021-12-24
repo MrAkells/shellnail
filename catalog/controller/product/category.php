@@ -10,6 +10,9 @@ class ControllerProductCategory extends Controller {
 
 		$this->load->model('tool/image');
 
+		$this->load->language('common/language');
+		$data['langcode'] = $this->session->data['language'];
+
                 
 		if (isset($this->request->get['filter'])) {
 			$filter = $this->request->get['filter'];
@@ -112,6 +115,8 @@ class ControllerProductCategory extends Controller {
 		$category_info = $this->model_catalog_category->getCategory($category_id);
 
 		if ($category_info) {
+			$text_page = $this->language->get('text_page');
+			
 			$meta_description = (mb_detect_encoding($category_info['meta_description']) == 'UTF-8' ? $category_info['meta_description'] :mb_convert_encoding($category_info['meta_description'],'utf-8', "HTML-ENTITIES"));
 			if ($page == 1) {
 			if ($category_info['meta_title']) {
@@ -120,18 +125,17 @@ class ControllerProductCategory extends Controller {
 				$this->document->setTitle($category_info['name']);
 			}
 
-			
 			$this->document->setDescription($meta_description);
 			$this->document->setKeywords($category_info['meta_keyword']);
 			}else{
 					if ($category_info['meta_title']) {
-				$this->document->setTitle($category_info['meta_title'].' - стр. '.$page);
+				$this->document->setTitle($category_info['meta_title'].$text_page.$page);
 			} else {
-				$this->document->setTitle($category_info['name'].' - стр. '.$page);
+				$this->document->setTitle($category_info['name'].$text_page.$page);
 			}
 
-			$this->document->setDescription($meta_description.' - стр. '.$page);
-			$this->document->setKeywords($category_info['meta_keyword'].' - стр. '.$page);
+			$this->document->setDescription($meta_description.$text_page.$page);
+			$this->document->setKeywords($category_info['meta_keyword'].$text_page.$page);
 			}
 		
 
@@ -165,6 +169,19 @@ class ControllerProductCategory extends Controller {
 			$data['button_continue'] = $this->language->get('button_continue');
 			$data['button_list'] = $this->language->get('button_list');
 			$data['button_grid'] = $this->language->get('button_grid');
+
+			$data['text_po_poryadku_asc'] = $this->language->get('text_po_poryadku_asc');
+			$data['text_most_viewed_desc'] = $this->language->get('text_most_viewed_desc');
+			$data['text_newest_desc'] = $this->language->get('text_newest_desc');
+			$data['text_btn_fb_share'] = $this->language->get('text_btn_fb_share');
+			$data['text_people'] = $this->language->get('text_people');
+			$data['text_action_do'] = $this->language->get('text_action_do');
+			$data['text_cheaper'] = $this->language->get('text_cheaper');
+			$data['text_more_expensive'] = $this->language->get('text_more_expensive');
+			$data['text_not_chosen'] = $this->language->get('text_not_chosen');
+			$data['text_buy_one_click'] = $this->language->get('text_buy_one_click');
+
+
 
 			// Set the last category breadcrumb
 			$data['breadcrumbs'][] = array(
@@ -335,6 +352,7 @@ class ControllerProductCategory extends Controller {
 			foreach ($results as $result) {
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
+
 				} else {
 					$image = $this->model_tool_image->resize('placeholder.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				}
@@ -367,6 +385,8 @@ class ControllerProductCategory extends Controller {
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
+					'img_width'   => $this->config->get($this->config->get('config_theme') . '_image_product_width'),
+					'img_height'  => $this->config->get($this->config->get('config_theme') . '_image_product_height'),
 					'name'        => $result['name'],
           'sku'       => $result['sku'],
 					'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '...',

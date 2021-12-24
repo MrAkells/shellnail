@@ -23,7 +23,7 @@
            
            
         <ul class="nav nav-tabs new-nav-tabs review-tabs">
-            <li class="active"><a data-toggle="tab" href="#reviews">Отзывов (<?php echo $review_total; ?>)</a></li>
+            <li class="active"><a data-toggle="tab" href="#reviews"><?php echo $text_ourreviews; ?> (<?php echo $review_total; ?>)</a></li>
             <li>
                 <a data-toggle="tab" href="#facebook_reviews">
                     Facebook
