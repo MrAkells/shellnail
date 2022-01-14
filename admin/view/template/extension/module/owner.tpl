@@ -174,12 +174,6 @@
                 
             </div>
             
-             <div class="form-group">
-                <label class="col-sm-4 control-label"><?php echo 'Текст суммы бесплатной доставки'; ?></label>
-                <div class="col-sm-8">
-                    <input type="number" name="owner_free_shipping_sum" value="<?php echo $owner_free_shipping_sum; ?>"   class="form-control" />
-                </div>
-            </div>
         </form>
       </div>
     </div>

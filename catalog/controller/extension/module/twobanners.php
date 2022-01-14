@@ -45,10 +45,8 @@ class ControllerExtensionModuleTwobanners extends Controller {
                 $data['third_advantage']    = $this->language->get('third_advantage');
                 $data['forth_advantage']    = $this->language->get('forth_advantage');
                 $data['text_1_advantage']    = $this->language->get('text_1_advantage');
-                //$data['text_2_advantage']    = $this->language->get('text_2_advantage');
                 
-                $data['text_2_advantage']    = sprintf($this->language->get('text_2_advantage'), $this->config->get('owner_free_shipping_sum')); 
-                        
+                $data['text_2_advantage']    = sprintf($this->language->get('text_2_advantage'), $this->config->get('ukrposhta_freetotal'), $this->config->get('new_mail_freetotal'));         
                 
                 $data['text_3_advantage']    = $this->language->get('text_3_advantage');
                 $data['text_4_advantage']    = $this->language->get('text_4_advantage');
