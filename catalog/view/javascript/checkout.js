@@ -1,40 +1,48 @@
     
   $(document).delegate('input[id="payment_address_city"]','focusin',function(){
+	  var _that = $(this);
+	  	  _that.data('ref', '');
 	    $(this).parent().find('ul').remove();
-            $(this).autocomplete({
-            'source': function(request, response) {
-		$.ajax({
-			url: 'index.php?route=account/precheckout/hint&hint=' +  encodeURIComponent(request),
-			dataType: 'json',
-			success: function(json) {
-                            if(json.success){
-                                response($.map(json.data, function(item) {
-					return {
-						label: item['name'],
-						value: item['ref']
-					}
-				}));
-                            }
-				
-			}
-		});
-            },
-            'select': select_handler
-        });
+		$(this).autocomplete({
+			'source': function(request, response) {
+					$.ajax({
+						url: 'index.php?route=account/precheckout/hint&hint=' +  encodeURIComponent(request),
+						dataType: 'json',
+						success: function(json) {
+									if(json.success){
+										response($.map(json.data, function(item) {
+											return {
+												label: item['name'],
+												value: item['ref']
+											}
+										}));
+									}
+									_that.data('ref', '');
+							
+						}
+					});
+			},
+			'select': select_handler
 
-        });
+		}).focusout(function(){            
+			if(!$(this).data('ref')) $(this).val('');
+		});
+
+    });
         
          function select_handler(item) {
-             
+
             if(item['value']=='another_city'){
                 $('input[id="payment_address_city"]').focus();
                 return false;
             }
-            $('input[id="payment_address_city"]').val(item['label']);
-            $('input[id="payment_address_city"]').focusout();
-            $('input[id="payment_address_address_1"]').val('');
-	 
-            $('input[id="payment_address_city"]').change();
+
+			$('input[id="payment_address_address_1"]').val('');
+			$('input[id="payment_address_city"]')
+				.data('ref', item['value'])
+				.val(item['label'])
+				.focusout()
+				.change();
 	 
             $('#new_mail_office').change();
         }
