@@ -192,7 +192,7 @@ class ModelExtensionTotalCoupon extends Model {
                                 $discount_total=$this->config->get('not_promo_products_sum')*($percent/100);
                                 $total['totals'][] = array(
                                     'code'       => 'coupon',
-                                    'title'      => '<span title="Скидка применяется только к товарам, которые не участвуют в акциях на данный момент">Ваша накопительная скидка '. $percent .'% '.'</span>',
+                                    'title'      => sprintf($this->language->get('text_total'), $percent),
                                     'value'      => -$discount_total,
                                     'sort_order' => $this->config->get('coupon_sort_order')
                             );
