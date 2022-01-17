@@ -73,6 +73,9 @@
 
 				</table>
 		</div>
+		<?php if(isset($text_min_total)) { ?>
+		<div class="text_min_total"><?php echo $text_min_total; ?></div>	
+		<?php } ?>	
 		<div class="popupcart_buttons">
 			<?php if($button_shopping_show) { ?>
 				<button type="button" class="btn-checkout" onclick="$('#popupcart_extended').popup('hide')" ><?php echo $button_shopping; ?></button>
@@ -82,7 +85,7 @@
 			<?php if ($button_cart_show) { ?>
 				<button type="button" class="btn-checkout" onclick="location='<?php echo $cart; ?>'" ><?php echo $button_cart; ?></button>
 			<?php } ?>
-			<button type="button" class="btn-checkout" onclick="location='<?php echo $checkout; ?>'"><?php echo $button_checkout; ?></button>
+			<button type="button" class="btn-checkout" onclick="location='<?php echo $checkout; ?>'" <?php echo (isset($text_min_total) ? 'disabled':''); ?>><?php echo $button_checkout; ?></button>
 		</div>
 		<?php if($products_related) { ?>
 			<div id="related">

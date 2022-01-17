@@ -95,7 +95,16 @@ class ControllerExtensionModulePopupCart extends Controller {
 
 			array_multisort($sort_order, SORT_ASC, $totals);
 		}
-		
+
+		//check min sum
+		if($this->config->get('owner_min_sum')){
+			$delta = $this->config->get('owner_min_sum') - $this->cart->getSubTotal();
+			if($delta > 0){
+				$data['text_min_total'] = sprintf($this->language->get('text_min_total'), $delta);
+			}
+			
+		}
+
 		$data['totals'] = array();
 
 		foreach ($totals as $total) {

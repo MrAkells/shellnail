@@ -188,10 +188,15 @@ class ControllerExtensionModuleOwner extends Controller
 			$data['thumb_additional_logo'] = $this->model_tool_image->resize('no_image.png', 200, 100);
 		}
 
-		if (isset($this->request->post['owner_free_shipping_sum'])) {
-			$data['owner_free_shipping_sum'] = $this->request->post['owner_free_shipping_sum'];
+		// if (isset($this->request->post['owner_free_shipping_sum'])) {
+		// 	$data['owner_free_shipping_sum'] = $this->request->post['owner_free_shipping_sum'];
+		// } else {
+		// 	$data['owner_free_shipping_sum'] = $this->config->get('owner_free_shipping_sum');
+		// }
+		if (isset($this->request->post['owner_min_sum'])) {
+			$data['owner_min_sum'] = $this->request->post['owner_min_sum'];
 		} else {
-			$data['owner_free_shipping_sum'] = $this->config->get('owner_free_shipping_sum');
+			$data['owner_min_sum'] = $this->config->get('owner_min_sum');
 		}
 
 		$data['header'] = $this->load->controller('common/header');

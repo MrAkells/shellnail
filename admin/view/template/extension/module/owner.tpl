@@ -173,7 +173,12 @@
                 </div>
                 
             </div>
-            
+             <div class="form-group">
+                <label class="col-sm-4 control-label"><?php echo 'Сумма минимального заказа'; ?></label>
+                <div class="col-sm-8">
+                    <input type="number" name="owner_min_sum" value="<?php echo $owner_min_sum; ?>"   class="form-control" />
+                </div>
+            </div>            
         </form>
       </div>
     </div>
