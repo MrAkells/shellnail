@@ -6365,6 +6365,18 @@ aside#column-left{
     justify-content: flex-end;
 }
 
+.text_min_total {
+	color: #ff0000;
+	text-align: right;
+}
+.btn-checkout[disabled] {
+	/*cursor: not-allowed;*/
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    opacity: .65;
+}
+
 /* 
 .fb-like span {
 	width: 90px !important;

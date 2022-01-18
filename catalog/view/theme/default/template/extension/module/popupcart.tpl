@@ -85,7 +85,7 @@
 			<?php if ($button_cart_show) { ?>
 				<button type="button" class="btn-checkout" onclick="location='<?php echo $cart; ?>'" ><?php echo $button_cart; ?></button>
 			<?php } ?>
-			<button type="button" class="btn-checkout" onclick="location='<?php echo $checkout; ?>'" <?php echo (isset($text_min_total) ? 'disabled':''); ?>><?php echo $button_checkout; ?></button>
+			<button type="button" class="btn-checkout" onclick="location='<?php echo $checkout; ?>'" <?php echo (isset($text_min_total) ? 'disabled="disabled"':''); ?>><?php echo $button_checkout; ?></button>
 		</div>
 		<?php if($products_related) { ?>
 			<div id="related">
