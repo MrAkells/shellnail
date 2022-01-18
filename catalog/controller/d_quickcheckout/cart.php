@@ -272,6 +272,15 @@ class ControllerDQuickcheckoutCart extends Controller {
         }
         $json['config_stock_warning'] = isset($data['config_stock_warning'])?$data['config_stock_warning']:'';
         $json['cart_error'] = (!empty($data['error_warning'])) ? $data['error_warning'] : '';
+        
+        //check min sum
+        $json['text_min_total'] = '';
+        if($this->config->get('owner_min_sum')){
+            $delta = $this->config->get('owner_min_sum') - $this->cart->getSubTotal();
+            if($delta > 0){
+                $json['text_min_total'] = sprintf($this->language->get('text_min_total'), $delta);
+            }
+        }
 
         return $json;
     }
@@ -321,6 +330,15 @@ class ControllerDQuickcheckoutCart extends Controller {
             );
             $json['totals'] = $this->session->data['totals'] = $this->model_d_quickcheckout_order->getTotals($total_data);
             $json['total'] = $this->model_d_quickcheckout_order->getCartTotal($total);
+
+            //check min sum
+            $json['text_min_total'] = '';
+            if($this->config->get('owner_min_sum')){
+                $delta = $this->config->get('owner_min_sum') - $this->cart->getSubTotal();
+                if($delta > 0){
+                    $json['text_min_total'] = sprintf($this->language->get('text_min_total'), $delta);
+                }
+            }
 
             //confirm
             $json['show_confirm'] = $this->model_d_quickcheckout_order->showConfirm();

@@ -49,6 +49,12 @@ qc.ConfirmView = qc.View.extend({
 			$('html,body').animate({ scrollTop: $("#d_quickcheckout #cart_view .alert-danger,.save-alert").offset().top-60}, 'slow');
 		}
 
+		if(valid && $("#d_quickcheckout #cart_view .text_min_total").length){
+			valid = false;
+			preloaderStop();
+			$('html,body').animate({ scrollTop: $("#d_quickcheckout #cart_view .text_min_total").offset().top-60}, 'slow');
+		}
+
         if(this.model.get('account') == 'register'){
             email = $("#d_quickcheckout #payment_address_form #payment_address_email")
             emailVal = email.val();

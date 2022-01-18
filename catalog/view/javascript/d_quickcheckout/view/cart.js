@@ -110,6 +110,10 @@ qc.CartView = qc.View.extend({
 			this.updateMiniCart(data.total);
 		}
 
+		if(data.text_min_total){
+			this.model.set('text_min_total', data.text_min_total);
+		}
+
 		if(data.cart_errors){
 			this.model.set('errors', data.cart_errors);
 		}

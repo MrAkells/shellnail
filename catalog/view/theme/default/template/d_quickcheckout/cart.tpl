@@ -238,7 +238,9 @@
 			</div>
 			<% } %>
 			<div class="preloader row"><img class="icon" src="image/<%= config.general.loader %>" /></div>
-			
+			<% if(model.text_min_total){ %>
+			<div class="text_min_total"><%= model.text_min_total %></div>
+			<% } %>
 			<div class='d_cart_confirmation'>
             	<button  class="btn-checkout" onclick="preConfirm()"><?php echo $button_confirm; ?></span></button> 
         	</div>
