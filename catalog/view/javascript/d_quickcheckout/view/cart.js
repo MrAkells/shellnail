@@ -112,6 +112,8 @@ qc.CartView = qc.View.extend({
 
 		if(data.text_min_total){
 			this.model.set('text_min_total', data.text_min_total);
+		} else {
+			this.model.set('text_min_total', '');
 		}
 
 		if(data.cart_errors){
