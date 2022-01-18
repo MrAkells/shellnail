@@ -68,6 +68,7 @@ style="border:3px solid transparent;"></canvas></button>
                
               function draw_loader(){
                     var elem = $('.owl-dot.active canvas');
+                    if(!elem.length) return;
                     var progress=elem.data('percent');
                     var percent= progress+2;
                     var progress=elem.data('percent', percent);
