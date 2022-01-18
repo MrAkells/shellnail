@@ -189,6 +189,7 @@ class ModelExtensionTotalCoupon extends Model {
                             $percent=$this->model_account_order->getCustomerSpecial($this->customer->getId());
                             
                             if($this->config->get('not_promo_products_sum') && $percent){
+								$this->load->language('extension/total/coupon');
                                 $discount_total=$this->config->get('not_promo_products_sum')*($percent/100);
                                 $total['totals'][] = array(
                                     'code'       => 'coupon',
