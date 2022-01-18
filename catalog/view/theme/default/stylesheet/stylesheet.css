@@ -6368,6 +6368,7 @@ aside#column-left{
 .text_min_total {
 	color: #ff0000;
 	text-align: right;
+	font-size: 16px;
 }
 .btn-checkout[disabled] {
 	/*cursor: not-allowed;*/
