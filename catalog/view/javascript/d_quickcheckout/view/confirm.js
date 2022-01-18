@@ -35,12 +35,6 @@ qc.ConfirmView = qc.View.extend({
 			$('html,body').animate({ scrollTop: $(".has-error").offset().top-60}, 'slow');
 		}
 
-		if($("#d_quickcheckout #cart_view .alert-danger,.save-alert").length){
-			valid = false;
-			preloaderStop();
-			$('html,body').animate({ scrollTop: $("#d_quickcheckout #cart_view .alert-danger,.save-alert").offset().top-60}, 'slow');
-		}
-
 		$("#d_quickcheckout form").each(function(){
 			if(!$(this).valid()){
 				valid = false;
@@ -48,6 +42,12 @@ qc.ConfirmView = qc.View.extend({
 				$('html,body').animate({ scrollTop: $(".has-error").offset().top-60}, 'slow');
 			}
 		});
+
+		if(valid && $("#d_quickcheckout #cart_view .alert-danger,.save-alert").length){
+			valid = false;
+			preloaderStop();
+			$('html,body').animate({ scrollTop: $("#d_quickcheckout #cart_view .alert-danger,.save-alert").offset().top-60}, 'slow');
+		}
 
         if(this.model.get('account') == 'register'){
             email = $("#d_quickcheckout #payment_address_form #payment_address_email")
