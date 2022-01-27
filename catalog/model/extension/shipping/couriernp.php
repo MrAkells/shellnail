@@ -22,13 +22,13 @@ class ModelExtensionShippingCouriernp extends Model
                         }
                         
                          if(!$cost){
-                                $cost=40;
+                                $cost=$this->config->get('new_mail_min_cost') + $this->config->get('couriernp_add_cost');
                             }
                         
                     }
-               
+                    
                     if($this->cart->getSubTotal()>=$this->config->get('couriernp_freetotal')){
-                        $cost=15;  
+                        $cost = $this->config->get('couriernp_add_cost');  
                     }
                     
                     
