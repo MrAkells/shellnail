@@ -1486,10 +1486,16 @@ span.icon-bar:nth-child(3){
 .top-lang-mobile .pull-left {
 	float: unset !important;
 }
-.top-lang-mobile .btn {
+.top-lang-mobile .btn,
+.top-lang .btn {
 	border: 1px solid rgba(151, 107, 168, 0.5);
     border-radius: 3px;
+	color: #888;
 }
+.top-lang .btn {
+	margin-right: 30px;
+}
+
 /*---Darken-the-page---*/
 .pushy-active .site-overlay{
     display: block;
