@@ -20,7 +20,11 @@
     <div class="row register-page">
     <div class="col-md-5 col-sm-6 left-register">
       <h1 class="title-register"><?php echo $heading_title; ?></h1>
-     
+      <div class="social_login-register">
+        <button type="button" onclick="social_auth.facebook(this)" data-loading-text="<?= $text_loading; ?>" class="btn btn-primary"><i class="fa fa-facebook-f"></i></button>
+        <button type="button" onclick="social_auth.googleplus(this)" data-loading-text="<?= $text_loading; ?>" class="btn btn-primary"><i class="fa fa-google"></i></button>
+        <button type="button" onclick="social_auth.instagram(this)" data-loading-text="<?= $text_loading; ?>" class="btn btn-primary"><i class="fa fa-instagram"></i></button> 
+      </div>    
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
         <fieldset id="account">
         

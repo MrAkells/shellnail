@@ -12,7 +12,8 @@ class ControllerAccountModal extends Controller {
             $data['entry_login_email']=$this->language->get('entry_login_email');
             $data['entry_login_password']=$this->language->get('entry_login_password');
             $data['text_contact_details'] = $this->language->get('text_enter_as');
-
+            $data['text_loading'] = $this->language->get('text_loading');
+            
             $data['entry_remember'] = $this->language->get('entry_remember');
             $data['text_forgotten'] = $this->language->get('text_forgotten');
             $data['forgotten'] = $this->url->link('account/forgotten', '', true);

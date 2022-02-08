@@ -1,6 +1,6 @@
 <div class="qc-step" data-col="<?php echo $col; ?>" data-row="<?php echo $row; ?>">
 	<div id="login_view"></div>
-	<div id="login_social_login"><?php echo $d_social_login; ?></div>
+	<!-- <div id="login_social_login"><?php echo $d_social_login; ?></div> -->
 </div>
 
 <script type="text/html" id="login_template">

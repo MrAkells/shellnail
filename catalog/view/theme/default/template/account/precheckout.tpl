@@ -7,10 +7,12 @@
   <div class="row precheckout">
     <div class="col-lg-5 col-md-6">
       <h1><?php echo $heading_title; ?></h1>
-      <div class="contact-details"><?php echo $text_contact_details; ?></div> 
-        <div class="precheckout-ulogin ">
-            <?php echo $content_top; ?>  
-        </div>
+      <div class="social_login-autorization">
+        <div class="contact-details"><?php echo $text_contact_details; ?></div>
+        <button type="button" onclick="social_auth.facebook(this)" data-loading-text="<?= $text_loading; ?>" class="btn btn-primary"><i class="fa fa-facebook-f"></i></button>
+        <button type="button" onclick="social_auth.googleplus(this)" data-loading-text="<?= $text_loading; ?>" class="btn btn-primary"><i class="fa fa-google"></i></button>
+        <button type="button" onclick="social_auth.instagram(this)" data-loading-text="<?= $text_loading; ?>" class="btn btn-primary"><i class="fa fa-instagram"></i></button>      
+      </div>
       
        <ul class="nav nav-tabs new-nav-tabs precheckout-tabs">
           <li class="active"><a data-toggle="tab" href="#tab1"><span><?php echo $text_new; ?></span></a></li>
