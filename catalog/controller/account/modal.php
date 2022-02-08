@@ -1,29 +1,28 @@
 <?php
 class ControllerAccountModal extends Controller {
-        private $error = array();
+      private $error = array();
     
 	public function index() {
 		$this->load->language('account/modal');
 
-		$data['heading_title'] = $this->language->get('heading_title');
-                $data['text_login'] = $this->language->get('text_login1');
-                 $data['text_step_into'] = $this->language->get('text_step_into');
-                $data['action']=$this->url->link('account/modal/login');
-                $data['entry_login_email']=$this->language->get('entry_login_email');
-                $data['entry_login_password']=$this->language->get('entry_login_password');
-                $data['text_contact_details'] = $this->language->get('text_enter_as');
-   
-                $data['entry_remember'] = $this->language->get('entry_remember');
-                $data['text_forgotten'] = $this->language->get('text_forgotten');
-                $data['forgotten'] = $this->url->link('account/forgotten', '', true);
-                
-                $data['route'] = $this->request->get['route'];
-                $data['ulogin_panel'] = $this->load->controller('extension/module/ulogin',['uloginid'=>null, 'status'=>'1', 'type'=>'offline']);
-               
+            $data['heading_title'] = $this->language->get('heading_title');
+            $data['text_login'] = $this->language->get('text_login1');
+            $data['text_step_into'] = $this->language->get('text_step_into');
+            $data['action']=$this->url->link('account/modal/login');
+            $data['entry_login_email']=$this->language->get('entry_login_email');
+            $data['entry_login_password']=$this->language->get('entry_login_password');
+            $data['text_contact_details'] = $this->language->get('text_enter_as');
+
+            $data['entry_remember'] = $this->language->get('entry_remember');
+            $data['text_forgotten'] = $this->language->get('text_forgotten');
+            $data['forgotten'] = $this->url->link('account/forgotten', '', true);
+            
+            $data['route'] = $this->request->get['route'];
+
 		return $this->load->view('account/modal', $data);
 	}
         
-        public function login() {
+      public function login() {
             //var_dump($this->request->post);
             $this->load->language('account/modal');
             
@@ -44,25 +43,25 @@ class ControllerAccountModal extends Controller {
 
             // Wishlist
             if (isset($this->session->data['wishlist']) && is_array($this->session->data['wishlist'])) {
-		$this->load->model('account/wishlist');
+		      $this->load->model('account/wishlist');
 
-		foreach ($this->session->data['wishlist'] as $key => $product_id) {
-                    $this->model_account_wishlist->addWishlist($product_id);
+                  foreach ($this->session->data['wishlist'] as $key => $product_id) {
+                        $this->model_account_wishlist->addWishlist($product_id);
 
-                    unset($this->session->data['wishlist'][$key]);
-		}
+                        unset($this->session->data['wishlist'][$key]);
+                  }
             }
 
             // Add to activity log
             if ($this->config->get('config_customer_activity')) {
-		$this->load->model('account/activity');
+                  $this->load->model('account/activity');
 
-		$activity_data = array(
-                    'customer_id' => $this->customer->getId(),
-                    'name'        => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
-		);
+                  $activity_data = array(
+                        'customer_id' => $this->customer->getId(),
+                        'name'        => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
+                  );
 
-		$this->model_account_activity->addActivity('login', $activity_data);
+                  $this->model_account_activity->addActivity('login', $activity_data);
             }
 
                 $result=json_encode(['success'=>1, 'message'=>$this->language->get('success_login')]);
