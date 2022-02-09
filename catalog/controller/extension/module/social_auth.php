@@ -393,8 +393,10 @@ class ControllerExtensionModuleSocialAuth extends Controller {
     // login or redister user
     private function toLoginRegister($customer){
         
-        $redirect_after = $this->url->link('account/account', '', 'SSL');
-        $redirect_after_register = $this->url->link('extension/module/social_auth/register', '', 'SSL');
+        $redirect_after = 'window.opener.document.location';
+        $redirect_after_add = $this->url->link('account/account', '', 'SSL');
+        //$redirect_after_register = $this->url->link('extension/module/social_auth/register', '', 'SSL');
+        $redirect_after_register = $this->url->link('account/register', '', 'SSL');
         
         if($customer['social_id']){
             $this->load->model('account/customer');
@@ -434,7 +436,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
 
                             $this->login($customer_info);
 
-                            return ['status' => true, 'text' => 'login','redirect' => $redirect_after];
+                            return ['status' => true, 'text' => 'login','redirect' => $redirect_after_add];
 
                         } else {
                             return ['status' => false, 'text' => 'not login'];
