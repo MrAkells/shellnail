@@ -35,11 +35,10 @@
                     </div>
                 </div>
             </form>
-            <div class="social_login-autorization">
-                <div class="log-in-as-user"><?php echo $text_contact_details; ?></div>
-                <button type="button" onclick="social_auth.facebook(this)" data-loading-text="<?= $text_loading; ?>" class="btn btn-primary"><i class="fa fa-facebook-f"></i></button>
-                <button type="button" onclick="social_auth.googleplus(this)" data-loading-text="<?= $text_loading; ?>" class="btn btn-primary"><i class="fa fa-google"></i></button>
-                <button type="button" onclick="social_auth.instagram(this)" data-loading-text="<?= $text_loading; ?>" class="btn btn-primary"><i class="fa fa-instagram"></i></button>      
+
+            <div class="social-autorization-modal">
+                <div class="social-autorization__title"><?php echo $text_contact_details; ?></div>
+                <?php include DIR_APPLICATION . '/view/theme/default/template/component/social_autorization.tpl'; ?>
             </div>
 
         </div>
