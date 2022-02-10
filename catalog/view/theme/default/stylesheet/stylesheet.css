@@ -6420,6 +6420,23 @@ aside#column-left{
 	height: 24px;
 	margin-right: 10px;
 }
+@media(max-width: 768px) { 
+	.social-autorization-modal {
+		padding: 0 25px 40px;
+	}
+	.social-autorization {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		flex-wrap: wrap;
+		margin-top: 25px;
+	}
+	.social-autorization__btn {
+		margin-right: 0;
+		width: 100%;
+		margin-bottom: 10px;
+	}
+}
 
 /* 
 .fb-like span {
