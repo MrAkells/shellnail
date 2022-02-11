@@ -241,7 +241,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
                 if($return_data['status']){
 
                     $this->response->setOutput('<script>
-                        window.opener.document.location = "'.$return_data['redirect'].'";
+                        window.opener.document.location = '. $return_data['redirect'].';
                         window.close();
                         </script>');
                 
@@ -309,7 +309,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
                 if($return_data['status']){
 
                     $this->response->setOutput('<script>
-                        window.opener.document.location = "'.$return_data['redirect'].'";
+                        window.opener.document.location = '.$return_data['redirect'].';
                         window.close();
                         </script>');
                 
@@ -377,7 +377,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
                 if($return_data['status']){
 
                     $this->response->setOutput('<script>
-                        window.opener.document.location = "'.$return_data['redirect'].'";
+                        window.opener.document.location = '.$return_data['redirect'].';
                         window.close();
                         </script>');
                 
@@ -394,9 +394,9 @@ class ControllerExtensionModuleSocialAuth extends Controller {
     private function toLoginRegister($customer){
         
         $redirect_after = 'window.opener.document.location';
-        $redirect_after_add = $this->url->link('account/account', '', 'SSL');
+        $redirect_after_add = '"' . $this->url->link('account/account', '', 'SSL') . '"';
         //$redirect_after_register = $this->url->link('extension/module/social_auth/register', '', 'SSL');
-        $redirect_after_register = $this->url->link('account/register', '', 'SSL');
+        $redirect_after_register = '"' . $this->url->link('account/register', '', 'SSL') . '"';
         
         if($customer['social_id']){
             $this->load->model('account/customer');
