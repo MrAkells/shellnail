@@ -263,8 +263,8 @@ class ControllerExtensionModuleSocialAuth extends Controller {
         $facebook_app_id = $this->config->get('social_auth_facebook_app_id');
         $facebook_secret_key = $this->config->get('social_auth_facebook_secret_key');
 
-        $link = 'https://www.facebook.com/v3.2/dialog/oauth?client_id=' . $facebook_app_id . '&redirect_uri=' . urlencode($redirect_href) . '&auth_type=rerequest';
-
+        $link = 'https://www.facebook.com/v3.2/dialog/oauth?client_id=' . $facebook_app_id . '&redirect_uri=' . urlencode($redirect_href) . '&scope=email,public_profile&response_type=code';
+          
         if (!isset($this->request->get['code'])) {
 
             $this->response->redirect($link);
@@ -278,8 +278,8 @@ class ControllerExtensionModuleSocialAuth extends Controller {
             $data = $this->getCurl($url_token);
 
             $url = 'https://graph.facebook.com/me?fields=email,about,first_name,last_name&access_token=' . $data->access_token;
-
             $result = $this->getCurl($url);
+           //file_put_contents(DIR_LOGS . 'facebook.log', print_r($result,true) . "\n", FILE_APPEND);
 
             if(isset($result->error)){
                 echo @$result->error->message; exit;
