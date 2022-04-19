@@ -6384,6 +6384,66 @@ aside#column-left{
     opacity: .65;
 }
 
+.social-autorization-registr {
+	padding: 0 0 30px;
+}
+.social-autorization-prechec {
+	padding: 20px 0 30px;
+}
+.social-autorization-modal {
+	padding: 30px 45px 40px;
+}
+.social-autorization {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.social-autorization__title {
+	font-size: 18px;
+    font-family: 'Roboto Bold';
+    color: #161616;
+    margin-bottom: 10px;
+	font-weight: bold;
+}
+.social-autorization__btn {
+	padding: 10px 12x 11px;
+	margin-right: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	font-size: 16px;
+	background-color: #fff;
+}
+.social-autorization__btn:last-of-type {
+	margin-right: 0;
+}
+.social-autorization__btn:hover {
+	background-color: #f7f3f8;
+}
+.social-autorization__btn img {
+	width: 24px;
+	height: 24px;
+	margin-right: 10px;
+}
+@media(max-width: 768px) { 
+	.social-autorization-modal {
+		padding: 0 25px 40px;
+	}
+	.social-autorization {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		flex-wrap: wrap;
+		margin-top: 25px;
+	}
+	.social-autorization__btn {
+		margin-right: 0;
+		width: 100%;
+		margin-bottom: 10px;
+	}
+}
+
 /* 
 .fb-like span {
 	width: 90px !important;

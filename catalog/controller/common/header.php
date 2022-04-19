@@ -53,45 +53,37 @@ class ControllerCommonHeader extends Controller {
 		}else{
 			$data['is_admin'] = 0;
 		}
+		$this->document->addScript('/catalog/view/javascript/social_auth.js');                
+		$this->document->addScript('catalog/view/javascript/popup_form/popup_form.js');
+		$this->document->addScript('catalog/view/javascript/jquery.inputmask.bundle.min.js');
+		$data['phone_call_back']=$this->load->controller('extension/module/popup_form');
 		
-		if (!$this->customer->isLogged()) {
-                    $this->document->addScript('https://ulogin.ru/js/ulogin.js');
-                    $this->document->addScript('catalog/view/javascript/extension/ulogin.js');
-                     // $this->document->addScript('catalog/view/javascript/extension/ulogin_local.js');
-                    $this->document->addStyle('https://ulogin.ru/version/2.0/css/providers.min.css');
-                    $this->document->addStyle('catalog/view/theme/default/stylesheet/extension/ulogin.css');
-                }
-                
-                $this->document->addScript('catalog/view/javascript/popup_form/popup_form.js');
-                $this->document->addScript('catalog/view/javascript/jquery.inputmask.bundle.min.js');
-                $data['phone_call_back']=$this->load->controller('extension/module/popup_form');
-                
-                
-                $data['static_header_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/menu_noindex"]);
-                
-                //$data['static_header_catalog']='';
-                
-                $fake_menu=array(
-                    "common/home",
-                    "common/success",
-                    "checkout/success",
-                    "account/reset",
-                    "account/login",
-                    "information/information",
-                    "account/logout",
-                    "account/forgotten",
-                    "features/promotions",
-                    "features/reviews",
-                    "newsblog/category",
-                    "newsblog/article",
-                    "product/product",
-					"product/search"
-                );
-                if(!in_array($this->request->get['route'],$fake_menu)){
-                    $data['header_catalog']=$this->load->controller('extension/module/menu');
-               
-                }
-                $data['route']=$this->request->get['route'];
+		
+		$data['static_header_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/menu_noindex"]);
+		
+		//$data['static_header_catalog']='';
+		
+		$fake_menu=array(
+			"common/home",
+			"common/success",
+			"checkout/success",
+			"account/reset",
+			"account/login",
+			"information/information",
+			"account/logout",
+			"account/forgotten",
+			"features/promotions",
+			"features/reviews",
+			"newsblog/category",
+			"newsblog/article",
+			"product/product",
+			"product/search"
+		);
+		if(!in_array($this->request->get['route'],$fake_menu)){
+			$data['header_catalog']=$this->load->controller('extension/module/menu');
+		
+		}
+		$data['route']=$this->request->get['route'];
 		$data['base'] = $server;
                 
 		$data['description'] = $this->document->getDescription();
