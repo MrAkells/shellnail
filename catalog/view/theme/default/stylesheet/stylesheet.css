@@ -6444,6 +6444,30 @@ aside#column-left{
 	}
 }
 
+.sd-warning-modal {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: rgba(0, 0, 0, 0.2);
+	z-index: 1999;
+}
+.sd-warning-modal__body {
+	background: #fff;
+	padding: 30px;
+	display: inline-block;
+	max-width: 380px;
+	text-align: center;
+	font-size: 15px;
+}
+.sd-warning-modal__bottom {
+	margin-top: 20px;
+	text-align: center;
+}
 /* 
 .fb-like span {
 	width: 90px !important;

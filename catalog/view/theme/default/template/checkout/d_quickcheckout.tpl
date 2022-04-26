@@ -1,5 +1,19 @@
 <?php echo $header; ?>
 <div class="container" id="container">
+
+<div class="sd-warning-modal" id="sd-warning-modal">
+  <div class="sd-warning-modal__body">
+    В связи с военными действиями в Украине почта прекратила работу на отправку из нашего региона. Вы можете добавлять товары в список желаний, чтобы их купить, когда мы вернемся к работе. Мы обязательно оповестим вас, когда магазин заработает! Извините за неудобства.
+    <div class="sd-warning-modal__bottom">
+      <button type="button" id="sd-warning-close" class="btn btn-default sd-warning-modal__btn" >Понятно</button>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("sd-warning-close").onclick = function() {
+    document.getElementById("sd-warning-modal").style.display = "none";
+  }
+</script>
  
   <?php if ($error_warning) { ?>
   <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
@@ -18,32 +32,11 @@
 <!--<h1><?php echo $heading_title; ?></h1>-->
 <!-- Quick Checkout v4.0 by Dreamvention.com checkout/quickcheckout.tpl -->
 
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#warningModal">
-        Launch demo modal
-      </button>
-
       <?php echo $d_quickcheckout; ?>
 
       <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      </div>
-      <div class="modal-body">
-        В связи с военными действиями в Украине почта прекратила работу на отправку из нашего региона. Вы можете добавлять товары в список желаний, чтобы их купить, когда мы вернемся к работе. Мы обязательно оповестим вас, когда магазин заработает! Извините за неудобства.
 
-        <button type="button" class="btn btn-default" data-dismiss="modal">Понятно</button>
-
-      </div>
-
-    </div>
-  </div>
-</div>
 <?php echo $footer; ?>
