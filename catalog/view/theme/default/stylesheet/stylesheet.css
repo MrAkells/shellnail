@@ -6462,7 +6462,8 @@ aside#column-left{
 	display: inline-block;
 	max-width: 380px;
 	text-align: center;
-	font-size: 15px;
+	font-size: 16px;
+	line-height: 21px;
 }
 .sd-warning-modal__bottom {
 	margin-top: 20px;
