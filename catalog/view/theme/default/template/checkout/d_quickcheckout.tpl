@@ -3,7 +3,7 @@
 
 <div class="sd-warning-modal" id="sd-warning-modal">
   <div class="sd-warning-modal__body">
-    В связи с военными действиями в Украине почта прекратила работу на отправку из нашего региона. Вы можете добавлять товары в список желаний, чтобы их купить, когда мы вернемся к работе. Мы обязательно оповестим вас, когда магазин заработает! Извините за неудобства.
+    <?php echo $sd_warning; ?>
     <div class="sd-warning-modal__bottom">
       <button type="button" id="sd-warning-close" class="btn btn-default sd-warning-modal__btn" >Понятно</button>
     </div>
