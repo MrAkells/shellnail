@@ -70,6 +70,7 @@ class ControllerCheckoutCheckout extends Controller {
 		$data['text_checkout_shipping_method'] = sprintf($this->language->get('text_checkout_shipping_method'), 4);
 
 		$data['sd_warning'] = $this->language->get('sd_warning');
+		$data['sd_warning_btn'] = $this->language->get('sd_warning_btn');
 		
 		if ($this->cart->hasShipping()) {
 			$data['text_checkout_payment_method'] = sprintf($this->language->get('text_checkout_payment_method'), 5);

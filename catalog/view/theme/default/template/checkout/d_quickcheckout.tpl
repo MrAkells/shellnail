@@ -5,7 +5,7 @@
   <div class="sd-warning-modal__body">
     <?php echo $sd_warning; ?>
     <div class="sd-warning-modal__bottom">
-      <button type="button" id="sd-warning-close" class="btn btn-default sd-warning-modal__btn" >Понятно</button>
+      <button type="button" id="sd-warning-close" class="btn btn-default sd-warning-modal__btn" ><?php echo $sd_warning_btn; ?></button>
     </div>
   </div>
 </div>
