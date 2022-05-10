@@ -1,6 +1,7 @@
 <?php echo $header; ?>
 <div class="container" id="container">
 
+<!--
 <div class="sd-warning-modal" id="sd-warning-modal">
   <div class="sd-warning-modal__body">
     <?php echo $sd_warning; ?>
@@ -14,6 +15,7 @@
     document.getElementById("sd-warning-modal").style.display = "none";
   }
 </script>
+-->
  
   <?php if ($error_warning) { ?>
   <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
