@@ -173,7 +173,7 @@ class ModelExtensionShippingNewMail extends Model
     public function update_base()
     {        
         $Areas      = $this->getAreas();
-        $Cities     = $this->getCities();
+        $Cities     = $this->getCities(1000);
        // $Warehouses = $this->getWarehouses();
         $Warehouses = $this->getWarehousesL(1000);
        // $Warehouses = $this->getWarehousesByCityRef($Cities);
@@ -223,11 +223,26 @@ class ModelExtensionShippingNewMail extends Model
      * Call method getCities() - load catalog cities new mail     
      * @return data array objects
      */    
-    private function getCities()
+    private function getCities($limit = 1000)
     {
-        $data = new Address_getCities();        
-        $data->setPage(1);      
-        return Address::getCities($data)->data;
+        // $data = new Address_getCities();        
+        // $data->setPage(1);      
+        // return Address::getCities($data)->data;
+
+        $cities = [];
+        $page = 1;
+        $data = new Address_getCities(); 
+        $data->setPage($page);
+        $data->setLimit($limit);
+        $w = Address::getCities($data)->data;
+
+        while ($w) {
+            $cities = array_merge($cities, $w);
+            $data->setPage(++$page);
+            $w = Address::getCities($data)->data;
+        }
+        return  $cities;
+
     }    
     
     /**

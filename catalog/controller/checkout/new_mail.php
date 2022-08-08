@@ -59,6 +59,7 @@ class ControllerCheckoutNewMail extends Controller {
         $data['text_region']=$this->language->get('text_region');
         $data['text_city']=$this->language->get('text_city');
         $data['text_office']=$this->language->get('text_office');
+        $data['text_choose']=$this->language->get('text_choose');
         
         return $this->load->view('checkout/new_mail', $data);
 	

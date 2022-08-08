@@ -155,7 +155,7 @@ class ModelExtensionShippingNewMail extends Model
                 return "cURL Error #:" . $err;
             } else {
                 $novaposhta_obj= json_decode($response);
-                return ($novaposhta_obj->data[0]->Cost);
+                return (isset($novaposhta_obj->data[0]) ? $novaposhta_obj->data[0]->Cost: 0);
                // return 0;
             }
         }

@@ -1,6 +1,6 @@
 <div id="new_mail_addon">
     
-   <?php if($is_valid_city && $offices){ ?>
+   <?php //if($is_valid_city && $offices){ ?>
         <div class="addres-new-office">
             <label><?php echo $text_office; ?></label>
             <select id='new_mail_office' class='form-control'>
@@ -14,18 +14,18 @@
                     <?php } ?>
             </select>
              <div class="text_fill_field text-danger" style="display: none;">
-            Выберите отделение Новой Почты
+                <?php echo $text_choose; ?>
         </div>
         </div>
-    <?php }else{ ?> 
-         <div class="addres-new-mail" style="margin-bottom: 20px;">
+    <?php //}else{ ?> 
+         <!-- <div class="addres-new-mail" style="margin-bottom: 20px;">
             <label><?php echo $text_office; ?></label>
             <input id='new_mail_office' class='form-control'>
             <div class="text_fill_field text-danger" style="display: none;">
-            Выберите отделение Новой Почты
+                <?php echo $text_choose; ?>
         </div>
-        </div>
-    <?php } ?>
+        </div> -->
+    <?php //} ?>
 </div>
 
 <script type="text/javascript">

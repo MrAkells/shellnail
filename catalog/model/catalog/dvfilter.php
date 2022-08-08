@@ -195,18 +195,18 @@ class ModelCatalogDVFilter extends Model {
     }
 
     public function getManufacturersByCategoryId($category_id) {
-        $manufacturers_data = $this->cache->get('dvfilter.manufacturer.' . (int) $category_id);
+        $manufacturers_data = $this->cache->get('dvfilter.manufacturer.' . $this->config->get('config_language_id') . '.' . (int) $category_id);
 
         if (false !== $manufacturers_data) {
             return $manufacturers_data;
         }
 
         $query = $this->db->query("SELECT results.*, ua.keyword FROM "
-                . "(SELECT m.manufacturer_id AS value_id, m.name, 'm' AS option_id FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) LEFT JOIN " . DB_PREFIX . "product p ON (m.manufacturer_id = p.manufacturer_id) LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) WHERE m2s.store_id = '" . (int) $this->config->get('config_store_id') . "' AND p2c.category_id = '" . (int) $category_id . "' GROUP BY m.manufacturer_id) results, " . DB_PREFIX . "url_alias ua WHERE CONCAT('manufacturer_id=', results.value_id) = ua.`query` ORDER BY results.name");
+                . "(SELECT m.manufacturer_id AS value_id, md.name, 'm' AS option_id FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id AND language_id = '" . (int) $this->config->get('config_language_id') . "') LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) LEFT JOIN " . DB_PREFIX . "product p ON (m.manufacturer_id = p.manufacturer_id) LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) WHERE m2s.store_id = '" . (int) $this->config->get('config_store_id') . "' AND p2c.category_id = '" . (int) $category_id . "' GROUP BY m.manufacturer_id) results, " . DB_PREFIX . "url_alias ua WHERE CONCAT('manufacturer_id=', results.value_id) = ua.`query` ORDER BY results.name");
 
         $manufacturers_data = $query->rows;
 
-        $this->cache->set('dvfilter.manufacturer.' . (int) $category_id, $manufacturers_data);
+        $this->cache->set('dvfilter.manufacturer.' . $this->config->get('config_language_id') . '.' . (int) $category_id, $manufacturers_data);
 
         return $manufacturers_data;
     }
@@ -508,6 +508,22 @@ class ModelCatalogDVFilter extends Model {
             }
         }
         return $dvfilter_counter_data;
+    }
+
+    public function getCategoryByOptions($filter_dvfilter) {
+        $category_id = 0;
+        $params = decodeParamsFromString($filter_dvfilter, $this->config);
+        if($params && count($params) == 1){
+            $values = array_shift($params);
+            if($values && count($values) == 1){
+                $query = $this->db->query("SELECT category_id FROM " . DB_PREFIX . "dvfilter_option_value WHERE value_id = '" . (int) $values[0] . "'");
+
+                if ($query->num_rows) {
+                    $category_id = $query->row['category_id'];
+                }  
+            }
+        }
+        return $category_id;
     }
 
     private function getCategoryCounterSQL($data) {

@@ -115,18 +115,19 @@ class ModelDQuickcheckoutOrder extends Model {
     }
 
     public function updateOrder($order_id, $data) {
+        $this->load->language('checkout/shipping');
         if(VERSION < '2.3.0.0'){
             $this->event->trigger('pre.order.add', $data);
         }
 
         if($data['shipping_code']=='ukrposhta.ukrposhta' && isset($this->session->data['changed_postcode'])){
-            $data['shipping_address_2']='<br/><b>Индекс для Укрпочты: ' . $this->session->data['changed_postcode'].'</b>'; 
+            $data['shipping_address_2']='<br/><b>' . $this->language->get('text_shipping_ukrposhta') . $this->session->data['changed_postcode'].'</b>'; 
         }else if($data['shipping_code']=='couriernp.couriernp' && isset($this->session->data['courier_address'])){
-            $data['shipping_address_2']='<br/><b>Адрес для курьерской доставки: ' . $this->session->data['courier_address'].'</b>'; 
+            $data['shipping_address_2']='<br/><b>' . $this->language->get('text_shipping_couriernp') . $this->session->data['courier_address'].'</b>'; 
         }else if($data['shipping_code']=='new_mail.new_mail' && isset($this->session->data['newmail_office'])){
-             $data['shipping_address_2']='<br/><b>Отделение новой почты: ' . $this->session->data['newmail_office'].'</b>'; 
+             $data['shipping_address_2']='<br/><b>' . $this->language->get('text_shipping_new_mail') . $this->session->data['newmail_office'].'</b>'; 
         }else if($data['shipping_code']=='inter.inter' && isset($this->session->data['inter_comment'])){
-            $data['shipping_address_2']='<br/><b>Детали международной доставки: ' . $this->session->data['inter_comment'].'</b>'; 
+            $data['shipping_address_2']='<br/><b>' . $this->language->get('text_shipping_inter') . $this->session->data['inter_comment'].'</b>'; 
         }
         
         

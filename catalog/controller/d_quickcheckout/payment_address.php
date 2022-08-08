@@ -16,6 +16,7 @@ class ControllerDQuickcheckoutPaymentAddress extends Controller {
 
         $data['text_address_existing'] = $this->language->get('text_address_existing');
         $data['text_address_new'] = $this->language->get('text_address_new');
+        $data['heading_title'] = $this->language->get('heading_title');
 
         $data['col'] = $config['account']['guest']['payment_address']['column'];
         $data['row'] = $config['account']['guest']['payment_address']['row'];

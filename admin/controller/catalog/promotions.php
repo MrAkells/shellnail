@@ -306,6 +306,11 @@ class ControllerCatalogPromotions extends Controller
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
 
+		$this->load->model('localisation/language');
+		$data['languages'] = $this->model_localisation_language->getLanguages();
+
+		$data['lang'] = $this->language->get('lang');
+
 		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];
 		} else {
@@ -361,28 +366,12 @@ class ControllerCatalogPromotions extends Controller
 		$data['ckeditor'] = $this->config->get('config_editor_default');
 
 
-		if (isset($this->request->post['title'])) {
-			$data['title'] = $this->request->post['title'];
+		if (isset($this->request->post['promo_description'])) {
+			$data['promo_description'] = $this->request->post['promo_description'];
 		} elseif (isset($this->request->get['promo_id'])) {
-			$data['title'] = $promo_info['title'];
+			$data['promo_description'] = $this->model_catalog_promotions->getPromoDescription($this->request->get['promo_id']);
 		} else {
-			$data['title'] = '';
-		}
-
-		if (isset($this->request->post['short_title'])) {
-			$data['short_title'] = $this->request->post['short_title'];
-		} elseif (isset($this->request->get['promo_id'])) {
-			$data['short_title'] = $promo_info['short_title'];
-		} else {
-			$data['short_title'] = '';
-		}
-
-		if (isset($this->request->post['description'])) {
-			$data['description'] = html_entity_decode($this->request->post['description']);
-		} elseif (isset($promo_info['description'])) {
-			$data['description'] = html_entity_decode($promo_info['description']);
-		} else {
-			$data['description'] = '';
+			$data['promo_description'] = array();
 		}
 
 		if (isset($this->request->post['status'])) {

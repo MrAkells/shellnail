@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']    = 'Page tags, texts, noindex';
+$_['heading_title']    = 'Page tags, texts, noindex, canonical';
 
 // Text
 $_['text_add']         = 'Добавление url';
@@ -17,6 +17,7 @@ $_['entry_status']     = 'Статус';
 $_['entry_url']      = 'URL';
 $_['entry_name']     = 'URL';
 $_['entry_noindex']             = 'Is noIndex';
+$_['entry_canonical']           = 'Is canonical';
 $_['entry_description']         = 'Описание';
 $_['entry_meta_title']          = 'Мета-тег Title';
 $_['entry_meta_keyword']        = 'Мета-тег Keywords';

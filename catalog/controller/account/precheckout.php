@@ -287,7 +287,10 @@ class ControllerAccountPrecheckout extends Controller {
         
         public function hint() {
             $this->load->model('extension/shipping/new_mail');
-        
+			$this->load->language('account/precheckout');
+
+			$lang = ($this->config->get('config_language_id') == 1 ? '_ru' : '_ua');
+
             $hint=$this->request->get['hint'];
         
             $areas=$this->model_extension_shipping_new_mail->getCityByHint($hint);
@@ -297,8 +300,8 @@ class ControllerAccountPrecheckout extends Controller {
             if($hint){
                 foreach($areas as $area){
                     $cities[]=array(
-                        'name'=> $area['name_ru'],
-                        'ref'=>  $area['city_ref']
+                        'name'=> $area['name'.$lang],
+                        'ref'=>  $area['city_ref'],
                     );
                 }
             }
@@ -312,17 +315,17 @@ class ControllerAccountPrecheckout extends Controller {
                     'db5c88d0-391c-11dd-90d9-001a92567626',
                     'db5c88f5-391c-11dd-90d9-001a92567626',
                 );
-                
+                $lang = ($this->config->get('config_language_id') == 1 ? '_ru' : '');
                 $default_areas=$this->model_extension_shipping_new_mail->getDefaultCities($def_cities);
                 foreach($default_areas as $area){
                     $cities[]=array(
-                        'name'=> $area['description_ru'],
+                        'name'=> $area['description' . $lang],
                         'ref'=>  $area['ref']
                     );
                 }
                 if($cities){
                      $cities[]=[
-                    'name'=> 'Выбрать другой город',
+                    'name'=> $this->language->get('text_another_city'),
                     'ref'=>  'another_city'
                 ];
                 }

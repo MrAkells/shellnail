@@ -60,6 +60,20 @@
               </div>
             </div>
           </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-is_canonical"><?php echo $entry_canonical; ?></label>
+            <div class="col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <?php if ($is_canonical) { ?>
+                  <input type="checkbox" name="is_canonical" value="1" checked="checked" id="input-is_canonical" />
+                  <?php } else { ?>
+                  <input type="checkbox" name="is_canonical" value="1" id="input-is_canonical" />
+                  <?php } ?>
+                  &nbsp; </label>
+              </div>
+            </div>
+          </div>
           <ul class="nav nav-tabs" id="language">
             <?php foreach ($languages as $language) { ?>
             <li><a href="#language<?php echo $language['language_id']; ?>" data-toggle="tab"><img src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a></li>

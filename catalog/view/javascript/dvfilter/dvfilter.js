@@ -77,9 +77,9 @@ Math.easeIn = function (val, min, max, strength) {
 			    $('#dvfilter').html(filter.html());
 			    if(dvfilter.parent_id!='color_hook'){
 				var filter_elem=$("#"+dvfilter.parent_id);
-				filter_elem.find('a').find('span').after("<a href='"+dvfilter.transition+"'><span class='custom_popover'> Показать "+ result.count +"</span></a>");
+				filter_elem.find('a').find('span').after("<a href='"+dvfilter.transition+"'><span class='custom_popover'> "+$this.options.text.show_res + ' '+result.count +"</span></a>");
 			    }else{
-				$('#color_hook').after("<a href='"+dvfilter.transition+"'><span class='custom_popover'> Показать "+ result.count +"</span></a>");
+				$('#color_hook').after("<a href='"+dvfilter.transition+"'><span class='custom_popover'> "+$this.options.text.show_res +' '+result.count +"</span></a>");
 			    }
 			    
 //			    dvfilter.collapsed.forEach(function(id) {

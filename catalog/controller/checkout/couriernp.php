@@ -19,7 +19,7 @@ class ControllerCheckoutCouriernp extends Controller {
         }
         
         $data['text_address']=$this->language->get('text_address');
-       
+        $data['text_input_address']=$this->language->get('text_input_address');
         
         return $this->load->view('checkout/couriernp', $data);
 	

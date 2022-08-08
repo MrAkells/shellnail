@@ -25,22 +25,41 @@
       </div>
       <div class="panel-body">
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-category" class="form-horizontal">
-         
-                <div class="form-group">
-                <label class="col-sm-3 control-label" for="input-title"><?php echo $entry_title; ?></label>
-                <div class="col-sm-8">
-                    <input name="title" value="<?php echo $title; ?>" class="form-control">
+            <ul class="nav nav-tabs" id="language">
+                <?php foreach ($languages as $language) { ?>
+                <li><a href="#language<?php echo $language['language_id']; ?>" data-toggle="tab"><img
+                            src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png"
+                            title="<?php echo $language['name']; ?>" />
+                        <?php echo $language['name']; ?>
+                    </a></li>
+                <?php } ?>
+            </ul>
+            <div class="tab-content">
+                <?php foreach ($languages as $language) { ?>
+                <div class="tab-pane" id="language<?php echo $language['language_id']; ?>">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="input-title">
+                            <?php echo $entry_title; ?>
+                        </label>
+                        <div class="col-sm-8">
+                            <input name="extralink_description[<?php echo $language['language_id']; ?>][title]" value="<?php echo isset($extralink_description[$language['language_id']]) && isset($extralink_description[$language['language_id']]['title']) ? $extralink_description[$language['language_id']]['title'] : ''; ?>" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="input-column_link">
+                            <?php echo $column_link; ?>
+                        </label>
+                        <div class="col-sm-8">
+                            <input name="extralink_description[<?php echo $language['language_id']; ?>][link]" value="<?php echo isset($extralink_description[$language['language_id']]) && isset($extralink_description[$language['language_id']]['link']) ? $extralink_description[$language['language_id']]['link'] : ''; ?>" class="form-control">
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <?php } ?>         
+            </div>    
             
-                <div class="form-group">
-                <label class="col-sm-3 control-label" for="input-link"><?php echo $column_link; ?></label>
-                <div class="col-sm-8">
-                    <input name="link" value="<?php echo $link; ?>" class="form-control">
-                </div>
-              </div>
-            
-            
+            <hr>
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="input-parent"><?php echo $entry_parent; ?></label>
                 <div class="col-sm-8">
@@ -74,7 +93,7 @@
                 </div>
               </div>
             
-                    <div class="form-group">
+              <div class="form-group">
                 <label class="col-sm-3 control-label" for="input-status"><?php echo $entry_status; ?></label>
                 <div class="col-sm-8">
                   <select name="status" id="input-status" class="form-control">
@@ -95,4 +114,7 @@
   </div>
 
   </div>
+  <script type="text/javascript"><!--
+    $('#language a:first').tab('show');
+  //--></script>
 <?php echo $footer; ?>

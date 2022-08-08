@@ -7,7 +7,7 @@
 				<span class="text"><%= model.config.title %></span>
 			</h4>
 			<div class="continue-shopping">
-				<a href="#">Продолжить покупки</a>
+				<a href="#"><?php echo $button_shopping; ?></a>
 			</div>
 			<div style="clear: left"></div>
 		</div>
@@ -50,7 +50,7 @@
 						<td class="qc-name <%= parseInt(model.config.columns.name) ? '' : 'hidden' %>">
 							<div class="qc-name-info">
 							<a href="<%= product.href %>" <%=  model.config.columns.image ? '' : 'rel="popup" data-help=\'<img src="' + product.image + '"/>\'' %>> 
-								<%= product.name %> <%= product.stock ? '' : '<span class="out-of-stock">***</span>' %>
+								<%= product.stock ? '' : '<span class="out-of-stock sd-red">***</span>' %> <%= product.name %>
 							</a>
 							<div class="qc-model-info">
 							<span class="qc-model hidden-xs <%= parseInt(model.config.columns.model) ? '' : 'hidden' %>"><?php echo $column_model; ?>: </span>
@@ -73,11 +73,14 @@
                                                                         
                                                                         
 								</span>
-
+								
 									
 								
 							</div>
 						</div>
+							<% if(!product.stock){ %>
+								<div class="qc-model sd-red"><%= product.stock_quantity %></span>
+							<% } %>	
 							<% if(parseInt(model.config.columns.price) && model.show_price){ %>
 								<div class="qc-name-price visible-xs-block "><span class="text"><%= product.price %></span></div>
 							<% } %>
@@ -235,7 +238,9 @@
 			</div>
 			<% } %>
 			<div class="preloader row"><img class="icon" src="image/<%= config.general.loader %>" /></div>
-			
+			<% if(model.text_min_total){ %>
+			<div class="text_min_total"><%= model.text_min_total %></div>
+			<% } %>
 			<div class='d_cart_confirmation'>
             	<button  class="btn-checkout" onclick="preConfirm()"><?php echo $button_confirm; ?></span></button> 
         	</div>

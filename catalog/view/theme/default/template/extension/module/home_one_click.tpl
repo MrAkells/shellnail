@@ -9,7 +9,7 @@
 			<div class="modal-header">
                             <button class="close close-icon" type="button" data-dismiss="modal"><span></span></button>
 
-                            <h2 class="modal-title">Заказ</h2>
+                            <div class="h2title modal-title">Заказ</div>
 			</div>
 			<div class="modal-body">
 			<?php if ($buyoneclick_img_status) { ?>
@@ -18,7 +18,7 @@
                                     <img src="" class="img-responsive" />
 				</div>
 				<div class="price text-center">
-                                    <h3></h3>
+                                    
 				</div>
                             </div>
                             <div class="col-xs-12">
@@ -99,7 +99,7 @@
             <div class="modal-content">
                 <div id="let_me_know">
                         <button class="close close-icon" type="button" data-dismiss="modal"><span></span></button>
-                        <h3 class="enter-information">Введите данные о заказе</h3>
+                        <div class="enter-information">Введите данные о заказе</div>
                         <div class="form-group">
                             <label class="control-label" for="let_me_know_name">Ваше ФИО</label>
                             <input id="let_me_know_name" class="form-control" type="text" placeholder="">

@@ -23,7 +23,8 @@ class ControllerExtensionShippingCourierNP extends Controller {
 		$data['text_enabled'] = $this->language->get('text_enabled');
 		$data['text_disabled'] = $this->language->get('text_disabled');
 		$data['min_free_total'] = $this->language->get('min_free_total');
-                
+		$data['add_cost_total'] = $this->language->get('add_cost_total');
+
 		$data['text_none'] = $this->language->get('text_none');
 
 		$data['entry_status'] = $this->language->get('entry_status');
@@ -68,7 +69,7 @@ class ControllerExtensionShippingCourierNP extends Controller {
 			$data['couriernp_status'] = $this->config->get('couriernp_status');
 		}
 
-                if (isset($this->request->post['couriernp_freetotal'])) {
+        if (isset($this->request->post['couriernp_freetotal'])) {
 			$data['couriernp_freetotal'] = $this->request->post['couriernp_freetotal'];
 		} else {
 			$data['couriernp_freetotal'] = $this->config->get('couriernp_freetotal');
@@ -78,6 +79,12 @@ class ControllerExtensionShippingCourierNP extends Controller {
 			$data['couriernp_sort_order'] = $this->request->post['couriernp_sort_order'];
 		} else {
 			$data['couriernp_sort_order'] = $this->config->get('couriernp_sort_order');
+		}
+
+		if (isset($this->request->post['couriernp_add_cost'])) {
+			$data['couriernp_add_cost'] = $this->request->post['couriernp_add_cost'];
+		} else {
+			$data['couriernp_add_cost'] = $this->config->get('couriernp_add_cost');
 		}
 
 		$data['header'] = $this->load->controller('common/header');

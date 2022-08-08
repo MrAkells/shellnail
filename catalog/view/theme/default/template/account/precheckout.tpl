@@ -7,10 +7,11 @@
   <div class="row precheckout">
     <div class="col-lg-5 col-md-6">
       <h1><?php echo $heading_title; ?></h1>
-      <div class="contact-details"><?php echo $text_contact_details; ?></div> 
-        <div class="precheckout-ulogin ">
-            <?php echo $content_top; ?>  
-        </div>
+
+      <div class="social-autorization-prechec">
+        <div class="social-autorization__title"><?php echo $text_contact_details; ?></div>
+        <?php include DIR_APPLICATION . '/view/theme/default/template/component/social_autorization.tpl'; ?>
+      </div>
       
        <ul class="nav nav-tabs new-nav-tabs precheckout-tabs">
           <li class="active"><a data-toggle="tab" href="#tab1"><span><?php echo $text_new; ?></span></a></li>

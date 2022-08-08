@@ -151,6 +151,8 @@ class ControllerAccountWishList extends Controller {
 		$product_info = $this->model_catalog_product->getProduct($product_id);
 
 		if ($product_info) {
+			$json['success_new'] = sprintf($this->language->get('text_success_new'),  $this->url->link('account/wishlist'));
+
 			if ($this->customer->isLogged()) {
 				// Edit customers cart
 				$this->load->model('account/wishlist');
@@ -158,7 +160,7 @@ class ControllerAccountWishList extends Controller {
 				$this->model_account_wishlist->addWishlist($this->request->post['product_id']);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . (int)$this->request->post['product_id']), $product_info['name'], $this->url->link('account/wishlist'));
-
+				
 				$json['total'] = $this->model_account_wishlist->getTotalWishlist();
                                 $json['text'] =$this->language->get('text_wishlist');
 			} else {

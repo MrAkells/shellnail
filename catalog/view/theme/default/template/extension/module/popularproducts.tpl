@@ -1,6 +1,6 @@
 <div class="row new-product">
   <div class="col-xs-12 envelope">
-  <h2 class="title-feature"><?php echo $heading_title; ?></h3>
+  <h2 class="title-feature"><?php echo $title; ?></h3>
     <div id="products_<?php echo $tpl; ?>" class="owl-carousel">
   <?php foreach ($products as $product) { ?>
   <div class="item product-layout">
@@ -8,19 +8,19 @@
       <ul class="list-inline bts-wish-compare">
         <?php if($product['video_link']){ ?>
           <li class='magni_youtube'>
-              <img onclick="create_frame_popup($(this))" data-video_link="<?php echo $product['video_link']; ?>" style='width: 24px; cursor:pointer;' src="image/video-tovara-youtube.png" alt="youtube">
+              <img onclick="create_frame_popup($(this))" data-video_link="<?php echo $product['video_link']; ?>" style='width: 24px; cursor:pointer;' src="image/video-tovara-youtube.png" alt="youtube" width="24" height="17" >
           </li>
         <?php } ?>
         <li>
-         <button class="btn-transparent" data-product_id="<?php echo $product['product_id']; ?>" onclick="compare.add($(this))"><img src="catalog/view/theme/default/image/icon-small-compare.png" alt="Compare"></button>
+         <button class="btn-transparent" data-product_id="<?php echo $product['product_id']; ?>" onclick="compare.add($(this))"><img src="catalog/view/theme/default/image/icon-small-compare.png" alt="Compare" width="26" height="19" ></button>
         </li>
         <li>
-           <button class="btn-transparent" data-product_id="<?php echo $product['product_id']; ?>" onclick="wishlist.add($(this))"><img src="catalog/view/theme/default/image/icon-small-heart.png" alt="Wishlist"></button>
+           <button class="btn-transparent" data-product_id="<?php echo $product['product_id']; ?>" onclick="wishlist.add($(this))"><img src="catalog/view/theme/default/image/icon-small-heart.png" alt="Wishlist" width="19" height="17" ></button>
         </li>
       </ul>
         
     <div class="product-thumb transition">
-      <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a></div>
+      <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" width="<?php echo $product['img_width']; ?>"  height="<?php echo $product['img_height']; ?>" class="img-responsive" /></a></div>
       <div class="caption">
         <div class="name-product"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></div>
        <?php if($product['sku']){ ?>
@@ -80,8 +80,9 @@
                             </div>
                             <?php }else{ ?>
                                  <div class="btn-two">
-        <button type="button" class="btn-add-cart" data-fbq_sku="<?php echo $product['sku']; ?>" data-fbq_name="<?php echo $product['name']; ?>" data-fbq_price="<?php echo $product['intprice']; ?>" onclick="prepare_fbq($(this)); cart.add('<?php echo $product['product_id']; ?>');"><img src="catalog/view/theme/default/image/icon-small-cart.png" alt="New"> <span class=""><?php echo $button_cart; ?></span></button>
-        <button type="button" class="buy-one-click order" data-toggle="modal" data-target="#order" data-fbq_sku="<?php echo $product['sku']; ?>" data-fbq_name="<?php echo $product['name']; ?>" data-fbq_price="<?php echo $product['intprice']; ?>" data-product_id="<?php echo $product['product_id']; ?>" data-product="<?php echo $product['name']; ?>" data-product_url="<?php echo $product['href']; ?>" data-product_img="<?php echo $product['thumb']; ?>" data-product_price="<?php echo $product['price']; ?>" onclick="prepare_fbq($(this));"><img src="catalog/view/theme/default/image/icon-small-phone.png" alt="New"> <span class="title-one-click"><?php echo $text_buy_one_click; ?></span></button>
+        <button type="button" class="btn-add-cart" data-fbq_sku="<?php echo $product['sku']; ?>" data-fbq_name="<?php echo $product['name']; ?>" data-fbq_price="<?php echo $product['intprice']; ?>" onclick="prepare_fbq($(this)); cart.add('<?php echo $product['product_id']; ?>');">
+        <img src="catalog/view/theme/default/image/icon-small-cart.png" alt="<?php echo $button_cart; ?>" width="16" height="22"> <span class=""><?php echo $button_cart; ?></span></button>
+        <button type="button" class="buy-one-click order" data-toggle="modal" data-target="#order" data-fbq_sku="<?php echo $product['sku']; ?>" data-fbq_name="<?php echo $product['name']; ?>" data-fbq_price="<?php echo $product['intprice']; ?>" data-product_id="<?php echo $product['product_id']; ?>" data-product="<?php echo $product['name']; ?>" data-product_url="<?php echo $product['href']; ?>" data-product_img="<?php echo $product['thumb']; ?>" data-product_price="<?php echo $product['price']; ?>" onclick="prepare_fbq($(this));"><img src="catalog/view/theme/default/image/icon-small-phone.png" alt="<?php echo $text_buy_one_click; ?>" width="16" height="23"> <span class="title-one-click"><?php echo $text_buy_one_click; ?></span></button>
        
       </div>
                            

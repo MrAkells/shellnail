@@ -25,18 +25,31 @@
       </div>
       <div class="panel-body">
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-colors" class="form-horizontal">
-          <div class="form-group required">
-            <label class="col-sm-3 control-label"><?php echo $entry_name; ?></label>
-             <div class="col-sm-6">
-              
-                <input type="text" name="name" value="<?php echo $name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
-             
-              <?php if ($error_name) { ?>
-              <div class="text-danger"><?php echo $error_name; ?></div>
-              <?php } ?>
+          <ul class="nav nav-tabs" id="language">
+            <?php foreach ($languages as $language) { ?>
+            <li><a href="#language<?php echo $language['language_id']; ?>" data-toggle="tab"><img
+                        src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png"
+                        title="<?php echo $language['name']; ?>" />
+                    <?php echo $language['name']; ?>
+                </a></li>
+            <?php } ?>
+        </ul>
+        <div class="tab-content">
+            <?php foreach ($languages as $language) { ?>
+            <div class="tab-pane" id="language<?php echo $language['language_id']; ?>">
+
+                <div class="form-group required">
+                    <label class="col-sm-3 control-label" for="input-name">
+                        <?php echo $entry_name; ?>
+                    </label>
+                    <div class="col-sm-8">
+                        <input name="color_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($color_description[$language['language_id']]) && isset($color_description[$language['language_id']]['name']) ? $color_description[$language['language_id']]['name'] : ''; ?>" class="form-control">
+                    </div>
+                </div>
             </div>
-            
+            <?php } ?>     
           </div>
+
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-code"><span data-toggle="tooltip" title="<?php echo $help_code; ?>"><?php echo $entry_code; ?></span></label>
             <div class="col-sm-6">
@@ -53,7 +66,8 @@
       </div>
     </div>
   </div>
-<script type="text/javascript"><!--
-
-//--></script></div> 
+  <script type="text/javascript"><!--
+    $('#language a:first').tab('show');
+  //--></script>
+</div> 
 <?php echo $footer; ?>

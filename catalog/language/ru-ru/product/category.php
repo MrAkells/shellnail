@@ -15,6 +15,7 @@ $_['text_points']       = 'Бонусные баллы:';
 $_['text_price']        = 'Цена:';
 $_['text_tax']          = 'Без налога:';
 $_['text_compare']      = 'Сравнение товаров (%s)';
+$_['text_color']        = 'Цвет';
 $_['text_sort']         = 'Сортировать:';
 $_['text_default']      = 'По умолчанию';
 $_['text_name_asc']     = 'По имени (A - Я)';
@@ -27,9 +28,6 @@ $_['text_model_asc']    = 'По модели (A - Я)';
 $_['text_model_desc']   = 'По модели (Я - A)';
 $_['text_limit']        = 'Показывать:';
 
-
-
-
 $_['text_po_poryadku_desc']        = 'С конца списка';
 $_['text_po_poryadku_asc']        = 'По порядку ';
 
@@ -39,14 +37,26 @@ $_['text_most_viewed_asc']        = 'Популярные (по возраста
 //$_['text_price_desc']        = 'По цене ';
 //$_['text_price_asc']        = 'По цене ';
 
-$_['text_newest_desc']        = 'Новиннки';
+$_['text_newest_desc']       = 'Новинки';
 $_['text_newest_asc']        = 'По дате (по возрастанию)';
+$_['text_page']              = ' - стр. ';
+$_['text_meta_title']        = ' купить, цена в Украине';
+$_['text_meta_description1']        = ' купить в Украине';
+$_['text_meta_description2']        = ' Подарок в каждом заказе ⚡ Выгодная цена ❤️ Товары для ногтей и красоты в ShellNail';
 
-$_['load_more_products']        = 'Загрузить следующие %s товаров';
+$_['load_more_products']     = 'Загрузить следующие %s товаров';
 
 $_['text_promo_product'] = 'Акционных товаров:';
-$_['text_look_over'] = 'Сейчас просматриват:';
+$_['text_look_over'] = 'Сейчас просматривают:';
 $_['text_day'] = 'дней';
 $_['text_hour'] = 'час';
 $_['text_minute'] = 'мин';
 $_['text_second'] = 'сек';
+
+$_['text_people'] = 'человека';
+$_['text_btn_fb_share'] = 'Поделиться';
+$_['text_action_do'] = 'Акция до';
+$_['text_cheaper'] = 'Дешевле';
+$_['text_more_expensive'] = 'Дороже';
+$_['text_not_chosen'] = 'Не выбрано';
+//$_['text_'] = '';

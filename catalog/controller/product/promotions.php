@@ -9,7 +9,7 @@ class ControllerProductPromotions extends Controller {
                 $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.carousel.css');
                 $this->document->addScript('catalog/view/javascript/jquery/owl-carousel/owl.carousel.min.js');
 
-                $cache_data=$this->cache->get('promotions');
+                $cache_data=$this->cache->get('promotions_'. $this->config->get('config_language_id'));
            if(!$cache_data){
                 
                 $data['button_cart'] = $this->language->get('button_cart');
@@ -97,7 +97,7 @@ class ControllerProductPromotions extends Controller {
                         'products'=>  array_slice($products, 0,10)
                     );
                 }
-                $this->cache->set('promotions', $data);
+                $this->cache->set('promotions_'. $this->config->get('config_language_id'), $data);
               
            }else{
                $data=$cache_data;

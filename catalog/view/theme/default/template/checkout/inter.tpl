@@ -3,7 +3,7 @@
         <label><?php echo $text_international; ?></label>
         <textarea id='inter_comment' class='form-control' oninput="$(this).change();"><?php echo $comment_value; ?></textarea>
         <div class="text_fill_field text-danger" style="display: none;">
-            Введите информацию для международной доставки
+            <?php echo $text_input_international; ?>
         </div>
     </div> 
 </div>

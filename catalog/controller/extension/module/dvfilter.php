@@ -263,6 +263,8 @@ class ControllerExtensionModuleDVFilter extends Controller {
         $data['text_price'] = $this->language->get('text_price');
         $data['text_any'] = $this->language->get('text_any');
         $data['text_cancel_all'] = $this->language->get('text_cancel_all');
+        $data['text_color'] = $this->language->get('text_color');
+        $data['text_show_res'] = $this->language->get('text_show_res');
 
         $data['symbol_left'] = $this->currency->getSymbolLeft($this->session->data['currency']);
         $data['symbol_right'] = $this->currency->getSymbolRight($this->session->data['currency']);
@@ -313,7 +315,7 @@ class ControllerExtensionModuleDVFilter extends Controller {
         
   
   
-        $query_colors = $this->db->query("SELECT * FROM " . DB_PREFIX . "colors");
+        $query_colors = $this->db->query("SELECT c.color_id,c.code,cd.name FROM " . DB_PREFIX . "colors c LEFT JOIN ". DB_PREFIX ."colors_description cd ON (c.color_id=cd.color_id AND cd.language_id='" . (int)$this->config->get('config_language_id') . "')");
         $data['filter_colors_array']=array();
             foreach($query_colors->rows as $row){
                 $data['filter_colors_array'][$row['name']]=$row['code'];
@@ -408,7 +410,7 @@ class ControllerExtensionModuleDVFilter extends Controller {
                     'values' => array(
                         array(
                             'value_id' => 'in',
-                            'name' => 'В наличии'
+                            'name' => $this->language->get('text_in_stock')
                         )
                     )
                 );

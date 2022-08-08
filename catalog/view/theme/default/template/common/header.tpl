@@ -6,10 +6,10 @@
 <html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" <?php 
         switch ($route) {
             case 'newsblog/article':
-                echo "itemscope itemtype='http://schema.org/Article'";
+                echo "itemscope itemtype='https://schema.org/Article'";
                 break;
             // case 'product/product':
-            //     echo "itemscope itemtype='http://schema.org/Product'";
+            //     echo "itemscope itemtype='https://schema.org/Product'";
             //     break;
         }?> >
 <!--<![endif]-->
@@ -37,7 +37,9 @@
 <script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
 <link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
 <link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 <link href="catalog/view/theme/default/stylesheet/stylesheet.css?v<?php echo $version_stylesheet_css; ?>" rel="stylesheet">
 <?php foreach ($styles as $style) { ?>
 <link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
@@ -53,8 +55,8 @@
 <?php if (isset($ishome)) { ?>
     <script type="application/ld+json">
     { 
-    "@context": "http://schema.org",
-    "@type": "LocalBusiness",
+    "@context": "https://schema.org",
+    "@type": "Organization",
     "url": "https://shellnail.com.ua/",
     "priceRange": "$",
     "name": "Товары для ногтей и красоты. Интернет-магазин для маникюра ShellNail Украина",
@@ -109,7 +111,7 @@
 
 <script type="application/ld+json">
     {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "WebSite",
     "url": "https://shellnail.com.ua/",
     "potentialAction": {
@@ -133,7 +135,7 @@
   gtag('js', new Date());
 
   gtag('config', 'UA-59209923-1');
-  gtag('config', 'AW-CONVERSION_ID');
+  gtag('config', 'AW-969257410');
 </script>
 <!-- End of Global site tag (gtag.js) - Google Analytics -->
 
@@ -145,6 +147,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-W244K4');</script>
 <!-- End Google Tag Manager -->
 
+<!-- TikTok Pixel Code -->
+<script>
+!function (w, d, t) {
+  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+
+  ttq.load('C80H2IM0MJON0LQMV410');
+  ttq.page();
+}(window, document, 'ttq');
+</script>
+<!-- End of TikTok Pixel Code -->
 
 <!-- Facebook Pixel Code -->
         <script>
@@ -174,21 +186,40 @@ src="https://www.facebook.com/tr?id=1322266524515292&ev=PageView
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W244K4"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
+
+
+<?php if ($langcode == 'uk-ua') { ?>
+    <!-- facebook api element -->
+    <div id="fb-root"></div>
+     <script>
+     (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/uk_UA/sdk.js#xfbml=1&version=v2.5&appId=179241882791748&autoLogAppEvents=1';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+     <!-- end facebook api element -->
+<?php } ?>
+<?php if ($langcode == 'ru-ru') { ?>
+     <!-- facebook api element -->
+     <div id="fb-root"></div>
+     <script>
+     (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v2.5&appId=179241882791748&autoLogAppEvents=1';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+     <!-- end facebook api element -->
+<?php } ?>
+
+
     
- <!-- facebook api element -->
- <div id="fb-root"></div>
- <script>
- (function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v2.5&appId=179241882791748&autoLogAppEvents=1';
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-</script>
- <!-- end facebook api element -->
-    
-    <!-- Верхние ссылки-->  
+<!-- Верхние ссылки-->  
 <nav id="top" class="hidden-xs">
     <div class="container">
         <div id="top-links" class="nav row">
@@ -202,35 +233,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li><a href="<?php echo $return_product['href']; ?>"><span><?php echo $return_product['text']; ?></span></a></li> 
                     <li><a href="<?php echo $user_agreement['href']; ?>"><span ><?php echo $user_agreement['text']; ?></span></a></li>
                     <li><a href="<?php echo $contact; ?>"><span><?php echo $text_contact; ?></span></a></li>   
-                 
-                         
-            </ul>
+                </ul>
             </div>
             <div class="col-lg-3 col-md-1 col-sm-1 text-right">
+                <?php if ( $is_admin == 1) { ?>
+                    <div class="top-d-flex">
+                <?php } else { ?>
+                    <div class="top-d-flex top-d-flex--right">
+                <?php } ?>
+
+                <div class="top-lang"><?php echo $language; ?></div>
+
+
                 <!-- Личный кабинет-->
-                  <?php if ($logged) { ?>
-                <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" ><img src="catalog/view/theme/default/image/icon-avatar.png" alt="Avatar" class="img-avatar"> <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_account; ?></span></a>
-                        <?php } else { ?>
-                       
-                         <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" data-toggle="dropdown"><img src="catalog/view/theme/default/image/icon-avatar.png" alt="Avatar" class="img-avatar"> <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_account; ?></span></a>
-                         <ul class="dropdown-menu dropdown-menu-right">
+                <?php if ($logged) { ?>
+                    <li class="dropdown">
+                        <a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" >
+                            <img src="catalog/view/theme/default/image/icon-avatar.png" alt="Avatar" class="img-avatar"> 
+                            <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_account; ?></span>
+                        </a>
+                    </li>
+                <?php } else { ?>
+                    <li class="dropdown">  
+                        <a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="catalog/view/theme/default/image/icon-avatar.png" alt="Avatar" class="img-avatar">    
+                            <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_account; ?></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
                             <li><a href="<?php echo $register; ?>"><?php echo $text_register; ?></a></li>
                             <li><span type="button" onclick = "$('#login_modal').modal('show')" class="authorization"><span><?php echo $text_login; ?></span></span></li>
-             
-                         </ul>
+                        </ul>
+                    </li>
                     <?php } ?>
-                   
-                </li>
                 <!-- конец личного кабинета -->
+                
+                </div>
+
             </div>
-            
         </div>
     </div>
 </nav>
-    <!-- конец верхних ссылок-->
-    
-    
-    
+<!-- конец верхних ссылок-->
+
 <header>
   <div class="container">
     <div class="row">
@@ -278,12 +322,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div> 
         <div id="shop_feature" class="header_element hidden-md hidden-sm hidden-xs">
             <?php if ($home == $og_url) { ?>
-            <h1 id='h1_shop_feature' itemprop="name"><?php echo $shop_feature; ?></h1>
+                <h1 id='h1_shop_feature' itemprop="name"><?php echo $shop_feature; ?></h1>
             <?php }else{ ?>
-            <p><?php echo $shop_feature; ?></p>
+                <p class="header_shop_feature"><?php echo $shop_feature; ?></p>
             <?php } ?> 
         </div>
     </div>
+
+        <div class="top-lang-mobile header_element visible-xs-inline-block"><?php echo $language; ?></div>
          
         <div id="phone_numbers" class="header_element">
             <div class="hidden-xs">
@@ -354,9 +400,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>  
                     <p class="bnt-order-bell"> <?php echo $phone_call_back['button']; ?> </p>
                     <div style="clear: both"></div>
+
                     <div class="shedule-block">
                         <div class="schedule-work"> <?php echo $text_schedule; ?> </div>
                         <div class="schedule-work"> <?php echo $schedule; ?> </div>
+                        <div class="schedule-work"> Сб. 10.00-16.00</div>
                     </div>
                 </div> 
             </div>
@@ -364,9 +412,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div id="schedule" class="header_element hidden-xs">
             <p class="schedule-work"> <?php echo $text_schedule; ?> </p>
             <div class="schedule-work"> <?php echo $schedule; ?> </div>
-             <div class="block-skype" ><span class="skype">   </span><?php echo $skype; ?></div>
+            <div class="schedule-work"> Сб. 10.00-16.00</div>
+            <!-- <div class="block-skype" ><span class="skype">   </span><?php echo $skype; ?></div> -->
         </div>
-        
        
             <div id="call_me_back" class="header_element hidden-xs">
             <p class="bnt-order-bell"> <?php echo $phone_call_back['button']; ?> </p>
@@ -399,7 +447,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         
        
-      <div id="cart_element" class="header_element"><?php echo $cart; ?></div>
+        <div id="cart_element" class="header_element"><?php echo $cart; ?></div>
 
         
     </div>
@@ -439,5 +487,3 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         echo $login_form;
      } ?>
    <?php echo $phone_call_back['modal']; ?>
-   
-  

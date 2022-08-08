@@ -143,38 +143,51 @@ class ModelExtensionModuleDelovod extends Model
 	{
 
 		// auto sms code
-		$this->sms_log =  new Log('sms.log');
-		$sms_config = new Config();
-		$sms_config->load('sms');
-		$this->sms_config = $sms_config;
-
-		$query_sms = $this->db->query("SELECT sms.product_id, sms.name as user_name, sms.phone as user_phone, pd.name as product_name, isbn FROM " . DB_PREFIX . "product p JOIN sms ON (p.product_id=sms.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON(p.product_id=pd.product_id) WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
 		$waiters = [];
-		foreach ($query_sms->rows as $row) {
-			if (isset($waiters[$row['isbn']])) {
-				$waiters[$row['isbn']][] = $row;
-			} else {
-				$waiters[$row['isbn']] = array($row);
+		if($this->url->link('common/home') === 'https://shellnail.com.ua/'){
+			$this->sms_log =  new Log('sms.log');
+			$sms_config = new Config();
+			$sms_config->load('sms');
+			$this->sms_config = $sms_config;
+	
+			$query_sms = $this->db->query("SELECT sms.product_id, sms.name as user_name, sms.phone as user_phone, pd.name as product_name, isbn FROM " . DB_PREFIX . "product p JOIN sms ON (p.product_id=sms.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON(p.product_id=pd.product_id) WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
+	
+			foreach ($query_sms->rows as $row) {
+				if (isset($waiters[$row['isbn']])) {
+					$waiters[$row['isbn']][] = $row;
+				} else {
+					$waiters[$row['isbn']] = array($row);
+				}
 			}
 		}
-
 		// end of auto sms
 
-		$i = 0;
+		// if return need sum qty (2 rows)
+		$goods = [];
 		foreach ($data as $good) {
-			++$i;
-
-			// auto sms code
-			if (isset($waiters[$good->id]) && (int) $good->qty > 0) {
-				$this->notify($waiters[$good->id]);
+			if(isset($goods[$good->id] )) {
+				$goods[$good->id] += $good->qty;
+			} else {
+				$goods[$good->id] = $good->qty;
 			}
-			// end of auto sms            
-
-
-			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '" . (int) $good->qty . "', date_modified = NOW() WHERE `isbn` = '" . $good->id . "'");
 		}
-		if ($i) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0',  date_modified = NOW() WHERE `isbn` <> '' AND `mpn` = '' AND `date_modified` < (NOW() - INTERVAL 50 MINUTE)");
+
+		if($goods) {
+			$i = 0;
+			foreach ($goods as $key => $qty) {
+				++$i;
+	
+				// auto sms code
+				if (isset($waiters[$key]) && (int) $qty > 0) {
+					$this->notify($waiters[$key]);
+				}
+				// end of auto sms            
+
+				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '" . (int) $qty . "', date_modified = NOW() WHERE `isbn` = '" . $key . "'");
+			}
+			if ($i) {
+				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0',  date_modified = NOW() WHERE `isbn` <> '' AND `mpn` = '' AND `quantity` > 0 AND `date_modified` < (NOW() - INTERVAL 50 MINUTE)");
+			}
 		}
 	}
 

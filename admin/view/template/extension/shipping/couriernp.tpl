@@ -41,13 +41,18 @@
             </div>
           </div>
             
-             <div class="form-group">
+          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-freetotal"><?php echo $min_free_total; ?></label>
             <div class="col-sm-10">
               <input type="number" name="couriernp_freetotal" value="<?php echo $couriernp_freetotal; ?>"  id="input-freetotal" class="form-control" />
             </div>
           </div>
-            
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-add_cos"><?php echo $add_cost_total; ?></label>
+            <div class="col-sm-10">
+              <input type="number" name="couriernp_add_cost" value="<?php echo $couriernp_add_cost; ?>"  id="input-add_cos" class="form-control" />
+            </div>
+          </div>            
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>
             <div class="col-sm-10">

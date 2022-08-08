@@ -22,13 +22,13 @@ class ModelExtensionShippingCouriernp extends Model
                         }
                         
                          if(!$cost){
-                                $cost=40;
+                                $cost=$this->config->get('new_mail_min_cost') + $this->config->get('couriernp_add_cost');
                             }
                         
                     }
-               
+                    
                     if($this->cart->getSubTotal()>=$this->config->get('couriernp_freetotal')){
-                        $cost=15;  
+                        $cost = $this->config->get('couriernp_add_cost');  
                     }
                     
                     
@@ -98,7 +98,7 @@ class ModelExtensionShippingCouriernp extends Model
                 return "cURL Error #:" . $err;
             } else {
                 $novaposhta_obj= json_decode($response);
-                return ($novaposhta_obj->data[0]->Cost);
+                return (isset($novaposhta_obj->data[0]) ? $novaposhta_obj->data[0]->Cost: 0);
                 // return 0;
             }
         }

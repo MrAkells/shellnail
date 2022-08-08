@@ -1,5 +1,21 @@
 <?php echo $header; ?>
 <div class="container" id="container">
+
+<!--
+<div class="sd-warning-modal" id="sd-warning-modal">
+  <div class="sd-warning-modal__body">
+    <?php echo $sd_warning; ?>
+    <div class="sd-warning-modal__bottom">
+      <button type="button" id="sd-warning-close" class="btn btn-default sd-warning-modal__btn" ><?php echo $sd_warning_btn; ?></button>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("sd-warning-close").onclick = function() {
+    document.getElementById("sd-warning-modal").style.display = "none";
+  }
+</script>
+-->
  
   <?php if ($error_warning) { ?>
   <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
@@ -17,9 +33,12 @@
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
 <!--<h1><?php echo $heading_title; ?></h1>-->
 <!-- Quick Checkout v4.0 by Dreamvention.com checkout/quickcheckout.tpl -->
-  <?php echo $d_quickcheckout; ?>
+
+      <?php echo $d_quickcheckout; ?>
 
       <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>
 </div>
+
+
 <?php echo $footer; ?>

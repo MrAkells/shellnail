@@ -415,6 +415,17 @@ class ModelCheckoutOrder extends Model {
 				$data['text_price'] = $language->get('text_new_price');
 				$data['text_total'] = $language->get('text_new_total');
 				$data['text_footer'] = $language->get('text_new_footer');
+				$data['text_payment_detail'] = $language->get('text_payment_detail');
+				$data['text_new_get_present'] = $language->get('text_new_get_present');
+				$data['text_new_footer_greeting'] = $language->get('text_new_footer_greeting');
+				$data['text_new_description'] = $language->get('text_new_description');
+				$data['text_new_illustration'] = $language->get('text_new_illustration');
+				$data['text_new_google_search'] = $language->get('text_new_google_search');
+				$data['text_new_google_login'] = $language->get('text_new_google_login');
+				$data['text_new_google_no_login'] = $language->get('text_new_google_no_login');
+				$data['text_new_youtube'] = $language->get('text_new_youtube');
+				$data['text_new_reviews'] = $language->get('text_new_reviews');
+				$data['text_new_reviews_greeting'] = $language->get('text_new_reviews_greeting');
 
 				$data['logo'] = $this->config->get('config_url') . 'image/' . $this->config->get('owner_additional_logo');
 				$data['store_name'] = $order_info['store_name'];
@@ -431,6 +442,7 @@ class ModelCheckoutOrder extends Model {
 				$data['order_id'] = $order_id;
 				$data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added']));
 				$data['payment_method'] = $order_info['payment_method'];
+				$data['payment_code'] = $order_info['payment_code'];
 				$data['shipping_method'] = $order_info['shipping_method'];
 				$data['email'] = $order_info['email'];
 				$data['telephone'] = $order_info['telephone'];
@@ -446,7 +458,7 @@ class ModelCheckoutOrder extends Model {
 //				if ($order_info['payment_address_format']) {
 //					$format = $order_info['payment_address_format'];
 //				} else {
-					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' .  "\n" . '{country}';
+					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}';
 //				}
 
 				$find = array(
@@ -478,7 +490,7 @@ class ModelCheckoutOrder extends Model {
 //				if ($order_info['shipping_address_format']) {
 //					$format = $order_info['shipping_address_format'];
 //				} else {
-					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n"  . '{country}';
+					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}';
 //				}
 
 				$find = array(

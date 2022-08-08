@@ -20,6 +20,10 @@
     <div class="row register-page">
     <div class="col-md-5 col-sm-6 left-register">
       <h1 class="title-register"><?php echo $heading_title; ?></h1>
+
+      <div class="social-autorization-registr">
+        <?php include DIR_APPLICATION . '/view/theme/default/template/component/social_autorization.tpl'; ?>
+      </div>
      
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
         <fieldset id="account">

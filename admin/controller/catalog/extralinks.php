@@ -279,28 +279,23 @@ class ControllerCatalogExtralinks extends Controller {
 		$data['cancel'] = $this->url->link('catalog/extralinks', 'token=' . $this->session->data['token'] . $url, true);
 
 		if (isset($this->request->get['extralink_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-                    $extralink_info = $this->model_catalog_extralinks->getExtralink($this->request->get['extralink_id']);
+                $extralink_info = $this->model_catalog_extralinks->getExtralink($this->request->get['extralink_id']);
 		}
 
 		$data['token'] = $this->session->data['token'];
 		$data['ckeditor'] = $this->config->get('config_editor_default');
 
-		
-                if (isset($this->request->post['title'])) {
-			$data['title'] = $this->request->post['title'];
+		$this->load->model('localisation/language');
+		$data['languages'] = $this->model_localisation_language->getLanguages();
+
+		if (isset($this->request->post['extralink_description'])) {
+			$data['extralink_description'] = $this->request->post['extralink_description'];
 		} elseif (isset($this->request->get['extralink_id'])) {
-			$data['title'] = $extralink_info['title'];
+			$data['extralink_description'] = $this->model_catalog_extralinks->getExtralinkDescription($this->request->get['extralink_id']);
 		} else {
-			$data['title'] = '';
+			$data['extralink_description'] = array();
 		}
-                
-		if (isset($this->request->post['link'])) {
-			$data['link'] = $this->request->post['link'];
-		} elseif (isset($this->request->get['extralink_id'])) {
-			$data['link'] = $extralink_info['link'];
-		} else {
-			$data['link'] = '';
-		}
+
 
 		if (isset($this->request->post['status'])) {
                     $data['status'] = $this->request->post['status'];

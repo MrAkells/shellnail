@@ -7,7 +7,8 @@ class ControllerExtensionModuleVisitedproduct extends Controller {
                 $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.carousel.css');
 		$this->document->addScript('catalog/view/javascript/jquery/owl-carousel/owl.carousel.min.js');
 
-		$data['heading_title'] = $setting['name'];
+				//$data['heading_title'] = $setting['name'];
+				$data['heading_title'] = $this->language->get('heading_title');
                 $data['text_reviews'] = $this->language->get('text_reviews');
                 $data['button_cart'] = $this->language->get('button_cart');
                 $data['text_artikul'] = $this->language->get('text_artikul');

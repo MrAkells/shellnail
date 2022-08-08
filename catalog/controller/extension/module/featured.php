@@ -6,7 +6,9 @@ class ControllerExtensionModuleFeatured extends Controller {
 
 		//$data['heading_title'] = $this->language->get('heading_title');
         $data['heading_title'] =  $setting['name'];
-              
+
+        $data['title'] =  (isset($setting['title']) && isset($setting['title'][$this->config->get('config_language_id')]) ? $setting['title'][$this->config->get('config_language_id')] : $setting['name']);
+
         $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.carousel.css');
         $this->document->addScript('catalog/view/javascript/jquery/owl-carousel/owl.carousel.min.js');
         
@@ -96,6 +98,8 @@ class ControllerExtensionModuleFeatured extends Controller {
                         'stock_status'=>$product_info['stock_status'],
                         'quantity'=>$product_info['quantity'],
                         'thumb' => $image,
+                        'img_width' => $setting['width'], 
+                        'img_height' => $setting['height'],
                         'name' => $product_info['name'],
                         'description' => utf8_substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '..',
                         'price' => $price,

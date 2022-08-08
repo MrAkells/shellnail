@@ -1,8 +1,16 @@
 <?php
 class ControllerCommonHeader extends Controller {
 	public function index() {
+
+		// !!!!! Удалить после настройки Уа
+		//if((int)$this->config->get('config_language_id') == 3) $this->document->setNoindex(true);
+
 		// Analytics
 		$this->load->model('extension/extension');
+
+		$data['language'] = $this->load->controller('common/language');
+
+		$data['langcode'] = $this->session->data['language'];
              
 		$data['analytics'] = array();
 
@@ -39,45 +47,43 @@ class ControllerCommonHeader extends Controller {
 
                 // Обратный звонок
                 //$this->document->addScript( "https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js");
-               
+
+		if(isset($this->session->data['user_id']) && $this->session->data['user_id']){
+			$data['is_admin'] = 1;
+		}else{
+			$data['is_admin'] = 0;
+		}
+		$this->document->addScript('/catalog/view/javascript/social_auth.js');                
+		$this->document->addScript('catalog/view/javascript/popup_form/popup_form.js');
+		$this->document->addScript('catalog/view/javascript/jquery.inputmask.bundle.min.js');
+		$data['phone_call_back']=$this->load->controller('extension/module/popup_form');
 		
-		if (!$this->customer->isLogged()) {
-                    $this->document->addScript('https://ulogin.ru/js/ulogin.js');
-                    $this->document->addScript('catalog/view/javascript/extension/ulogin.js');
-                     // $this->document->addScript('catalog/view/javascript/extension/ulogin_local.js');
-                    $this->document->addStyle('https://ulogin.ru/version/2.0/css/providers.min.css');
-                    $this->document->addStyle('catalog/view/theme/default/stylesheet/extension/ulogin.css');
-                }
-                
-                $this->document->addScript('catalog/view/javascript/popup_form/popup_form.js');
-                $this->document->addScript('catalog/view/javascript/jquery.inputmask.bundle.min.js');
-                $data['phone_call_back']=$this->load->controller('extension/module/popup_form');
-                
-                
-                $data['static_header_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/menu_noindex"]);
-                
-                //$data['static_header_catalog']='';
-                
-                $fake_menu=array(
-                    "common/home",
-                    "common/success",
-                    "checkout/success",
-                    "account/reset",
-                    "account/login",
-                    "information/information",
-                    "account/logout",
-                    "account/forgotten",
-                    "features/promotions",
-                    "features/reviews",
-                    "newsblog/category",
-                    "newsblog/article",
-                    "product/product"
-                );
-                if(!in_array($this->request->get['route'],$fake_menu)){
-                    $data['header_catalog']=$this->load->controller('extension/module/menu');
-               
-                }
-                $data['route']=$this->request->get['route'];
+		
+		$data['static_header_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/menu_noindex"]);
+		
+		//$data['static_header_catalog']='';
+		
+		$fake_menu=array(
+			"common/home",
+			"common/success",
+			"checkout/success",
+			"account/reset",
+			"account/login",
+			"information/information",
+			"account/logout",
+			"account/forgotten",
+			"features/promotions",
+			"features/reviews",
+			"newsblog/category",
+			"newsblog/article",
+			"product/product",
+			"product/search"
+		);
+		if(!in_array($this->request->get['route'],$fake_menu)){
+			$data['header_catalog']=$this->load->controller('extension/module/menu');
+		
+		}
+		$data['route']=$this->request->get['route'];
 		$data['base'] = $server;
                 
 		$data['description'] = $this->document->getDescription();
@@ -152,7 +158,7 @@ class ControllerCommonHeader extends Controller {
 		$data['logout'] = $this->url->link('account/logout', '', true);
 		$data['shopping_cart'] = $this->url->link('checkout/cart');
 		$data['checkout'] = $this->url->link('checkout/checkout', '', true);
-		$data['contact'] = $this->url->link('information/information', 'information_id=12');
+		$data['contact'] = $this->url->link('information/contact', '', true);
 		$data['telephone'] = $this->config->get('config_telephone');
                 
                 $data['text_contact'] = $this->language->get('text_contact');
@@ -200,7 +206,10 @@ class ControllerCommonHeader extends Controller {
                 );
                 
                 
-                $data['shop_feature']=$this->config->get('owner_moto');
+                $data['shop_feature']=$this->config->get('owner_description')[$this->config->get('config_language_id')]['moto'];
+
+				//$data['shop_feature'] = $this->language->get('shop_feature');
+                
                 
                 $data['phone1']=$this->config->get('owner_phone1');
                 $data['phone2']=$this->config->get('owner_phone2');

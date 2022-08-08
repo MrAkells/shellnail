@@ -64,8 +64,7 @@ class ModelCatalogCategory extends Model {
                     }
                 }
                 
-		$this->cache->delete('category');
-                $this->cache->delete('menushka');
+		$this->cacheDelete();
                 
 		return $category_id;
 	}
@@ -183,8 +182,7 @@ class ModelCatalogCategory extends Model {
                 }
                 
                 
-                $this->cache->delete('menushka');
-		$this->cache->delete('category');
+		$this->cacheDelete();
                 
 	}
 
@@ -208,9 +206,8 @@ class ModelCatalogCategory extends Model {
 
                 $this->db->query("DELETE FROM category_related_products WHERE category_id='".(int)$category_id."'");
                 
-                
-                $this->cache->delete('menushka');
-		$this->cache->delete('category');
+		$this->cacheDelete();        
+
 	}
 
 	public function repairCategories($parent_id = 0) {
@@ -379,10 +376,20 @@ class ModelCatalogCategory extends Model {
 		return $query->row['total'];
 	}
         
-        public function getCategoryRelatedProducts($category_id) {
+    public function getCategoryRelatedProducts($category_id) {
             
             $query = $this->db->query("SELECT DISTINCT crp.category_id, crp.product_id, pd.name FROM category_related_products crp LEFT JOIN " . DB_PREFIX . "product_description pd ON (crp.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND crp.category_id='".(int)$category_id."'");
 
             return $query->rows;
+	}
+
+	private function cacheDelete() {
+		$this->cache->delete('category');
+
+		$this->load->model('localisation/language');
+		$languages = $this->model_localisation_language->getLanguages();
+		foreach ($languages as $language) {
+			$this->cache->delete('menushka_' . $language['language_id']);
+		}
 	}
 }

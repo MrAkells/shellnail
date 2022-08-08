@@ -3,7 +3,7 @@ class ModelExtensionModuleMenu extends Model {
     
     public function createCategoryMenu(){  
         
-        $cache_data=$this->cache->get('menushka');
+        $cache_data=$this->cache->get('menushka_' . $this->config->get('config_language_id'));
         if($cache_data){
             return $cache_data;
         }
@@ -17,8 +17,8 @@ class ModelExtensionModuleMenu extends Model {
             $categories = $this->model_catalog_category->getCategories(0);
             $extra_links=$this->model_catalog_extralinks->getExtralinks();
             if ( $_SERVER['REMOTE_ADDR'] == '82.207.90.222') {
-        var_dump($extra_links); die;        
-        }
+            var_dump($extra_links); die;        
+            }
             foreach ($categories as $category) {
                
                 $children_data = array();
@@ -165,7 +165,7 @@ class ModelExtensionModuleMenu extends Model {
                         }
                 
                   $full_category_data[] = array(
-                            'name'        => $this->config->get('owner_brands_name'),
+                            'name'        => $this->config->get('owner_description')[$this->config->get('config_language_id')]['brands_name'],
                             'icon'=> $icon_manuf,
                             'icon2'=>$icon_manuf2,
                             'cols'=> 2,
@@ -211,7 +211,7 @@ class ModelExtensionModuleMenu extends Model {
                         unset($extra_links[0]);
                 }
         
-            $this->cache->set('menushka', $full_category_data);
+            $this->cache->set('menushka_' . $this->config->get('config_language_id'), $full_category_data);
             
             return $full_category_data;
     }
