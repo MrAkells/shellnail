@@ -90,6 +90,14 @@
             </div>
             <form action="<?php echo $url_sync; ?>" method="post" enctype="multipart/form-data" id="form-delovod-sync" class="form-horizontal">
               <div class="form-group">
+                <div class="col-sm-6">
+                  <label>
+                    <input type="checkbox" name="only_name" value="1" checked>
+                    Обновить только наименование
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-category"><?php echo $entry_category; ?></label>
                 <div class="col-sm-6">
                   <select id="category_id" name="category_id" class="form-control">
