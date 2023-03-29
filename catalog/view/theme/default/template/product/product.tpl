@@ -255,7 +255,7 @@
               </table>
             </div>
             <?php if($count_f >= 5){ ?>
-              <div class="product-more-detailed">Eщё</div>
+              <div class="product-more-detailed"><?php echo $text_more_inf; ?></div>
             <?php } ?>
             <?php } ?>
             
@@ -323,7 +323,7 @@
           <div class="tab-content">
             <div class="tab-pane active" id="tab-description" itemprop="description">
               <div class="box-description"><?php echo $description; ?></div>
-              <span class="view-more-description">Ещё</span>
+              <span class="view-more-description"><?php echo $text_more_inf; ?></span>
               
             </div>
            

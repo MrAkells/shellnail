@@ -268,6 +268,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			$data['text_related'] = $this->language->get('text_related');
 			$data['text_payment_recurring'] = $this->language->get('text_payment_recurring');
 			$data['text_loading'] = $this->language->get('text_loading');
+			$data['text_more_inf'] = $this->language->get('text_more_inf');
 			$data['button_notify_availability'] = $this->language->get('button_notify_availability');
 			
 			$data['first_advantage']    = $this->language->get('first_advantage');
