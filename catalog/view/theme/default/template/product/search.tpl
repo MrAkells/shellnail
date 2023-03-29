@@ -192,11 +192,11 @@
         <?php foreach ($products as $product) { ?>
   <div class="product-layout product-list col-xs-12 grid-product js_infscrl">
         <ul class="list-inline bts-wish-compare">
-             <?php if($product['video_link']){ ?>
-                <li class='magni_youtube'>
-                  <img style='width: 24px' src="image/video-tovara-youtube.png" alt="youtube">
-                </li>
-            <?php } ?>
+          <?php if($product['video_link']){ ?>
+          <li class='magni_youtube'>
+            <img onclick="create_frame_popup($(this))" data-video_link="<?php echo $product['video_link']; ?>" style='width: 24px; cursor:pointer;' src="image/video-tovara-youtube.png" alt="youtube"  width="24" height="17" >
+          </li>
+          <?php } ?>
           <li>
             <button class="btn-transparent" data-product_id="<?php echo $product['product_id']; ?>" onclick="compare.add($(this))"><img src="catalog/view/theme/default/image/icon-small-compare.png" alt="Compare"></button>
           </li>
