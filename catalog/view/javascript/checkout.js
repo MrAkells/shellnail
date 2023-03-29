@@ -24,8 +24,9 @@
 			},
 			'select': select_handler
 
-		}).focusout(function(){            
-			if(!$(this).data('ref')) $(this).val('');
+		}).focusout(function(){  
+			let shipping_method = $('input[name="shipping_method"]:checked').val();           
+			if(!$(this).data('ref') && shipping_method != 'ukrposhta.ukrposhta') $(this).val('');
 		});
 
     });
