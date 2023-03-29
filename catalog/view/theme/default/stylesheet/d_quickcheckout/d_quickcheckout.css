@@ -362,7 +362,8 @@
   color: #161616;
 }
 #confirm_comment_input .col-xs-12{
-  padding-left: 0px;
+  padding-left: 0;
+  padding-right: 0;
 }
 #confirm_comment_input label{
   font-family: 'Roboto-Regular';
