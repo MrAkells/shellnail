@@ -117,6 +117,13 @@
                                 <div class="image_accept_payment"><img src="catalog/view/theme/default/image/payment/icon_payment_master_card.png" alt="Mastercard"><img src="catalog/view/theme/default/image/payment/icon_payment_visa.png" alt="Visa"></div>
                             </a>
                         </div>
+                        <?php if (isset($informations['17'])) { ?>
+                        <div>
+                            <a href="<?php echo $informations['17']['href']; ?>">
+                                <?php echo $informations['17']['title']; ?>
+                            </a>
+                        </div>
+                        <?php } ?>
                     </div>
 
                 </div>
