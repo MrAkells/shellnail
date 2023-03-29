@@ -148,7 +148,7 @@
                 <span class="price-old"><?php echo $price; ?></span>
                 <?php if($active_promos){ ?>
                   <a href="<?php echo $active_promos['href']; ?>" title="<?php echo $active_promos['title']; ?>">
-                      <img src="catalog/view/theme/default/image/stiker-promotional-price.png" class="stiker-product"/>
+                      <img src="catalog/view/theme/default/image/stiker-promotional-price.png" class="stiker-product" rel="nofollow"/>
                   </a>
                 <?php } ?>
               <?php } ?>
