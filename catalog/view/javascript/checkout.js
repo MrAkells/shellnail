@@ -18,7 +18,6 @@
 										}));
 									}
 									_that.data('ref', '');
-							
 						}
 					});
 			},
@@ -30,24 +29,28 @@
 		});
 
     });
-        
-         function select_handler(item) {
 
-            if(item['value']=='another_city'){
-                $('input[id="payment_address_city"]').focus();
-                return false;
-            }
+	function select_handler(item) {
 
-			$('input[id="payment_address_address_1"]').val('');
-			$('input[id="payment_address_city"]')
-				.data('ref', item['value'])
-				.val(item['label'])
-				.focusout()
-				.change();
-	 
-            $('#new_mail_office').change();
-        }
+		if(item['value']=='another_city'){
+			$('input[id="payment_address_city"]').focus();
+			return false;
+		}
+
+		$('input[id="payment_address_address_1"]').val('');
+		$('input[id="payment_address_city"]')
+			.data('ref', item['value'])
+			.val(item['label'])
+			.focusout()
+			.change();
+
+		$('#new_mail_office').change();
+	}
         
+	$(document).delegate('input[name="shipping_method"]', 'change', function(e) {
+		let _city = $('input[id="payment_address_city"]');
+		if(!_city.data('ref')) _city.val('');
+	});        
 	
 //	$(document).delegate('input[id="payment_address_custom_field.address.1"]','change',function(){
 //              console.log('phone changed');   
