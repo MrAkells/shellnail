@@ -355,8 +355,16 @@ $('select[name=\'category_id\']').on('change', function() {
 
 $('select[name=\'category_id\']').trigger('change');
 --></script>
- <script type="text/javascript">
- 
+<script type="text/javascript">
+function create_frame_popup(elem) {
+  var link = elem.data('video_link');
+  $.magnificPopup.open({
+      items: {
+          src: link
+      },
+      type: 'iframe'
+  });
+}
 $(document).ready(function(){
      $(".form-group").each(function(){
         $(this).find(".customSelectInner").html($(this).find("select :selected").html());
