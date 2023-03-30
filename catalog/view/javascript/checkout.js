@@ -25,7 +25,7 @@
 
 		}).focusout(function(){  
 			let shipping_method = $('input[name="shipping_method"]:checked').val();           
-			if(!$(this).data('ref') && shipping_method != 'ukrposhta.ukrposhta') $(this).val('');
+			if(!$(this).data('ref') && (shipping_method != 'ukrposhta.ukrposhta' && shipping_method != 'inter.inter')) $(this).val('');
 		});
 
     });
@@ -48,6 +48,8 @@
 	}
         
 	$(document).delegate('input[name="shipping_method"]', 'change', function(e) {
+		let shipping_method = $('input[name="shipping_method"]:checked').val();
+		if(shipping_method == 'ukrposhta.ukrposhta' || shipping_method == 'inter.inter') return;
 		let _city = $('input[id="payment_address_city"]');
 		if(!_city.data('ref')) _city.val('');
 	});        
