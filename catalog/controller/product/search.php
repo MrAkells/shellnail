@@ -82,6 +82,9 @@ class ControllerProductSearch extends Controller {
 			'href' => $this->url->link('common/home')
 		);
 
+		$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
+		$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
+		
 		$url = '';
 
 		if (isset($this->request->get['search'])) {
