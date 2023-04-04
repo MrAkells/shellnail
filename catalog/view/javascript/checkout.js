@@ -18,35 +18,50 @@
 										}));
 									}
 									_that.data('ref', '');
-							
 						}
 					});
 			},
 			'select': select_handler
 
-		}).focusout(function(){            
-			if(!$(this).data('ref')) $(this).val('');
+		}).focusout(function(){  
+			let shipping_method = $('input[name="shipping_method"]:checked').val();           
+			if(!$(this).data('ref') && (shipping_method != 'ukrposhta.ukrposhta' && shipping_method != 'inter.inter')) $(this).val('');
 		});
 
     });
-        
-         function select_handler(item) {
 
-            if(item['value']=='another_city'){
-                $('input[id="payment_address_city"]').focus();
-                return false;
-            }
+	function select_handler(item) {
 
-			$('input[id="payment_address_address_1"]').val('');
-			$('input[id="payment_address_city"]')
-				.data('ref', item['value'])
-				.val(item['label'])
-				.focusout()
-				.change();
-	 
-            $('#new_mail_office').change();
-        }
+		if(item['value']=='another_city'){
+			$('input[id="payment_address_city"]').focus();
+			return false;
+		}
+
+		$('input[id="payment_address_address_1"]').val('');
+		$('input[id="payment_address_city"]')
+			.data('ref', item['value'])
+			.val(item['label'])
+			.focusout()
+			.change();
+
+		$('#new_mail_office').change();
+	}
         
+	$(document).delegate('input[name="shipping_method"]', 'change', function(e) {
+		let shipping_method = $('input[name="shipping_method"]:checked').val();
+		let _city = $('input[id="payment_address_city"]');
+
+		if(shipping_method == 'ukrposhta.ukrposhta' || shipping_method == 'inter.inter') return;
+		if(!_city.data('ref')){
+			_city.val('');
+			if(shipping_method == 'new_mail.new_mail') {
+				_city.trigger('change');
+				let top = $('#payment_address_city_input').offset().top;
+				$('body,html').animate({scrollTop: top}, 1000);
+			}
+		}
+		
+	});        
 	
 //	$(document).delegate('input[id="payment_address_custom_field.address.1"]','change',function(){
 //              console.log('phone changed');   

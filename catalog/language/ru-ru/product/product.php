@@ -38,7 +38,8 @@ $_['text_week']                               = 'неделя';
 $_['text_semi_month']                         = 'полмесяца';
 $_['text_month']                              = 'месяц';
 $_['text_year']                               = 'год';
-$_['send_review']        = 'Отправить отзыв';
+$_['send_review']                             = 'Отправить отзыв';
+$_['text_more_inf']                           = 'Eщё';
 
 // Entry
 $_['entry_qty']                               = 'Укажите необходимое кол-во';

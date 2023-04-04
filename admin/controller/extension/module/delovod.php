@@ -60,6 +60,7 @@ class ControllerExtensionModuleDelovod extends Controller
 		} else {
 			$data['error_warning'] = '';
 		}
+
 		if (isset($this->session->data['success'])) {
 			$data['success'] = $this->session->data['success'];
 
@@ -184,6 +185,7 @@ class ControllerExtensionModuleDelovod extends Controller
 
 	public function sync()
 	{
+
 		$json = [];
 		if ($this->config->get('delovod_status') && $this->user->hasPermission('modify', 'extension/module/delovod')) {
 			if (isset($this->request->post['category_id']) && $this->request->post['category_id']) {
@@ -192,7 +194,13 @@ class ControllerExtensionModuleDelovod extends Controller
 				$category_id = $this->request->post['category_id'];
 				$this->load->model('extension/delovod');
 
+				if(isset($this->request->post['only_name'])){
+					$this->updateNameUa($category_id);
+					$this->response->redirect($this->url->link('extension/module/delovod', 'token=' . $this->session->data['token'] . (isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] : ''), true));
+				}
 				$results = $this->model_extension_delovod->getProductsByCategoryId($category_id);
+
+
 				$i = 0;
 				$j = 0;
 				$packet['action'] = "request";
@@ -305,7 +313,8 @@ class ControllerExtensionModuleDelovod extends Controller
 				$packet["params"]['header'] = [
 					"id" 		=> "catalogs.goods",
 					"name" 	=> [
-						"ru" => $product_info['name']
+						"ru" => $product_info['name'],
+						"uk" => $product_info['name_ua'],
 					],
 					"productNum"	=> $product_id, // Артикул
 					"mainUnit"		=> "1103600000001002", // шт
@@ -558,5 +567,75 @@ class ControllerExtensionModuleDelovod extends Controller
 			$query = $this->db->query("ALTER TABLE `" . DB_PREFIX . "order` ADD `delovod_order_id` VARCHAR(20) NOT NULL AFTER `invoice_prefix`");
 			$query = $this->db->query("ALTER TABLE `" . DB_PREFIX . "order` ADD INDEX(`delovod_order_id`)");
 		}
+	}
+
+	/**
+	 * Set product name UA
+	 *
+	 * @param $category_id
+	 * @return void
+	 */
+	private function updateNameUa($category_id){
+		$i = 0;
+		$j = 0;
+		$results = $this->model_extension_delovod->getProductsByCategoryId($category_id,false);
+
+		foreach ($results as $result) {
+			$i++;
+			$product_info = $this->model_extension_delovod->getProduct($result['product_id']);
+
+			if($product_info['isbn'] != '' && $product_info['name_ua'] != '' && $product_info['name_ua'] != $product_info['name']){
+				$packet['action'] = "saveObject";
+				$packet["params"]['header'] = [
+					"id" 		=> $product_info['isbn'],
+					"name" 	=> [
+						"uk" => $product_info['name_ua'],
+					]
+				];
+				$requestResult = $this->sendRequest($packet);
+				$data = $this->handleResult($requestResult);
+				if (!isset($data->is_error)) {
+					$j++;
+				}
+
+			}
+		}
+
+		$this->session->data['success'] = "Всего: " . $i . " Обновлено: " . $j;
+		
+	}
+
+	public function test()
+	{
+		$this->load->model('extension/delovod');
+		$product_info = $this->model_extension_delovod->getProduct(4060);
+		//print_r($product_info);die();
+		// $packet['action'] = "saveObject";
+		// $packet["params"]['header'] = [
+		// 	"id" 		=> "1100300000003854",
+		// 	"name" 	=> [
+		// 		"uk" => $product_info['name_ua'],
+		// 	]
+		// ];
+		// $requestResult = $this->sendRequest($packet);
+		// $data = $this->handleResult($requestResult);
+		// print_r($data);die();
+
+		$packet['action'] = "request";
+		$packet['params']['from'] = "catalogs.goods";
+		$packet['params']['fields'] = ["id" => "id", "name" => "name"];
+		$packet['params']['multilang'] = true;
+		
+		$packet['params']['filters'] = [
+			[
+				"alias" => "id",
+				"operator" => '=',
+				"value" => '1100300000003854'
+			]
+		];
+
+		$requestResult = $this->sendRequest($packet);
+		$data = $this->handleResult($requestResult);
+		print_r($data);
 	}
 }

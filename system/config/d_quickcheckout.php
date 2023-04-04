@@ -567,7 +567,18 @@ $_['d_quickcheckout_setting'] = array(
 										'refresh' => '3',
 										'custom' => 0,
 										'class' => ''
-							)
+							),
+							'not_call' => array(
+									'id' => 'not_call',
+									'title' => 'entry_not_call',
+									'tooltip' => '',
+									'type' => 'checkbox',
+									'custom' => 0,
+									'class' => '',
+									'refresh' => '1',
+									'sort_order' => 17,
+									'value' => '0'
+							),
 				),
 			),
 			'payment' => array(
@@ -617,7 +628,18 @@ $_['d_quickcheckout_setting'] = array(
 							'custom' => 0,
 							'class' => '',
 							'sort_order' => 1,
-					)
+					),
+					'not_call' => array(
+							'id' => 'not_call',
+							'title' => 'text_not_call',
+							'tooltip' => '',
+							'type' => 'checkbox',
+							'custom' => 0,
+							'class' => 'not_call',
+							'refresh' => '1',
+							'sort_order' => 17,
+							'value' => '0'
+					),
 					
 					
 				)
@@ -832,6 +854,10 @@ $_['d_quickcheckout_setting'] = array(
 								 'display' => 1, 
 								 'require' => 1,
 								 'value' => ''	
+							 ),
+							 'not_call' => array(
+										 'display' => 1,
+										 'value' => ''	
 							 )
 					  )	   
 			)
@@ -1027,6 +1053,10 @@ $_['d_quickcheckout_setting'] = array(
 								 'display' => 1, 
 								 'require' => 1,
 								 'value' => ''	
+							 ),
+							 'not_call' => array(
+									'display' => 1,
+									'value' => ''	
 							 )
 					  )	   
 			)
@@ -1181,6 +1211,10 @@ $_['d_quickcheckout_setting'] = array(
 								 'display' => 1, 
 								 'require' => 1,
 								 'value' => ''
+							 ),
+							 'not_call' => array(
+										 'display' => 1,
+										 'value' => ''	
 							 )
 					  )	   
 			)

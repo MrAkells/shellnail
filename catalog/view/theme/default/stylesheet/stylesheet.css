@@ -6196,7 +6196,7 @@ aside#column-left{
 .view-more-description,
 .product-more-detailed {
 	color: #976ba8;
-	font-size: 14px;
+	font-size: 18px;
 	font-family: 'Roboto Bold';
 	border-bottom: 1px dashed #976ba8;
 	display: none;
@@ -6477,3 +6477,54 @@ aside#column-left{
 .fb-like span iframe {
 	width: 90px !important;
 } */
+
+#confirm_not_call_input {
+	background-color: #edfeed;
+	color: #696969;
+    padding: 9px 20px 10px;
+    font-size: 16px;
+}
+#confirm_not_call_input .control-label {
+	padding-top: 0 !important;
+	color: #696969;
+}
+#confirm_not_call_input .col-xs-12 {
+	padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+#confirm_not_call_input input[type=checkbox] {
+	position: relative;
+	border: 1px solid #5f2e73;
+	background: none;
+	cursor: pointer;
+	line-height: 0;
+	margin: 2px 10px 0 0 !important;
+	outline: 0;
+	padding: 0 !important;
+	vertical-align: text-top;
+	height: 18px;
+	width: 18px;
+	-webkit-appearance: none;
+  	opacity: .5;
+}
+#confirm_not_call_input input[type=checkbox]:hover {
+	opacity: 1;
+  }
+  
+#confirm_not_call_input input[type=checkbox]:checked {
+	background-color: #5f2e73;
+	opacity: 1;
+  }
+#confirm_not_call_input input[type=checkbox]:before {
+	content: '';
+	position: absolute;
+	right: 50%;
+	top: 50%;
+	width: 4px;
+	height: 10px;
+	border: solid #FFF;
+	border-width: 0 2px 2px 0;
+	margin: -1px -1px 0 -1px;
+	transform: rotate(45deg) translate(-75%, -50%);
+	z-index: 2;
+  }

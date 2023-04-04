@@ -672,3 +672,10 @@ div.ckeditor {
       position: fixed;
   }
 }
+
+.not_call {
+	max-width: 100px;
+}
+.not_call img {
+	margin-right: 8px;
+}

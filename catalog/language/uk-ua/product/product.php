@@ -37,6 +37,7 @@ $_['text_month']                              = 'місяць';
 $_['text_year']                               = 'рік';
 $_['text_benefits']                           = 'Переваги:';
 $_['send_review']                             = 'Надіслати відгук';
+$_['text_more_inf']                           = 'Ще';
 // Entry
 $_['entry_qty']                               = 'Вкажіть необхідну кількість';
 $_['entry_name']                              = 'Ваше ім’я:';

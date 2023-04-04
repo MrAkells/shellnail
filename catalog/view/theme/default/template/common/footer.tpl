@@ -7,11 +7,11 @@
                     <div class="logo_info-middle">
                         <div>
                             <?php if ($logo) { ?>
-                            <?php if ($home == $og_url) { ?>
-                            <img src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" class="img-responsive" />
-                            <?php } else { ?>
-                            <a href="<?php echo $home; ?>"><img src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" class="img-responsive" /></a>
-                            <?php } ?>
+                                <?php if ($home == $og_url) { ?>
+                                    <img src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" class="img-responsive" />
+                                <?php } else { ?>
+                                    <a href="<?php echo $home; ?>"><img src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" class="img-responsive" /></a>
+                                <?php } ?>
                             <?php } ?>
                         </div>
                         <div class="owner-moto">
@@ -111,12 +111,22 @@
                                 <?php echo $informations['7']['title']; ?>
                             </a>
                         </div>
+
+                        <?php if (isset($informations['17'])) { ?>
+                            <div>
+                                <a href="<?php echo $informations['17']['href']; ?>">
+                                    <?php echo $informations['17']['title']; ?>
+                                </a>
+                            </div>
+                        <?php } ?>
+
                         <div>
                             <a class="link-footer-payment" href="<?php echo $informations['6']['href']; ?>">
                                 <?php echo $informations['6']['title']; ?>
                                 <div class="image_accept_payment"><img src="catalog/view/theme/default/image/payment/icon_payment_master_card.png" alt="Mastercard"><img src="catalog/view/theme/default/image/payment/icon_payment_visa.png" alt="Visa"></div>
                             </a>
                         </div>
+
                     </div>
 
                 </div>
@@ -170,14 +180,15 @@
                     <div class="block-shedule">
                         <div class="title-footer">
                             <strong><?php echo $text_schedule; ?></b>
-                </div>
-                <div class="shedule">
-                <?php echo $schedule; ?><br>
-                Сб. 10.00-16.00
-                </div>
-            </div>
-         <div class="our-public our-public-copy">  <div class="title-footer">
-                <strong><?php echo $text_our_public; ?></strong>
+                        </div>
+                        <div class="shedule">
+                            <?php echo $schedule; ?><br>
+                            Сб. 10.00-16.00
+                        </div>
+                    </div>
+                    <div class="our-public our-public-copy">
+                        <div class="title-footer">
+                            <strong><?php echo $text_our_public; ?></strong>
                         </div>
 
                         <ul class="soc-icon">
@@ -261,34 +272,22 @@
                 js.src = 'https://connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v2.5&appId=179241882791748&autoLogAppEvents=1';
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
-            <!-- BEGIN JIVOSITE CODE {literal} -->
-            (function() {
-                var widget_id = 'dC14xgTxSo';
-                var d = document;
-                var w = window;
 
-                function l() {
-                    var s = document.createElement('script');
-                    s.type = 'text/javascript';
-                    s.async = true;
-                    s.src = '//code.jivosite.com/script/widget/' + widget_id;
-                    var ss = document.getElementsByTagName('script')[0];
-                    ss.parentNode.insertBefore(s, ss);
-                }
-                if (d.readyState == 'complete') {
-                    l();
-                } else {
-                    if (w.attachEvent) {
-                        w.attachEvent('onload', l);
-                    } else {
-                        w.addEventListener('load', l, false);
-                    }
-                }
-            })();
-            <!-- {/literal} END JIVOSITE CODE -->
         }, 3000);
 
     });
+</script>
+
+<script type="text/javascript">
+    (function(d, w, s) {
+        var widgetHash = '9Q7b9yCxX0T0oqqm19rM',
+            bch = d.createElement(s);
+        bch.type = 'text/javascript';
+        bch.async = true;
+        bch.src = '//widgets.binotel.com/chat/widgets/' + widgetHash + '.js';
+        var sn = d.getElementsByTagName(s)[0];
+        sn.parentNode.insertBefore(bch, sn);
+    })(document, window, 'script');
 </script>
 
 
