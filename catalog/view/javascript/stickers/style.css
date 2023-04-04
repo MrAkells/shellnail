@@ -20,7 +20,7 @@
   border-top-width: 20px;
   border-top-style: solid;
   border-right: 7px solid transparent;
-
+  border-top-color: transparent;
   position: relative;
   z-index: 1;
 }
@@ -54,21 +54,21 @@
 .sticker_bestseller:before {
   background-image: url(../../theme/default/image/stiker-best.png);
 }
-
+*/
 .sticker_new_product {
-  margin-bottom: 5px;
+  border-top-color: #6cc23c !important;
 }
 .sticker_new_product:before {
-  background-image: url(../../theme/default/image/icon-new.png);
-} */
+  content: "New";
+}
 .sticker_special {
-  border-top-color: #ff3131;
+  border-top-color: #ff3131 !important;
 }
 .sticker_special:before {
   content: "Акции";
 }
 .sticker_most_viewed {
-  border-top-color: #ff612f;
+  border-top-color: #ff612f !important;
 }
 .sticker_most_viewed:before {
   content: "Хит";
