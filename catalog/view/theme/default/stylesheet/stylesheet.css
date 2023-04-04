@@ -1802,6 +1802,16 @@ h2.title-feature{
 	position: absolute;
 	right: 10px;
     top: 10px;
+	z-index: 5;
+}
+@media(max-width: 380px) { 
+	.list-inline.bts-wish-compare {
+		right: 7px;
+	}
+.list-inline.bts-wish-compare li {
+	padding-right: 3px;
+	padding-left: 3px;
+}
 }
 .name-product a{
 	font-family: 'Roboto-Regular'; 
