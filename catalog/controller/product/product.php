@@ -1,8 +1,10 @@
 <?php
-class ControllerProductProduct extends Controller {
+class ControllerProductProduct extends Controller
+{
 	private $error = array();
 
-	public function index() {
+	public function index()
+	{
 		$this->load->language('product/product');
 
 		$data['breadcrumbs'] = array();
@@ -11,7 +13,7 @@ class ControllerProductProduct extends Controller {
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/home')
 		);
-$data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
+		$data['mini_catalog'] = $this->load->controller('extension/module/menu', ['template' => "extension/module/mini_menu_noindex"]);
 		$this->load->model('catalog/category');
 
 		if (isset($this->request->get['path'])) {
@@ -209,7 +211,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
 
-                     
+
 			$data['breadcrumbs'][] = array(
 				'text' => $product_info['name'],
 				'href' => $data['product_link'] = $this->url->link('product/product', $url . '&product_id=' . $this->request->get['product_id'])
@@ -221,25 +223,25 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			} else {
 				$this->document->setTitle($product_info['name']);
 			}
-			$meta_description = (mb_detect_encoding($product_info['meta_description']) == 'UTF-8' ? $product_info['meta_description'] : mb_convert_encoding($product_info['meta_description'],'utf-8', "HTML-ENTITIES"));
+			$meta_description = (mb_detect_encoding($product_info['meta_description']) == 'UTF-8' ? $product_info['meta_description'] : mb_convert_encoding($product_info['meta_description'], 'utf-8', "HTML-ENTITIES"));
 			$this->document->setDescription($meta_description);
 			$this->document->setKeywords($product_info['meta_keyword']);
 			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
 			$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
-                        $this->document->addScript('catalog/view/javascript/social-likes.min.js');
-                                      
+			$this->document->addScript('catalog/view/javascript/social-likes.min.js');
+
 			$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
-                        $this->document->addStyle('catalog/view/theme/default/stylesheet/social-likes.css');
-                        
-                        
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/social-likes.css');
+
+
 			//$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment.js');
 			//$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/locale/'.$this->session->data['language'].'.js');
 			//$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
 			//$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
-                        
-            //$this->document->addScript('catalog/view/javascript/jquery/simplebar.js');
-            //$this->document->addStyle('catalog/view/theme/default/stylesheet/simplebar.css');
-                  
+
+			//$this->document->addScript('catalog/view/javascript/jquery/simplebar.js');
+			//$this->document->addStyle('catalog/view/theme/default/stylesheet/simplebar.css');
+
 			if ($product_info['meta_h1']) {
 				$data['heading_title'] = $product_info['meta_h1'];
 			} else {
@@ -252,10 +254,10 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			$data['text_reward'] = $this->language->get('text_reward');
 			$data['text_points'] = $this->language->get('text_points');
 			$data['text_stock'] = $this->language->get('text_stock');
-                        
-                        $data['text_instock'] = $this->language->get('text_instock');
-                         $data['text_outstock'] = $this->language->get('text_outstock');
-                        
+
+			$data['text_instock'] = $this->language->get('text_instock');
+			$data['text_outstock'] = $this->language->get('text_outstock');
+
 			$data['text_discount'] = $this->language->get('text_discount');
 			$data['text_tax'] = $this->language->get('text_tax');
 			$data['text_option'] = $this->language->get('text_option');
@@ -270,15 +272,15 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			$data['text_loading'] = $this->language->get('text_loading');
 			$data['text_more_inf'] = $this->language->get('text_more_inf');
 			$data['button_notify_availability'] = $this->language->get('button_notify_availability');
-			
+
 			$data['first_advantage']    = $this->language->get('first_advantage');
 			$data['second_advantage']    = $this->language->get('second_advantage');
 			$data['third_advantage']    = $this->language->get('third_advantage');
 			$data['forth_advantage']    = $this->language->get('forth_advantage');
 			$data['text_1_advantage']    = $this->language->get('text_1_advantage');
-			
-			$data['text_2_advantage']    = sprintf($this->language->get('text_2_advantage'), $this->config->get('ukrposhta_freetotal'), $this->config->get('new_mail_freetotal')); 
-			
+
+			$data['text_2_advantage']    = sprintf($this->language->get('text_2_advantage'), $this->config->get('ukrposhta_freetotal'), $this->config->get('new_mail_freetotal'));
+
 			$data['text_3_advantage']    = $this->language->get('text_3_advantage');
 			$data['text_4_advantage']    = $this->language->get('text_4_advantage');
 			$data['btn_more_detailed']    = $this->language->get('btn_more_detailed');
@@ -297,13 +299,15 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			$data['button_buy_click'] = $this->language->get('button_buy_click');
 			$data['button_wishlist'] = $this->language->get('button_wishlist');
 			$data['button_compare'] = $this->language->get('button_compare');
-                        
+
+			$data['text_promo_sale']    = $this->language->get('text_promo_sale');
+
 			$data['button_share'] = $this->language->get('button_share');
-                        
+
 			$data['button_upload'] = $this->language->get('button_upload');
 			//$data['button_continue'] = $this->language->get('button_continue');
-            $data['button_continue'] = $this->language->get('send_review');
-                        
+			$data['button_continue'] = $this->language->get('send_review');
+
 			$this->load->model('catalog/review');
 
 			$data['tab_description'] = $this->language->get('tab_description');
@@ -311,18 +315,18 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			$data['tab_review'] = sprintf($this->language->get('tab_review'), $product_info['reviews']);
 
 			if ($product_info['reviews']) {
-					$data['five_reviews']=$this->fiveReview();
+				$data['five_reviews'] = $this->fiveReview();
 			} else {
-				$data['five_reviews']='';
+				$data['five_reviews'] = '';
 			}
-			
+
 			$data['product_id'] = (int)$this->request->get['product_id'];
 			$data['manufacturer'] = $product_info['manufacturer'];
 			$data['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);
 			$data['model'] = $product_info['model'];
 			$data['reward'] = $product_info['reward'];
-                        $data['quantity'] = $product_info['quantity'];
-                        $data['sku'] = $product_info['sku'];
+			$data['quantity'] = $product_info['quantity'];
+			$data['sku'] = $product_info['sku'];
 			$data['points'] = $product_info['points'];
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
 
@@ -332,16 +336,16 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				// if(!(isset($category_id) && $category_id == 334)){
 				// 	if(time() > strtotime( "+1 month", strtotime( $product_info['date_modified'] )) ) $this->document->setNoindex(true);
 				// }
-				
+
 			} elseif ($this->config->get('config_stock_display')) {
 				$data['stock'] = $product_info['quantity'];
 			} else {
 				$data['stock'] = $this->language->get('text_instock');
 			}
 
-			$data['text_vendorcountry'] =$this->language->get('text_vendorcountry');
+			$data['text_vendorcountry'] = $this->language->get('text_vendorcountry');
 			$data['vendorcountry'] = $product_info['vendorcountry'];
-			
+
 			$this->load->model('tool/image');
 
 			if ($product_info['image']) {
@@ -368,21 +372,19 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				);
 			}
 
-                        
-                        
+
+
 			if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
 				$data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-                                $data['intprice']=$product_info['price'];
-                                
-                        } else {
+				$data['intprice'] = $product_info['price'];
+			} else {
 				$data['price'] = false;
 			}
 
 			if ((float)$product_info['special']) {
 				$data['special'] = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-                                $data['intprice']=$product_info['special'];
-                                
-                        } else {
+				$data['intprice'] = $product_info['special'];
+			} else {
 				$data['special'] = false;
 			}
 
@@ -473,33 +475,33 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			$data['attribute_groups'] = $this->model_catalog_product->getProductAttributes($this->request->get['product_id']);
 
 			$data['products'] = array();
-                        
-                    $active_promos_products=$this->config->get('active_promos_products_as_keys');    
-                    
-                    $data['active_promos']=array();
-                    
-                        if(isset($active_promos_products['1'][$product_id])){
-                            $data['active_promos']=array(
-                                'title'=>$active_promos_products['1'][$product_id]['title'],
-                                'href'=>$this->url->link('product/category', 'path=90_' . (int)$active_promos_products['1'][$product_id]['promo_id'])
-                            );
-                        }else if(isset($active_promos_products['2'][$product_id])){
-                            $data['active_promos']=array(
-                                'title'=>$active_promos_products['2'][$product_id]['title'],
-                                'href'=>$this->url->link('product/category', 'path=90_' . (int)$active_promos_products['2'][$product_id]['promo_id'])
-                            );
-                        }
-                    
-                    
-                    $data['text_artikul']=$this->language->get('text_artikul');
-                    $data['text_reviews_number']=$this->language->get('text_reviews_number');
+
+			$active_promos_products = $this->config->get('active_promos_products_as_keys');
+
+			$data['active_promos'] = array();
+
+			if (isset($active_promos_products['1'][$product_id])) {
+				$data['active_promos'] = array(
+					'title' => $active_promos_products['1'][$product_id]['title'],
+					'href' => $this->url->link('product/category', 'path=90_' . (int)$active_promos_products['1'][$product_id]['promo_id'])
+				);
+			} else if (isset($active_promos_products['2'][$product_id])) {
+				$data['active_promos'] = array(
+					'title' => $active_promos_products['2'][$product_id]['title'],
+					'href' => $this->url->link('product/category', 'path=90_' . (int)$active_promos_products['2'][$product_id]['promo_id'])
+				);
+			}
+
+
+			$data['text_artikul'] = $this->language->get('text_artikul');
+			$data['text_reviews_number'] = $this->language->get('text_reviews_number');
 
 			$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
-                        if(!$results && isset($category_id) && $category_id){
-                            
-                            $results=$this->model_catalog_product->getCategoryRelatedProducts($category_id);
-                        }
-                        
+			if (!$results && isset($category_id) && $category_id) {
+
+				$results = $this->model_catalog_product->getCategoryRelatedProducts($category_id);
+			}
+
 			foreach ($results as $result) {
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_related_width'), $this->config->get($this->config->get('config_theme') . '_image_related_height'));
@@ -538,9 +540,9 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 					'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '..',
 					'price'       => $price,
 					'special'     => $special,
-                                        'sku'     => $result['sku'],
-                                    'reviews'=>$result['reviews'],
-                                    'quantity'     => $result['quantity'],
+					'sku'     => $result['sku'],
+					'reviews' => $result['reviews'],
+					'quantity'     => $result['quantity'],
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $rating,
@@ -549,30 +551,30 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				);
 			}
 
-                     
-                $prod_sort=[];
-                foreach($data['products']  as $key=>$value){
-                     $prod_sort[$key]=(int)$value['quantity'];
-                }
-                array_multisort($prod_sort, SORT_DESC, $data['products']);
-                        
-                       
-                        $data['watch_videoobzor'] = $this->language->get('watch_videoobzor');
-                        
-                        
-                        //-------------видео обзор --------------------
-                        
-                        if ($product_info['thumb'] && is_file(DIR_IMAGE . $product_info['thumb'])) {
-                            $thumb = $this->model_tool_image->resize($product_info['thumb'], 70, 70);
-                        }else{
-                            $thumb = $this->model_tool_image->resize('youtube_placeholder.png', 70, 70);
-                        }
-                        $data['product_video'] = array(
-                            'video'=> $product_info['video'],
-                            'thumb'=> $thumb
-                        );
-                        //---------------------------------------------
-                        
+
+			$prod_sort = [];
+			foreach ($data['products']  as $key => $value) {
+				$prod_sort[$key] = (int)$value['quantity'];
+			}
+			array_multisort($prod_sort, SORT_DESC, $data['products']);
+
+
+			$data['watch_videoobzor'] = $this->language->get('watch_videoobzor');
+
+
+			//-------------видео обзор --------------------
+
+			if ($product_info['thumb'] && is_file(DIR_IMAGE . $product_info['thumb'])) {
+				$thumb = $this->model_tool_image->resize($product_info['thumb'], 70, 70);
+			} else {
+				$thumb = $this->model_tool_image->resize('youtube_placeholder.png', 70, 70);
+			}
+			$data['product_video'] = array(
+				'video' => $product_info['video'],
+				'thumb' => $thumb
+			);
+			//---------------------------------------------
+
 			$data['tags'] = array();
 
 			if ($product_info['tag']) {
@@ -588,8 +590,8 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 
 			// Json_ld
 			$results_reviews = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], 0, 20);
-            $reviews=[];
-                
+			$reviews = [];
+
 			foreach ($results_reviews as $review) {
 				$reviews[] = array(
 					"@type" 		=> "Review",
@@ -613,8 +615,8 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				"@type" => "Product",
 				"aggregateRating" => [
 					"@type" => "AggregateRating",
-					"ratingValue" => ($data['rating'] ? $data['rating'] : 5), 
-					"reviewCount" => ($product_info['reviews'] ? $product_info['reviews'] : 1) 
+					"ratingValue" => ($data['rating'] ? $data['rating'] : 5),
+					"reviewCount" => ($product_info['reviews'] ? $product_info['reviews'] : 1)
 				],
 				"description" => $meta_description,
 				"name"	=> $data['heading_title'],
@@ -628,21 +630,21 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 				"offers"	=> [
 					"@type" => "Offer",
 					"availability" => "http://schema.org/InStock",
-					"price" => round(($product_info['special'] ? $product_info['special'] : $product_info['price']),2),
-					"priceCurrency" => "UAH", 
+					"price" => round(($product_info['special'] ? $product_info['special'] : $product_info['price']), 2),
+					"priceCurrency" => "UAH",
 					"url" => "https://shellnail.com.ua/gel-laki/gel-lak-go-by-naomy/go-classic-collection/gel-lak-go-1.html",
-					"priceValidUntil" => date('Y-m-d',strtotime("+1095 day")) 
+					"priceValidUntil" => date('Y-m-d', strtotime("+1095 day"))
 				]
 			];
-			if(!$reviews){
+			if (!$reviews) {
 				$reviews[] = array(
 					"@type" 		=> "Review",
 					"author" => [
 						"@type" => "Person",
 						"name" => "Аноним"
 					],
-					"datePublished" => date('Y-m-d',strtotime($product_info['date_added'] . " +1 day")),
-					'description'	=> 'Порадовала цена ' . round(($product_info['special'] ? $product_info['special'] : $product_info['price']),2) . 'грн.',
+					"datePublished" => date('Y-m-d', strtotime($product_info['date_added'] . " +1 day")),
+					'description'	=> 'Порадовала цена ' . round(($product_info['special'] ? $product_info['special'] : $product_info['price']), 2) . 'грн.',
 					"reviewRating" => [
 						"@type" => "Rating",
 						"bestRating" => 5, // Максимальная оценка
@@ -650,25 +652,24 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 						"worstRating" => 1 // Минимальная оценка
 					]
 				);
-				
 			}
 			$json_ld['review'] = $reviews;
 
-			$this->document->setJsonLd(json_encode($json_ld,JSON_UNESCAPED_UNICODE));
+			$this->document->setJsonLd(json_encode($json_ld, JSON_UNESCAPED_UNICODE));
 			// END Json_ld
 
 			// Get option filters for product
 			$data['product_filters'] = [];
 			$filters = $this->model_catalog_product->getProductFilters($this->request->get['product_id']);
-			if($filters){
-				$filter_href = rtrim ($this->url->link('product/category', 'path=' . $this->request->get['path']), "/") . '_';
+			if ($filters) {
+				$filter_href = rtrim($this->url->link('product/category', 'path=' . $this->request->get['path']), "/") . '_';
 				foreach ($filters as $value) {
-					if(isset($data['product_filters'][$value['option_id']])){
-						$data['product_filters'][$value['option_id']]['values'][] = [$value['value_name'],$filter_href . $value['option_keyword']. '_' . $value['value_keyword']];
+					if (isset($data['product_filters'][$value['option_id']])) {
+						$data['product_filters'][$value['option_id']]['values'][] = [$value['value_name'], $filter_href . $value['option_keyword'] . '_' . $value['value_keyword']];
 					} else {
 						$data['product_filters'][$value['option_id']] = [
 							'option' => $value['option_name'],
-							'values' => [[$value['value_name'],$filter_href . $value['option_keyword']. '_' . $value['value_keyword']]],
+							'values' => [[$value['value_name'], $filter_href . $value['option_keyword'] . '_' . $value['value_keyword']]],
 							//'href' => $filter_href . $value['option_keyword']. '_' . $value['value_keyword'],
 						];
 					}
@@ -766,7 +767,8 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 		}
 	}
 
-	public function review() {
+	public function review()
+	{
 		$this->load->language('product/product');
 
 		$this->load->model('catalog/review');
@@ -790,7 +792,7 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 			$data['reviews'][] = array(
 				'author'     => $result['author'],
 				'text'       => nl2br($result['text']),
-                                'answer'       => nl2br($result['answer']),
+				'answer'       => nl2br($result['answer']),
 				'rating'     => (int)$result['rating'],
 				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
 			);
@@ -809,8 +811,9 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 		$this->response->setOutput($this->load->view('product/review', $data));
 	}
 
-        public function fiveReview() {
-            $this->load->language('product/product');
+	public function fiveReview()
+	{
+		$this->load->language('product/product');
 
 		$this->load->model('catalog/review');
 
@@ -819,29 +822,29 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 		$data['reviews'] = array();
 
 		$results = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], 0, 5);
-                $data['reviews']=[];
-                
+		$data['reviews'] = [];
+
 		foreach ($results as $result) {
 			$data['reviews'][] = array(
 				'author'     => $result['author'],
 				'text'       => nl2br($result['text']),
-                                'answer'       => nl2br($result['answer']),
+				'answer'       => nl2br($result['answer']),
 				'rating'     => (int)$result['rating'],
 				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
 			);
 		}
-              
-                           
-                if($data['reviews']){
-                    return $this->load->view('product/fiveReview', $data);
-                }else{
-                    return '';
-                }
-		
-        }
-        
-        
-	public function write() {
+
+
+		if ($data['reviews']) {
+			return $this->load->view('product/fiveReview', $data);
+		} else {
+			return '';
+		}
+	}
+
+
+	public function write()
+	{
 		$this->load->language('product/product');
 
 		$json = array();
@@ -881,7 +884,8 @@ $data['mini_catalog']=$this->load->controller('extension/module/menu', ['templat
 		$this->response->setOutput(json_encode($json));
 	}
 
-	public function getRecurringDescription() {
+	public function getRecurringDescription()
+	{
 		$this->load->language('product/product');
 		$this->load->model('catalog/product');
 

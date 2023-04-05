@@ -1216,7 +1216,8 @@ $_['d_quickcheckout_setting'] = array(
 										 'display' => 1,
 										 'value' => ''	
 							 )
-					  )	   
+					  )
+					  	   
 			)
 		)
 	)
