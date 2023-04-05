@@ -48,9 +48,6 @@ class ControllerExtensionModuleShopreview extends Controller {
 	}
         
         public function getreviews() {
-
-                $this->response->redirect($this->url->link('features/reviews', '', true));
-
             $this->load->language('extension/module/shopreview');
             $data['text_answer']=$this->language->get('text_answer');
             
