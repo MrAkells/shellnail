@@ -1,7 +1,7 @@
 <?php
 // Heading
 $_['heading_title']     = 'Пошук';
-$_['heading_tag']	= 'Тег - ';
+$_['heading_tag']    = 'Тег - ';
 
 // Text
 $_['text_search']       = 'Товари, що відповідають критеріям пошуку';
@@ -29,6 +29,10 @@ $_['text_model_asc']    = 'За Моделлю (А - Я)';
 $_['text_model_desc']   = 'За Моделлю (Я - А)';
 $_['text_limit']        = 'На сторінці:';
 $_['text_benefits']     = 'Переваги:';
+
+$_['text_po_poryadku_desc']        = 'З кінця списку';
+$_['text_po_poryadku_asc']        = 'По порядку';
+$_['text_most_viewed_desc']        = 'Популярні';
 
 // Entry
 $_['entry_search']      = 'Критерії пошуку';
