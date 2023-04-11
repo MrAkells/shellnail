@@ -195,7 +195,8 @@ class ControllerExtensionModuleDelovod extends Controller
 				$this->load->model('extension/delovod');
 
 				if(isset($this->request->post['only_name'])){
-					$this->updateNameUa($category_id);
+					$page = isset($this->request->post['page']) ? $this->request->post['page'] : 0;
+					$this->updateNameUa($category_id, $page);
 					$this->response->redirect($this->url->link('extension/module/delovod', 'token=' . $this->session->data['token'] . (isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] : ''), true));
 				}
 				$results = $this->model_extension_delovod->getProductsByCategoryId($category_id);
@@ -575,10 +576,10 @@ class ControllerExtensionModuleDelovod extends Controller
 	 * @param $category_id
 	 * @return void
 	 */
-	private function updateNameUa($category_id){
+	private function updateNameUa($category_id, $page){
 		$i = 0;
 		$j = 0;
-		$results = $this->model_extension_delovod->getProductsByCategoryId($category_id,false);
+		$results = $this->model_extension_delovod->getProductsByCategoryId($category_id, false, $page);
 
 		foreach ($results as $result) {
 			$i++;
@@ -601,7 +602,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			}
 		}
 
-		$this->session->data['success'] = "Всего: " . $i . " Обновлено: " . $j;
+		$this->session->data['success'] = "Всего: " . $i . " Обновлено: " . $j . " Page: " . $page;
 		
 	}
 
