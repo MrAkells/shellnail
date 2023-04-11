@@ -98,8 +98,8 @@
                 </div>
                 <div class="col-sm-6">
                   <label>
-                    <input type="text" name="page" value="0" >
                     Page
+                    <input type="text" name="page" value="0" >
                   </label>
                 </div>
               </div>
