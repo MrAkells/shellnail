@@ -477,9 +477,9 @@ input:-ms-input-placeholder      { color: #fff; }
   #payment_address .panel-body {
     padding-bottom: 10px;
   }
-  #d_quickcheckout #confirm_comment_input {
+  /* #d_quickcheckout #confirm_comment_input {
     margin-bottom: 0;
-  }
+  } */
   #d_quickcheckout #cart_view .panel-default > .panel-heading {
     padding-top: 5px;
   }
