@@ -12,6 +12,7 @@ class ModelExtensionModuleSdNpInvoice extends Model
                 . " packaging_id INT(11) NOT NULL AUTO_INCREMENT, "
                 . " title VARCHAR(255) NOT NULL, "
                 . " volume VARCHAR(255) NOT NULL, "
+
                 . " PRIMARY KEY (packaging_id)"
                 . ") COLLATE='utf8_general_ci' ENGINE=MyISAM"
         );
@@ -28,14 +29,14 @@ class ModelExtensionModuleSdNpInvoice extends Model
 
     public function addPackage($data)
     {
-        $this->db->query("INSERT INTO ".DB_PREFIX."np_packaging SET title='". $this->db->escape($data['title'])."', volume='".$this->db->escape($data['volume'])."'");
+        $this->db->query("INSERT INTO ".DB_PREFIX."np_packaging SET title='". $this->db->escape($data['title'])."', volume='".$this->db->escape($data['volume']) . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "'");
 
         return $this->db->getLastId();
     }
 
     public function editPackage($packaging_id, $data)
     {
-        $this->db->query("UPDATE " . DB_PREFIX . "np_packaging  SET  title='".$this->db->escape($data['title'])."', volume='".$this->db->escape($data['volume'])."' WHERE packaging_id='".(int)$packaging_id."'");
+        $this->db->query("UPDATE " . DB_PREFIX . "np_packaging  SET  title='".$this->db->escape($data['title'])."', volume='".$this->db->escape($data['volume']) . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] ."' WHERE packaging_id='".(int)$packaging_id."'");
 
     }
 

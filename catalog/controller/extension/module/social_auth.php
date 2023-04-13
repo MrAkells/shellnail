@@ -28,7 +28,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
                     'address_2' => '',
                     'city' => '',
                     'postcode' => '',
-                    'country_id' => 104,
+                    'country_id' => 220,
                     'zone_id' => 0,
                     'social_id' => $this->request->post['social_id'],
                 );
@@ -231,7 +231,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
                     'address_2' => '',
                     'city' => '',
                     'postcode' => '',
-                    'country_id' => 104,
+                    'country_id' => 220,
                     'zone_id' => 0,
                     'social_id' => $result->id,
                 );
@@ -299,7 +299,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
                     'address_2' => '',
                     'city' => '',
                     'postcode' => '',
-                    'country_id' => 104,
+                    'country_id' => 220,
                     'zone_id' => 0,
                     'social_id' => $result->id,
                 );
@@ -367,7 +367,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
                     'address_2' => '',
                     'city' => '',
                     'postcode' => '',
-                    'country_id' => 104,
+                    'country_id' => 220,
                     'zone_id' => 0,
                     'social_id' => $result->data->id,
                 );
