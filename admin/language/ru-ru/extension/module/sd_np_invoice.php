@@ -22,7 +22,10 @@ $_['entry_np_ref_sender_address']  = 'SenderAddress';
 $_['entry_status']     = 'Статус';
 $_['entry_title']      = 'Название упаковки';
 $_['entry_volume']     = 'Объем';
-
+$_['entry_dimension']          	= 'Размеры (Д x Ш x В):';
+$_['entry_length']          	= 'Единица длины:';
+$_['entry_width']          		= 'Ширина';
+$_['entry_height']          	= 'Высота';
 // Error
 $_['error_permission']  = 'У вас нет прав для управления этим модулем!';
 $_['error_np_key']      = 'Необходимо ввести API ключ НП!';

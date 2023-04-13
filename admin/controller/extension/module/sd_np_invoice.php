@@ -274,6 +274,10 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 
 		$data['entry_title'] = $this->language->get('entry_title');
 		$data['entry_volume'] = $this->language->get('entry_volume');
+		$data['entry_dimension'] = $this->language->get('entry_dimension');
+		$data['entry_length'] = $this->language->get('entry_length');
+		$data['entry_width'] = $this->language->get('entry_width');
+		$data['entry_height'] = $this->language->get('entry_height');
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
 
@@ -322,6 +326,30 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 			$data['volume'] = $package_info['volume'];
 		} else {
 			$data['volume'] = '';
+		}
+
+		if (isset($this->request->post['length'])) {
+			$data['length'] = $this->request->post['length'];
+		} elseif (!empty($package_info)) {
+			$data['length'] = $package_info['length'];
+		} else {
+			$data['length'] = '';
+		}
+
+		if (isset($this->request->post['width'])) {
+			$data['width'] = $this->request->post['width'];
+		} elseif (!empty($package_info)) {
+			$data['width'] = $package_info['width'];
+		} else {
+			$data['width'] = '';
+		}
+
+		if (isset($this->request->post['height'])) {
+			$data['height'] = $this->request->post['height'];
+		} elseif (!empty($package_info)) {
+			$data['height'] = $package_info['height'];
+		} else {
+			$data['height'] = '';
 		}
 
 		$data['header'] = $this->load->controller('common/header');

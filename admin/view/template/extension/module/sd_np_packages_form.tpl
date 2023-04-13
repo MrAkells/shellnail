@@ -40,7 +40,22 @@
                     <input name="volume" value="<?php echo $volume; ?>" class="form-control">
                 </div>
               </div>
-
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-length"><?php echo $entry_dimension; ?></label>
+                <div class="col-sm-10">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <input type="text" name="length" value="<?php echo $length; ?>" placeholder="<?php echo $entry_length; ?>" id="input-length" class="form-control" />
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="text" name="width" value="<?php echo $width; ?>" placeholder="<?php echo $entry_width; ?>" id="input-width" class="form-control" />
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="text" name="height" value="<?php echo $height; ?>" placeholder="<?php echo $entry_height; ?>" id="input-height" class="form-control" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             
         </form>
       </div>
