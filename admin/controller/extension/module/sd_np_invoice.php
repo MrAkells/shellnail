@@ -437,13 +437,23 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 			$order_info = $this->model_sale_order->getOrder($order_id);
 
 			if ($order_info && ($order_info['shipping_code'] == 'new_mail.new_mail' || $order_info['shipping_code'] == 'couriernp.couriernp')) {
-
+				$weight = $this->model_extension_module_sd_np_invoice->getWeightOrder($order_id);
 				$volumeGeneral = 0;
+				$optionsSeat = [];
 				$packaging_id = $this->model_extension_module_sd_np_invoice->getPackageOrder($order_id);
 				if ($packaging_id) {
 					$packaging = $this->model_extension_module_sd_np_invoice->getPackage($packaging_id);
 					if ($packaging) {
 						$volumeGeneral = $packaging['volume'];
+						$optionsSeat = [
+							[
+								"volumetricVolume" 	=> $packaging['volume'],
+								"volumetricWidth" 	=> $packaging['width'],
+								"volumetricLength"	=> $packaging['length'],
+								"volumetricHeight"	=> $packaging['height'],
+								"weight"			=> $weight
+							]
+						];
 					}
 				} else {
 					$json['errors'] = 'Необходимо выбрать упаковку!';
@@ -489,7 +499,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"PaymentMethod" => ($payer_type == "Recipient" ? "Cash" : "NonCash"),
 						"CargoType" => "Parcel",
 						"VolumeGeneral" => $volumeGeneral,
-						"Weight" => $this->model_extension_module_sd_np_invoice->getWeightOrder($order_id),
+						"Weight" => $weight,
 						"ServiceType" => ($order_info['shipping_code'] == 'new_mail.new_mail' ? 'WarehouseWarehouse' : 'WarehouseDoors'),
 						"SeatsAmount" => 1,
 						"Description" => "Косметика, косметологічне обладнання",
@@ -508,6 +518,12 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"DateTime" => date('d.m.Y')
 					]
 				];
+
+				// Параметр вантажу для кожного місця відправлення
+				if($order_info['shipping_code'] == 'new_mail.new_mail'){
+					$data['methodProperties']['OptionsSeat'] = $optionsSeat;
+				}
+
 				//Формирование запроса на создание «ЭН» с услугой «Контроль оплаты»
 				if ($order_info['payment_code'] == 'cod') $data['methodProperties']['AfterpaymentOnGoodsCost'] = round($order_info['total']);
 

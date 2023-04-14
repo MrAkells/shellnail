@@ -12,7 +12,9 @@ class ModelExtensionModuleSdNpInvoice extends Model
                 . " packaging_id INT(11) NOT NULL AUTO_INCREMENT, "
                 . " title VARCHAR(255) NOT NULL, "
                 . " volume VARCHAR(255) NOT NULL, "
-
+                . " length DECIMAL(15,2) NULL DEFAULT '0.00', "
+                . " width DECIMAL(15,2) NULL DEFAULT '0.00', "
+                . " height DECIMAL(15,2) NULL DEFAULT '0.00', "
                 . " PRIMARY KEY (packaging_id)"
                 . ") COLLATE='utf8_general_ci' ENGINE=MyISAM"
         );
