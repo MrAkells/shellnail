@@ -96,6 +96,12 @@
                     Обновить только наименование
                   </label>
                 </div>
+                <div class="col-sm-6">
+                  <label>
+                    Page
+                    <input type="text" name="page" value="0" >
+                  </label>
+                </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-category"><?php echo $entry_category; ?></label>

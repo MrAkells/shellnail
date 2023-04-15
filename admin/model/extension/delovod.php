@@ -4,8 +4,10 @@ class ModelExtensionDelovod extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `sku` = '" . $this->db->escape($id) . "', `isbn` = '" . $this->db->escape($isbn) . "' WHERE `product_id` = '" . (int)$id . "'");
 	}
 
-	public function getProductsByCategoryId($category_id, $isbn = true) {
-		$query = $this->db->query("SELECT p.product_id, pd.name FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p2c.category_id = '" . (int)$category_id. "'" . ($isbn?" AND p.isbn = ''" :"") . " ORDER BY pd.name ASC");
+	public function getProductsByCategoryId($category_id, $isbn = true, $page = 0 ) {
+        $sql = "SELECT p.product_id, pd.name FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p2c.category_id = '" . (int)$category_id. "'" . ($isbn?" AND p.isbn = ''" :"") . " ORDER BY pd.name ASC";
+        if($page) $sql .= " LIMIT " . (int)($page - 1)*50 . ", 50";
+		$query = $this->db->query($sql);
 
 		return $query->rows;
 	}

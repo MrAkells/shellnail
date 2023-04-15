@@ -274,6 +274,10 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 
 		$data['entry_title'] = $this->language->get('entry_title');
 		$data['entry_volume'] = $this->language->get('entry_volume');
+		$data['entry_dimension'] = $this->language->get('entry_dimension');
+		$data['entry_length'] = $this->language->get('entry_length');
+		$data['entry_width'] = $this->language->get('entry_width');
+		$data['entry_height'] = $this->language->get('entry_height');
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
 
@@ -322,6 +326,30 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 			$data['volume'] = $package_info['volume'];
 		} else {
 			$data['volume'] = '';
+		}
+
+		if (isset($this->request->post['length'])) {
+			$data['length'] = $this->request->post['length'];
+		} elseif (!empty($package_info)) {
+			$data['length'] = $package_info['length'];
+		} else {
+			$data['length'] = '';
+		}
+
+		if (isset($this->request->post['width'])) {
+			$data['width'] = $this->request->post['width'];
+		} elseif (!empty($package_info)) {
+			$data['width'] = $package_info['width'];
+		} else {
+			$data['width'] = '';
+		}
+
+		if (isset($this->request->post['height'])) {
+			$data['height'] = $this->request->post['height'];
+		} elseif (!empty($package_info)) {
+			$data['height'] = $package_info['height'];
+		} else {
+			$data['height'] = '';
 		}
 
 		$data['header'] = $this->load->controller('common/header');
@@ -409,13 +437,23 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 			$order_info = $this->model_sale_order->getOrder($order_id);
 
 			if ($order_info && ($order_info['shipping_code'] == 'new_mail.new_mail' || $order_info['shipping_code'] == 'couriernp.couriernp')) {
-
+				$weight = $this->model_extension_module_sd_np_invoice->getWeightOrder($order_id);
 				$volumeGeneral = 0;
+				$optionsSeat = [];
 				$packaging_id = $this->model_extension_module_sd_np_invoice->getPackageOrder($order_id);
 				if ($packaging_id) {
 					$packaging = $this->model_extension_module_sd_np_invoice->getPackage($packaging_id);
 					if ($packaging) {
 						$volumeGeneral = $packaging['volume'];
+						$optionsSeat = [
+							[
+								"volumetricVolume" 	=> $packaging['volume'],
+								"volumetricWidth" 	=> $packaging['width'],
+								"volumetricLength"	=> $packaging['length'],
+								"volumetricHeight"	=> $packaging['height'],
+								"weight"			=> $weight
+							]
+						];
 					}
 				} else {
 					$json['errors'] = 'Необходимо выбрать упаковку!';
@@ -461,7 +499,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"PaymentMethod" => ($payer_type == "Recipient" ? "Cash" : "NonCash"),
 						"CargoType" => "Parcel",
 						"VolumeGeneral" => $volumeGeneral,
-						"Weight" => $this->model_extension_module_sd_np_invoice->getWeightOrder($order_id),
+						"Weight" => $weight,
 						"ServiceType" => ($order_info['shipping_code'] == 'new_mail.new_mail' ? 'WarehouseWarehouse' : 'WarehouseDoors'),
 						"SeatsAmount" => 1,
 						"Description" => "Косметика, косметологічне обладнання",
@@ -480,6 +518,12 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"DateTime" => date('d.m.Y')
 					]
 				];
+
+				// Параметр вантажу для кожного місця відправлення
+				if($order_info['shipping_code'] == 'new_mail.new_mail'){
+					$data['methodProperties']['OptionsSeat'] = $optionsSeat;
+				}
+
 				//Формирование запроса на создание «ЭН» с услугой «Контроль оплаты»
 				if ($order_info['payment_code'] == 'cod') $data['methodProperties']['AfterpaymentOnGoodsCost'] = round($order_info['total']);
 
