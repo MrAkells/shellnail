@@ -6781,3 +6781,30 @@ tr.one_order {
   transform: rotate(25deg);
   z-index: 2;
 }
+
+.search-input-box {
+  position: relative;
+  z-index: 1;
+}
+.search-close {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 9px;
+  right: 24px;
+  z-index: 15;
+  opacity: .3;
+}
+.search-close:hover {
+  opacity: .6;
+}
+
+.search-input-box input:placeholder-shown ~ .search-close {
+  display: none;
+}
