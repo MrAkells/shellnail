@@ -6782,10 +6782,10 @@ tr.one_order {
   z-index: 2;
 }
 
-.search-input-box {
+/* .search-input-box {
   position: relative;
   z-index: 1;
-}
+} */
 .search-close {
   width: 24px;
   height: 24px;
@@ -6796,8 +6796,8 @@ tr.one_order {
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 9px;
-  right: 24px;
+  top: 14px;
+  right: 104px;
   z-index: 15;
   opacity: .3;
 }
@@ -6805,6 +6805,18 @@ tr.one_order {
   opacity: .6;
 }
 
-.search-input-box input:placeholder-shown ~ .search-close {
+#search input:placeholder-shown ~ .search-close {
   display: none;
+}
+@media (min-width: 481px) {
+  .search-close {
+    top: 18px;
+    right: 164px;
+  }
+}
+@media (min-width: 640px) {
+  .search-close {
+    top: 18px;
+    right: 174px;
+  }
 }
