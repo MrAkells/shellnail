@@ -64,7 +64,7 @@ class ModelToolNewMail extends Model
                 if($office->ShortAddressRu == '') $office->ShortAddressRu = $office->ShortAddress;
                 if($office->CityDescriptionRu == '') $office->CityDescriptionRu = $office->CityDescription;
                 $this->db->query(
-                    "INSERT INTO " . DB_PREFIX . "newmail_office SET site_key = '" . (int)$office->SiteKey . "', number = '" . (int)$this->Number . "',"
+                    "INSERT INTO " . DB_PREFIX . "newmail_office SET site_key = '" . (int)$office->SiteKey . "', number = '" . (int)$office->Number . "',"
                     . " ref = '" . $this->db->escape($office->Ref) . "', city_ref = '" . $this->db->escape($office->CityRef) . "',"
                     . " city_description = '" . $this->db->escape($office->CityDescription) . "', city_description_ru = '" . $this->db->escape($office->CityDescriptionRu) . "',"
                     . " description = '" . $this->db->escape($office->Description) . "', description_ru = '" . $this->db->escape($office->DescriptionRu) . "',"
