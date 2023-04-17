@@ -86,7 +86,7 @@ class ModelExtensionShippingNewMail extends Model
         
         public function getOffices ($ref)
         {
-            $data_city = $this->db->query("SELECT * FROM " . DB_PREFIX . "newmail_office WHERE city_ref = '" . $ref . "'");
+            $data_city = $this->db->query("SELECT * FROM " . DB_PREFIX . "newmail_office WHERE city_ref = '" . $ref . "' ORDER BY number");
             if(isset($data_city->rows) && !empty($data_city->rows)){
                 return $data_city->rows;
             }
