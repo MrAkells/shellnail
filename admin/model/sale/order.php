@@ -247,7 +247,7 @@ class ModelSaleOrder extends Model {
 	}
 
 	public function getOrderProducts($order_id) {
-		$query = $this->db->query("SELECT op.* FROM " . DB_PREFIX . "order_product op LEFT JOIN " . DB_PREFIX . "product p ON (op.product_id = p.product_id) WHERE op.order_id = '" . (int)$order_id . "' ORDER BY p.manufacturer_id, op.name");
+		$query = $this->db->query("SELECT op.*, p.manufacturer_id FROM " . DB_PREFIX . "order_product op LEFT JOIN " . DB_PREFIX . "product p ON (op.product_id = p.product_id) WHERE op.order_id = '" . (int)$order_id . "' ORDER BY p.manufacturer_id, op.product_id");
 
 		return $query->rows;
 	}

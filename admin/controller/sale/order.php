@@ -1340,12 +1340,12 @@ class ControllerSaleOrder extends Controller {
 			}
                         
                         // alphabetic order
-                        $prod_sort_order = array();
-                        foreach ($data['products'] as $key => $one) {
-				$prod_sort_order[$key] = $one['name'];
-			}
+            //             $prod_sort_order = array();
+            //             foreach ($data['products'] as $key => $one) {
+			// 	$prod_sort_order[$key] = $one['name'];
+			// }
 
-			array_multisort($prod_sort_order, SORT_ASC, $data['products']);
+			// array_multisort($prod_sort_order, SORT_ASC, $data['products']);
                         
                         
 			$data['header'] = $this->load->controller('common/header');
