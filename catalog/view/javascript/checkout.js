@@ -54,7 +54,7 @@
 		if(shipping_method == 'ukrposhta.ukrposhta' || shipping_method == 'inter.inter') return;
 		if(!_city.data('ref')){
 			_city.val('');
-			if(shipping_method == 'new_mail.new_mail') {
+			if(shipping_method == 'new_mail.new_mail' || shipping_method == 'couriernp.couriernp') {
 				_city.trigger('change');
 				let top = $('#payment_address_city_input').offset().top;
 				$('body,html').animate({scrollTop: top}, 1000);
