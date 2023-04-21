@@ -585,7 +585,8 @@ class ControllerExtensionModuleDelovod extends Controller
 			$i++;
 			$product_info = $this->model_extension_delovod->getProduct($result['product_id']);
 
-			if($product_info['isbn'] != '' && $product_info['name_ua'] != '' && $product_info['name_ua'] != $product_info['name']){
+			//if($product_info['isbn'] != '' && $product_info['name_ua'] != '' && $product_info['name_ua'] != $product_info['name']){
+			if($product_info['isbn'] != '' && $product_info['name_ua'] != ''){	
 				$packet['action'] = "saveObject";
 				$packet["params"]['header'] = [
 					"id" 		=> $product_info['isbn'],
