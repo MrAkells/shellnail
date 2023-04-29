@@ -3,9 +3,9 @@ class ModelExtensionModulePageNoIndex extends Model
 {
     public function isPageNoIndex()
     {
-        
+        $pattern = ['/\?.*/i','/\/ua/i'];
         if(isset($this->request->server['REQUEST_URI'])){
-            $sql = "SELECT page_id FROM  " . DB_PREFIX . "page_no_index WHERE url = '" . $this->request->server['REQUEST_URI'] . "'  AND is_noindex=1";
+            $sql = "SELECT page_id FROM  " . DB_PREFIX . "page_no_index WHERE url = '" . preg_replace($pattern, '', $this->request->server['REQUEST_URI']) . "'  AND is_noindex=1";
 
             $query = $this->db->query($sql);
 
@@ -16,10 +16,10 @@ class ModelExtensionModulePageNoIndex extends Model
 
     public function isPageCanonical()
     {
-        
+
         if(isset($this->request->server['REQUEST_URI'])){
 
-            $pattern = '/\?.*/i';
+            $pattern = ['/\?.*/i','/\/ua/i'];
 
             $sql = "SELECT page_id FROM  " . DB_PREFIX . "page_no_index WHERE url = '" . preg_replace($pattern, '', $this->request->server['REQUEST_URI']) . "'  AND is_canonical=1";
 
