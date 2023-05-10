@@ -426,6 +426,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 		$json = array();
 		$json['err'] = true;
 		$is_warning = false;
+		$is_documents = false;
 
 		if ($order_id > 0) {
 			$ttn = $this->model_extension_module_sd_np_invoice->getInvoiceOrder($order_id);
@@ -443,6 +444,17 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 				$packaging_id = $this->model_extension_module_sd_np_invoice->getPackageOrder($order_id);
 				if ($packaging_id) {
 					$packaging = $this->model_extension_module_sd_np_invoice->getPackage($packaging_id);
+
+					if($packaging['name'] == 'Спец - Документы'){
+						$is_documents = true;
+						if($weight <= 0.1) 
+							$weight = 0.1;
+						elseif($weight <= 0.5) 
+							$weight = 0.5;
+						else 
+							$weight = 1;
+					}
+
 					if ($packaging) {
 						$volumeGeneral = $packaging['volume'];
 						$optionsSeat = [
@@ -454,6 +466,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 								"weight"			=> $weight
 							]
 						];
+
 					}
 				} else {
 					$json['errors'] = 'Необходимо выбрать упаковку!';
@@ -497,12 +510,11 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"NewAddress" => "1",
 						"PayerType" => $payer_type,
 						"PaymentMethod" => ($payer_type == "Recipient" ? "Cash" : "NonCash"),
-						"CargoType" => "Parcel",
+						"CargoType" => $is_documents ? "Documents" : "Parcel", 
 						"VolumeGeneral" => $volumeGeneral,
 						"Weight" => $weight,
 						"ServiceType" => ($order_info['shipping_code'] == 'new_mail.new_mail' ? 'WarehouseWarehouse' : 'WarehouseDoors'),
 						"SeatsAmount" => 1,
-						"Description" => "Косметика, косметологічне обладнання",
 						"Cost" => ($order_info['payment_code'] == 'privat' ? 200 : round($order_info['total'])),
 						"CitySender" => $this->config->get('sd_np_ref_city'),
 						"Sender" => $this->config->get('sd_np_sender'),
@@ -518,6 +530,11 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"DateTime" => date('d.m.Y')
 					]
 				];
+
+				// Description только если не документ
+				if(!$is_documents){
+					$data['methodProperties']['Description'] = "Косметика, косметологічне обладнання";
+				}
 
 				// Параметр вантажу для кожного місця відправлення
 				if($order_info['shipping_code'] == 'new_mail.new_mail'){
