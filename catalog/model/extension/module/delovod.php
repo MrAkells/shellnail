@@ -150,7 +150,7 @@ class ModelExtensionModuleDelovod extends Model
 			$sms_config->load('sms');
 			$this->sms_config = $sms_config;
 	
-			$query_sms = $this->db->query("SELECT sms.product_id, sms.name as user_name, sms.phone as user_phone, pd.name as product_name, isbn FROM " . DB_PREFIX . "product p JOIN sms ON (p.product_id=sms.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON(p.product_id=pd.product_id) WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
+			$query_sms = $this->db->query("SELECT sms.product_id, sms.name as user_name, sms.phone as user_phone, pd.name as product_name, isbn FROM " . DB_PREFIX . "product p JOIN sms ON (p.product_id=sms.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON(p.product_id=pd.product_id) WHERE pd.language_id = '3'");
 	
 			foreach ($query_sms->rows as $row) {
 				if (isset($waiters[$row['isbn']])) {
@@ -219,7 +219,6 @@ class ModelExtensionModuleDelovod extends Model
 
 	public function sendSms($data)
 	{
-
 		$username = $this->sms_config->get('sms_username'); //'380508448537';    
 		$token = $this->sms_config->get('sms_token');  //'VKpJeF81HzujOj9';       
 		$from = $this->sms_config->get('sms_from');  //'shellnail';  
@@ -229,7 +228,12 @@ class ModelExtensionModuleDelovod extends Model
 
 		$link = $this->url->link('product/product', '&product_id=' . $data['product_id']);
 
-		$message = "Товар $name, который Вы ожидаете появился в наличии $link";
+		if($this->config->get('config_language_id') != 3) {
+			$base_url = $this->url->link('common/home', '', 'SSL');
+			$link = str_replace($base_url, $base_url. 'ua/', $link);
+		}
+
+		$message = "Товар $name, який Ви очікуєте з'явився в наявності $link";
 		$text = iconv('utf-8', 'windows-1251', $message);
 		$text = urlencode($text);
 
