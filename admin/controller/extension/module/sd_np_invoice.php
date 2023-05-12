@@ -444,8 +444,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 				$packaging_id = $this->model_extension_module_sd_np_invoice->getPackageOrder($order_id);
 				if ($packaging_id) {
 					$packaging = $this->model_extension_module_sd_np_invoice->getPackage($packaging_id);
-
-					if($packaging['name'] == 'Спец - Документы'){
+					if($packaging['title'] == 'Спец - Документы'){
 						$is_documents = true;
 						if($weight <= 0.1) 
 							$weight = 0.1;
