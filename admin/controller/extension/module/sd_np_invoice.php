@@ -510,7 +510,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"PayerType" => $payer_type,
 						"PaymentMethod" => ($payer_type == "Recipient" ? "Cash" : "NonCash"),
 						"CargoType" => $is_documents ? "Documents" : "Parcel", 
-						"VolumeGeneral" => $volumeGeneral,
+						"VolumeGeneral" => !$is_documents ? $volumeGeneral : '',
 						"Weight" => $weight,
 						"ServiceType" => ($order_info['shipping_code'] == 'new_mail.new_mail' ? 'WarehouseWarehouse' : 'WarehouseDoors'),
 						"Description" => $is_documents ? "Сертифікати на продукцію" : "Косметика, косметологічне обладнання",
@@ -532,7 +532,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 				];
 
 				// Параметр вантажу для кожного місця відправлення
-				if($order_info['shipping_code'] == 'new_mail.new_mail'){
+				if($order_info['shipping_code'] == 'new_mail.new_mail' && !$is_documents){
 					$data['methodProperties']['OptionsSeat'] = $optionsSeat;
 				}
 
