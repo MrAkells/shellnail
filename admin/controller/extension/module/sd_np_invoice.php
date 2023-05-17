@@ -513,6 +513,7 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"VolumeGeneral" => $volumeGeneral,
 						"Weight" => $weight,
 						"ServiceType" => ($order_info['shipping_code'] == 'new_mail.new_mail' ? 'WarehouseWarehouse' : 'WarehouseDoors'),
+						"Description" => $is_documents ? "Сертифікати на продукцію" : "Косметика, косметологічне обладнання",
 						"SeatsAmount" => 1,
 						"Cost" => ($order_info['payment_code'] == 'privat' ? 200 : round($order_info['total'])),
 						"CitySender" => $this->config->get('sd_np_ref_city'),
@@ -529,11 +530,6 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 						"DateTime" => date('d.m.Y')
 					]
 				];
-
-				// Description только если не документ
-				if(!$is_documents){
-					$data['methodProperties']['Description'] = "Косметика, косметологічне обладнання";
-				}
 
 				// Параметр вантажу для кожного місця відправлення
 				if($order_info['shipping_code'] == 'new_mail.new_mail'){
