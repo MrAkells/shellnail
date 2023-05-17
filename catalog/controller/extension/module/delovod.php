@@ -75,11 +75,13 @@ class ControllerExtensionModuleDelovod extends Controller
 						} elseif (isset($order_info['telephone']) && $order_info['telephone'] != '') {
 							$telephone = $order_info['telephone'];
 						}
+						
+						$client_full_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
 
 						$packet["params"]['header'] = [
 							"id"		=> "catalogs.persons",
 							"parent"	=> "1100100000001022", //Покупатели
-							"name" 		=> ["ru" => $order_info['firstname'] . ' ' . $order_info['lastname']],
+							"name" 		=> ["ru" => $client_full_name, "uk" => $client_full_name],
 							"details"	=> json_encode(["phones" => [["pr" => $telephone, "kind" => "phone"]], "emails" => [["pr" => $order_info['email'], "kind" => "email"]]])
 						];
 						$person_id = $this->saveObject($packet, $time);
