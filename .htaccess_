@@ -1,0 +1,293 @@
+# 1.To use URL Alias you need to be running apache with mod_rewrite enabled.
+
+# 2. In your opencart directory rename htaccess.txt to .htaccess.
+
+# For any support issues please visit: http://www.opencart.com
+
+Options +SymLinksIfOwnerMatch
+
+# Prevent Directoy listing
+Options -Indexes
+
+RewriteEngine on
+
+RewriteCond %{HTTP_USER_AGENT} ^.*(AspiegelBot).*$ [NC]
+RewriteRule .* - [F,L]
+
+
+RewriteCond %{REQUEST_URI} ^/wholesale.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/vse-dlya-manikura-optom-ukraine.html$ [R=301,L]
+
+#Редирект статей
+#--------------самый-последний-рабочий-редирект-статьи-----------
+RewriteCond %{REQUEST_URI} ^.*/magic-remover--supernovinka.*$
+RewriteRule ^.*$ https://shellnail.com.ua/articles-news-reviews/magic-remover-otzyv-i-obzor-novinki-dlya-snyatiya-gel-laka.html$ [R=301,L]
+#----------------------------------------------------------------
+
+RewriteCond %{REQUEST_URI} ^/opium.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/roks-hand-and-nails.html? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/maimeri.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/brands/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/cnd.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/brands/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/lady-victory.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/brands/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/salon-professional.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/brands/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/how-to-order.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/shipping-and-payment.html? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/about_us.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/innovative-in-passion.html?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/? [R=301,L]
+
+
+
+
+RewriteCond %{REQUEST_URI} ^/orange-manicure.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/articles-news-reviews/orange-manikyur.html? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/french-v-mode-zima-2014-2015/$
+RewriteRule ^.*$ https://shellnail.com.ua/articles-news-reviews/french_v_mode.html? [R=301,L]
+
+
+RewriteCond %{REQUEST_URI} ^/slayder-dizayn-dlya-nogtey/$
+RewriteRule ^.*$ https://shellnail.com.ua/articles-news-reviews/slayder-dizayn-dlya-nogtey-28.html? [R=301,L]
+
+
+RewriteCond %{REQUEST_URI} ^/letniy-manikur-2017.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/articles-news-reviews/letniy-dginsovo-zefirniy-manikyur-2017.html? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/pakazyvaem-kak-nanesti-hlopya-juki/$
+RewriteRule ^.*$ https://shellnail.com.ua/articles-news-reviews/pokazivaem-kak-nanosit-hlopya-yuki.html? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/narashivanie-polygelem-instrukciya-po-primeneniu/$
+RewriteRule ^.*$ https://shellnail.com.ua/articles-news-reviews/narashchivanie-nogtey-akrilatikom-poligelem-instruktsiya-po-primeneniyu-116.html? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/novinka-gel-lak-koshachiy-glaz/$
+RewriteRule ^.*$ https://shellnail.com.ua/articles-news-reviews/gel-lak-koshachiy-glaz-27.html? [R=301,L]
+
+
+#Редирект категорий
+RewriteCond %{REQUEST_URI} ^.*/gel-lak-koshachiy-glaz-kodi/?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/gel-lak-kodi/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/polygel-canni-dlya-narashivaniya-nogtey/?$
+RewriteRule ^.*$ https://shellnail.com.ua/geli/acrylatik-acrygel-polygel/poligel-kanni-canni/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/pokrytiya_effekt_ljuministsentnyj/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_effekt_ljuminestsentnyj/? [R=301,L]
+
+
+#Редирект категории на пункт меню (урл с параметрами фильтра)
+RewriteCond %{REQUEST_URI} ^.*/dots-manicure-tool/?$
+RewriteRule ^.*$ https://shellnail.com.ua/instrumenty-i-vspomogatelnye-materialy/kisti_forma_dots/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/base/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_vid-pokrytija_baza/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/top/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_vid-pokrytija_top/? [R=301,L]
+
+#Редирект товаров на страницу категории
+RewriteCond %{REQUEST_URI} ^.*/cats-eye-[0-9]*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/kamufliruyshaya-base-opium-n[0-9]-[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_baza_effekt_kamuflirujuschij/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/kamufliruyshaya-base-opium-n[0-9]-[0-9][0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_baza_effekt_kamuflirujuschij/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/french-base-opium-[0-9]-[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_baza_effekt_kamuflirujuschij/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/french-base-opium-[0-9]-[0-9][0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_baza_effekt_kamuflirujuschij/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/french-base-opium-[0-9][0-9]-[0-9][0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_baza_effekt_kamuflirujuschij/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/french-base-opium-[0-9][0-9]*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_baza_effekt_kamuflirujuschij/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/opium-aquagel-[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/rubber-top-opium-[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_top/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/rubber-top-opium-[0-9][0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_top/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/matte-non-wipe-top-opium-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_top/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/matte-non-wipe-top-opium-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_top/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/top-non-wipe-opium-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_top/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/matte-top-opium-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_top/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/top-opium-no-wipe-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_top/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/top-opium-shimmer-opal-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_top/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/shimmer-top-opium-[0-9]-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_top/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/rubber-base-opium-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/pokrytiya_roks-hand-and-nails_vid-pokrytija_baza/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/ultrabond-opium-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/ochistitel/primer-dlya-nogtey/ultrabond-roks-12ml.html? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/acid-primer-opium-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/ochistitel/primer-dlya-nogtey/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/nail-prep-opium-[0-9]*[0-9]ml*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/ochistitel/antiseptiki/nail-prep-roks-150ml.html? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/smennaya-ruchka-dlya-frezera-[a-z,0-9]*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/frezer-nasadki-ruchki/ruchki-dlya-frezera/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/gel-lak-kodi-felt[0-9]*.html/?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/gel-lak-kodi/? [R=301,L]
+
+
+
+#--------------
+
+#Редирект самой категории вместе с товарами на другую страницу
+RewriteCond %{REQUEST_URI} ^.*/akcionnye-tovary/.*?$
+RewriteRule ^.*$ https://shellnail.com.ua/akcii/5-fox-sumka-v-podarok/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/gel-lak-opium-color-series/.*?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/gel-laki-roks/gel-lak-roks-color/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/gel-lak-opium-diamond-series/.*?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/gel-laki-roks/gel-laki-roks-diamond/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/gel-lak-opium-cat-eye/.*?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/gel-laki-roks/gel-lak-roks-cat-eye/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/gel-lak-opium-opium-glass-color-8-ml/.*?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/gel-laki-roks/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/gel-laki-opium/.*?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/gel-laki-roks/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/gel-lak-naomi/.*?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/gel-lak-silcare/.*?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/gel-lak-innovative-in-passion/.*?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^.*/gel-lak-fox-drinks/.*?$
+RewriteRule ^.*$ https://shellnail.com.ua/gel-laki/gel-laki-fox/? [R=301,L]
+
+
+
+
+#Редирект товаров из старой категории в новую
+RewriteRule ^https://shellnail.com.ua/instrumenty-i-vspomogatelnye-materialy/kisti/$ /dots-manicure-tool/$1 [R=301,L]
+RewriteRule ^https://shellnail.com.ua/pokrytiya/$ /base/$1 [R=301,L]
+RewriteRule ^https://shellnail.com.ua/pokrytiya/$ /top/$1 [R=301,L]
+
+
+RewriteCond %{QUERY_STRING} information_id=13$ [NC]
+RewriteRule ^.*$ https://shellnail.com.ua/reviews/? [R=301,L]
+
+
+# Prevent Direct Access to files
+<FilesMatch "(?i)((\.tpl|\.ini|\.log|(?<!robots)\.txt))">
+ Require all denied
+## For apache 2.2 and older, replace "Require all denied" with these two lines :
+# Order deny,allow
+# Deny from all
+</FilesMatch>
+
+# SEO URL Settings
+RewriteEngine On
+# If your opencart installation does not run on the main web folder make sure you folder it does run in ie. / becomes /shop/
+
+RewriteBase /
+
+#Vita
+RewriteCond %{QUERY_STRING} page=1$ [NC]
+RewriteCond %{REQUEST_URI} !^/admin [NC]
+RewriteRule (.*)  /$1? [R=301,L]
+
+RewriteCond %{QUERY_STRING} page=$ [NC]
+RewriteCond %{REQUEST_URI} !^/admin [NC]
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1? [R=301,L]
+
+#RewriteRule ^sitemap.xml$ index.php?route=extension/feed/google_sitemap [L]
+#RewriteRule ^sitemap-manufacturers.xml$ index.php?route=extension/feed/google_sitemap&type=manufacturers [L]
+
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
+
+RewriteRule ^googlebase.xml$ index.php?route=extension/feed/google_base [L]
+RewriteRule ^system/download/(.*) index.php?route=error/not_found [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)
+RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
+
+#RewriteCond %{HTTP_HOST} ^www\.(.*)$
+#RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
+#RewriteCond %{HTTPS} off
+#RewriteCond %{HTTP:X-Forwarded-Proto} !https
+#RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301] 
+
+### Additional Settings that may need to be enabled for some servers
+### Uncomment the commands by removing the # sign in front of it.
+### If you get an "Internal Server Error 500" after enabling any of the following settings, restore the # as this means your host doesn't allow that.
+
+# 1. If your cart only allows you to add one item at a time, it is possible register_globals is on. This may work to disable it:
+# php_flag register_globals off
+
+# 2. If your cart has magic quotes enabled, This may work to disable it:
+# php_flag magic_quotes_gpc Off
+
+# 3. Set max upload file size. Most hosts will limit this and not allow it to be overridden but you can try
+# php_value upload_max_filesize 999M
+
+# 4. set max post size. uncomment this line if you have a lot of product options or are getting errors where forms are not saving all fields
+# php_value post_max_size 999M
+
+# 5. set max time script can take. uncomment this line if you have a lot of product options or are getting errors where forms are not saving all fields
+# php_value max_execution_time 200
+
+# 6. set max time for input to be recieved. Uncomment this line if you have a lot of product options or are getting errors where forms are not saving all fields
+# php_value max_input_time 200
+
+# 7. disable open_basedir limitations
+# php_admin_value open_basedir none
+
+### Display PHP errors 
+### Uncomment the commands by removing the # sign in front of it.
+# php_flag display_startup_errors on
+# php_flag display_errors on
+# php_flag html_errors on
+# php_flag track_errors on
+# php_value error_reporting "E_ALL"
+
+
+

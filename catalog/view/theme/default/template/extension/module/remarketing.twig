@@ -1,0 +1,34 @@
+	{% if remarketing_code %}
+	{{ remarketing_code }}
+	{% endif %}
+	
+	{% if ecommerce_status and ga4_datalayer %}
+	<script>
+	{% if ecommerce_status %}
+	window.dataLayer = window.dataLayer || [];
+	dataLayer.push({ ecommerce: null });
+	dataLayer.push({{ ga4_datalayer|json_encode() }});
+	{% if remarketing_product_json %}
+	dataLayer.push({{ remarketing_product_json|json_encode() }});
+	{% endif %}
+	{% endif %}
+	</script>
+	{% endif %}
+	{% if ecommerce_ga4_status and ga4_product %}
+	<script>
+	if (typeof sendGa4Details !== 'undefined') {
+		sendGa4Details({{ ga4_product|json_encode() }}, false);
+	} 
+	</script>
+	{% endif %}
+	{% if ga4_json %}
+	<script>
+	window.ecommerce_ga4_products = window.ecommerce_ga4_products || {};
+	ecommerce_ga4_product_data = {{ ga4_json|json_encode() }};
+
+	if (typeof sendGa4Impressions !== 'undefined') { 
+		sendGa4Impressions(ecommerce_ga4_product_data, {% if view_search_results %}true{% else %}false{% endif %}, false);
+	}
+	 ecommerce_ga4_products = $.extend(ecommerce_ga4_products, ecommerce_ga4_product_data);
+	  </script>
+	 {% endif %}
