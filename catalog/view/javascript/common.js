@@ -24,6 +24,7 @@ function getURLVar(key) {
 }
 
 function prepare_fbq(obj) {
+	return;
     var sku = obj.data('fbq_sku');
     var name = obj.data('fbq_name');
     var price = obj.data('fbq_price');
@@ -53,6 +54,7 @@ function prepare_fbq(obj) {
 }
 
 function prepare_fbq_purchase(value) {
+	return;
     if (typeof fbq === "function") {
 	fbq('track', 'Purchase', {
 	    content_name: 'Покупка подтверждённая',
