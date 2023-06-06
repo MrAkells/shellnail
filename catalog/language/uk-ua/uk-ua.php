@@ -85,3 +85,8 @@ $_['text_outstock']                            = 'Немає в наявност
 
 $_['error_field_required'] = 'Дане поле обов`язково до заповнення';
 $_['text_min_total'] = 'До мінімальної суми замовлення не вистачає %s грн.';
+
+$_['sticker_bestseller'] = 'Хіт';
+$_['sticker_new_product'] = 'new';
+$_['sticker_most_viewed'] = 'Хіт';
+$_['sticker_special'] = 'Акції';
