@@ -7,6 +7,10 @@
   width: 100%;
   max-width: 75px;
 }
+
+.product-images .stickers {
+  left: 80px;
+}
 .stickers-box {
   overflow: hidden;
   
