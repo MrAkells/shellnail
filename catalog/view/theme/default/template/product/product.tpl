@@ -148,11 +148,6 @@
                   <?php } else { ?>
                     <span class="price-new"><?php echo $special; ?></span>
                     <span class="price-old"><?php echo $price; ?></span>
-                    <?php if ($active_promos) { ?>
-                      <a class="link-product-sale" href="<?php echo $active_promos['href']; ?>" title="<?php echo $active_promos['title']; ?>" rel="nofollow">
-                        <div class="sticker-product-sale"><span><?php echo $text_promo_sale; ?></span></div>
-                      </a>
-                    <?php } ?>
                   <?php } ?>
                   <ul class="list-unstyled">
                     <?php if ($tax) { ?>

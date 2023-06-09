@@ -14,6 +14,7 @@ class ModelCatalogProduct extends Model {
 			if(isset($active_promos_products['1'][$query->row['product_id']]) ){
 				$query->row['special']=$query->row['price']-($active_promos_products['1'][$query->row['product_id']]['settings']*$query->row['price']/100);
 				$promos[] = [
+					'promo_id' => $active_promos_products['1'][$query->row['product_id']]['promo_id'],
 					'class' => 'sticker_special',
 					'title' => '-' . $active_promos_products['1'][$query->row['product_id']]['settings'] . '%',
 					'href' => $this->url->link('product/category', 'category_id=' . $active_promos_products['1'][$query->row['product_id']]['promo_id'])
@@ -22,6 +23,7 @@ class ModelCatalogProduct extends Model {
 			if(isset($active_promos_products['2'][$query->row['product_id']]) ){
 				$query->row['special']=$query->row['price']-$active_promos_products['2'][$query->row['product_id']]['settings'];
 				$promos[] = [
+					'promo_id' => $active_promos_products['2'][$query->row['product_id']]['promo_id'],
 					'class' => 'sticker_special',
 					'title' => '-' . $this->currency->format($this->tax->calculate($active_promos_products['2'][$query->row['product_id']]['settings'], $query->row['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']),
 					'href' => $this->url->link('product/category', 'category_id=' . $active_promos_products['2'][$query->row['product_id']]['promo_id'])
@@ -29,6 +31,7 @@ class ModelCatalogProduct extends Model {
 			}
 			if(isset($active_promos_products['3'][$query->row['product_id']]) ){
 				$promos[] = [
+					'promo_id' => $active_promos_products['3'][$query->row['product_id']]['promo_id'],
 					'class' => 'sticker_special',
 					'title' => $active_promos_products['3'][$query->row['product_id']]['settings'] . ' + 1',
 					'href' => $this->url->link('product/category', 'category_id=' . $active_promos_products['3'][$query->row['product_id']]['promo_id'])
