@@ -9,8 +9,14 @@
 }
 
 .product-images .stickers {
-  left: 90px;
+  left: 0;
 }
+@media (min-width: 1200px) {
+  .product-images .stickers {
+    left: 90px;
+  }
+}
+
 .stickers-box {
   overflow: hidden;
   
