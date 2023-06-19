@@ -27,6 +27,7 @@
   justify-content: center;
   font-size: 11px;
   color: white;
+  white-space: nowrap;
   text-transform: uppercase;
   /* border-top-width: 20px; */
   /* border-top-style: solid;
