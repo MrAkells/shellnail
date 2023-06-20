@@ -31,7 +31,6 @@
   display: inline-flex;
   height: 20px;
   width: auto;
-  /* max-width: 55px; */
   min-width: 55px;
   border-radius: 3px;
   align-items: center;
@@ -39,30 +38,13 @@
   font-size: 11px;
   color: white;
   white-space: nowrap;
-  text-transform: uppercase;
-  /* border-top-width: 20px; */
-  /* border-top-style: solid;
-  border-right: 7px solid transparent;
-  border-top-color: transparent; */
   padding-right: 14px;
   padding-left: 8px;
   position: relative;
   z-index: 1;
   clip-path: polygon(0 0, 100% 0%, 85% 100%, 0% 100%);
 }
-/* .stickers .stickers-item::before {
-  display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  text-align: center;
-  color: white;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 20px;
-  z-index: 3;
-} */
+
 .stickers .stickers-item::after {
   content: "";
   position: absolute;
@@ -87,26 +69,19 @@
 }
 */
 .sticker_new_product {
-  /* border-top-color: #6cc23c !important; */
   background-color: #6cc23c;
+  text-transform: uppercase;
 }
-.sticker_new_product:before {
-  /* content: "New"; */
-}
+
 .sticker_special {
   background-color: #ff3131;
-  /* border-top-color: #ff3131 !important; */
 }
-.sticker_special:before {
-  /* content: "Акции"; */
-}
+
 .sticker_most_viewed {
-  /* border-top-color: #ff612f !important; */
   background-color: #ff612f;
+  text-transform: uppercase;
 }
-.sticker_most_viewed:before {
-  /* content: "Хит"; */
-}
+
 .product_cart_sticker {
   left: 30px !important ;
 }
