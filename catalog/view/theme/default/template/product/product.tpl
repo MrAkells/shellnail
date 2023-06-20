@@ -62,6 +62,7 @@
                 </a>  -->
               <?php } ?>
               <!-- Начало блока с картинкой продукта и дополнительными изображениями -->
+              <div class="product-stickers">
               <?php if ($thumb || $images) { ?>
                 <ul class="thumbnails product-images">
                   <?php if ($thumb) { ?>
@@ -78,6 +79,7 @@
                     <?php } ?>
                 </ul>
               <?php } ?>
+              </div>
               <!-- Конец блока с картинкой продукта и дополнительными изображениями -->
 
             </div>

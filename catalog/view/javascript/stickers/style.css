@@ -8,11 +8,16 @@
   max-width: 75px;
 }
 
-.product-images .stickers {
+.product-stickers {
+  position: relative;
+  height: 100%;
+}
+
+.product-stickers .stickers {
   left: 10px;
 }
 @media (min-width: 1200px) {
-  .product-images .stickers {
+  .product-stickers .stickers {
     left: 90px;
   }
 }
