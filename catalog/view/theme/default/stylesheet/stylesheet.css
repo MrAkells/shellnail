@@ -2064,19 +2064,34 @@ h2.title-feature {
   align-items: center;
 }
 
+.new-product .nav-tabs h2.title-promotions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70px;
+  padding: 10px 25px;
+
+}
+
 .new-product .nav-tabs > li {
-  margin-bottom: -3px;
-  margin-left: -2px;
+  margin-bottom: 0;
+  margin-left: 0;
   flex: 1;
   text-align: center;
   float: none;
+  z-index: 10;
+  box-sizing: border-box;
 }
 
 .new-product .nav-tabs > li.active {
   margin-bottom: -2px;
+  min-height: 72px;
+  background-color: #fff;
+  z-index: 30;
 }
 .new-product .nav-tabs > li > a {
-  margin-right: 2px;
+  margin-right: 0;
+  margin-left: 0;
   line-height: 1.42857143;
   border: none;
   border-bottom: 0px solid #c9a6d7;
@@ -2085,6 +2100,11 @@ h2.title-feature {
   color: #161616;
   font-size: 14px;
   background-color: #f7f3f8;
+  box-sizing: border-box;
+}
+.new-product .nav-tabs > li.active a {
+  min-height: 72px;
+  margin-left: -1px;
 }
 .new-product .nav-tabs > li.active > a,
 .new-product .nav-tabs > li.active > a:focus,
@@ -2094,12 +2114,20 @@ h2.title-feature {
   font-size: 14px;
   border-bottom: 2px solid #fff;
   background-color: transparent;
-  margin-left: -1px;
 }
 .new-product .nav > li > a {
   position: relative;
-  display: block;
-  padding: 20px 25px;
+  display: flex;
+  padding: 5px 15px;
+  align-items: center;
+  justify-content: center;
+  min-height: 70px;
+}
+
+@media (min-width: 769px) and (max-width: 1199px) { 
+  .new-product .nav-tabs h2.title-promotions {
+    padding: 7px 25px;
+}
 }
 
 @media (max-width: 768px) {
@@ -2109,13 +2137,26 @@ h2.title-feature {
   .new-product .nav-tabs > li {
     margin-bottom: 0;
     min-width: 100%;
+    margin-left: 0;
   }
   .new-product .nav-tabs > li.active {
     margin-bottom: 0;
   }
   .new-product .nav-tabs > li > a {
     margin-right: 0;
-    margin-left: -1px !important; 
+    margin-left: 0 !important; 
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e7e6e7;
+    border-bottom: 0;
+  }
+  .new-product .nav-tabs > li:last-child a {
+    border-right: 1px solid #e7e6e7 !important;
+  }
+  .new-product .nav-tabs > li:last-child a,
+  .new-product .nav-tabs > li:nth-child(2) a {
+    border-radius: 0 !important;
   }
 }
 
