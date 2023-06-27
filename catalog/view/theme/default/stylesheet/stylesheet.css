@@ -805,9 +805,9 @@ footer h5 {
     min-height: unset;
   }
 }
-.product-thumb .rating {
+/* .product-thumb .rating {
   padding-bottom: 10px;
-}
+} */
 .rating .fa-stack {
   font-size: 8px;
 }
@@ -1943,6 +1943,7 @@ h2.title-feature {
   font-family: "Roboto-Medium";
   color: #161616;
   font-size: 18px;
+  padding-top: 10px;
 }
 .goods-cart .price {
   font-family: "Roboto-Medium";
@@ -2059,11 +2060,18 @@ h2.title-feature {
 /*---Stoke---*/
 .new-product .nav-tabs {
   border-bottom: 2px solid #c9a6d7;
+  display: flex;
+  align-items: center;
 }
+
 .new-product .nav-tabs > li {
   margin-bottom: -3px;
   margin-left: -2px;
+  flex: 1;
+  text-align: center;
+  float: none;
 }
+
 .new-product .nav-tabs > li.active {
   margin-bottom: -2px;
 }
@@ -2091,8 +2099,26 @@ h2.title-feature {
 .new-product .nav > li > a {
   position: relative;
   display: block;
-  padding: 20px 40px;
+  padding: 20px 25px;
 }
+
+@media (max-width: 768px) {
+  .new-product .nav-tabs {
+    flex-direction: column;
+  }
+  .new-product .nav-tabs > li {
+    margin-bottom: 0;
+    min-width: 100%;
+  }
+  .new-product .nav-tabs > li.active {
+    margin-bottom: 0;
+  }
+  .new-product .nav-tabs > li > a {
+    margin-right: 0;
+    margin-left: -1px !important; 
+  }
+}
+
 .title-promotions {
   padding: 20px 40px;
   margin-top: 0px;

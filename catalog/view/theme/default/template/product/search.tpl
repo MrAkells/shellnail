@@ -231,13 +231,13 @@
                 <?php } ?>
                 </div>
               <?php } else{ ?>
-              <div class="rating">
+              <!-- <div class="rating">
                 <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                 <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                 <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                 <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                 <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-              </div>
+              </div> -->
             <?php } ?>
         <div style="clear: left"></div>
         <?php if ($product['price']) { ?>

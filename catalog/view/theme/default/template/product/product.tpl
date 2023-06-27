@@ -113,18 +113,19 @@
                       <?php } ?>
                     <?php } ?>
                   </div>
+                  <p class="reviews">
+                    <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); to_reviews(); return false;"><span><?php echo $reviews; ?></span></a>
+                  </p>
                 <?php } else { ?>
-                  <div class="rating">
+                  <!-- <div class="rating">
                     <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                     <span class="fa fa-stack"><i class="fa fa-star-o        fa-stack-2x"></i></span>
                     <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                     <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                     <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                  </div>
+                  </div> -->
                 <?php } ?>
-                <p class="reviews">
-                  <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); to_reviews(); return false;"><span><?php echo $reviews; ?></span></a>
-                </p>
+                
               </div>
 
               <div class="product-manufacture">
@@ -538,21 +539,24 @@
                             <?php } ?>
                           <?php } ?>
                         </div>
-                      <?php } else { ?>
-                        <div class="rating">
-                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                        </div>
-                      <?php } ?>
 
-
-
-                      <?php if ($product['reviews']) { ?>
+                        <?php if ($product['reviews']) { ?>
                         <p class="reviews"><span><?php echo $product['reviews']; ?></span> <span><?php echo  $text_reviews_number; ?></span></p>
                       <?php } ?>
+
+                      <?php } else { ?>
+                        <!-- <div class="rating">
+                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                        </div> -->
+                      <?php } ?>
+
+
+
+                     
                       <div style="clear: left"></div>
 
 
