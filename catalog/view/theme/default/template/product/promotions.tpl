@@ -47,6 +47,20 @@
                                     <?php }else{ ?>
                                    <p class="produc-status"><i class="fa fa-check"></i><?php echo $text_instock; ?> </p>
                                     <?php } ?>
+
+                                    <?php if ($product['price']) { ?>
+                                    <p class="price">
+                                    <?php if (!$product['special']) { ?>
+                                    <?php echo $product['price']; ?>
+                                    <?php } else { ?>
+                                    <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
+                                    <?php } ?>
+                                    <?php if ($product['tax']) { ?>
+                                    <span class="price-tax"><?php echo $text_tax; ?> <?php echo $product['tax']; ?></span>
+                                    <?php } ?>
+                                    </p>
+                                    <?php } ?>
+
                                     <?php if ($product['rating']) { ?>
                                         <div class="rating">
                                             <?php for ($i = 1; $i <= 5; $i++) { ?>
@@ -74,24 +88,9 @@
                                         <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                                     </div> -->
                                     <?php } ?>
-                                    
-                                    
-                                    
+
                                     <div style="clear: left"></div>
-                                    
-                                    <?php if ($product['price']) { ?>
-                                    <p class="price">
-                                    <?php if (!$product['special']) { ?>
-                                    <?php echo $product['price']; ?>
-                                    <?php } else { ?>
-                                    <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
-                                    <?php } ?>
-                                    <?php if ($product['tax']) { ?>
-                                    <span class="price-tax"><?php echo $text_tax; ?> <?php echo $product['tax']; ?></span>
-                                    <?php } ?>
-                                    </p>
-                                    <?php } ?>
-                               
+
                             </div>
                                 
                             <?php if(!$product['quantity'] || $product['quantity']<1){ ?>

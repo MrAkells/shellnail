@@ -219,6 +219,18 @@
              <p class="produc-status is_not_present"> <?php echo $text_outstock; ?></p>
         <?php } ?>
                 
+        <?php if ($product['price']) { ?>
+                <p class="price">
+                  <?php if (!$product['special']) { ?>
+                  <?php echo $product['price']; ?>
+                  <?php } else { ?>
+                  <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
+                  <?php } ?>
+                  <?php if ($product['tax']) { ?>
+                  <span class="price-tax"><?php echo $text_tax; ?> <?php echo $product['tax']; ?></span>
+                  <?php } ?>
+                </p>
+                <?php } ?>
                 
                 <?php if ($product['rating']) { ?>
                 <div class="rating">
@@ -240,23 +252,9 @@
               </div> -->
             <?php } ?>
         <div style="clear: left"></div>
-        <?php if ($product['price']) { ?>
-                <p class="price">
-                  <?php if (!$product['special']) { ?>
-                  <?php echo $product['price']; ?>
-                  <?php } else { ?>
-                  <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
-                  <?php } ?>
-                  <?php if ($product['tax']) { ?>
-                  <span class="price-tax"><?php echo $text_tax; ?> <?php echo $product['tax']; ?></span>
-                  <?php } ?>
-                </p>
-                <?php } ?>
+        
               </div>
-                
-              
-            
-                
+ 
                       <?php if(!$product['quantity'] || $product['quantity']<1){ ?>
                             <div class="btn-two">
                                 <button type="button" class="notify-of-availability order" data-toggle="modal" data-target="#preoder" data-product="<?php echo $product['name']; ?>" data-product_url="<?php echo $product['href']; ?>" data-product_id="<?php echo $product['product_id']; ?>" data-product_img="<?php echo $product['thumb']; ?>" data-product_price="<?php echo $product['price']; ?>"><span class="title-one-click"><?php echo $button_notify_availability; ?></span></button>

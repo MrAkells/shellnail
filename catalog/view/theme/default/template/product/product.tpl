@@ -522,11 +522,23 @@
                         <p class="artikul"><span><?php echo $text_artikul; ?>:</span> <span><?php echo $product['sku']; ?></span></p>
                       <?php } ?>
 
-
                       <?php if ($product['quantity']) { ?>
                         <p class="produc-status"><i class="fa fa-check"></i> <?php echo $text_instock; ?></p>
                       <?php } else { ?>
                         <p class="produc-status is_not_present"> <?php echo $text_outstock; ?></p>
+                      <?php } ?>
+
+                      <?php if ($product['price']) { ?>
+                        <p class="price">
+                          <?php if (!$product['special']) { ?>
+                            <?php echo $product['price']; ?>
+                          <?php } else { ?>
+                            <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
+                          <?php } ?>
+                          <?php if ($product['tax']) { ?>
+                            <span class="price-tax"><?php echo $text_tax; ?> <?php echo $product['tax']; ?></span>
+                          <?php } ?>
+                        </p>
                       <?php } ?>
 
                       <?php if ($product['rating']) { ?>
@@ -541,7 +553,7 @@
                         </div>
 
                         <?php if ($product['reviews']) { ?>
-                        <p class="reviews"><span><?php echo $product['reviews']; ?></span> <span><?php echo  $text_reviews_number; ?></span></p>
+                        <div class="reviews"><span><?php echo $product['reviews']; ?></span> <span><?php echo  $text_reviews_number; ?></span></div>
                       <?php } ?>
 
                       <?php } else { ?>
@@ -554,24 +566,9 @@
                         </div> -->
                       <?php } ?>
 
-
-
-                     
                       <div style="clear: left"></div>
 
-
-                      <?php if ($product['price']) { ?>
-                        <p class="price">
-                          <?php if (!$product['special']) { ?>
-                            <?php echo $product['price']; ?>
-                          <?php } else { ?>
-                            <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
-                          <?php } ?>
-                          <?php if ($product['tax']) { ?>
-                            <span class="price-tax"><?php echo $text_tax; ?> <?php echo $product['tax']; ?></span>
-                          <?php } ?>
-                        </p>
-                      <?php } ?>
+                      
 
                     </div>
 
