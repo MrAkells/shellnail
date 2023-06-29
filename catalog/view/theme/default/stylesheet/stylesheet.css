@@ -2186,9 +2186,11 @@ h2.title-promotions {
 .new-product .nav-tabs > li:last-child a {
   border-top-right-radius: 5px;
   border-right: none;
+  border-bottom: 1px solid #e7e6e7
 }
 .new-product .nav-tabs > li:last-child.active a {
   border-right: 1px solid #e7e6e7;
+  
 }
 /*---End-Stoke---*/
 /*---End-Newsproduct----*/
