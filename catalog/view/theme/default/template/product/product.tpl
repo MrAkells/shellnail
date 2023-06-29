@@ -18,10 +18,23 @@
         <?php $i = 0; ?>
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
           <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+
+          <?php if ($i + 1 < count($breadcrumbs)) { ?>
+
             <a itemprop="item" class="crumb" href="<?php echo $breadcrumb['href']; ?>">
               <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
             </a>
             <meta itemprop="position" content="<?php echo $i++; ?>">
+
+            <?php } else { ?>
+
+              <span class="crumb">
+                <span><?php echo $breadcrumb['text']; ?></span>
+              </span>
+              <meta itemprop="position" content="<?php echo $i++; ?>">
+              
+              <?php } ?>
+
           </li>
         <?php } ?>
       </ul>

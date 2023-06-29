@@ -4698,13 +4698,17 @@ tr.one_order {
     height: 76px;
     overflow: hidden;
   }
-  /* .product-thumb .price {
+  .product-thumb .caption {
+    padding: 0 10px;
+    min-height: 174px;
+}
+  .product-thumb .price {
     min-height: 40px;
-  } */
-  /* .product-thumb .price-new,
+  }
+  .product-thumb .price-new,
   .product-thumb .price-old {
     display: block;
-  } */
+  }
   .product-thumb .price-old {
     margin-left: 0;
   }
