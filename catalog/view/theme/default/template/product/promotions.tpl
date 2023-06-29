@@ -47,35 +47,7 @@
                                     <?php }else{ ?>
                                    <p class="produc-status"><i class="fa fa-check"></i><?php echo $text_instock; ?> </p>
                                     <?php } ?>
-                                    <?php if ($product['rating']) { ?>
-                                    <div class="rating">
-                                    <?php for ($i = 1; $i <= 5; $i++) { ?>
-                                    <?php if ($product['rating'] < $i) { ?>
-                                    <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                                    <?php } else { ?>
-                                    <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
-                                    <?php } ?>
-                                    <?php } ?>
-                                    </div>
-                                    <?php } else{ ?>
-                                    <div class="rating">
-                                        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                                        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                                        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                                        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                                        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                                    </div>
-                                    <?php } ?>
-                                    
-                                    <?php if($product['reviews']){ ?>
-                                    <p class="reviews">
-                                        <span><?php echo $product['reviews']; ?></span> 
-                                        <span><?php echo  $text_reviews_number; ?></span>
-                                    </p>
-                                    <?php } ?>
-                                    
-                                    <div style="clear: left"></div>
-                                    
+
                                     <?php if ($product['price']) { ?>
                                     <p class="price">
                                     <?php if (!$product['special']) { ?>
@@ -88,7 +60,37 @@
                                     <?php } ?>
                                     </p>
                                     <?php } ?>
-                               
+
+                                    <?php if ($product['rating']) { ?>
+                                        <div class="rating">
+                                            <?php for ($i = 1; $i <= 5; $i++) { ?>
+                                                <?php if ($product['rating'] < $i) { ?>
+                                                    <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                                                <?php } else { ?>
+                                                    <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+                                                <?php } ?>
+                                            <?php } ?>
+                                        </div>
+
+                                        <?php if($product['reviews']){ ?>
+                                            <div class="reviews">
+                                                <span><?php echo $product['reviews']; ?></span> 
+                                                <span><?php echo  $text_reviews_number; ?></span>
+                                            </div>
+                                        <?php } ?>
+
+                                    <?php } else{ ?>
+                                    <!-- <div class="rating">
+                                        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                                        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                                        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                                        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                                        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                                    </div> -->
+                                    <?php } ?>
+
+                                    <div style="clear: left"></div>
+
                             </div>
                                 
                             <?php if(!$product['quantity'] || $product['quantity']<1){ ?>

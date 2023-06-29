@@ -219,27 +219,6 @@
              <p class="produc-status is_not_present"> <?php echo $text_outstock; ?></p>
         <?php } ?>
                 
-                
-                <?php if ($product['rating']) { ?>
-                <div class="rating">
-                <?php for ($i = 1; $i <= 5; $i++) { ?>
-                <?php if ($product['rating'] < $i) { ?>
-                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                <?php } else { ?>
-                <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
-                <?php } ?>
-                <?php } ?>
-                </div>
-              <?php } else{ ?>
-              <div class="rating">
-                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-              </div>
-            <?php } ?>
-        <div style="clear: left"></div>
         <?php if ($product['price']) { ?>
                 <p class="price">
                   <?php if (!$product['special']) { ?>
@@ -252,11 +231,30 @@
                   <?php } ?>
                 </p>
                 <?php } ?>
+                
+                <?php if ($product['rating']) { ?>
+                <div class="rating">
+                <?php for ($i = 1; $i <= 5; $i++) { ?>
+                <?php if ($product['rating'] < $i) { ?>
+                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                <?php } else { ?>
+                <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+                <?php } ?>
+                <?php } ?>
+                </div>
+              <?php } else{ ?>
+              <!-- <div class="rating">
+                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+              </div> -->
+            <?php } ?>
+        <div style="clear: left"></div>
+        
               </div>
-                
-              
-            
-                
+ 
                       <?php if(!$product['quantity'] || $product['quantity']<1){ ?>
                             <div class="btn-two">
                                 <button type="button" class="notify-of-availability order" data-toggle="modal" data-target="#preoder" data-product="<?php echo $product['name']; ?>" data-product_url="<?php echo $product['href']; ?>" data-product_id="<?php echo $product['product_id']; ?>" data-product_img="<?php echo $product['thumb']; ?>" data-product_price="<?php echo $product['price']; ?>"><span class="title-one-click"><?php echo $button_notify_availability; ?></span></button>

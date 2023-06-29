@@ -18,10 +18,23 @@
         <?php $i = 0; ?>
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
           <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+
+          <?php if ($i + 1 < count($breadcrumbs)) { ?>
+
             <a itemprop="item" class="crumb" href="<?php echo $breadcrumb['href']; ?>">
               <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
             </a>
             <meta itemprop="position" content="<?php echo $i++; ?>">
+
+            <?php } else { ?>
+
+              <span class="crumb">
+                <span><?php echo $breadcrumb['text']; ?></span>
+              </span>
+              <meta itemprop="position" content="<?php echo $i++; ?>">
+              
+              <?php } ?>
+
           </li>
         <?php } ?>
       </ul>
@@ -113,18 +126,19 @@
                       <?php } ?>
                     <?php } ?>
                   </div>
+                  <p class="reviews">
+                    <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); to_reviews(); return false;"><span><?php echo $reviews; ?></span></a>
+                  </p>
                 <?php } else { ?>
-                  <div class="rating">
+                  <!-- <div class="rating">
                     <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                     <span class="fa fa-stack"><i class="fa fa-star-o        fa-stack-2x"></i></span>
                     <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                     <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
                     <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                  </div>
+                  </div> -->
                 <?php } ?>
-                <p class="reviews">
-                  <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); to_reviews(); return false;"><span><?php echo $reviews; ?></span></a>
-                </p>
+                
               </div>
 
               <div class="product-manufacture">
@@ -521,40 +535,11 @@
                         <p class="artikul"><span><?php echo $text_artikul; ?>:</span> <span><?php echo $product['sku']; ?></span></p>
                       <?php } ?>
 
-
                       <?php if ($product['quantity']) { ?>
                         <p class="produc-status"><i class="fa fa-check"></i> <?php echo $text_instock; ?></p>
                       <?php } else { ?>
                         <p class="produc-status is_not_present"> <?php echo $text_outstock; ?></p>
                       <?php } ?>
-
-                      <?php if ($product['rating']) { ?>
-                        <div class="rating">
-                          <?php for ($i = 1; $i <= 5; $i++) { ?>
-                            <?php if ($product['rating'] < $i) { ?>
-                              <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                            <?php } else { ?>
-                              <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
-                            <?php } ?>
-                          <?php } ?>
-                        </div>
-                      <?php } else { ?>
-                        <div class="rating">
-                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                        </div>
-                      <?php } ?>
-
-
-
-                      <?php if ($product['reviews']) { ?>
-                        <p class="reviews"><span><?php echo $product['reviews']; ?></span> <span><?php echo  $text_reviews_number; ?></span></p>
-                      <?php } ?>
-                      <div style="clear: left"></div>
-
 
                       <?php if ($product['price']) { ?>
                         <p class="price">
@@ -568,6 +553,35 @@
                           <?php } ?>
                         </p>
                       <?php } ?>
+
+                      <?php if ($product['rating']) { ?>
+                        <div class="rating">
+                          <?php for ($i = 1; $i <= 5; $i++) { ?>
+                            <?php if ($product['rating'] < $i) { ?>
+                              <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                            <?php } else { ?>
+                              <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+                            <?php } ?>
+                          <?php } ?>
+                        </div>
+
+                        <?php if ($product['reviews']) { ?>
+                        <div class="reviews"><span><?php echo $product['reviews']; ?></span> <span><?php echo  $text_reviews_number; ?></span></div>
+                      <?php } ?>
+
+                      <?php } else { ?>
+                        <!-- <div class="rating">
+                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+                        </div> -->
+                      <?php } ?>
+
+                      <div style="clear: left"></div>
+
+                      
 
                     </div>
 
