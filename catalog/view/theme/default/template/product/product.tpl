@@ -32,7 +32,7 @@
                 <span><?php echo $breadcrumb['text']; ?></span>
               </span>
               <meta itemprop="position" content="<?php echo $i++; ?>">
-              
+
               <?php } ?>
 
           </li>
@@ -565,7 +565,7 @@
                           <?php } ?>
                         </div>
 
-                        <?php if ($product['reviews']) { ?>
+                        <?php if(isset($product['reviews']) && $product['reviews']) { ?>
                         <div class="reviews"><span><?php echo $product['reviews']; ?></span> <span><?php echo  $text_reviews_number; ?></span></div>
                       <?php } ?>
 
