@@ -2535,7 +2535,7 @@ select.form-control {
 }
 .grid-product:last-child .product-thumb {
   border-right: 1px solid #ddd;
-  margin-right: -1px;
+  /* margin-right: -1px; */
 }
 .infscrlintro {
   margin-bottom: 40px;
