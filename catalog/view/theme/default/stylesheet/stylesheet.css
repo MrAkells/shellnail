@@ -2089,7 +2089,7 @@ h2.title-feature {
   margin-bottom: -2px;
   min-height: 72px;
   background-color: #fff;
-  z-index: 30;
+  /*z-index: 30;*/
 }
 .new-product .nav-tabs > li > a {
   margin-right: 0;
