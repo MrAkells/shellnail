@@ -687,9 +687,12 @@ div.ckeditor {
 	justify-content: flex-end;
 	gap: 4px;
 }
+.order-icons.order-icons--left {
+	justify-content: flex-start;
+}
 .order-icon {
-	width: 16px;
-	height: 16px;
+	width: 16px !important;
+	height: 16px !important;
 	background-color: transparent;
 	background-position: center center;
 }
