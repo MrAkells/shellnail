@@ -67,6 +67,7 @@
             <tr>
               <td><button data-toggle="tooltip" title="<?php echo $text_telephone; ?>" class="btn btn-info btn-xs"><i class="fa fa-phone fa-fw"></i></button></td>
               <td>
+              <div class="order-icons order-icons--left">
                   <?php $main_phone=''; ?>
                   <?php foreach($payment_custom_fields as $custom_f){ 
                     if($custom_f['name']=='Телефон'){
@@ -74,15 +75,18 @@
                     }
                    } ?>
                 
-                   <?php if($main_phone){ 
-                        echo 'Основной телефон: '.$main_phone; 
+                   <?php if($main_phone) { ?>
+                    <div style="margin-right: 12px">
+                    <?php echo 'Основной телефон: '.$main_phone; 
                         if($main_phone != $telephone){ 
                             echo '<br/>Предварительный телефон: '.$telephone; 
-                        }
-                    }else{
-                         echo 'Tелефон: '.$telephone; 
-                    }
-                    ?>
+                        } ?>
+                        </div>
+                    <?php } else {
+                         echo '<div>Tелефон: '.$telephone . '</div>';
+                    } ?>
+                    
+                    </div>
               </td>
             </tr>
           </table>

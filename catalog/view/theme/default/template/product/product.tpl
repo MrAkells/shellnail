@@ -29,7 +29,7 @@
             <?php } else { ?>
 
               <span class="crumb">
-                <span><?php echo $breadcrumb['text']; ?></span>
+                <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
               </span>
               <meta itemprop="position" content="<?php echo $i++; ?>">
 
