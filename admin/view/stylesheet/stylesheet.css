@@ -679,3 +679,27 @@ div.ckeditor {
 .not_call img {
 	margin-right: 8px;
 }
+
+
+.order-icons {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 4px;
+}
+.order-icon {
+	width: 16px;
+	height: 16px;
+	background-color: transparent;
+	background-position: center center;
+}
+.order-icon.not_call {
+	background-image: url('../image/no-call.svg');
+}
+.order-icon.is_comment {
+	background-image: url('../image/is-comment.svg');
+}
+.order-icon.is_return {
+	background-image: url('../image/is-return.svg');
+}
+
