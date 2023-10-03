@@ -22,7 +22,7 @@ class ModelExtensionModulePageNoIndex extends Model
                 . " language_id int(11) NOT NULL,"
                 . " description text, "
                 . " meta_title varchar(255),"
-                . " meta_description varchar(255),"
+                . " meta_description varchar(2024),"
                 . " meta_keyword varchar(255),"
                 . " PRIMARY KEY (page_id, language_id)"
                 . ") COLLATE='utf8_general_ci' ENGINE=MyISAM"
@@ -44,7 +44,7 @@ class ModelExtensionModulePageNoIndex extends Model
 		foreach ($query->rows as $result) {
 			$page_description_data[$result['language_id']] = array(
 				'meta_title'       => $result['meta_title'],
-				'meta_description' => $result['meta_description'],
+				'meta_description' => (mb_detect_encoding($result['meta_description']) == 'UTF-8' ? $result['meta_description'] : mb_convert_encoding($result['meta_description'],'utf-8', "HTML-ENTITIES")),
 				'meta_keyword'     => $result['meta_keyword'],
 				'description'      => $result['description']
 			);
@@ -99,7 +99,7 @@ class ModelExtensionModulePageNoIndex extends Model
         $id = $this->db->getLastId();
 
         foreach ($data['page_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "page_no_index_description SET page_id = '" . (int)$id . "', language_id = '" . (int)$language_id . "', description = '" . $this->db->escape($value['description']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "page_no_index_description SET page_id = '" . (int)$id . "', language_id = '" . (int)$language_id . "', description = '" . $this->db->escape($value['description']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape(mb_convert_encoding($value['meta_description'],'HTML-ENTITIES')) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
 		}
 
         return $id;
@@ -112,7 +112,7 @@ class ModelExtensionModulePageNoIndex extends Model
         $this->db->query("DELETE FROM " . DB_PREFIX . "page_no_index_description WHERE page_id = '" . (int)$id . "'");
 
         foreach ($data['page_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "page_no_index_description SET page_id = '" . (int)$id . "', language_id = '" . (int)$language_id . "', description = '" . $this->db->escape($value['description']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "page_no_index_description SET page_id = '" . (int)$id . "', language_id = '" . (int)$language_id . "', description = '" . $this->db->escape($value['description']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape(mb_convert_encoding($value['meta_description'],'HTML-ENTITIES')) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
 		}
     
     }
