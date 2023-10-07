@@ -1022,6 +1022,9 @@ class ModelToolExportImport extends Model {
 		if (in_array('mpn',$product_fields)) {
 			$mpn = $this->db->escape($product['mpn']);
 		}
+		if (in_array('video',$product_fields)) {
+			$video = $this->db->escape($product['video']);
+		}
 		$location = $this->db->escape($product['location']);
 		$store_ids = $product['store_ids'];
 		$layout = $product['layout'];
@@ -1030,6 +1033,7 @@ class ModelToolExportImport extends Model {
 		$subtract = ((strtoupper($subtract)=="TRUE") || (strtoupper($subtract)=="YES") || (strtoupper($subtract)=="ENABLED")) ? 1 : 0;
 		$minimum = $product['minimum'];
 		$meta_keywords = $product['meta_keywords'];
+		$meta_h1s = $product['meta_h1s'];
 		$tags = $product['tags'];
 		$sort_order = $product['sort_order'];
 		if ($manufacturer_name) {
@@ -1045,6 +1049,7 @@ class ModelToolExportImport extends Model {
 		$sql .= in_array('jan',$product_fields) ? "`jan`," : "";
 		$sql .= in_array('isbn',$product_fields) ? "`isbn`," : "";
 		$sql .= in_array('mpn',$product_fields) ? "`mpn`," : "";
+		$sql .= in_array('video',$product_fields) ? "`video`," : "";
 		$sql .= "`location`,`stock_status_id`,`model`,`manufacturer_id`,`image`,`shipping`,`price`,`points`,`date_added`,`date_modified`,`date_available`,`weight`,`weight_class_id`,`status`,";
 		$sql .= "`tax_class_id`,`viewed`,`length`,`width`,`height`,`length_class_id`,`sort_order`,`subtract`,`minimum`) VALUES ";
 		$sql .= "($product_id,$quantity,'$sku','$upc',";
@@ -1052,6 +1057,7 @@ class ModelToolExportImport extends Model {
 		$sql .= in_array('jan',$product_fields) ? "'$jan'," : "";
 		$sql .= in_array('isbn',$product_fields) ? "'$isbn'," : "";
 		$sql .= in_array('mpn',$product_fields) ? "'$mpn'," : "";
+		$sql .= in_array('video',$product_fields) ? "'$video'," : "";
 		$sql .= "'$location',$stock_status_id,'$model',$manufacturer_id,'$image',$shipping,$price,$points,";
 		$sql .= ($date_added=='NOW()') ? "$date_added," : "'$date_added',";
 		$sql .= ($date_modified=='NOW()') ? "$date_modified," : "'$date_modified',";
@@ -1067,16 +1073,19 @@ class ModelToolExportImport extends Model {
 			if ($exist_meta_title) {
 				$meta_title = isset($meta_titles[$language_code]) ? $this->db->escape($meta_titles[$language_code]) : '';
 			}
-			$meta_description = isset($meta_descriptions[$language_code]) ? $this->db->escape($meta_descriptions[$language_code]) : '';
+
+			$meta_description = isset($meta_descriptions[$language_code]) ? $this->db->escape(mb_convert_encoding($meta_descriptions[$language_code],'HTML-ENTITIES')) : '';
+			
 			$meta_keyword = isset($meta_keywords[$language_code]) ? $this->db->escape($meta_keywords[$language_code]) : '';
+			$meta_h1 = isset($meta_h1s[$language_code]) ? $this->db->escape($meta_h1s[$language_code]) : '';
 			$tag = isset($tags[$language_code]) ? $this->db->escape($tags[$language_code]) : '';
 			if ($exist_table_product_tag) {
 				if ($exist_meta_title) {
-					$sql  = "INSERT INTO `".DB_PREFIX."product_description` (`product_id`, `language_id`, `name`, `description`, `meta_title`, `meta_description`, `meta_keyword`) VALUES ";
-					$sql .= "( $product_id, $language_id, '$name', '$description', '$meta_title', '$meta_description', '$meta_keyword' );";
+					$sql  = "INSERT INTO `".DB_PREFIX."product_description` (`product_id`, `language_id`, `name`, `description`, `meta_title`, `meta_description`, `meta_keyword`, `meta_h1`) VALUES ";
+					$sql .= "( $product_id, $language_id, '$name', '$description', '$meta_title', '$meta_description', '$meta_keyword','$meta_h1' );";
 				} else {
-					$sql  = "INSERT INTO `".DB_PREFIX."product_description` (`product_id`, `language_id`, `name`, `description`, `meta_description`, `meta_keyword`) VALUES ";
-					$sql .= "( $product_id, $language_id, '$name', '$description', '$meta_description', '$meta_keyword' );";
+					$sql  = "INSERT INTO `".DB_PREFIX."product_description` (`product_id`, `language_id`, `name`, `description`, `meta_description`, `meta_keyword`, `meta_h1`) VALUES ";
+					$sql .= "( $product_id, $language_id, '$name', '$description', '$meta_description', '$meta_keyword','$meta_h1' );";
 				}
 				$this->db->query( $sql );
 				$sql  = "INSERT INTO `".DB_PREFIX."product_tag` (`product_id`,`language_id`,`tag`) VALUES ";
@@ -1084,11 +1093,11 @@ class ModelToolExportImport extends Model {
 				$this->db->query($sql);
 			} else {
 				if ($exist_meta_title) {
-					$sql  = "INSERT INTO `".DB_PREFIX."product_description` (`product_id`, `language_id`, `name`, `description`, `meta_title`, `meta_description`, `meta_keyword`, `tag`) VALUES ";
-					$sql .= "( $product_id, $language_id, '$name', '$description', '$meta_title', '$meta_description', '$meta_keyword', '$tag' );";
+					$sql  = "INSERT INTO `".DB_PREFIX."product_description` (`product_id`, `language_id`, `name`, `description`, `meta_title`, `meta_description`, `meta_keyword`, `meta_h1`, `tag`) VALUES ";
+					$sql .= "( $product_id, $language_id, '$name', '$description', '$meta_title', '$meta_description', '$meta_keyword', '$meta_h1', '$tag' );";
 				} else {
-					$sql  = "INSERT INTO `".DB_PREFIX."product_description` (`product_id`, `language_id`, `name`, `description`, `meta_description`, `meta_keyword`, `tag`) VALUES ";
-					$sql .= "( $product_id, $language_id, '$name', '$description', '$meta_description', '$meta_keyword', '$tag' );";
+					$sql  = "INSERT INTO `".DB_PREFIX."product_description` (`product_id`, `language_id`, `name`, `description`, `meta_description`, `meta_keyword`, `meta_h1`, `tag`) VALUES ";
+					$sql .= "( $product_id, $language_id, '$name', '$description', '$meta_description', '$meta_keyword', '$meta_h1', '$tag' );";
 				}
 				$this->db->query( $sql );
 			}
@@ -1373,6 +1382,16 @@ class ModelToolExportImport extends Model {
 				$meta_keyword = htmlspecialchars( $meta_keyword );
 				$meta_keywords[$language_code] = $meta_keyword;
 			}
+			$meta_h1s = array();
+			while ($this->startsWith($first_row[$j-1],"meta_h1(")) {
+				$language_code = substr($first_row[$j-1],strlen("meta_h1("),strlen($first_row[$j-1])-strlen("meta_h1(")-1);
+				$meta_h1 = $this->getCell($data,$i,$j++);
+				$meta_h1 = htmlspecialchars( $meta_h1 );
+				$meta_h1s[$language_code] = $meta_h1;
+			}
+			$video = $this->getCell($data,$i,$j++);
+			$video = htmlspecialchars( $video );
+
 			$stock_status_id = $this->getCell($data,$i,$j++,$default_stock_status_id);
 			$store_ids = $this->getCell($data,$i,$j++);
 			$layout = $this->getCell($data,$i,$j++);
@@ -1454,6 +1473,8 @@ class ModelToolExportImport extends Model {
 			$product['subtract'] = $subtract;
 			$product['minimum'] = $minimum;
 			$product['meta_keywords'] = $meta_keywords;
+			$product['meta_h1s'] = $meta_h1s;
+			$product['video'] = $video;
 			$product['tags'] = $tags;
 			$product['sort_order'] = $sort_order;
 			if ($incremental) {
@@ -4035,11 +4056,11 @@ class ModelToolExportImport extends Model {
 		if ($exist_meta_title) {
 			$expected_heading[] = "meta_title";
 		}
-		$expected_heading = array_merge( $expected_heading, array( "meta_description", "meta_keywords", "stock_status_id", "store_ids", "layout", "related_ids", "tags", "sort_order", "subtract", "minimum" ) );
+		$expected_heading = array_merge( $expected_heading, array( "meta_description", "meta_keywords", "meta_h1", "video", "stock_status_id", "store_ids", "layout", "related_ids", "tags", "sort_order", "subtract", "minimum" ) );
 		if ($exist_meta_title) {
-			$expected_multilingual = array( "name", "description", "meta_title", "meta_description", "meta_keywords", "tags" );
+			$expected_multilingual = array( "name", "description", "meta_title", "meta_description", "meta_keywords", "meta_h1", "tags" );
 		} else {
-			$expected_multilingual = array( "name", "description", "meta_description", "meta_keywords", "tags" );
+			$expected_multilingual = array( "name", "description", "meta_description", "meta_keywords", "meta_h1", "tags" );
 		}
 		return $this->validateHeading( $data, $expected_heading, $expected_multilingual );
 	}
@@ -6796,6 +6817,7 @@ class ModelToolExportImport extends Model {
 		if (!$exist_seo_url_table) {
 			$sql .= "  ua.keyword,";
 		}
+		$sql .= "  p.video, ";
 		$sql .= "  p.stock_status_id, ";
 		$sql .= "  mc.unit AS length_unit, ";
 		$sql .= "  p.subtract, ";
@@ -6843,6 +6865,7 @@ class ModelToolExportImport extends Model {
 					}
 					$results->rows[$key]['meta_description'][$language_code] = $product_descriptions[$language_code][$key]['meta_description'];
 					$results->rows[$key]['meta_keyword'][$language_code] = $product_descriptions[$language_code][$key]['meta_keyword'];
+					$results->rows[$key]['meta_h1'][$language_code] = $product_descriptions[$language_code][$key]['meta_h1'];
 					$results->rows[$key]['tag'][$language_code] = $product_descriptions[$language_code][$key]['tag'];
 				} else {
 					$results->rows[$key]['name'][$language_code] = '';
@@ -6852,6 +6875,7 @@ class ModelToolExportImport extends Model {
 					}
 					$results->rows[$key]['meta_description'][$language_code] = '';
 					$results->rows[$key]['meta_keyword'][$language_code] = '';
+					$results->rows[$key]['meta_h1'][$language_code] = '';
 					$results->rows[$key]['tag'][$language_code] = '';
 				}
 			}
@@ -6933,6 +6957,10 @@ class ModelToolExportImport extends Model {
 		foreach ($languages as $language) {
 			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_keywords')+4,32)+1);
 		}
+		foreach ($languages as $language) {
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_h1')+4,32)+1);
+		}
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('video')+4,32)+1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('stock_status_id'),3)+1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('store_ids'),16)+1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('layout'),16)+1);
@@ -7023,6 +7051,11 @@ class ModelToolExportImport extends Model {
 			$styles[$j] = &$text_format;
 			$data[$j++] = 'meta_keywords('.$language['code'].')';
 		}
+		foreach ($languages as $language) {
+			$styles[$j] = &$text_format;
+			$data[$j++] = 'meta_h1('.$language['code'].')';
+		}
+		$data[$j++] = 'video';
 		$data[$j++] = 'stock_status_id';
 		$data[$j++] = 'store_ids';
 		$styles[$j] = &$text_format;
@@ -7101,11 +7134,16 @@ class ModelToolExportImport extends Model {
 				}
 			}
 			foreach ($languages as $language) {
-				$data[$j++] = html_entity_decode($row['meta_description'][$language['code']],ENT_QUOTES,'UTF-8');
+				$data[$j++] = (mb_detect_encoding($row['meta_description'][$language['code']]) == 'UTF-8' ? $row['meta_description'][$language['code']] : mb_convert_encoding($row['meta_description'][$language['code']],'utf-8', "HTML-ENTITIES"));
+				//$data[$j++] = html_entity_decode($row['meta_description'][$language['code']],ENT_QUOTES,'UTF-8');
 			}
 			foreach ($languages as $language) {
 				$data[$j++] = html_entity_decode($row['meta_keyword'][$language['code']],ENT_QUOTES,'UTF-8');
 			}
+			foreach ($languages as $language) {
+				$data[$j++] = html_entity_decode($row['meta_h1'][$language['code']],ENT_QUOTES,'UTF-8');
+			}
+			$data[$j++] = $row['video'];
 			$data[$j++] = $row['stock_status_id'];
 			$store_id_list = '';
 			if (isset($store_ids[$product_id])) {
