@@ -1103,7 +1103,7 @@ class ModelToolExportImport extends Model {
 			}
 		}
 		if (count($categories) > 0) {
-			$sql = "INSERT INTO `".DB_PREFIX."product_to_category` (`product_id`,`category_id`) VALUES ";
+			$sql = "INSERT INTO `".DB_PREFIX."product_to_category` (`product_id`,`category_id`, `main_category`) VALUES ";
 			$first = true;
 			foreach ($categories as $category_id) {
 				$sql .= ($first) ? "\n" : ",\n";
