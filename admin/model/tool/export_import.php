@@ -1108,7 +1108,7 @@ class ModelToolExportImport extends Model {
 			foreach ($categories as $category_id) {
 				$sql .= ($first) ? "\n" : ",\n";
 				$first = false;
-				$sql .= "($product_id,$category_id)";
+				$sql .= "($product_id,$category_id," . $first ? 1 : 0 . ")";
 			}
 			$sql .= ";";
 			$this->db->query($sql);
