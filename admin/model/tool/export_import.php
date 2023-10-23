@@ -1105,10 +1105,12 @@ class ModelToolExportImport extends Model {
 		if (count($categories) > 0) {
 			$sql = "INSERT INTO `".DB_PREFIX."product_to_category` (`product_id`,`category_id`, `main_category`) VALUES ";
 			$first = true;
-			foreach ($categories as $category_id) {
+
+			foreach ($categories as $category) {
+				$value = ($category=="") ? [] : explode( "-", $category );
 				$sql .= ($first) ? "\n" : ",\n";
 				$first = false;
-				$sql .= "($product_id,$category_id," . $first ? 1 : 0 . ")";
+				$sql .= "($product_id,$value[0]," . (isset($value[1]) ? 1 : 0) . ")";
 			}
 			$sql .= ";";
 			$this->db->query($sql);
@@ -6780,7 +6782,7 @@ class ModelToolExportImport extends Model {
 	protected function getProducts( &$languages, $default_language_id, $product_fields, $exist_meta_title, $exist_seo_url_table, $offset=null, $rows=null, $min_id=null, $max_id=null ) {
 		$sql  = "SELECT ";
 		$sql .= "  p.product_id,";
-		$sql .= "  GROUP_CONCAT( DISTINCT CAST(pc.category_id AS CHAR(11)) SEPARATOR \",\" ) AS categories,";
+		$sql .= "  GROUP_CONCAT( DISTINCT CONCAT(pc.category_id,'-',pc.main_category) SEPARATOR \",\" ) AS categories,";
 		$sql .= "  p.sku,";
 		$sql .= "  p.upc,";
 		if (in_array( 'ean', $product_fields )) {
