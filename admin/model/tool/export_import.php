@@ -1110,7 +1110,7 @@ class ModelToolExportImport extends Model {
 				$value = ($category=="") ? [] : explode( "-", $category );
 				$sql .= ($first) ? "\n" : ",\n";
 				$first = false;
-				$sql .= "($product_id,$value[0]," . (isset($value[1]) ? 1 : 0) . ")";
+				$sql .= "($product_id,$value[0]," . (isset($value[1]) ? $value[1] : 0) . ")";
 			}
 			$sql .= ";";
 			$this->db->query($sql);
