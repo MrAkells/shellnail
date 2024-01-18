@@ -619,7 +619,7 @@ class ControllerProductProduct extends Controller
 			$shipping_price = $nm_price > 0 && $nm_price < $ukr_price ? $nm_price : ($ukr_price > 0 ? $ukr_price : $nm_price);
 			$product_price = round(($product_info['special'] ? $product_info['special'] : $product_info['price']), 2);
 			
-			$shipping_price = $shipping_price >= $product_price ? $shipping_price : 0; 
+			$shipping_price = $shipping_freetotal >= $product_price ? $shipping_price : 0; 
 
 			$json_ld = [
 				"@context" => "http://schema.org",
