@@ -437,7 +437,7 @@ class ControllerExtensionModuleDelovod extends Controller
 
 	public function testOrder()
 	{
-		//$this->getObjectT();
+		$this->getObjectT();
 		//$data = $this->getObject('1109100000014988', 'delovod_test.log');
 		//print_r($data);
 		// $this->load->model('extension/module/delovod');
@@ -449,7 +449,8 @@ class ControllerExtensionModuleDelovod extends Controller
 	private function getObjectT()
 	{
 		$packet['action'] = "request";
-		$packet['params']['from']="catalogs.states";
+		//$packet['params']['from']="catalogs.states";
+		$packet['params']['from']="catalogs.goods";
 		$packet['params']['fields'] = ["id" => "id", "name" => "name", "code" => "code"];
 		// $packet['params']['from'] = "catalogs.goods";
 		// $packet['params']['fields'] = ["id" => "id", "name" => "name", "gType_forDel" => "gType_forDel"];
@@ -462,7 +463,17 @@ class ControllerExtensionModuleDelovod extends Controller
 		// ];
 		$requestResult = $this->sendRequest($packet);
 		$data = $this->handleResult($requestResult);
-		print_r($data);
+		$fp = fopen(DIR_LOGS . 'delovod.csv', 'w');
+
+		foreach ($data as $fields) {
+			fputcsv($fp, [$fields->id,$fields->code,$fields->name],";");
+		}
+
+		fclose($fp);
+
+		
+		//print_r($data);
+		print_r('ok');
 	}
 	/**
 	 * Order synchronization from delovod

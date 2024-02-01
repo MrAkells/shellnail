@@ -610,6 +610,17 @@ class ControllerProductProduct extends Controller
 				);
 			}
 
+			$nm_freetotal = $this->config->get('new_mail_freetotal');
+			$nm_price = $this->config->get('new_mail_min_cost');
+			$ukr_freetotal = $this->config->get('ukrposhta_freetotal');
+			$ukr_price = $this->config->get('ukrposhta_price');
+
+			$shipping_freetotal = $nm_freetotal > 0 && $nm_freetotal < $ukr_freetotal ? $nm_freetotal : ($ukr_freetotal > 0 ? $ukr_freetotal : $nm_freetotal);
+			$shipping_price = $nm_price > 0 && $nm_price < $ukr_price ? $nm_price : ($ukr_price > 0 ? $ukr_price : $nm_price);
+			$product_price = round(($product_info['special'] ? $product_info['special'] : $product_info['price']), 2);
+			
+			$shipping_price = $shipping_freetotal >= $product_price ? $shipping_price : 0; 
+
 			$json_ld = [
 				"@context" => "http://schema.org",
 				"@type" => "Product",
@@ -630,12 +641,50 @@ class ControllerProductProduct extends Controller
 				"offers"	=> [
 					"@type" => "Offer",
 					"availability" => "http://schema.org/InStock",
-					"price" => round(($product_info['special'] ? $product_info['special'] : $product_info['price']), 2),
+					"price" => $product_price,
 					"priceCurrency" => "UAH",
 					"url" => "https://shellnail.com.ua/gel-laki/gel-lak-go-by-naomy/go-classic-collection/gel-lak-go-1.html",
-					"priceValidUntil" => date('Y-m-d', strtotime("+1095 day"))
+					"priceValidUntil" => date('Y-m-d', strtotime("+1095 day")),
+					"shippingDetails" => [
+						"@type" => "OfferShippingDetails",
+						"shippingRate" => [
+							"@type" => "MonetaryAmount",
+							"value" => $shipping_price,
+							"currency" => "UAH"
+						],
+						"shippingDestination" => [
+							"@type" => "DefinedRegion",
+							"addressCountry" => "UA"
+						],
+						"deliveryTime" => [
+							"@type" => "ShippingDeliveryTime",
+							"handlingTime" => [
+								"@type" => "QuantitativeValue",
+								"minValue" => 0,
+								"maxValue" => 3,
+								"unitCode" => "DAY"
+							],
+							"transitTime" => [
+								"@type" => "QuantitativeValue",
+								"minValue" => 0,
+								"maxValue" => 2,
+								"unitCode" => "DAY"
+							]
+						]
+					],
+					"hasMerchantReturnPolicy" => [
+						"@type" 				=> "MerchantReturnPolicy",
+						"applicableCountry"		=> "UA",
+						"returnPolicyCategory"	=> "https://schema.org/MerchantReturnFiniteReturnWindow",
+						"merchantReturnDays"	=> 14,
+						"returnMethod"			=> "https://schema.org/ReturnByMail",
+						"returnFees"			=> "https://schema.org/FreeReturn"
+					]
 				]
 			];
+
+			if($shipping_price == 0) $json_ld['offers']['shippingDetails']['shippingDestination']['addressRegion'] = ["Ukraine"];
+
 			if (!$reviews) {
 				$reviews[] = array(
 					"@type" 		=> "Review",
