@@ -354,7 +354,7 @@ class ControllerExtensionModuleDelovod extends Controller
 		//file_put_contents(DIR_LOGS . "delovod_Request.log", print_r($packet,true) . "\n", FILE_APPEND);
 	
 		if ($curl = curl_init()) {
-			curl_setopt($curl, CURLOPT_URL, 'https://api.delovod.ua');
+			curl_setopt($curl, CURLOPT_URL, 'https://api.dilovod.ua');
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, "packet=" . json_encode($packet));
