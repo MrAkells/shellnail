@@ -522,7 +522,7 @@ class ControllerExtensionModuleDelovod extends Controller
 		$packet['version'] = "0.15";
 
 		if ($curl = curl_init()) {
-			curl_setopt($curl, CURLOPT_URL, 'https://api.delovod.ua');
+			curl_setopt($curl, CURLOPT_URL, 'https://api.dilovod.ua');
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, "packet=" . json_encode($packet));
