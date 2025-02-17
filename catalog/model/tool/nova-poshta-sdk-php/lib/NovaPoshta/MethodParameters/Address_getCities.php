@@ -78,7 +78,7 @@ class Address_getCities extends MethodParameters
     {
         return $this->Page;
     }
-    
+        
     /**
      * Устанавливает лимит
      *
@@ -89,5 +89,5 @@ class Address_getCities extends MethodParameters
     {
         $this->Limit = $value;
         return $this;
-    }    
+    } 
 }
