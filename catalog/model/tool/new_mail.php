@@ -9,7 +9,67 @@ use NovaPoshta\MethodParameters\Address_getAreas;
 
 
 class ModelToolNewMail extends Model 
+
 {
+    /**
+     * Call method createTable() - for create tables in database during install module
+     */    
+    public function createTable ()
+    {
+      
+         /*$this->db->query(
+                 "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "newmail_area ("
+                        ." area_id INT(11) NOT NULL AUTO_INCREMENT,"
+                        ." ref VARCHAR(255) NOT NULL,"
+                        ." areas_center VARCHAR(255) NOT NULL,"
+                        ." description VARCHAR(255) NOT NULL,"
+                        ." date_added DATETIME,"
+                        ." area_status TINYINT,"
+                        ." sort INT(11), code VARCHAR(50) NOT NULL, PRIMARY KEY (area_id)"
+                    .") COLLATE='utf8_general_ci' ENGINE=MyISAM"
+                );   */
+         
+         $this->db->query(	
+                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "newmail_city ("
+                        ." city_id INT(11) NOT NULL AUTO_INCREMENT, "
+                        ." ref VARCHAR(255) NOT NULL, "
+                        ." areas VARCHAR(255) NOT NULL, "
+                        ." settlement_type VARCHAR(255) NOT NULL, "
+                        ." mail_city_id INT (11) NOT NULL, "
+                        ." description VARCHAR(255) NOT NULL, "
+                        ." description_ru VARCHAR(255) NOT NULL, "
+                        ." settlement_type_description VARCHAR(255) NOT NULL, "
+                        ." settlement_type_description_ru VARCHAR(255) NOT NULL, "
+                        ." date_added DATETIME, "
+                        ." city_status TINYINT NOT NULL, "
+                        ." sort INT(11) NOT NULL, PRIMARY KEY (city_id)"
+                    .") COLLATE='utf8_general_ci' ENGINE=MyISAM"
+                );        
+         
+        $this->db->query(
+                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "newmail_office ("
+                        ." office_id int(11) NOT NULL AUTO_INCREMENT, site_key int(11) NOT NULL,"
+                        ." number int (11) NOT NULL, ref varchar(255) NOT NULL,"
+                        ." city_ref varchar(255) NOT NULL, city_description varchar(255) NOT NULL,"
+                        ." city_description_ru varchar(255) NOT NULL, description varchar(255) NOT NULL,"
+                        ." description_ru varchar(255) NOT NULL, short_address varchar(255) NOT NULL,"
+                        ." short_address_ru varchar(255) NOT NULL, phone varchar(100) NOT NULL,"
+                        ." typeof_warehouse varchar(255) NOT NULL, longitude varchar(255) NOT NULL,"
+                        ." latitude varchar(255) NOT NULL, post_finance tinyint NOT NULL,"
+                        ." bicycle_parking tinyint NOT NULL, payment_access tinyint NOT NULL,"
+                        ." posterminal tinyint NOT NULL, international_shipping tinyint NOT NULL,"
+                        ." total_max_weight_allowed int(11) NOT NULL,"
+                        ." place_max_weight_allowed int(11) NOT NULL, reception text NOT NULL,"
+                        ." delivery text NOT NULL, schedule text NOT NULL,"
+                        ." date_added datetime, office_status tinyint NOT NULL, sort int(11) NOT NULL,"
+                        ." PRIMARY KEY (office_id)"
+                    .") COLLATE='utf8_general_ci' ENGINE=MyISAM"
+                );  
+        
+        $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "newmail_area_dump LIKE " . DB_PREFIX . "newmail_area");
+        $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "newmail_city_dump LIKE " . DB_PREFIX . "newmail_city");
+        $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "newmail_office_dump LIKE " . DB_PREFIX . "newmail_office");
+    }
     
     private function updateAreas($data)
     {
@@ -55,19 +115,17 @@ class ModelToolNewMail extends Model
     
     private function updateWarehouses($data)
     {
+        
         if(!empty($data))
         {
             $this->db->query("TRUNCATE " . DB_PREFIX . "newmail_office");
             
             foreach ($data as $office){
-                if($office->DescriptionRu == '') $office->DescriptionRu = $office->Description;
-                if($office->ShortAddressRu == '') $office->ShortAddressRu = $office->ShortAddress;
-                if($office->CityDescriptionRu == '') $office->CityDescriptionRu = $office->CityDescription;
                 $this->db->query(
-                    "INSERT INTO " . DB_PREFIX . "newmail_office SET site_key = '" . (int)$office->SiteKey . "', number = '" . (int)$office->Number . "',"
+                    "INSERT INTO " . DB_PREFIX . "newmail_office SET site_key = '" . (int)$office->SiteKey . "', number = '" . (int)$this->Number . "',"
                     . " ref = '" . $this->db->escape($office->Ref) . "', city_ref = '" . $this->db->escape($office->CityRef) . "',"
-                    . " city_description = '" . $this->db->escape($office->CityDescription) . "', city_description_ru = '" . $this->db->escape($office->CityDescriptionRu) . "',"
-                    . " description = '" . $this->db->escape($office->Description) . "', description_ru = '" . $this->db->escape($office->DescriptionRu) . "',"
+                    . " city_description = '" . $this->db->escape($office->CityDescriptionRu) . "', city_description_ru = '" . $this->db->escape($office->CityDescriptionRu) . "',"
+                    . " description = '" . $this->db->escape($office->DescriptionRu) . "', description_ru = '" . $this->db->escape($office->DescriptionRu) . "',"
                     . " short_address = '" . $this->db->escape($office->ShortAddress) . "', short_address_ru = '" . $this->db->escape($office->ShortAddressRu) . "',"
                     . " phone = '" . $this->db->escape($office->Phone) . "', typeof_warehouse = '" . $this->db->escape($office->TypeOfWarehouse) . "',"
                     . " longitude = '" . $this->db->escape($office->Longitude) . "', latitude = '" . $this->db->escape($office->Latitude) . "',"
@@ -83,7 +141,25 @@ class ModelToolNewMail extends Model
         }
         return false;       
     }
-     
+    
+    public function deleteTable (){
+         $this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "newmail_area");       
+         $this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "newmail_city");       
+         $this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "newmail_office");       
+    }
+    
+    public function create_backup()
+    {        
+        $this->db->query("TRUNCATE " . DB_PREFIX . "newmail_area_dump");
+        $this->db->query("TRUNCATE " . DB_PREFIX . "newmail_city_dump");
+        $this->db->query("TRUNCATE " . DB_PREFIX . "newmail_office_dump");        
+        $this->db->query("INSERT INTO " . DB_PREFIX . "newmail_area_dump    SELECT * FROM " . DB_PREFIX . "newmail_area");
+        $this->db->query("INSERT INTO " . DB_PREFIX . "newmail_city_dump    SELECT * FROM " . DB_PREFIX . "newmail_city");
+        $this->db->query("INSERT INTO " . DB_PREFIX . "newmail_office_dump  SELECT * FROM " . DB_PREFIX . "newmail_office");
+        echo 'true';
+    }
+    
+    
     public function setKey($key)
     {
         Config::setApiKey($key);
@@ -112,7 +188,7 @@ class ModelToolNewMail extends Model
                 echo $update['areas']['notice'];
             } 
             if ($update['areas'] && $update['cities'] && $update['warehouses']){
-                echo true;
+                echo 'database do update';
             } else {
                 echo 'database do not update';
             }        
@@ -167,6 +243,7 @@ class ModelToolNewMail extends Model
             $w = Address::getCities($data)->data;
         }
         return  $cities;
+
     }    
     
     /**
