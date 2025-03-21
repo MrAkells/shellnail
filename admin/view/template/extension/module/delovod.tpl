@@ -98,6 +98,12 @@
                 </div>
                 <div class="col-sm-6">
                   <label>
+                    <input type="checkbox" name="only_price" value="1">
+                    Обновить только Цену
+                  </label>
+                </div>
+                <div class="col-sm-6">
+                  <label>
                     Page
                     <input type="text" name="page" value="0" >
                   </label>

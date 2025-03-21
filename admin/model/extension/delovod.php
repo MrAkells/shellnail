@@ -12,6 +12,14 @@ class ModelExtensionDelovod extends Model {
 		return $query->rows;
 	}
 
+    public function getProductsPriceByCategoryId($category_id, $isbn = true, $page = 0 ) {
+        $sql = "SELECT p.product_id, p.price, p.isbn FROM " . DB_PREFIX . "product p  LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) WHERE  p2c.category_id = '" . (int)$category_id. "' ORDER BY p.product_id ASC";
+        if($page) $sql .= " LIMIT " . (int)($page - 1)*50 . ", 50";
+		$query = $this->db->query($sql);
+
+		return $query->rows;
+	}
+
 	public function getProduct($product_id) {
 		$query = $this->db->query("SELECT DISTINCT p.price, p.weight, pd.name, pdu.name as name_ua,p.sku, p.isbn, p2c.category_id, cd.name as category, md.name as manufacturer  FROM " . DB_PREFIX . "product p
 					LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')

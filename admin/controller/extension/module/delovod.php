@@ -199,6 +199,11 @@ class ControllerExtensionModuleDelovod extends Controller
 					$this->updateNameUa($category_id, $page);
 					$this->response->redirect($this->url->link('extension/module/delovod', 'token=' . $this->session->data['token'] . (isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] : ''), true));
 				}
+				if(isset($this->request->post['only_price'])){
+					$page = isset($this->request->post['page']) ? $this->request->post['page'] : 0;
+					$this->updatePrice($category_id, $page);
+					$this->response->redirect($this->url->link('extension/module/delovod', 'token=' . $this->session->data['token'] . (isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] : ''), true));
+				}	
 				$results = $this->model_extension_delovod->getProductsByCategoryId($category_id);
 
 
@@ -604,6 +609,34 @@ class ControllerExtensionModuleDelovod extends Controller
 		}
 
 		$this->session->data['success'] = "Всего: " . $i . " Обновлено: " . $j . " Page: " . $page;
+		
+	}
+
+	/**
+	 * Set product Price
+	 *
+	 * @param $category_id
+	 * @return void
+	 */
+	private function updatePrice($category_id, $page){
+		$i = 0;
+		$j = 0;
+		$results = $this->model_extension_delovod->getProductsPriceByCategoryId($category_id, false, $page);
+		$time = new DateTime('now', new DateTimeZone('UTC'));
+		
+		foreach ($results as $result) {
+			$i++;
+
+				if ($result['isbn'] != '') { // Обновить только цену
+					if ($this->setPrice($result['isbn'], $result['price'], $time)) {
+						$j++;
+					}
+
+				}
+
+		}
+
+		$this->session->data['success'] = "Обновление цен. Всего: " . $i . " Обновлено: " . $j . " Page: " . $page;
 		
 	}
 
