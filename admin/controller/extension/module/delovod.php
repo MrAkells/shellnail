@@ -382,51 +382,61 @@ class ControllerExtensionModuleDelovod extends Controller
 	private function setPrice($id, $price, $time)
 	{
 		if ($id != '' && (float)$price > 0) {
-			// 1. Проверим текущую цену в Деловоде:
-			$checkPacket['action'] = "request";
-			$checkPacket["params"]["from"] = "informationRegisters.goodsPrices";
-			$checkPacket["params"]["fields"] = ["price" => "price"];
-			$checkPacket["params"]["filters"] = [
-				["alias" => "good", "operator" => "=", "value" => $id],
-				["alias" => "priceType", "operator" => "=", "value" => "1101300000001001"] // Факт
+
+			// Получаем текущую цену
+			$packetCheck = [
+				'action' => 'request',
+				'params' => [
+					'from' => 'informationRegisters.goodsPrices',
+					'fields' => ['price' => 'price'],
+					'filters' => [
+						['alias' => 'good', 'operator' => '=', 'value' => $id],
+						['alias' => 'priceType', 'operator' => '=', 'value' => '1101300000001001'] // Факт
+					],
+					'sortOrder' => [['alias' => 'date', 'order' => 'DESC']],
+					'limit' => 1
+				]
 			];
 
-			$checkResult = $this->sendRequest($checkPacket);
-			$checkData = $this->handleResult($checkResult);
+			$check = $this->sendRequest($packetCheck);
+			$checkData = $this->handleResult($check);
 
 			if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0]->price)) {
 				$current_price = (float)$checkData[0]->price;
 				if (abs($current_price - (float)$price) < 0.0001) {
-					file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Пропущено: цена уже установлена ({$price}) для isbn {$id}\n", FILE_APPEND);
-					return 1;
+					file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
+						date('Y-m-d H:i:s') . " Пропущено: цена уже установлена ({$price}) для isbn {$id}\n",
+						FILE_APPEND
+					);
+					return 1; // считаем как успешно
 				}
 			}
-			
 
-			// 2. Устанавливаем цену
+			// Установка новой цены
 			$packet['action'] = "saveObject";
 			$packet["params"]['header'] = [
-				"id" 					=> "informationRegisters.goodsPrices",
-				"date"				=> $time->format('Y-m-d H:i:s'),
-				"good" 				=> $id,
-				"priceType" 	=> "1101300000001001",
-				"price"				=> $price,
-				"currency"		=> "1101200000001001"
+				"id"         => "informationRegisters.goodsPrices",
+				"date"       => $time->format('Y-m-d H:i:s'),
+				"good"       => $id,
+				"priceType"  => "1101300000001001", // Факт
+				"price"      => $price,
+				"currency"   => "1101200000001001"
 			];
 
 			$requestResult = $this->sendRequest($packet);
 			$data = $this->handleResult($requestResult);
 
-			if (!(isset($data->is_error) || isset($data->error) || $data  == new \stdClass()) && isset($data->result)) {
-				file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', $time->format('Y-m-d H:i:s') . " Установлена цена: {$price} для isbn {$id}\n", FILE_APPEND);
+			if (!(isset($data->is_error) || isset($data->error) || $data == new \stdClass()) && isset($data->result)) {
+				file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Установлена новая цена {$price} для isbn {$id}\n", FILE_APPEND);
 				return 1;
 			} else {
 				$error_msg = (isset($data->error_msg) ? $data->error_msg : (isset($data->error) ? $data->error : ''));
-				file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', $time->format('Y-m-d H:i:s') . " Ошибка установки цены для isbn {$id}: {$error_msg}\n", FILE_APPEND);
+				file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Ошибка установки цены для isbn {$id}: {$error_msg}\n", FILE_APPEND);
 				return 0;
 			}
 		}
 	}
+
 
 
 	/**
@@ -683,42 +693,49 @@ class ControllerExtensionModuleDelovod extends Controller
 
 		$results = $this->model_extension_delovod->getAllProductsForPriceUpdate($page, $limit);
 
-		$i = 0;
-		$j = 0;
+		$i = 0; // всего обработано
+		$j = 0; // успешно обновлено
 		$time = new DateTime('now', new DateTimeZone('UTC'));
 
 		foreach ($results as $result) {
 			$i++;
-			$log = date('Y-m-d H:i:s') . " [{$page}/{$total_pages}] → product_id: {$result['product_id']}, isbn: {$result['isbn']}, price: {$result['price']}";
 
+			// Лог: перед отправкой
+			file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
+				date('Y-m-d H:i:s') . " [{$page}/{$total_pages}] → product_id: {$result['product_id']}, isbn: {$result['isbn']}, price: {$result['price']}",
+				FILE_APPEND
+			);
+
+			$success = false;
 			if ($result['isbn'] != '') {
-				if ($this->setPrice($result['isbn'], $result['price'], $time)) {
-					$j++;
-					$log .= " → OK";
-				} else {
-					$log .= " → FAIL";
-				}
-			} else {
-				$log .= " → NO ISBN";
+				$success = $this->setPrice($result['isbn'], $result['price'], $time);
 			}
 
-			file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', $log . "\n", FILE_APPEND);
+			file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
+				$success ? " → OK\n" : " → FAIL\n",
+				FILE_APPEND
+			);
+
+			if ($success) $j++;
 		}
 
+		// Лог завершения страницы
 		file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
 			date('Y-m-d H:i:s') . " [{$page}/{$total_pages}] — Завершено. Всего: $i. Обновлено: $j.\n",
 			FILE_APPEND
 		);
 
-		if (count($results) < $limit || $page >= $total_pages) {
-			$this->session->data['success'] = "Обновление всех цен завершено. Всего товаров: $total. Последняя страница: $page. Обновлено: $j.";
-		} else {
+		// Переход на следующую страницу (только если не последняя)
+		if ($page < $total_pages) {
 			$next_page = $page + 1;
 			$this->session->data['success'] = "Обновлена страница $page из $total_pages. Обновлено: $j.";
 			$this->response->redirect($this->url->link('extension/module/delovod/sync', 'token=' . $this->session->data['token'] . '&page=' . $next_page . '&update_all_prices=1', true));
 			exit;
+		} else {
+			$this->session->data['success'] = "Обновление всех цен завершено. Всего товаров: $total. Последняя страница: $page. Обновлено: $j.";
 		}
 	}
+
 
 
 
