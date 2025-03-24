@@ -648,11 +648,16 @@ class ControllerExtensionModuleDelovod extends Controller
 	/* Обновление цен для всех товаров */
 	private function updateAllPrices($page = 1)
 	{
-		$page = max(1, (int)$page); // защита от page = 0
+		$page = max(1, (int)$page);
+		$limit = 100;
 
 		$this->load->model('extension/delovod');
 
-		$limit = 100;
+		// Получаем общее количество товаров с ISBN
+		$total_query = $this->db->query("SELECT COUNT(*) as total FROM " . DB_PREFIX . "product WHERE isbn != ''");
+		$total = (int)$total_query->row['total'];
+		$total_pages = ceil($total / $limit);
+
 		$results = $this->model_extension_delovod->getAllProductsForPriceUpdate($page, $limit);
 
 		$i = 0;
@@ -661,6 +666,13 @@ class ControllerExtensionModuleDelovod extends Controller
 
 		foreach ($results as $result) {
 			$i++;
+
+			// Логируем перед отправкой
+			file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
+				date('Y-m-d H:i:s') . " [{$page}/{$total_pages}] → product_id: {$result['product_id']}, isbn: {$result['isbn']}, price: {$result['price']}\n",
+				FILE_APPEND
+			);
+
 			if ($result['isbn'] != '') {
 				if ($this->setPrice($result['isbn'], $result['price'], $time)) {
 					$j++;
@@ -668,27 +680,21 @@ class ControllerExtensionModuleDelovod extends Controller
 			}
 		}
 
-		file_put_contents(
-			DIR_LOGS . 'delovod_all_price_update.log',
-			date('Y-m-d H:i:s') . " — Обновление цен. Страница $page. Всего: $i. Обновлено: $j\n",
+		file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
+			date('Y-m-d H:i:s') . " [{$page}/{$total_pages}] — Завершено. Всего: $i. Обновлено: $j.\n",
 			FILE_APPEND
 		);
 
-		if (count($results) < $limit) {
-			$this->session->data['success'] = "Обновление всех цен завершено. Всего: $i, обновлено: $j.";
+		if (count($results) < $limit || $page >= $total_pages) {
+			$this->session->data['success'] = "Обновление всех цен завершено. Всего товаров: $total. Последняя страница: $page. Обновлено: $j.";
 		} else {
 			$next_page = $page + 1;
-			$this->session->data['success'] = "Обновлена страница $page. Обновлено: $j.";
-			$this->response->redirect(
-				$this->url->link(
-					'extension/module/delovod/sync',
-					'token=' . $this->session->data['token'] . '&page=' . $next_page . '&update_all_prices=1',
-					true
-				)
-			);
+			$this->session->data['success'] = "Обновлена страница $page из $total_pages. Обновлено: $j.";
+			$this->response->redirect($this->url->link('extension/module/delovod/sync', 'token=' . $this->session->data['token'] . '&page=' . $next_page . '&update_all_prices=1', true));
 			exit;
 		}
 	}
+
 
 
 
