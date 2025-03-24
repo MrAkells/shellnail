@@ -185,6 +185,11 @@ class ControllerExtensionModuleDelovod extends Controller
 
 	public function sync()
 	{
+		if (isset($this->request->get['update_all_prices']) && $this->request->get['update_all_prices']) {
+			$page = isset($this->request->get['page']) ? (int)$this->request->get['page'] : 1;
+			$this->updateAllPrices($page);
+			return;
+		}
 
 		$json = [];
 		if ($this->config->get('delovod_status') && $this->user->hasPermission('modify', 'extension/module/delovod')) {
@@ -679,62 +684,49 @@ class ControllerExtensionModuleDelovod extends Controller
 
 
 	/* Обновление цен для всех товаров */
-	private function updateAllPrices($page = 1)
-	{
-		$page = max(1, (int)$page);
+	public function updateAllPrices($page = 1) {
+		$this->load->model('catalog/product');
+	
 		$limit = 100;
-
-		$this->load->model('extension/delovod');
-
-		// Получаем общее количество товаров с ISBN
-		$total_query = $this->db->query("SELECT COUNT(*) as total FROM " . DB_PREFIX . "product WHERE isbn != ''");
-		$total = (int)$total_query->row['total'];
+		$offset = ($page - 1) * $limit;
+	
+		$products = $this->model_catalog_product->getProducts([
+			'start' => $offset,
+			'limit' => $limit
+		]);
+	
+		$total = $this->model_catalog_product->getTotalProducts();
 		$total_pages = ceil($total / $limit);
-
-		$results = $this->model_extension_delovod->getAllProductsForPriceUpdate($page, $limit);
-
-		$i = 0; // всего обработано
-		$j = 0; // успешно обновлено
-		$time = new DateTime('now', new DateTimeZone('UTC'));
-
-		foreach ($results as $result) {
-			$i++;
-
-			// Лог: перед отправкой
-			file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
-				date('Y-m-d H:i:s') . " [{$page}/{$total_pages}] → product_id: {$result['product_id']}, isbn: {$result['isbn']}, price: {$result['price']}",
-				FILE_APPEND
-			);
-
-			$success = false;
-			if ($result['isbn'] != '') {
-				$success = $this->setPrice($result['isbn'], $result['price'], $time);
+	
+		$this->log("[$page/$total_pages] — Обработка цен товаров ($offset - " . ($offset + $limit) . ")");
+	
+		$updated = 0;
+	
+		foreach ($products as $product) {
+			$isbn = $product['isbn'] ?? null;
+			$price = $product['price'] ?? null;
+	
+			if (!$isbn || !$price) continue;
+	
+			$result = $this->setPrice($isbn, $price, new DateTime());
+	
+			if ($result) {
+				$updated++;
+				$this->log("→ product_id: {$product['product_id']}, isbn: {$isbn}, price: {$price} → OK");
+			} else {
+				$this->log("→ product_id: {$product['product_id']}, isbn: {$isbn}, price: {$price} → FAIL");
 			}
-
-			file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
-				$success ? " → OK\n" : " → FAIL\n",
-				FILE_APPEND
-			);
-
-			if ($success) $j++;
 		}
-
-		// Лог завершения страницы
-		file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
-			date('Y-m-d H:i:s') . " [{$page}/{$total_pages}] — Завершено. Всего: $i. Обновлено: $j.\n",
-			FILE_APPEND
-		);
-
-		// Переход на следующую страницу (только если не последняя)
+	
+		$this->log("[$page/$total_pages] — Завершено. Всего: " . count($products) . ". Обновлено: $updated.");
+	
+		// Переход на следующую страницу
 		if ($page < $total_pages) {
-			$next_page = $page + 1;
-			$this->session->data['success'] = "Обновлена страница $page из $total_pages. Обновлено: $j.";
-			$this->response->redirect($this->url->link('extension/module/delovod/sync', 'token=' . $this->session->data['token'] . '&page=' . $next_page . '&update_all_prices=1', true));
-			exit;
-		} else {
-			$this->session->data['success'] = "Обновление всех цен завершено. Всего товаров: $total. Последняя страница: $page. Обновлено: $j.";
+			$next_url = $this->url->link('extension/module/delovod/sync', 'token=' . $this->session->data['token'] . '&update_all_prices=1&page=' . ($page + 1), true);
+			$this->response->redirect($next_url);
 		}
 	}
+	
 
 
 
