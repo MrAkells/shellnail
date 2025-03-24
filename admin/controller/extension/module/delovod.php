@@ -382,29 +382,52 @@ class ControllerExtensionModuleDelovod extends Controller
 	private function setPrice($id, $price, $time)
 	{
 		if ($id != '' && (float)$price > 0) {
+			// 1. Проверим текущую цену в Деловоде:
+			$checkPacket['action'] = "request";
+			$checkPacket["params"]["from"] = "informationRegisters.goodsPrices";
+			$checkPacket["params"]["fields"] = ["price" => "price"];
+			$checkPacket["params"]["filters"] = [
+				["alias" => "good", "operator" => "=", "value" => $id],
+				["alias" => "priceType", "operator" => "=", "value" => "1101300000001001"] // Факт
+			];
+
+			$checkResult = $this->sendRequest($checkPacket);
+			$checkData = $this->handleResult($checkResult);
+
+			if (!isset($checkData->is_error) && isset($checkData[0]->price)) {
+				$current_price = (float)$checkData[0]->price;
+				if (abs($current_price - (float)$price) < 0.0001) {
+					// Цена совпадает, не отправляем
+					file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Пропущено: цена уже установлена ({$price}) для isbn {$id}\n", FILE_APPEND);
+					return 1;
+				}
+			}
+
+			// 2. Устанавливаем цену
 			$packet['action'] = "saveObject";
 			$packet["params"]['header'] = [
 				"id" 					=> "informationRegisters.goodsPrices",
 				"date"				=> $time->format('Y-m-d H:i:s'),
-				"good" 				=> $id, // товар
-				"priceType" 	=> "1101300000001001", // Факт
+				"good" 				=> $id,
+				"priceType" 	=> "1101300000001001",
 				"price"				=> $price,
-				"currency"		=> "1101200000001001" // грн.
+				"currency"		=> "1101200000001001"
 			];
 
 			$requestResult = $this->sendRequest($packet);
 			$data = $this->handleResult($requestResult);
 
 			if (!(isset($data->is_error) || isset($data->error) || $data  == new \stdClass()) && isset($data->result)) {
-				file_put_contents(DIR_LOGS . 'delovod_goods.log', $time->format('Y-m-d H:i:s') . ' Set price:' . $price . ' for product: isbn = ' . $id . "\n", FILE_APPEND);
+				file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', $time->format('Y-m-d H:i:s') . " Установлена цена: {$price} для isbn {$id}\n", FILE_APPEND);
 				return 1;
 			} else {
 				$error_msg = (isset($data->error_msg) ? $data->error_msg : (isset($data->error) ? $data->error : ''));
-				file_put_contents(DIR_LOGS . 'delovod_goods.log', $time->format('Y-m-d H:i:s') . ' Err set price product: isbn = ' . $id . ". " . $error_msg . "\n", FILE_APPEND);
+				file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', $time->format('Y-m-d H:i:s') . " Ошибка установки цены для isbn {$id}: {$error_msg}\n", FILE_APPEND);
 				return 0;
 			}
 		}
 	}
+
 
 	/**
 	 * Get Object Id from delovod by object_type and object name
@@ -666,18 +689,20 @@ class ControllerExtensionModuleDelovod extends Controller
 
 		foreach ($results as $result) {
 			$i++;
-
-			// Логируем перед отправкой
-			file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
-				date('Y-m-d H:i:s') . " [{$page}/{$total_pages}] → product_id: {$result['product_id']}, isbn: {$result['isbn']}, price: {$result['price']}\n",
-				FILE_APPEND
-			);
+			$log = date('Y-m-d H:i:s') . " [{$page}/{$total_pages}] → product_id: {$result['product_id']}, isbn: {$result['isbn']}, price: {$result['price']}";
 
 			if ($result['isbn'] != '') {
 				if ($this->setPrice($result['isbn'], $result['price'], $time)) {
 					$j++;
+					$log .= " → OK";
+				} else {
+					$log .= " → FAIL";
 				}
+			} else {
+				$log .= " → NO ISBN";
 			}
+
+			file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', $log . "\n", FILE_APPEND);
 		}
 
 		file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
