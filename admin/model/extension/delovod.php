@@ -20,6 +20,20 @@ class ModelExtensionDelovod extends Model {
 		return $query->rows;
 	}
 
+    /* get all products with isbn */
+    public function getAllProductsForPriceUpdate($page = 0, $limit = 100)
+    {
+        $offset = ($page - 1) * $limit;
+        $sql = "SELECT product_id, price, isbn FROM " . DB_PREFIX . "product WHERE isbn != '' ORDER BY product_id ASC";
+        
+        if ($page) {
+            $sql .= " LIMIT " . (int)$offset . ", " . (int)$limit;
+        }
+
+        $query = $this->db->query($sql);
+        return $query->rows;
+    }
+
 	public function getProduct($product_id) {
 		$query = $this->db->query("SELECT DISTINCT p.price, p.weight, pd.name, pdu.name as name_ua,p.sku, p.isbn, p2c.category_id, cd.name as category, md.name as manufacturer  FROM " . DB_PREFIX . "product p
 					LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')

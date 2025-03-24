@@ -92,16 +92,21 @@
               <div class="form-group">
                 <div class="col-sm-6">
                   <label>
-                    <input type="checkbox" name="only_name" value="1" checked>
+                    <input type="checkbox" name="only_name" value="1">
                     Обновить только наименование
                   </label>
-                </div>
-                <div class="col-sm-6">
+                  <br>
                   <label>
-                    <input type="checkbox" name="only_price" value="1">
-                    Обновить только Цену
-                  </label>
+                  <input type="checkbox" name="only_price" value="1">
+                  Обновить только Цену
+                </label>
+                <br>
+                <label>
+                <input type="checkbox" name="update_all_prices" value="1">
+                Обновить цену всех товаров (постранично)
+              </label>
                 </div>
+
                 <div class="col-sm-6">
                   <label>
                     Page

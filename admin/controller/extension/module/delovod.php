@@ -188,6 +188,14 @@ class ControllerExtensionModuleDelovod extends Controller
 
 		$json = [];
 		if ($this->config->get('delovod_status') && $this->user->hasPermission('modify', 'extension/module/delovod')) {
+
+			// Обработка массового обновления всех цен без категории
+			if (isset($this->request->post['update_all_prices']) && $this->request->post['update_all_prices'] == 1) {
+				$page = isset($this->request->post['page']) ? (int)$this->request->post['page'] : 1;
+				$this->updateAllPrices($page);
+				return;
+			}
+
 			if (isset($this->request->post['category_id']) && $this->request->post['category_id']) {
 				$time = new DateTime('now', new DateTimeZone('UTC'));
 				file_put_contents(DIR_LOGS . 'delovod_sync.log', "\nBEGIN -------" . $time->format('Y-m-d H:i:s') . "--------\n", FILE_APPEND);
@@ -199,6 +207,7 @@ class ControllerExtensionModuleDelovod extends Controller
 					$this->updateNameUa($category_id, $page);
 					$this->response->redirect($this->url->link('extension/module/delovod', 'token=' . $this->session->data['token'] . (isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] : ''), true));
 				}
+			
 				if(isset($this->request->post['only_price'])){
 					$page = isset($this->request->post['page']) ? $this->request->post['page'] : 0;
 					$this->updatePrice($category_id, $page);
@@ -623,22 +632,55 @@ class ControllerExtensionModuleDelovod extends Controller
 		$j = 0;
 		$results = $this->model_extension_delovod->getProductsPriceByCategoryId($category_id, false, $page);
 		$time = new DateTime('now', new DateTimeZone('UTC'));
-		
 		foreach ($results as $result) {
 			$i++;
-
 				if ($result['isbn'] != '') { // Обновить только цену
 					if ($this->setPrice($result['isbn'], $result['price'], $time)) {
 						$j++;
 					}
 
 				}
+		}
+		$this->session->data['success'] = "Обновление цен. Всего: " . $i . " Обновлено: " . $j . " Page: " . $page;
+	}
 
+
+	/* Обновление цен для всех товаров */
+	private function updateAllPrices($page = 1)
+	{
+	
+		$this->load->model('extension/delovod');
+
+		$limit = 100;
+		$results = $this->model_extension_delovod->getAllProductsForPriceUpdate($page, $limit);
+
+		$i = 0;
+		$j = 0;
+		$time = new DateTime('now', new DateTimeZone('UTC'));
+
+		foreach ($results as $result) {
+			$i++;
+			if ($result['isbn'] != '') {
+				if ($this->setPrice($result['isbn'], $result['price'], $time)) {
+					$j++;
+				}
+			}
 		}
 
-		$this->session->data['success'] = "Обновление цен. Всего: " . $i . " Обновлено: " . $j . " Page: " . $page;
-		
+		file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " — Обновление цен. Страница $page. Всего: $i. Обновлено: $j\n", FILE_APPEND);
+
+		if (count($results) < $limit) {
+			$this->session->data['success'] = "Обновление всех цен завершено. Всего: $i, обновлено: $j.";
+		} else {
+			$next_page = $page + 1;
+			$this->session->data['success'] = "Обновлена страница $page. Обновлено: $j.";
+			$this->response->redirect($this->url->link('extension/module/delovod/sync', 'token=' . $this->session->data['token'] . '&page=' . $next_page . '&update_all_prices=1', true));
+			exit;
+		}
 	}
+
+
+
 
 	public function test()
 	{
