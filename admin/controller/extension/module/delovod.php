@@ -394,14 +394,14 @@ class ControllerExtensionModuleDelovod extends Controller
 			$checkResult = $this->sendRequest($checkPacket);
 			$checkData = $this->handleResult($checkResult);
 
-			if (!isset($checkData->is_error) && isset($checkData[0]->price)) {
+			if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0]->price)) {
 				$current_price = (float)$checkData[0]->price;
 				if (abs($current_price - (float)$price) < 0.0001) {
-					// Цена совпадает, не отправляем
 					file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Пропущено: цена уже установлена ({$price}) для isbn {$id}\n", FILE_APPEND);
 					return 1;
 				}
 			}
+			
 
 			// 2. Устанавливаем цену
 			$packet['action'] = "saveObject";
