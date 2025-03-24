@@ -23,18 +23,19 @@ class ModelExtensionDelovod extends Model {
     /* get all products with isbn */
     public function getAllProductsForPriceUpdate($page = 1, $limit = 100)
     {
-        $page = max(1, (int)$page);
+        $page = max(1, (int)$page); // защита от 0
         $offset = ($page - 1) * $limit;
-    
+
         $sql = "SELECT product_id, price, isbn 
                 FROM " . DB_PREFIX . "product 
                 WHERE isbn != '' 
                 ORDER BY product_id ASC 
                 LIMIT " . (int)$offset . ", " . (int)$limit;
-    
+
         $query = $this->db->query($sql);
         return $query->rows;
     }
+
     
 
 	public function getProduct($product_id) {

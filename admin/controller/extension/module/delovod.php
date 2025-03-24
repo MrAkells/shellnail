@@ -648,7 +648,8 @@ class ControllerExtensionModuleDelovod extends Controller
 	/* Обновление цен для всех товаров */
 	private function updateAllPrices($page = 1)
 	{
-	
+		$page = max(1, (int)$page); // защита от page = 0
+
 		$this->load->model('extension/delovod');
 
 		$limit = 100;
@@ -667,17 +668,28 @@ class ControllerExtensionModuleDelovod extends Controller
 			}
 		}
 
-		file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " — Обновление цен. Страница $page. Всего: $i. Обновлено: $j\n", FILE_APPEND);
+		file_put_contents(
+			DIR_LOGS . 'delovod_all_price_update.log',
+			date('Y-m-d H:i:s') . " — Обновление цен. Страница $page. Всего: $i. Обновлено: $j\n",
+			FILE_APPEND
+		);
 
 		if (count($results) < $limit) {
 			$this->session->data['success'] = "Обновление всех цен завершено. Всего: $i, обновлено: $j.";
 		} else {
 			$next_page = $page + 1;
 			$this->session->data['success'] = "Обновлена страница $page. Обновлено: $j.";
-			$this->response->redirect($this->url->link('extension/module/delovod/sync', 'token=' . $this->session->data['token'] . '&page=' . $next_page . '&update_all_prices=1', true));
+			$this->response->redirect(
+				$this->url->link(
+					'extension/module/delovod/sync',
+					'token=' . $this->session->data['token'] . '&page=' . $next_page . '&update_all_prices=1',
+					true
+				)
+			);
 			exit;
 		}
 	}
+
 
 
 
