@@ -179,34 +179,32 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
   (function() {
     const checkbox = document.querySelector('input[name="update_all_prices"]');
     const pageInput = document.querySelector('input[name="page"]');
     const progressContainer = document.getElementById('price-progress-info');
 
-    // Вычисляем общее число страниц из PHP (по умолчанию через hidden поле или sessionStorage)
     const totalPages = sessionStorage.getItem('delovod_total_pages') || 0;
     const currentPage = parseInt(pageInput.value) || 1;
 
     if (checkbox && checkbox.checked && totalPages > 0) {
       const percent = Math.min(100, Math.round((currentPage / totalPages) * 100));
 
-      // Прогресс-текст и полоска
       progressContainer.innerHTML = `
-        <div style="margin-top: 5px;">
+        <div style="margin-top: 10px;">
           Страница <strong>${currentPage}</strong> из <strong>${totalPages}</strong>
         </div>
-        <div style="width: 100%; background: #eee; border-radius: 5px; height: 10px;">
-          <div style="width: ${percent}%; background: #337ab7; height: 10px; border-radius: 5px;"></div>
+        <div style="width: 100%; background: #eee; border-radius: 5px; height: 10px; margin-top: 5px;">
+          <div style="width: ${percent}%; background: #5cb85c; height: 10px; border-radius: 5px;"></div>
         </div>
       `;
     }
 
-    // Сохраняем общее количество, если есть в flash-сообщении
+    // Извлекаем общее число товаров из flash-сообщения
     const successMsg = document.querySelector('.alert-success');
     if (successMsg) {
-      const match = successMsg.innerText.match(/Всего товаров: (\d+)\. .*страница: (\d+)/i);
+      const match = successMsg.innerText.match(/Всего товаров: (\d+)/i);
       if (match) {
         const total = parseInt(match[1]);
         const pageSize = 100;

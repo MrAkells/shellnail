@@ -20,20 +20,69 @@ class ModelExtensionDelovod extends Model {
 		return $query->rows;
 	}
 
-    /* get all products with isbn */
+    /**
+     * Получить товары с изменённой ценой за последние 24 часа или истекшей акцией
+     */
     public function getAllProductsForPriceUpdate($page = 1, $limit = 100)
     {
         $page = max(1, (int)$page); // защита от 0
         $offset = ($page - 1) * $limit;
 
-        $sql = "SELECT product_id, price, isbn 
-                FROM " . DB_PREFIX . "product 
-                WHERE isbn != '' 
-                ORDER BY product_id ASC 
-                LIMIT " . (int)$offset . ", " . (int)$limit;
+        $now = date('Y-m-d H:i:s');
+        $yesterday = date('Y-m-d H:i:s', strtotime('-24 hours'));
+
+        $sql = "
+            SELECT 
+                p.product_id, 
+                p.isbn, 
+                p.price AS base_price, 
+                ps.price AS special_price, 
+                ps.date_start, 
+                ps.date_end, 
+                p.date_modified
+            FROM " . DB_PREFIX . "product p
+            LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1
+            WHERE 
+                p.isbn != ''
+                AND (
+                    p.date_modified >= '" . $this->db->escape($yesterday) . "' 
+                    OR ps.date_start >= '" . $this->db->escape($yesterday) . "' 
+                    OR ps.date_end >= '" . $this->db->escape($yesterday) . "'
+                )
+            ORDER BY p.product_id ASC 
+            LIMIT " . (int)$offset . ", " . (int)$limit;
 
         $query = $this->db->query($sql);
-        return $query->rows;
+
+        $products = [];
+
+        foreach ($query->rows as $row) {
+            // Определяем, какая цена актуальна
+            $price = (isset($row['special_price']) && $this->isSpecialPriceActive($row)) 
+                ? (float)$row['special_price'] 
+                : (float)$row['base_price'];
+
+            $products[] = [
+                'product_id' => $row['product_id'],
+                'isbn'       => $row['isbn'],
+                'price'      => $price
+            ];
+        }
+
+        return $products;
+    }
+
+    /**
+     * Проверка, активна ли акционная цена
+     */
+    private function isSpecialPriceActive($row)
+    {
+        $now = strtotime(date('Y-m-d'));
+        $start = strtotime($row['date_start']);
+        $end = strtotime($row['date_end']);
+
+        return (!$row['date_start'] || $start <= $now) &&
+            (!$row['date_end'] || $end >= $now);
     }
 
     

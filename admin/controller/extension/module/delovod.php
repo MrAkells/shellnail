@@ -685,21 +685,16 @@ class ControllerExtensionModuleDelovod extends Controller
 
 	/* Обновление цен для всех товаров */
 	public function updateAllPrices($page = 1) {
-		$this->load->model('catalog/product');
+		$this->load->model('extension/delovod');
 	
 		$limit = 100;
-		$offset = ($page - 1) * $limit;
-	
-		$products = $this->model_catalog_product->getProducts([
-			'start' => $offset,
-			'limit' => $limit
-		]);
-	
-		$total = $this->model_catalog_product->getTotalProducts();
-		$total_pages = ceil($total / $limit);
-	
 		$log_file = DIR_LOGS . 'delovod_all_price_update.log';
-		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [$page/$total_pages] — Обработка цен товаров ($offset - " . ($offset + $limit) . ")\n", FILE_APPEND);
+	
+		$products = $this->model_extension_delovod->getAllProductsForPriceUpdate($page, $limit);
+		$total = count($products);
+		$total_pages = ($total === $limit) ? $page + 1 : $page;
+	
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [$page] — Обработка цен товаров (всего: {$total})\n", FILE_APPEND);
 	
 		$updated = 0;
 	
@@ -719,14 +714,17 @@ class ControllerExtensionModuleDelovod extends Controller
 			}
 		}
 	
-		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [$page/$total_pages] — Завершено. Всего: " . count($products) . ". Обновлено: $updated.\n", FILE_APPEND);
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [$page] — Завершено. Обновлено: $updated.\n", FILE_APPEND);
+
+		$this->session->data['success'] = "Обновлено товаров: $updated. Страница: $page из $total_pages. Всего товаров: $total.";
 	
-		// Переход на следующую страницу
-		if ($page < $total_pages) {
+		// Если вернулось ровно $limit товаров — возможно, есть ещё
+		if ($total === $limit) {
 			$next_url = $this->url->link('extension/module/delovod/sync', 'token=' . $this->session->data['token'] . '&update_all_prices=1&page=' . ($page + 1), true);
 			$this->response->redirect($next_url);
 		}
 	}
+	
 	
 
 
