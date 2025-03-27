@@ -162,6 +162,12 @@ class ControllerExtensionModuleDelovod extends Controller
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
 
+		$data['current_page'] = isset($this->request->get['page']) ? (int)$this->request->get['page'] : 1;
+		$data['total_pages'] = isset($this->session->data['delovod_total_pages']) ? (int)$this->session->data['delovod_total_pages'] : 1;
+		$data['progress_percent'] = $data['total_pages'] > 0
+			? round($data['current_page'] / $data['total_pages'] * 100)
+			: 0;
+
 		$this->response->setOutput($this->load->view('extension/module/delovod', $data));
 	}
 
@@ -185,8 +191,12 @@ class ControllerExtensionModuleDelovod extends Controller
 
 	public function sync()
 	{
-		if (isset($this->request->get['update_all_prices']) && $this->request->get['update_all_prices']) {
-			$page = isset($this->request->get['page']) ? (int)$this->request->get['page'] : 1;
+		// Обработка массового обновления всех цен без категории (по get или post)
+		if (
+			($this->request->get['update_all_prices'] ?? null) == 1 ||
+			($this->request->post['update_all_prices'] ?? null) == 1
+		) {
+			$page = (int)($this->request->get['page'] ?? $this->request->post['page'] ?? 1);
 			$this->updateAllPrices($page);
 			return;
 		}
@@ -691,23 +701,23 @@ class ControllerExtensionModuleDelovod extends Controller
 		$limit = 100;
 		$log_file = DIR_LOGS . 'delovod_all_price_update.log';
 
-		// Получаем общее количество товаров для обновления (только на первой итерации)
-		if ($page == 1) {
+		// Первая итерация — получаем общее количество товаров и сохраняем в сессии
+		if ($page == 1 || !isset($this->session->data['delovod_total_items'])) {
 			$total_items = $this->model_extension_delovod->getAllProductsTotalForPriceUpdate();
 			$this->session->data['delovod_total_items'] = $total_items;
 			$this->session->data['delovod_total_pages'] = ceil($total_items / $limit);
-		} else {
-			$total_items = $this->session->data['delovod_total_items'] ?? 0;
-			$total_pages = $this->session->data['delovod_total_pages'] ?? 1;
 		}
+
+		$total_items = $this->session->data['delovod_total_items'];
+		$total_pages = $this->session->data['delovod_total_pages'];
 
 		$products = $this->model_extension_delovod->getAllProductsForPriceUpdate($page, $limit);
 		$total = count($products);
-		$total_pages = ceil($total_items / $limit);
 
-		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [$page/$total_pages] — Обработка цен товаров (всего: {$total_items}, на странице: {$total})\n", FILE_APPEND);
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [{$page}/{$total_pages}] — Обработка цен товаров (всего: {$total_items}, на странице: {$total})\n", FILE_APPEND);
 
 		$updated = 0;
+		$time = new DateTime('now', new DateTimeZone('UTC'));
 
 		foreach ($products as $product) {
 			$isbn = $product['isbn'] ?? null;
@@ -715,9 +725,9 @@ class ControllerExtensionModuleDelovod extends Controller
 
 			if (!$isbn || !$price) continue;
 
-			$result = $this->setPrice($isbn, $price, new DateTime());
+			$result = $this->setPrice($isbn, $price, $time);
 
-			if ($result) {
+			if ($result === 1) {
 				$updated++;
 				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] → product_id: {$product['product_id']}, isbn: {$isbn}, price: {$price} → OK\n", FILE_APPEND);
 			} else {
@@ -725,24 +735,24 @@ class ControllerExtensionModuleDelovod extends Controller
 			}
 		}
 
-		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [$page/$total_pages] — Завершено. Обновлено: $updated.\n", FILE_APPEND);
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [{$page}/{$total_pages}] — Завершено. Обновлено: $updated.\n", FILE_APPEND);
 
 		$this->session->data['success'] = "Обновлено товаров: $updated. Страница: $page из $total_pages. Всего товаров: $total_items.";
 
-		if ($total === $limit && $page < $total_pages) {
+		// Переход на следующую страницу
+		if ($page < $total_pages) {
 			$next_url = $this->url->link('extension/module/delovod/sync', 'token=' . $this->session->data['token'] . '&update_all_prices=1&page=' . ($page + 1), true);
 			$this->response->redirect($next_url);
 		} else {
-			// Очистка временных данных
+			// Последняя страница — очищаем и возвращаемся
 			unset($this->session->data['delovod_total_items']);
 			unset($this->session->data['delovod_total_pages']);
 
-			$final_url = $this->url->link('extension/module/delovod/sync', 'token=' . $this->session->data['token'], true);
+			$final_url = $this->url->link('extension/module/delovod', 'token=' . $this->session->data['token'], true);
 			$this->response->redirect($final_url);
 		}
 	}
 
-	
 	
 
 

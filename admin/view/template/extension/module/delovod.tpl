@@ -106,11 +106,15 @@
                   Обновить цену всех товаров (постранично)
                 </label>
                 <br>
-                <label>
-                Страница: <input type="text" name="update_page" value="1" style="width: 60px;">
-              </label>
+                {% if total_pages > 1 %}
+                <div class="progress" style="margin-top: 20px;">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress_percent }}%;">
+                        {{ current_page }} / {{ total_pages }}
+                    </div>
+                </div>
+            {% endif %}
               <br>
-              <span id="price-progress-info"></span>
+             
 
                 </div>
 
@@ -178,42 +182,6 @@
       </div>
     </div>
 </div>
-
-<script>
-  (function() {
-    const checkbox = document.querySelector('input[name="update_all_prices"]');
-    const pageInput = document.querySelector('input[name="update_page"]');
-    const progressContainer = document.getElementById('price-progress-info');
-
-    const totalPages = parseInt(sessionStorage.getItem('delovod_total_pages') || 0);
-    const currentPage = parseInt(pageInput?.value || 1);
-
-    if (progressContainer && totalPages > 0) {
-      const percent = Math.min(100, Math.round((currentPage / totalPages) * 100));
-      progressContainer.innerHTML = `
-        <div style="margin-top: 10px;">
-          Страница <strong>${currentPage}</strong> из <strong>${totalPages}</strong>
-        </div>
-        <div style="width: 100%; background: #eee; border-radius: 5px; height: 10px; margin-top: 5px;">
-          <div style="width: ${percent}%; background: #5cb85c; height: 10px; border-radius: 5px;"></div>
-        </div>
-      `;
-    }
-
-    // Сохраняем общее число страниц из flash-сообщения (если есть)
-    const successMsg = document.querySelector('.alert-success');
-    if (successMsg) {
-      const match = successMsg.innerText.match(/Всего товаров: (\d+)/i);
-      if (match) {
-        const total = parseInt(match[1]);
-        const pageSize = 100;
-        const pages = Math.ceil(total / pageSize);
-        sessionStorage.setItem('delovod_total_pages', pages);
-      }
-    }
-  })();
-</script>
-
 
 
 <script type="text/javascript"><!--
