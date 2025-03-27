@@ -85,6 +85,31 @@ class ModelExtensionDelovod extends Model {
             (!$row['date_end'] || $end >= $now);
     }
 
+    /**
+     * Получить общее количество товаров с изменённой ценой за последние 24 часа или истекшей акцией
+     */
+    public function getAllProductsTotalForPriceUpdate()
+    {
+        $yesterday = date('Y-m-d H:i:s', strtotime('-24 hours'));
+
+        $sql = "
+            SELECT COUNT(DISTINCT p.product_id) AS total
+            FROM " . DB_PREFIX . "product p
+            LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1
+            WHERE 
+                p.isbn != ''
+                AND (
+                    p.date_modified >= '" . $this->db->escape($yesterday) . "' 
+                    OR ps.date_start >= '" . $this->db->escape($yesterday) . "' 
+                    OR ps.date_end >= '" . $this->db->escape($yesterday) . "'
+                )
+        ";
+
+        $query = $this->db->query($sql);
+        return (int)$query->row['total'];
+    }
+
+
     
 
 	public function getProduct($product_id) {
