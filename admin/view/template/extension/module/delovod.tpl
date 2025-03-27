@@ -106,13 +106,17 @@
                   Обновить цену всех товаров (постранично)
                 </label>
                 <br>
-                {% if total_pages > 1 %}
+                <?php if ($total_pages > 1) { ?>
                 <div class="progress" style="margin-top: 20px;">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress_percent }}%;">
-                        {{ current_page }} / {{ total_pages }}
-                    </div>
+                  <div class="progress-bar" role="progressbar"
+                      aria-valuenow="<?php echo round(($current_page / $total_pages) * 100); ?>"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      style="width: <?php echo round(($current_page / $total_pages) * 100); ?>%;">
+                    <?php echo $current_page; ?> / <?php echo $total_pages; ?>
+                  </div>
                 </div>
-            {% endif %}
+              <?php } ?>
               <br>
              
 
