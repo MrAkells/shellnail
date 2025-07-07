@@ -778,6 +778,8 @@ class ControllerExtensionModuleDelovod extends Controller
         $test_products = [];
         do {
             $products = $this->model_extension_delovod->getAllProductsForPriceUpdate($page, $limit);
+            // Логируем содержимое массива $products для отладки
+            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [PAGE {$page}] Выборка товаров: " . print_r($products, true) . "\n", FILE_APPEND);
             foreach ($products as $product) {
                 $isbn = $product['isbn'] ?? null;
                 $price = $product['price'] ?? null;

@@ -246,8 +246,9 @@ class ModelExtensionModuleDelovod extends Model
 	}
 
 	/**
-     * Получить товары с изменённой ценой за последние 24 часа или истекшей акцией
-     * Теперь учитывается поле price_modified и выбирается актуальная цена (акционная, если действует, иначе обычная)
+     * Получить товары с изменённой ценой за последние 24 часа (price_modified)
+     * Только если price_modified не null и не старше суток
+     * Выбирается актуальная цена (акционная, если действует, иначе обычная)
      */
     public function getAllProductsForPriceUpdate($page = 1, $limit = 100)
     {
@@ -268,12 +269,8 @@ class ModelExtensionModuleDelovod extends Model
                 ON ps.product_id = p.product_id AND ps.customer_group_id = 1
             WHERE 
                 p.isbn != '' 
-                AND (
-                    p.price_modified >= NOW() - INTERVAL 1 DAY
-                    OR ps.date_start >= NOW() - INTERVAL 1 DAY
-                    OR ps.date_end >= NOW() - INTERVAL 1 DAY
-                    OR (ps.date_end IS NOT NULL AND ps.date_end < NOW())
-                )
+                AND p.price_modified IS NOT NULL
+                AND p.price_modified >= NOW() - INTERVAL 1 DAY
             GROUP BY p.product_id
             ORDER BY p.product_id ASC
             LIMIT " . (int)$offset . ", " . (int)$limit;
@@ -284,7 +281,8 @@ class ModelExtensionModuleDelovod extends Model
     }
 
     /**
-     * Получить общее количество товаров с изменённой ценой за последние 24 часа или истекшей акцией
+     * Получить общее количество товаров с изменённой ценой за последние 24 часа (price_modified)
+     * Только если price_modified не null и не старше суток
      */
     public function getAllProductsTotalForPriceUpdate()
     {
@@ -293,15 +291,10 @@ class ModelExtensionModuleDelovod extends Model
         $sql = "
             SELECT COUNT(DISTINCT p.product_id) AS total
             FROM " . DB_PREFIX . "product p
-            LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1
             WHERE 
                 p.isbn != ''
-                AND (
-                    p.price_modified >= '" . $this->db->escape($yesterday) . "' 
-                    OR ps.date_start >= '" . $this->db->escape($yesterday) . "' 
-                    OR ps.date_end >= '" . $this->db->escape($yesterday) . "'
-                    OR (ps.date_end IS NOT NULL AND ps.date_end < NOW())
-                )
+                AND p.price_modified IS NOT NULL
+                AND p.price_modified >= '" . $this->db->escape($yesterday) . "'
         ";
 
         $query = $this->db->query($sql);
