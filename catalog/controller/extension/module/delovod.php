@@ -739,4 +739,69 @@ class ControllerExtensionModuleDelovod extends Controller
         file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Завершено. Обновлено: $updated.\n", FILE_APPEND);
         exit("OK. Updated: $updated (TEST MODE: только 2 товара)");
     }
+
+    /**
+     * Установить цену товара в Деловод (по isbn)
+     * @param string $id (isbn)
+     * @param float $price
+     * @param DateTime $time
+     * @return int 1 - успех, 0 - ошибка
+     */
+    private function setPrice($id, $price, $time)
+    {
+        if ($id != '' && (float)$price > 0) {
+            // Получаем текущую цену
+            $packetCheck = [
+                'action' => 'request',
+                'params' => [
+                    'from' => 'informationRegisters.goodsPrices',
+                    'fields' => ['price' => 'price'],
+                    'filters' => [
+                        ['alias' => 'good', 'operator' => '=', 'value' => $id],
+                        ['alias' => 'priceType', 'operator' => '=', 'value' => '1101300000001001'] // Факт
+                    ],
+                    'sortOrder' => [['alias' => 'date', 'order' => 'DESC']],
+                    'limit' => 1
+                ]
+            ];
+
+            $check = $this->sendRequest($packetCheck);
+            $checkData = $this->handleResult($check);
+
+            if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0]->price)) {
+                $current_price = (float)$checkData[0]->price;
+                if (abs($current_price - (float)$price) < 0.0001) {
+                    file_put_contents(DIR_LOGS . 'delovod_all_price_update.log',
+                        date('Y-m-d H:i:s') . " Пропущено: цена уже установлена ({$price}) для isbn {$id}\n",
+                        FILE_APPEND
+                    );
+                    return 1; // считаем как успешно
+                }
+            }
+
+            // Установка новой цены
+            $packet['action'] = "saveObject";
+            $packet["params"]['header'] = [
+                "id"         => "informationRegisters.goodsPrices",
+                "date"       => $time->format('Y-m-d H:i:s'),
+                "good"       => $id,
+                "priceType"  => "1101300000001001", // Факт
+                "price"      => $price,
+                "currency"   => "1101200000001001"
+            ];
+
+            $requestResult = $this->sendRequest($packet);
+            $data = $this->handleResult($requestResult);
+
+            if (!(isset($data->is_error) || isset($data->error) || $data == new \stdClass()) && isset($data->result)) {
+                file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Установлена новая цена {$price} для isbn {$id}\n", FILE_APPEND);
+                return 1;
+            } else {
+                $error_msg = (isset($data->error_msg) ? $data->error_msg : (isset($data->error) ? $data->error : ''));
+                file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Ошибка установки цены для isbn {$id}: {$error_msg}\n", FILE_APPEND);
+                return 0;
+            }
+        }
+        return 0;
+    }
 }
