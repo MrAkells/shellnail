@@ -244,4 +244,67 @@ class ModelExtensionModuleDelovod extends Model
 		$result = curl_exec($ch);
 		$this->sms_log->write('SMS was sended to user ' . $data['user_name'] . ' on number ' . $data['user_phone'] . '. Result = ' . $result);
 	}
+
+	/**
+     * Получить товары с изменённой ценой за последние 24 часа или истекшей акцией
+     * Теперь учитывается поле price_modified и выбирается актуальная цена (акционная, если действует, иначе обычная)
+     */
+    public function getAllProductsForPriceUpdate($page = 1, $limit = 100)
+    {
+        $page = max(1, (int)$page);
+        $offset = ($page - 1) * $limit;
+
+        $sql = "
+            SELECT 
+                p.product_id, 
+                p.isbn, 
+                CASE 
+                    WHEN MIN(ps.price) IS NOT NULL AND MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW() 
+                        THEN MIN(ps.price)
+                    ELSE p.price
+                END AS price
+            FROM " . DB_PREFIX . "product p
+            LEFT JOIN " . DB_PREFIX . "product_special ps 
+                ON ps.product_id = p.product_id AND ps.customer_group_id = 1
+            WHERE 
+                p.isbn != '' 
+                AND (
+                    p.price_modified >= NOW() - INTERVAL 1 DAY
+                    OR ps.date_start >= NOW() - INTERVAL 1 DAY
+                    OR ps.date_end >= NOW() - INTERVAL 1 DAY
+                    OR (ps.date_end IS NOT NULL AND ps.date_end < NOW())
+                )
+            GROUP BY p.product_id
+            ORDER BY p.product_id ASC
+            LIMIT " . (int)$offset . ", " . (int)$limit;
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    /**
+     * Получить общее количество товаров с изменённой ценой за последние 24 часа или истекшей акцией
+     */
+    public function getAllProductsTotalForPriceUpdate()
+    {
+        $yesterday = date('Y-m-d H:i:s', strtotime('-24 hours'));
+
+        $sql = "
+            SELECT COUNT(DISTINCT p.product_id) AS total
+            FROM " . DB_PREFIX . "product p
+            LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1
+            WHERE 
+                p.isbn != ''
+                AND (
+                    p.price_modified >= '" . $this->db->escape($yesterday) . "' 
+                    OR ps.date_start >= '" . $this->db->escape($yesterday) . "' 
+                    OR ps.date_end >= '" . $this->db->escape($yesterday) . "'
+                    OR (ps.date_end IS NOT NULL AND ps.date_end < NOW())
+                )
+        ";
+
+        $query = $this->db->query($sql);
+        return (int)$query->row['total'];
+    }
 }
