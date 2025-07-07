@@ -260,8 +260,14 @@ class ModelExtensionModuleDelovod extends Model
                 p.product_id, 
                 p.isbn, 
                 CASE 
-                    WHEN MIN(ps.price) IS NOT NULL AND MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW() 
-                        THEN MIN(ps.price)
+                    WHEN MIN(ps.price) IS NOT NULL AND (
+                        (
+                            (MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW())
+                        )
+                        OR (MIN(ps.date_start) = '0000-00-00' OR MIN(ps.date_start) IS NULL)
+                        OR (MIN(ps.date_end) = '0000-00-00' OR MIN(ps.date_end) IS NULL)
+                    )
+                    THEN MIN(ps.price)
                     ELSE p.price
                 END AS price
             FROM " . DB_PREFIX . "product p
