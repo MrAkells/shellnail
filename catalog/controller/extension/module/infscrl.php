@@ -34,7 +34,7 @@ class ControllerExtensionModuleinfscrl extends Controller {
 	public function index() {
  		$data['infscrl_status'] = $this->setvalue($this->modname.'_status');
  		$data['infscrl_endtext'] = $this->setvalue($this->modname.'_endtext');
-		$data['infscrl_endtext'] = $data['infscrl_endtext'][$this->langid];
+		$data['infscrl_endtext'] = isset($data['infscrl_endtext'][$this->langid]) ? $data['infscrl_endtext'][$this->langid] : '';
  		$data['infscrl_loader_img'] = $this->setvalue($this->modname.'_loader_img');
 		$data['infscrl_loader_img'] = 'image/'.$data['infscrl_loader_img'];
  		
