@@ -753,13 +753,59 @@ class ControllerExtensionModuleDelovod extends Controller
 		}
 	}
 
-	
-
-
-
-
-
-
+	/**
+     * Ночная синхронизация цен с Деловод
+     * Для запуска через крон: https://shellnail.com.ua/index.php?route=extension/module/delovod/syncPrices
+     * Для теста: ограничено 2 товарами (убрать ограничение после проверки)
+     */
+    public function syncPrices()
+    {
+        // Проверка статуса модуля
+        if (!$this->config->get('delovod_status')) {
+            exit('Delovod module disabled');
+        }
+        $this->load->model('extension/delovod');
+        $limit = 100;
+        $page = 1;
+        $updated = 0;
+        $log_file = DIR_LOGS . 'delovod_night_price_sync.log';
+        $total_items = $this->model_extension_delovod->getAllProductsTotalForPriceUpdate();
+        $total_pages = ceil($total_items / $limit);
+        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Ночная синхронизация цен. Всего товаров: {$total_items}\n", FILE_APPEND);
+        $time = new DateTime('now', new DateTimeZone('UTC'));
+        $test_limit = 2; // <--- ОГРАНИЧЕНИЕ ДЛЯ ТЕСТА, убрать после проверки
+        $test_count = 0;
+        $test_products = [];
+        do {
+            $products = $this->model_extension_delovod->getAllProductsForPriceUpdate($page, $limit);
+            foreach ($products as $product) {
+                $isbn = $product['isbn'] ?? null;
+                $price = $product['price'] ?? null;
+                if (!$isbn || !$price) continue;
+                $result = $this->setPrice($isbn, $price, $time);
+                // Логируем id и isbn каждого переданного товара
+                $test_products[] = [
+                    'product_id' => $product['product_id'] ?? '',
+                    'isbn' => $isbn,
+                    'price' => $price
+                ]; 
+                if ($result === 1) {
+                    $updated++;
+                    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] → product_id: {$product['product_id']}, isbn: {$isbn}, price: {$price} → OK\n", FILE_APPEND);
+                } else {
+                    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] → product_id: {$product['product_id']}, isbn: {$isbn}, price: {$price} → FAIL\n", FILE_APPEND);
+                }
+                $test_count++;
+                if ($test_count >= $test_limit) break; // <--- ОГРАНИЧЕНИЕ ДЛЯ ТЕСТА
+            }
+            if ($test_count >= $test_limit) break; // <--- ОГРАНИЧЕНИЕ ДЛЯ ТЕСТА
+            $page++;
+        } while ($page <= $total_pages);
+        // Логируем итоговый список переданных товаров
+        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Переданы товары (TEST): " . print_r($test_products, true) . "\n", FILE_APPEND);
+        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Завершено. Обновлено: $updated.\n", FILE_APPEND);
+        exit("OK. Updated: $updated (TEST MODE: только 2 товара)");
+    }
 
 	public function test()
 	{

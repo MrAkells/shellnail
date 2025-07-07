@@ -22,54 +22,42 @@ class ModelExtensionDelovod extends Model {
 
     /**
      * Получить товары с изменённой ценой за последние 24 часа или истекшей акцией
+     * Теперь учитывается поле price_modified и выбирается актуальная цена (акционная, если действует, иначе обычная)
      */
     public function getAllProductsForPriceUpdate($page = 1, $limit = 100)
     {
-        $page = max(1, (int)$page); // защита от 0
+        $page = max(1, (int)$page);
         $offset = ($page - 1) * $limit;
 
-        $now = date('Y-m-d H:i:s');
-        $yesterday = date('Y-m-d H:i:s', strtotime('-24 hours'));
-
+        // Выбираем товары, у которых была изменена цена за последние сутки (price_modified)
+        // или у которых началась/закончилась акция за последние сутки, или акция истекла
         $sql = "
             SELECT 
                 p.product_id, 
                 p.isbn, 
-                p.price AS base_price, 
-                ps.price AS special_price, 
-                ps.date_start, 
-                ps.date_end, 
-                p.date_modified
+                CASE 
+                    WHEN MIN(ps.price) IS NOT NULL AND MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW() 
+                        THEN MIN(ps.price)
+                    ELSE p.price
+                END AS price
             FROM " . DB_PREFIX . "product p
-            LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1
+            LEFT JOIN " . DB_PREFIX . "product_special ps 
+                ON ps.product_id = p.product_id AND ps.customer_group_id = 1
             WHERE 
-                p.isbn != ''
+                p.isbn != '' 
                 AND (
-                    p.date_modified >= '" . $this->db->escape($yesterday) . "' 
-                    OR ps.date_start >= '" . $this->db->escape($yesterday) . "' 
-                    OR ps.date_end >= '" . $this->db->escape($yesterday) . "'
+                    p.price_modified >= NOW() - INTERVAL 1 DAY
+                    OR ps.date_start >= NOW() - INTERVAL 1 DAY
+                    OR ps.date_end >= NOW() - INTERVAL 1 DAY
+                    OR (ps.date_end IS NOT NULL AND ps.date_end < NOW())
                 )
-            ORDER BY p.product_id ASC 
+            GROUP BY p.product_id
+            ORDER BY p.product_id ASC
             LIMIT " . (int)$offset . ", " . (int)$limit;
 
         $query = $this->db->query($sql);
 
-        $products = [];
-
-        foreach ($query->rows as $row) {
-            // Определяем, какая цена актуальна
-            $price = (isset($row['special_price']) && $this->isSpecialPriceActive($row)) 
-                ? (float)$row['special_price'] 
-                : (float)$row['base_price'];
-
-            $products[] = [
-                'product_id' => $row['product_id'],
-                'isbn'       => $row['isbn'],
-                'price'      => $price
-            ];
-        }
-
-        return $products;
+        return $query->rows;
     }
 
     /**
