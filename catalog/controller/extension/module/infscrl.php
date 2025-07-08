@@ -13,7 +13,8 @@ class ControllerExtensionModuleinfscrl extends Controller {
 	public function __construct($registry) {
 		parent::__construct($registry);
 		
-		$this->langid = (int)$this->config->get('config_language_id');
+		$value = $this->config->get('config_language_id');
+		$this->langid = is_numeric($value) ? (int)$value : 0;
  		
 		if(substr(VERSION,0,3)>='3.0' || substr(VERSION,0,3)=='2.3') { 
 			$this->modtpl = 'extension/module/infscrl';
@@ -32,11 +33,15 @@ class ControllerExtensionModuleinfscrl extends Controller {
  	} 
 	
 	public function index() {
- 		$data['infscrl_status'] = $this->setvalue($this->modname.'_status');
- 		$data['infscrl_endtext'] = $this->setvalue($this->modname.'_endtext');
-		$data['infscrl_endtext'] = $data['infscrl_endtext'][$this->langid];
- 		$data['infscrl_loader_img'] = $this->setvalue($this->modname.'_loader_img');
-		$data['infscrl_loader_img'] = 'image/'.$data['infscrl_loader_img'];
+        $data['infscrl_status'] = $this->setvalue($this->modname.'_status');
+        $data['infscrl_endtext'] = $this->setvalue($this->modname.'_endtext');
+        if (is_array($data['infscrl_endtext']) && isset($data['infscrl_endtext'][$this->langid])) {
+            $data['infscrl_endtext'] = $data['infscrl_endtext'][$this->langid];
+        } else {
+            $data['infscrl_endtext'] = '';
+        }
+        $data['infscrl_loader_img'] = $this->setvalue($this->modname.'_loader_img');
+        $data['infscrl_loader_img'] = 'image/'.$data['infscrl_loader_img'];
  		
                 $data['is_search']=false;
                 
