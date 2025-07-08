@@ -58,7 +58,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			$order_info = $this->model_checkout_order->getOrder($order_id);
 			if ($order_info) {
 				$time = new DateTime('now', new DateTimeZone('UTC'));
-				file_put_contents(DIR_LOGS . 'delovod_orders.log', $time->format('Y-m-d H:i:s') . ' Add new order: id = ' . $order_id . "\n", FILE_APPEND);
+				// file_put_contents(DIR_LOGS . 'delovod_orders.log', $time->format('Y-m-d H:i:s') . ' Add new order: id = ' . $order_id . "\n", FILE_APPEND);
 				if ($order_info['email']) {
 					$person_id = $this->getObjectId('persons', $order_info['email'], 'email', "=");
 					if ($person_id) {
@@ -77,15 +77,14 @@ class ControllerExtensionModuleDelovod extends Controller
 						}
 						
 						$client_full_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
-
-						$packet["params"]['header'] = [
-							"id"		=> "catalogs.persons",
-							"parent"	=> "1100100000001022", //Покупатели
-							"name" 		=> ["ru" => $client_full_name, "uk" => $client_full_name],
-							"details"	=> json_encode(["phones" => [["pr" => $telephone, "kind" => "phone"]], "emails" => [["pr" => $order_info['email'], "kind" => "email"]]])
-						];
+                        $packet["params"]['header'] = [
+                            "id"		=> "catalogs.persons",
+                            "parent"	=> "1100100000001022", //Покупатели
+                            "name" 		=> ["ru" => $client_full_name, "uk" => $client_full_name],
+                            "details"	=> json_encode(["phones" => [["pr" => $telephone, "kind" => "phone"]], "emails" => [["pr" => $order_info['email'], "kind" => "email"]]])
+                        ];
 						$person_id = $this->saveObject($packet, $time);
-						if ($person_id) file_put_contents(DIR_LOGS . 'delovod_orders.log', "Add new user email: " . $order_info['email'] . ". Person ID = " . $person_id . "\n", FILE_APPEND);
+                        // if ($person_id) file_put_contents(DIR_LOGS . 'delovod_orders.log', "Add new user email: " . $order_info['email'] . ". Person ID = " . $person_id . "\n", FILE_APPEND);
 					}
 					if (!$person_id) return 0;
 
@@ -217,7 +216,7 @@ class ControllerExtensionModuleDelovod extends Controller
 						}
 					}
 				} else {
-					file_put_contents(DIR_LOGS . 'delovod_orders.log', "Err user email. Order ID = " . $order_id . "\n", FILE_APPEND);
+					// file_put_contents(DIR_LOGS . 'delovod_orders.log', "Err user email. Order ID = " . $order_id . "\n", FILE_APPEND);
 				}
 			}
 		}
@@ -259,13 +258,12 @@ class ControllerExtensionModuleDelovod extends Controller
 
 		$requestResult = $this->sendRequest($packet);
 		$data = $this->handleResult($requestResult);
-
 		if (!(isset($data->is_error) || isset($data->error) || $data  == new \stdClass()) && isset($data->id)) {
-			file_put_contents(DIR_LOGS . 'delovod_orders.log', $time->format('Y-m-d H:i:s') . ' Save Object:' . $data->id . '. Packet' . json_encode($packet) . "\n", FILE_APPEND);
+			// file_put_contents(DIR_LOGS . 'delovod_orders.log', $time->format('Y-m-d H:i:s') . ' Save Object:' . $data->id . '. Packet' . json_encode($packet) . "\n", FILE_APPEND);
 			return $data->id;
 		} else {
 			$error_msg = (isset($data->error_msg) ? $data->error_msg : (isset($data->error) ? $data->error : ''));
-			file_put_contents(DIR_LOGS . 'delovod_orders.log', $time->format('Y-m-d H:i:s') . ' Err save Object: ' . $error_msg . "\n", FILE_APPEND);
+			// file_put_contents(DIR_LOGS . 'delovod_orders.log', $time->format('Y-m-d H:i:s') . ' Err save Object: ' . $error_msg . "\n", FILE_APPEND);
 			return 0;
 		}
 	}
@@ -326,7 +324,6 @@ class ControllerExtensionModuleDelovod extends Controller
 	{
 
 		if ($this->config->get('delovod_status')) {
-
 			$packet['action'] = "getObject";
 			$packet['params']['id'] = $id;
 
@@ -338,7 +335,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			} else {
 				$time = new DateTime('now', new DateTimeZone('UTC'));
 				$error_msg = (isset($data->error_msg) ? $data->error_msg : (isset($data->error) ? $data->error : ''));
-				file_put_contents(DIR_LOGS . $file_log, $time->format('Y-m-d H:i:s') . ' Err get Object Id: ' . $id . ". Error: " . $error_msg . "\n", FILE_APPEND);
+				// file_put_contents(DIR_LOGS . $file_log, $time->format('Y-m-d H:i:s') . ' Err get Object Id: ' . $id . ". Error: " . $error_msg . "\n", FILE_APPEND);
 			}
 		}
 		return 0;
@@ -403,7 +400,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			$this->load->model('extension/module/delovod');
 			$orders = $this->model_extension_module_delovod->getOrdersForSync();
 			$time = new DateTime('now', new DateTimeZone('UTC'));
-			file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Start synchronization ' . "\n", FILE_APPEND);
+			//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Start synchronization ' . "\n", FILE_APPEND);
 			if ($orders) {
 				foreach ($orders as $order) {
 					$this->syncOrder($order);
@@ -485,7 +482,7 @@ class ControllerExtensionModuleDelovod extends Controller
 		if ($this->config->get('delovod_status')) {
 			$this->load->model('extension/module/delovod');
 			$time = new DateTime('now', new DateTimeZone('UTC'));
-			file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order I: ' . $order['order_id'] . "\n", FILE_APPEND);
+			//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order I: ' . $order['order_id'] . "\n", FILE_APPEND);
 
 			$data = $this->getObject($order['delovod_order_id'], 'delovod_orders_sync.log');
 			if ($data) {
@@ -517,7 +514,7 @@ class ControllerExtensionModuleDelovod extends Controller
 								if ($product['quantity'] != $good->qty || $product['price'] != $good->price) {
 									$change = 1;
 									$this->model_extension_module_delovod->updateProductToOrder($product['order_product_id'], $good->price, $good->qty, $good->priceAmount);
-									file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Product ' . $good->good . ' new qty: ' . $good->qty . "\n", FILE_APPEND);
+									//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Product ' . $good->good . ' new qty: ' . $good->qty . "\n", FILE_APPEND);
 								}
 								unset($order_products[$key]);
 								break;
@@ -529,7 +526,7 @@ class ControllerExtensionModuleDelovod extends Controller
 								$change = 1;
 								$this->model_extension_module_delovod->addProductToOrder($order['order_id'], $product_inf, $good->good__pr, $good->price, $good->qty, $good->priceAmount);
 							} else {
-								file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Product ' . $good->good__pr . ' not found: ' . $good->good . "\n", FILE_APPEND);
+								//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Product ' . $good->good__pr . ' not found: ' . $good->good . "\n", FILE_APPEND);
 								//return 0;
 							}
 						}
@@ -539,7 +536,7 @@ class ControllerExtensionModuleDelovod extends Controller
 					if ($order_products) {
 						$change = 1;
 						$this->model_extension_module_delovod->deleteProductsFromOrder($order_products);
-						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Delete products.' . "\n", FILE_APPEND);
+						//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Delete products.' . "\n", FILE_APPEND);
 					}
 								
 					// change total
@@ -557,7 +554,7 @@ class ControllerExtensionModuleDelovod extends Controller
 							//Накопительная скидка
 							if (isset($totals['coupon']) && $order['customer_id'] && !$this->model_extension_module_delovod->isUseCoupon($order['order_id'])) {
 								$accumulative_discount = $this->getAccumulativeDiscount($order['customer_id'], $order['order_id']);
-								file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Accumulative_discount:' . $accumulative_discount . "\n", FILE_APPEND);
+								//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Accumulative_discount:' . $accumulative_discount . "\n", FILE_APPEND);
 								if ($accumulative_discount != $totals['coupon']) {
 									//$total = $total + $accumulative_discount - $totals['coupon'];
 									$new_totals['coupon'] = $accumulative_discount;
@@ -579,19 +576,19 @@ class ControllerExtensionModuleDelovod extends Controller
 							
 							$new_totals['sub_total'] = $sub_total;
 							$new_totals['total'] = $data->header->amountCur;//$total;
-							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($totals,true) . "\n", FILE_APPEND);
-							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($new_totals,true) . "\n", FILE_APPEND);
+							//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($totals,true) . "\n", FILE_APPEND);
+							//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($new_totals,true) . "\n", FILE_APPEND);
 							$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], $new_totals);
 
 							$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $new_totals['total']);
-							file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update totals.' . "\n", FILE_APPEND);
+							//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update totals.' . "\n", FILE_APPEND);
 						}
 
 					} else if($data->header->discountPercent && $totals['total'] != $data->header->amountCur){ // Add discount
 						$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], ['total' => $data->header->amountCur]);
 						
 						$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $data->header->amountCur);
-						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update total. Add Discount.' . "\n", FILE_APPEND);					
+						//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update total. Add Discount.' . "\n", FILE_APPEND);					
 					}
 
 
@@ -599,7 +596,7 @@ class ControllerExtensionModuleDelovod extends Controller
 					if ($order['order_status_id'] != $order_status_id) {
 						$this->load->model('checkout/order');
 						$this->model_checkout_order->addOrderHistory($order['order_id'], $order_status_id);
-						file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. New status: ' . $data->header->state->pr . "\n", FILE_APPEND);
+						//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. New status: ' . $data->header->state->pr . "\n", FILE_APPEND);
 					}
 				}
 			}
@@ -648,7 +645,7 @@ class ControllerExtensionModuleDelovod extends Controller
 	{
 		if ($this->config->get('delovod_status')) {
 			$time = new DateTime('now', new DateTimeZone('UTC'));
-			file_put_contents(DIR_LOGS . 'delovod_update_balance.log', $time->format('Y-m-d H:i:s') . ' ---Start---' . "\n", FILE_APPEND);
+			//file_put_contents(DIR_LOGS . 'delovod_update_balance.log', $time->format('Y-m-d H:i:s') . ' ---Start---' . "\n", FILE_APPEND);
 			$j = 0;
 			$time = new DateTime('now', new DateTimeZone('Europe/Kiev'));
 			$packet['action'] = "request";
@@ -678,10 +675,10 @@ class ControllerExtensionModuleDelovod extends Controller
 				$this->load->model('extension/module/delovod');
 				$this->model_extension_module_delovod->updateBalance($data);
 				$time = new DateTime('now', new DateTimeZone('UTC'));
-				file_put_contents(DIR_LOGS . 'delovod_update_balance.log', $time->format('Y-m-d H:i:s') . ' Всего:' . count($data) . "\n", FILE_APPEND);
+				//file_put_contents(DIR_LOGS . 'delovod_update_balance.log', $time->format('Y-m-d H:i:s') . ' Всего:' . count($data) . "\n", FILE_APPEND);
 			} else {
 				$error_msg = (isset($data->error_msg) ? $data->error_msg : 'Ошибка синхронизации остатков.');
-				file_put_contents(DIR_LOGS . 'delovod_update_balance.log', $time->format('Y-m-d H:i:s') . ' ' . $error_msg . "\n", FILE_APPEND);
+				//file_put_contents(DIR_LOGS . 'delovod_update_balance.log', $time->format('Y-m-d H:i:s') . ' ' . $error_msg . "\n", FILE_APPEND);
 			}
 		}
 	}
@@ -706,38 +703,18 @@ class ControllerExtensionModuleDelovod extends Controller
         $total_pages = ceil($total_items / $limit);
         file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Ночная синхронизация цен (фронт). Всего товаров: {$total_items}\n", FILE_APPEND);
         $time = new DateTime('now', new DateTimeZone('UTC'));
-        $test_limit = 2; // <--- ОГРАНИЧЕНИЕ ДЛЯ ТЕСТА, убрать после проверки
-        $test_count = 0;
-        $test_products = [];
         do {
             $products = $this->model_extension_module_delovod->getAllProductsForPriceUpdate($page, $limit);
             foreach ($products as $product) {
                 $isbn = $product['isbn'] ?? null;
                 $price = $product['price'] ?? null;
                 if (!$isbn || !$price) continue;
-                $result = $this->setPrice($isbn, $price, $time);
-                // Логируем id и isbn каждого переданного товара
-                $test_products[] = [
-                    'product_id' => $product['product_id'] ?? '',
-                    'isbn' => $isbn,
-                    'price' => $price
-                ]; 
-                if ($result === 1) {
-                    $updated++;
-                    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] → product_id: {$product['product_id']}, isbn: {$isbn}, price: {$price} → OK\n", FILE_APPEND);
-                } else {
-                    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] → product_id: {$product['product_id']}, isbn: {$isbn}, price: {$price} → FAIL\n", FILE_APPEND);
-                }
-                $test_count++;
-                if ($test_count >= $test_limit) break; // <--- ОГРАНИЧЕНИЕ ДЛЯ ТЕСТА
+                $this->setPrice($isbn, $price, $time);
+                $updated++;
             }
-            if ($test_count >= $test_limit) break; // <--- ОГРАНИЧЕНИЕ ДЛЯ ТЕСТА
             $page++;
         } while ($page <= $total_pages);
-        // Логируем итоговый список переданных товаров
-        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Переданы товары (TEST): " . print_r($test_products, true) . "\n", FILE_APPEND);
-        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Завершено. Обновлено: $updated.\n", FILE_APPEND);
-        exit("OK. Updated: $updated (TEST MODE: только 2 товара)");
+        exit("OK. Updated: $updated");
     }
 
     /**
@@ -794,11 +771,11 @@ class ControllerExtensionModuleDelovod extends Controller
             $data = $this->handleResult($requestResult);
 
             if (!(isset($data->is_error) || isset($data->error) || $data == new \stdClass()) && isset($data->result)) {
-                file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Установлена новая цена {$price} для isbn {$id}\n", FILE_APPEND);
+                //file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Установлена новая цена {$price} для isbn {$id}\n", FILE_APPEND);
                 return 1;
             } else {
                 $error_msg = (isset($data->error_msg) ? $data->error_msg : (isset($data->error) ? $data->error : ''));
-                file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Ошибка установки цены для isbn {$id}: {$error_msg}\n", FILE_APPEND);
+                //file_put_contents(DIR_LOGS . 'delovod_all_price_update.log', date('Y-m-d H:i:s') . " Ошибка установки цены для isbn {$id}: {$error_msg}\n", FILE_APPEND);
                 return 0;
             }
         }
