@@ -703,6 +703,7 @@ class ControllerExtensionModuleDelovod extends Controller
         $total_pages = ceil($total_items / $limit);
         file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Ночная синхронизация цен (фронт). Всего товаров: {$total_items}\n", FILE_APPEND);
         $time = new DateTime('now', new DateTimeZone('UTC'));
+        $exported_isbns = [];
         do {
             $products = $this->model_extension_module_delovod->getAllProductsForPriceUpdate($page, $limit);
             foreach ($products as $product) {
@@ -711,9 +712,20 @@ class ControllerExtensionModuleDelovod extends Controller
                 if (!$isbn || !$price) continue;
                 $this->setPrice($isbn, $price, $time);
                 $updated++;
+                $exported_isbns[$isbn] = true;
             }
             $page++;
         } while ($page <= $total_pages);
+        // Добавляем акционные товары
+        $promo_products = $this->model_extension_module_delovod->getAllActivePromoProductsForPriceUpdate();
+        foreach ($promo_products as $product) {
+            $isbn = $product['isbn'] ?? null;
+            $price = $product['price'] ?? null;
+            if (!$isbn || !$price) continue;
+            if (isset($exported_isbns[$isbn])) continue; // не дублируем
+            $this->setPrice($isbn, $price, $time);
+            $updated++;
+        }
         exit("OK. Updated: $updated");
     }
 

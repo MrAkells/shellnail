@@ -121,16 +121,16 @@ class ModelCatalogGroups extends Model {
             
             if($data['type']=='1'){
                 $coefficient=(float)((100+(float)$data['change_price'])/100);
-                $this->db->query("UPDATE ".DB_PREFIX."product SET price=price*".$coefficient." WHERE product_id IN(".implode(', ', $data['selected']).")");
+                $this->db->query("UPDATE ".DB_PREFIX."product SET price=price*".$coefficient.", price_modified=NOW() WHERE product_id IN(".implode(', ', $data['selected']).")");
             
             }else if($data['type']=='2'){
                 $coefficient=(float)$data['change_price'];
                 if($coefficient<0){
                     $coefficient=-($coefficient);
-                    $this->db->query("UPDATE ".DB_PREFIX."product SET price=(price-".$coefficient.") WHERE product_id IN(".implode(', ', $data['selected']).")");
+                    $this->db->query("UPDATE ".DB_PREFIX."product SET price=(price-".$coefficient."), price_modified=NOW() WHERE product_id IN(".implode(', ', $data['selected']).")");
             
                 }else{
-                    $this->db->query("UPDATE ".DB_PREFIX."product SET price=(price+".$coefficient.") WHERE product_id IN(".implode(', ', $data['selected']).")");
+                    $this->db->query("UPDATE ".DB_PREFIX."product SET price=(price+".$coefficient."), price_modified=NOW() WHERE product_id IN(".implode(', ', $data['selected']).")");
             
                 }
                 

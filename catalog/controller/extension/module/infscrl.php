@@ -13,8 +13,7 @@ class ControllerExtensionModuleinfscrl extends Controller {
 	public function __construct($registry) {
 		parent::__construct($registry);
 		
-		$value = $this->config->get('config_language_id');
-		$this->langid = is_numeric($value) ? (int)$value : 0;
+		$this->langid = (int)$this->config->get('config_language_id');
  		
 		if(substr(VERSION,0,3)>='3.0' || substr(VERSION,0,3)=='2.3') { 
 			$this->modtpl = 'extension/module/infscrl';

@@ -306,4 +306,41 @@ class ModelExtensionModuleDelovod extends Model
         $query = $this->db->query($sql);
         return (int)$query->row['total'];
     }
+
+    /**
+     * Получить все товары с активной акцией, у которых цена менялась за последние сутки
+     */
+    public function getAllActivePromoProductsForPriceUpdate()
+    {
+        $sql = "SELECT p.product_id, p.isbn, p.price as base_price, pr.type, pr.settings
+                FROM " . DB_PREFIX . "product p
+                INNER JOIN " . DB_PREFIX . "promotion_candidates pc ON p.product_id = pc.candidate_product_id
+                INNER JOIN " . DB_PREFIX . "promotions pr ON pc.promo_id = pr.promo_id
+                WHERE pr.status = 1
+                  AND pr.date_start <= NOW()
+                  AND pr.date_end >= NOW()
+                  AND p.isbn != ''
+                  AND p.price_modified IS NOT NULL
+                  AND p.price_modified >= NOW() - INTERVAL 1 DAY
+                GROUP BY p.product_id";
+        $query = $this->db->query($sql);
+        $result = [];
+        foreach ($query->rows as $row) {
+            $promo_price = $row['base_price'];
+            if ($row['type'] == 1) { // процент
+                $promo_price = $row['base_price'] * (1 - $row['settings'] / 100);
+            } elseif ($row['type'] == 2) { // скидка
+                $promo_price = $row['base_price'] - $row['settings'];
+            } elseif ($row['type'] == 3) { // фиксированная цена
+                $promo_price = $row['settings'];
+            }
+            if ($promo_price < 0) $promo_price = 0;
+            $result[] = [
+                'product_id' => $row['product_id'],
+                'isbn'       => $row['isbn'],
+                'price'      => $promo_price
+            ];
+        }
+        return $result;
+    }
 }
