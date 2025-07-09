@@ -344,4 +344,42 @@ class ModelExtensionModuleDelovod extends Model
         }
         return $result;
     }
+
+    /**
+     * Установить promo_price_synced для товара-акции
+     * @param int $product_id
+     * @param int $promo_id
+     */
+    public function setPromoPriceSynced($product_id, $promo_id) {
+        $this->db->query("UPDATE " . DB_PREFIX . "promotions SET promo_price_synced = NOW() WHERE promo_id = '" . (int)$promo_id . "'");
+    }
+
+    /**
+     * Установить price_synced для обычного товара
+     * @param int $product_id
+     */
+    public function setPriceSynced($product_id) {
+        $this->db->query("UPDATE " . DB_PREFIX . "product SET price_synced = NOW() WHERE product_id = '" . (int)$product_id . "'");
+    }
+
+    /**
+     * Получить общее количество акционных товаров для выгрузки (по promo_price_modified и promo_price_synced)
+     */
+    public function getAllActivePromoProductsTotalForPriceUpdate()
+    {
+        $sql = "SELECT COUNT(DISTINCT p.product_id) AS total
+                FROM " . DB_PREFIX . "product p
+                INNER JOIN " . DB_PREFIX . "promotion_candidates pc ON p.product_id = pc.candidate_product_id
+                INNER JOIN " . DB_PREFIX . "promotions pr ON pc.promo_id = pr.promo_id
+                WHERE pr.status = 1
+                  AND pr.date_start <= NOW()
+                  AND pr.date_end >= NOW()
+                  AND p.isbn != ''
+                  AND pr.promo_price_modified IS NOT NULL
+                  AND pr.promo_price_modified >= NOW() - INTERVAL 1 DAY
+                  AND (pr.promo_price_synced IS NULL OR pr.promo_price_synced < pr.promo_price_modified)
+        ";
+        $query = $this->db->query($sql);
+        return (int)$query->row['total'];
+    }
 }
