@@ -704,6 +704,7 @@ class ControllerExtensionModuleDelovod extends Controller
         file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Ночная синхронизация цен (фронт). Всего товаров: {$total_items}\n", FILE_APPEND);
         $time = new DateTime('now', new DateTimeZone('UTC'));
         $exported_isbns = [];
+        $debug_data = [];
         do {
             $products = $this->model_extension_module_delovod->getAllProductsForPriceUpdate($page, $limit);
             foreach ($products as $product) {
@@ -711,6 +712,7 @@ class ControllerExtensionModuleDelovod extends Controller
                 $price = $product['price'] ?? null;
                 if (!$isbn || !$price) continue;
                 $this->setPrice($isbn, $price, $time);
+                $debug_data[] = ['isbn' => $isbn, 'price' => $price, 'type' => 'base'];
                 $updated++;
                 $exported_isbns[$isbn] = true;
             }
@@ -718,14 +720,24 @@ class ControllerExtensionModuleDelovod extends Controller
         } while ($page <= $total_pages);
         // Добавляем акционные товары
         $promo_products = $this->model_extension_module_delovod->getAllActivePromoProductsForPriceUpdate();
+        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Получено акционных товаров: " . count($promo_products) . "\n", FILE_APPEND);
         foreach ($promo_products as $product) {
             $isbn = $product['isbn'] ?? null;
             $price = $product['price'] ?? null;
-            if (!$isbn || !$price) continue;
-            if (isset($exported_isbns[$isbn])) continue; // не дублируем
+            if (!$isbn || !$price) {
+                file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Пропущен акционный товар: ISBN или цена отсутствует: " . print_r($product, true) . "\n", FILE_APPEND);
+                continue;
+            }
+            if (isset($exported_isbns[$isbn])) {
+                file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Пропущен дубликат акционного товара: {$isbn}\n", FILE_APPEND);
+                continue; // не дублируем
+            }
+            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Экспорт акционного товара: ISBN={$isbn}, цена={$price}\n", FILE_APPEND);
             $this->setPrice($isbn, $price, $time);
+            $debug_data[] = ['isbn' => $isbn, 'price' => $price, 'type' => 'promo'];
             $updated++;
         }
+        file_put_contents(DIR_LOGS . 'delovod_debug_export.json', json_encode($debug_data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
         exit("OK. Updated: $updated");
     }
 

@@ -32,7 +32,7 @@ class ModelCatalogPromotions extends Model
             $hierarchy = -1;
             $this->db->query("UPDATE " . DB_PREFIX . "promotions SET hierarchy='1' WHERE promo_id='" . (int)$data['parent_id'] . "'");
         }
-        $this->db->query("INSERT INTO " . DB_PREFIX . "promotions SET promo_id='" . (int)$category_id . "', image = '" . $this->db->escape($data['image']) . "', image_m = '" . $this->db->escape($data['image_m']) . "', status = '" . (int)$data['status'] . "', main = '" . (int)$data['main'] . "', sort_order='" . (int)$data['sort_order'] . "', type='" . (int)$data['type'] . "', date_start='" . $this->db->escape($data['date_start']) . "', date_end='" . $this->db->escape($data['date_end']) . "', settings='" . $settings . "', parent_id='" . (int)$data['parent_id'] . "', hierarchy='" . (int)$hierarchy . "'");
+        $this->db->query("INSERT INTO " . DB_PREFIX . "promotions SET promo_id='" . (int)$category_id . "', image = '" . $this->db->escape($data['image']) . "', image_m = '" . $this->db->escape($data['image_m']) . "', status = '" . (int)$data['status'] . "', main = '" . (int)$data['main'] . "', sort_order='" . (int)$data['sort_order'] . "', type='" . (int)$data['type'] . "', date_start='" . $this->db->escape($data['date_start']) . "', date_end='" . $this->db->escape($data['date_end']) . "', settings='" . $settings . "', parent_id='" . (int)$data['parent_id'] . "', hierarchy='" . (int)$hierarchy . "', promo_price_modified = NOW()" ); // [delovod export] Обновление promo_price_modified при создании акции
 
         if (isset($data['keyword'])) {
             $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
@@ -41,7 +41,7 @@ class ModelCatalogPromotions extends Model
         $promo_id = $this->db->getLastId();
 
         foreach ($data['promo_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "promotion_description SET promo_id = '" . (int)$category_id . "', language_id = '" . (int)$language_id . "', title = '" . $this->db->escape($value['title']) . "', short_title = '" . $this->db->escape($value['short_title'])  . "', meta_h1 = '" . $this->db->escape($value['meta_h1']) . "', description = '" . $this->db->escape($value['description']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keywords = '" . $this->db->escape($value['meta_keywords']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "promotion_description SET promo_id = '" . (int)$promo_id . "', language_id = '" . (int)$language_id . "', title = '" . $this->db->escape($value['title'] ?? '') . "', short_title = '" . $this->db->escape($value['short_title'] ?? '')  . "', meta_h1 = '" . $this->db->escape($value['meta_h1'] ?? '') . "', description = '" . $this->db->escape($value['description'] ?? '') . "', meta_title = '" . $this->db->escape($value['meta_title'] ?? '') . "', meta_description = '" . $this->db->escape($value['meta_description'] ?? '') . "', meta_keywords = '" . $this->db->escape($value['meta_keywords'] ?? '') . "'");
 		}
 
         $this->cache->delete('promotions');
@@ -58,7 +58,7 @@ class ModelCatalogPromotions extends Model
         $old_parent = $query->row['parent_id'];
 
         foreach ($data['promo_description'] as $language_id => $value) {
-            $this->db->query("UPDATE " . DB_PREFIX . "category_description SET name='" . $this->db->escape($value['title']) . "', meta_title='" . $this->db->escape($value['meta_title']) . "', meta_h1='" . $this->db->escape($value['meta_h1']) . "',  meta_description='" . $this->db->escape($value['meta_description']) . "', meta_keyword='" . $this->db->escape($value['meta_keywords']) . "' WHERE language_id='" . (int)$language_id . "' AND category_id='" . (int)$promo_id . "'");
+            $this->db->query("UPDATE " . DB_PREFIX . "category_description SET name='" . $this->db->escape($value['title'] ?? '') . "', meta_title='" . $this->db->escape($value['meta_title'] ?? '') . "', meta_h1='" . $this->db->escape($value['meta_h1'] ?? '') . "',  meta_description='" . $this->db->escape($value['meta_description'] ?? '') . "', meta_keyword='" . $this->db->escape($value['meta_keywords'] ?? '') . "' WHERE language_id='" . (int)$language_id . "' AND category_id='" . (int)$promo_id . "'");
         }
         
         $settings = '';
@@ -84,7 +84,7 @@ class ModelCatalogPromotions extends Model
                 }
             }
         }
-        $this->db->query("UPDATE " . DB_PREFIX . "promotions SET image = '" . $this->db->escape($data['image']) . "', image_m = '" . $this->db->escape($data['image_m']) . "', status = '" . (int)$data['status'] . "', main = '" . (int)$data['main'] . "', sort_order='" . (int)$data['sort_order'] . "', type='" . (int)$data['type'] . "', date_start='" . $this->db->escape($data['date_start']) . "', date_end='" . $this->db->escape($data['date_end']) . "', settings='" . $settings . "', parent_id='" . (int)$data['parent_id'] . "', hierarchy='" . (int)$hierarchy  . "' WHERE promo_id='" . (int)$promo_id . "'");
+        $this->db->query("UPDATE " . DB_PREFIX . "promotions SET image = '" . $this->db->escape($data['image']) . "', image_m = '" . $this->db->escape($data['image_m']) . "', status = '" . (int)$data['status'] . "', main = '" . (int)$data['main'] . "', sort_order='" . (int)$data['sort_order'] . "', type='" . (int)$data['type'] . "', date_start='" . $this->db->escape($data['date_start']) . "', date_end='" . $this->db->escape($data['date_end']) . "', settings='" . $settings . "', parent_id='" . (int)$data['parent_id'] . "', hierarchy='" . (int)$hierarchy  . "', promo_price_modified = NOW() WHERE promo_id='" . (int)$promo_id . "'"); // [delovod export] Обновление promo_price_modified при изменении акции
 
         //            $this->db->query("DELETE FROM ".DB_PREFIX."product_to_category WHERE category_id='".(int)$promo_id."'");
         //            if(isset($data['selected'])){
@@ -95,8 +95,8 @@ class ModelCatalogPromotions extends Model
 
         $this->db->query("DELETE FROM " . DB_PREFIX . "promotion_description WHERE promo_id = '" . (int)$promo_id . "'");
         foreach ($data['promo_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "promotion_description SET promo_id = '" . (int)$promo_id . "', language_id = '" . (int)$language_id . "', title = '" . $this->db->escape($value['title']) . "', short_title = '" . $this->db->escape($value['short_title'])  . "', meta_h1 = '" . $this->db->escape($value['meta_h1']) . "', description = '" . $this->db->escape($value['description']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keywords = '" . $this->db->escape($value['meta_keywords']) . "'");
-		}
+            $this->db->query("INSERT INTO " . DB_PREFIX . "promotion_description SET promo_id = '" . (int)$promo_id . "', language_id = '" . (int)$language_id . "', title = '" . $this->db->escape($value['title'] ?? '') . "', short_title = '" . $this->db->escape($value['short_title'] ?? '')  . "', meta_h1 = '" . $this->db->escape($value['meta_h1'] ?? '') . "', description = '" . $this->db->escape($value['description'] ?? '') . "', meta_title = '" . $this->db->escape($value['meta_title'] ?? '') . "', meta_description = '" . $this->db->escape($value['meta_description'] ?? '') . "', meta_keywords = '" . $this->db->escape($value['meta_keywords'] ?? '') . "'");
+        }
 
         $this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'category_id=" . (int)$promo_id . "'");
         if (isset($data['keyword'])) {

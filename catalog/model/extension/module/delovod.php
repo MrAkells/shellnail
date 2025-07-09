@@ -308,7 +308,8 @@ class ModelExtensionModuleDelovod extends Model
     }
 
     /**
-     * Получить все товары с активной акцией, у которых цена менялась за последние сутки
+     * Получить все товары с активной акцией, у которых акция менялась за последние сутки
+     * [delovod export] Выборка по promo_price_modified
      */
     public function getAllActivePromoProductsForPriceUpdate()
     {
@@ -320,8 +321,8 @@ class ModelExtensionModuleDelovod extends Model
                   AND pr.date_start <= NOW()
                   AND pr.date_end >= NOW()
                   AND p.isbn != ''
-                  AND p.price_modified IS NOT NULL
-                  AND p.price_modified >= NOW() - INTERVAL 1 DAY
+                  AND pr.promo_price_modified IS NOT NULL
+                  AND pr.promo_price_modified >= NOW() - INTERVAL 1 DAY
                 GROUP BY p.product_id";
         $query = $this->db->query($sql);
         $result = [];
