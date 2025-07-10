@@ -767,93 +767,121 @@ class ControllerExtensionModuleDelovod extends Controller
     }
 
     /**
-     * Установить цену товара в Деловод (по isbn) через priceSettings (saveObject)
+     * Установить цену товара в Деловод (по isbn) через informationRegisters.goodsPrices (только добавление)
      * @param string $id (isbn)
      * @param float $price
      * @param DateTime $time
      * @return int|string
      */
-    private function setPrice($id, $price, $time, $product_id = null)
-    {
-        $log_file = DIR_LOGS . 'delovod_night_price_sync.log';
-        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены. ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
-        if ($id != '' && (float)$price > 0) {
-            // 1. Найти существующий документ priceSettings для товара и типа цены
-            $packetFind = [
-                'action' => 'request',
-                'params' => [
-                    'from' => 'documents.priceSettings',
-                    'fields' => ['id' => 'id', 'good' => 'good', 'priceType' => 'priceType', 'price' => 'price'],
-                    'filters' => [
-                        ['alias' => 'good', 'operator' => '=', 'value' => $id],
-                        ['alias' => 'priceType', 'operator' => '=', 'value' => '1101300000001001'] // Факт
-                    ],
-                    'limit' => 1
-                ]
-            ];
-            $find = $this->sendRequest($packetFind);
-            $findData = $this->handleResult($find);
-            $doc_id = null;
-            if (!isset($findData->is_error) && is_array($findData) && isset($findData[0]->id)) {
-                $doc_id = $findData[0]->id;
-            }
-            // 2. Если найден — получить документ, изменить цену, сохранить
-            if ($doc_id) {
-                $doc = $this->getObject($doc_id);
-                if ($doc && isset($doc->header)) {
-                    $doc->header->price = (float)$price;
-                    $packetSave = [
-                        'action' => 'saveObject',
-                        'params' => [
-                            'header' => [
-                                'id' => 'documents.priceSettings',
-                                'good' => $id,
-                                'priceType' => '1101300000001001',
-                                'price' => (float)$price,
-                                'date' => $time->format('Y-m-d H:i:s'),
-                                'parent' => $doc->header->parent ?? null,
-                                'id_doc' => $doc_id
-                            ]
-                        ]
-                    ];
-                    $save = $this->sendRequest($packetSave);
-                    $saveData = $this->handleResult($save);
-                    if (!isset($saveData->is_error) && isset($saveData->id)) {
-                        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: обновлён документ priceSettings. ID={$id}, doc_id={$saveData->id}, цена={$price}\n", FILE_APPEND);
-                        return 'updated: ' . $saveData->id;
-                    } else {
-                        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка обновления priceSettings. ID={$id}, цена={$price}\n", FILE_APPEND);
-                        return 'error: saveObject failed';
-                    }
-                }
-            } else {
-                // 3. Если не найден — создать новый документ priceSettings
-                $packetSave = [
-                    'action' => 'saveObject',
-                    'params' => [
-                        'header' => [
-                            'id' => 'documents.priceSettings',
-                            'good' => $id,
-                            'priceType' => '1101300000001001',
-                            'price' => (float)$price,
-                            'date' => $time->format('Y-m-d H:i:s')
-                        ]
-                    ]
-                ];
-				
-                $save = $this->sendRequest($packetSave);
-                $saveData = $this->handleResult($save);
-                if (!isset($saveData->is_error) && isset($saveData->id)) {
-                    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: создан новый документ priceSettings. ID={$id}, doc_id={$saveData->id}, цена={$price}\n", FILE_APPEND);
-                    return 'created: ' . $saveData->id;
-                } else {
-                    $err = isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : json_encode($saveData));
-                    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка создания priceSettings. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
-                    return 'error: saveObject failed';
-                }
+    // private function setPrice($id, $price, $time, $product_id = null)
+    // {
+    //     $log_file = DIR_LOGS . 'delovod_night_price_sync.log';
+    //     file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены (old method). ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
+    //     if ($id != '' && (float)$price > 0) {
+    //         // Добавление новой цены через informationRegisters.goodsPrices
+    //         $packetAdd = [
+    //             'action' => 'addRow',
+    //             'params' => [
+    //                 'register' => 'informationRegisters.goodsPrices',
+    //                 'row' => [
+    //                     'good' => $id,
+    //                     'priceType' => '1101300000001001', // Факт
+    //                     'price' => (float)$price,
+    //                     'date' => $time->format('Y-m-d H:i:s')
+    //                 ]
+    //             ]
+    //         ];
+    //         $add = $this->sendRequest($packetAdd);
+    //         $addData = $this->handleResult($add);
+    //         if (!isset($addData->is_error) && isset($addData->id)) {
+    //             file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: добавлена новая цена через goodsPrices. ID={$id}, row_id={$addData->id}, цена={$price}\n", FILE_APPEND);
+    //             return 'added: ' . $addData->id;
+    //         } else {
+    //             $err = isset($addData->error_msg) ? $addData->error_msg : (isset($addData->error) ? $addData->error : json_encode($addData));
+    //             file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка добавления в goodsPrices. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
+    //             return 'error: addRow failed';
+    //         }
+    //     }
+    //     file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка передачи (пустой id или цена). ID={$id}, цена={$price}\n", FILE_APPEND);
+    //     return 'error: empty id or price';
+    // }
+
+	private function setPrice($id, $price, $time, $product_id = null)
+{
+    $log_file = DIR_LOGS . 'delovod_night_price_sync.log';
+    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены. ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
+
+    if ($id != '' && (float)$price > 0) {
+        $priceType = '1101300000001001'; // Факт
+
+        // Получаем текущую цену
+        $packetCheck = [
+            'action' => 'request',
+            'params' => [
+                'from' => 'informationRegisters.goodsPrices',
+                'fields' => [
+                    '@id' => 'id',
+                    'price' => 'price'
+                ],
+                'filters' => [
+                    ['alias' => 'good', 'operator' => '=', 'value' => $id],
+                    ['alias' => 'priceType', 'operator' => '=', 'value' => $priceType]
+                ],
+                'sortOrder' => [['alias' => 'date', 'order' => 'DESC']],
+                'limit' => 1
+            ]
+        ];
+
+        $check = $this->sendRequest($packetCheck);
+        $checkData = $this->handleResult($check);
+
+        $existing_price_id = null;
+        $current_price = null;
+
+        if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0])) {
+            $existing_price_id = $checkData[0]->id ?? null;
+            $current_price = (float)($checkData[0]->price ?? 0);
+
+            if (abs($current_price - (float)$price) < 0.0001) {
+                file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена уже актуальна, обновление не требуется. ID={$id}, цена={$price}\n", FILE_APPEND);
+                return 'skip: already set';
             }
         }
-        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка передачи (пустой id или цена). ID={$id}, цена={$price}\n", FILE_APPEND);
-        return 'error: empty id or price';
+
+        // Сохраняем новую цену или обновляем существующую
+        $header = [
+            'good' => $id,
+            'priceType' => $priceType,
+            'price' => (float)$price,
+            'date' => $time->format('Y-m-d H:i:s'),
+        ];
+
+        // если есть ID существующей записи — обновим её
+        $header['id'] = $existing_price_id ?: 'informationRegisters.goodsPrices';
+
+        $packetSave = [
+            'action' => 'saveObject',
+            'params' => [
+                'header' => $header
+            ]
+        ];
+
+        $save = $this->sendRequest($packetSave);
+        $saveData = $this->handleResult($save);
+
+        if (!isset($saveData->is_error)) {
+            $operation = $existing_price_id ? 'обновлена' : 'создана';
+            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена {$operation}. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
+            return ($existing_price_id ? 'updated: ' : 'added: ') . $saveData->id;
+        } else {
+            $err = isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : json_encode($saveData));
+            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка сохранения. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
+            return 'error: saveObject failed';
+        }
     }
+
+    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка передачи (пустой id или цена). ID={$id}, цена={$price}\n", FILE_APPEND);
+    return 'error: empty id or price';
+}
+
 }
