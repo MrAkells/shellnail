@@ -840,6 +840,7 @@ class ControllerExtensionModuleDelovod extends Controller
                         ]
                     ]
                 ];
+				
                 $save = $this->sendRequest($packetSave);
                 $saveData = $this->handleResult($save);
                 if (!isset($saveData->is_error) && isset($saveData->id)) {
