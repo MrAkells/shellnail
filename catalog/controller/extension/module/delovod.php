@@ -846,7 +846,8 @@ class ControllerExtensionModuleDelovod extends Controller
                     file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: создан новый документ priceSettings. ID={$id}, doc_id={$saveData->id}, цена={$price}\n", FILE_APPEND);
                     return 'created: ' . $saveData->id;
                 } else {
-                    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка создания priceSettings. ID={$id}, цена={$price}\n", FILE_APPEND);
+                    $err = isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : json_encode($saveData));
+                    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка создания priceSettings. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
                     return 'error: saveObject failed';
                 }
             }
