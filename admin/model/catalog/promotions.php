@@ -84,7 +84,22 @@ class ModelCatalogPromotions extends Model
                 }
             }
         }
-        $this->db->query("UPDATE " . DB_PREFIX . "promotions SET image = '" . $this->db->escape($data['image']) . "', image_m = '" . $this->db->escape($data['image_m']) . "', status = '" . (int)$data['status'] . "', main = '" . (int)$data['main'] . "', sort_order='" . (int)$data['sort_order'] . "', type='" . (int)$data['type'] . "', date_start='" . $this->db->escape($data['date_start']) . "', date_end='" . $this->db->escape($data['date_end']) . "', settings='" . $settings . "', parent_id='" . (int)$data['parent_id'] . "', hierarchy='" . (int)$hierarchy  . "', promo_price_modified = NOW() WHERE promo_id='" . (int)$promo_id . "'"); // [delovod export] Обновление promo_price_modified при изменении акции
+        // --- Изменение: обновлять promo_price_modified только если изменились ключевые поля ---
+        $update_promo_price_modified = false;
+        if (
+            $query->row['type'] != $data['type'] ||
+            $query->row['settings'] != $settings ||
+            $query->row['date_start'] != $data['date_start'] ||
+            $query->row['date_end'] != $data['date_end']
+        ) {
+            $update_promo_price_modified = true;
+        }
+        $sql = "UPDATE " . DB_PREFIX . "promotions SET image = '" . $this->db->escape($data['image']) . "', image_m = '" . $this->db->escape($data['image_m']) . "', status = '" . (int)$data['status'] . "', main = '" . (int)$data['main'] . "', sort_order='" . (int)$data['sort_order'] . "', type='" . (int)$data['type'] . "', date_start='" . $this->db->escape($data['date_start']) . "', date_end='" . $this->db->escape($data['date_end']) . "', settings='" . $settings . "', parent_id='" . (int)$data['parent_id'] . "', hierarchy='" . (int)$hierarchy . "'";
+        if ($update_promo_price_modified) {
+            $sql .= ", promo_price_modified = NOW()";
+        }
+        $sql .= " WHERE promo_id='" . (int)$promo_id . "'";
+        $this->db->query($sql);
 
         //            $this->db->query("DELETE FROM ".DB_PREFIX."product_to_category WHERE category_id='".(int)$promo_id."'");
         //            if(isset($data['selected'])){

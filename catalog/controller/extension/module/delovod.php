@@ -773,47 +773,12 @@ class ControllerExtensionModuleDelovod extends Controller
      * @param DateTime $time
      * @return int|string
      */
-    // private function setPrice($id, $price, $time, $product_id = null)
-    // {
-    //     $log_file = DIR_LOGS . 'delovod_night_price_sync.log';
-    //     file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены (old method). ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
-    //     if ($id != '' && (float)$price > 0) {
-    //         // Добавление новой цены через informationRegisters.goodsPrices
-    //         $packetAdd = [
-    //             'action' => 'addRow',
-    //             'params' => [
-    //                 'register' => 'informationRegisters.goodsPrices',
-    //                 'row' => [
-    //                     'good' => $id,
-    //                     'priceType' => '1101300000001001', // Факт
-    //                     'price' => (float)$price,
-    //                     'date' => $time->format('Y-m-d H:i:s')
-    //                 ]
-    //             ]
-    //         ];
-    //         $add = $this->sendRequest($packetAdd);
-    //         $addData = $this->handleResult($add);
-    //         if (!isset($addData->is_error) && isset($addData->id)) {
-    //             file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: добавлена новая цена через goodsPrices. ID={$id}, row_id={$addData->id}, цена={$price}\n", FILE_APPEND);
-    //             return 'added: ' . $addData->id;
-    //         } else {
-    //             $err = isset($addData->error_msg) ? $addData->error_msg : (isset($addData->error) ? $addData->error : json_encode($addData));
-    //             file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка добавления в goodsPrices. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
-    //             return 'error: addRow failed';
-    //         }
-    //     }
-    //     file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка передачи (пустой id или цена). ID={$id}, цена={$price}\n", FILE_APPEND);
-    //     return 'error: empty id or price';
-    // }
-
-	private function setPrice($id, $price, $time, $product_id = null)
+    private function setPrice($id, $price, $time, $product_id = null)
 {
     $log_file = DIR_LOGS . 'delovod_night_price_sync.log';
     file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены. ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
-
     if ($id != '' && (float)$price > 0) {
         $priceType = '1101300000001001'; // Факт
-
         // Получаем текущую цену
         $packetCheck = [
             'action' => 'request',
@@ -831,7 +796,6 @@ class ControllerExtensionModuleDelovod extends Controller
                 'limit' => 1
             ]
         ];
-
         $check = $this->sendRequest($packetCheck);
         $checkData = $this->handleResult($check);
 
@@ -857,7 +821,9 @@ class ControllerExtensionModuleDelovod extends Controller
         ];
 
         // если есть ID существующей записи — обновим её
-        $header['id'] = $existing_price_id ?: 'informationRegisters.goodsPrices';
+        if ($existing_price_id) {
+            $header['id'] = $existing_price_id;
+        }
 
         $packetSave = [
             'action' => 'saveObject',
@@ -869,7 +835,7 @@ class ControllerExtensionModuleDelovod extends Controller
         $save = $this->sendRequest($packetSave);
         $saveData = $this->handleResult($save);
 
-        if (!isset($saveData->is_error)) {
+        if (!isset($saveData->is_error) && isset($saveData->id)) {
             $operation = $existing_price_id ? 'обновлена' : 'создана';
             file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена {$operation}. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
             return ($existing_price_id ? 'updated: ' : 'added: ') . $saveData->id;
@@ -879,7 +845,6 @@ class ControllerExtensionModuleDelovod extends Controller
             return 'error: saveObject failed';
         }
     }
-
     file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка передачи (пустой id или цена). ID={$id}, цена={$price}\n", FILE_APPEND);
     return 'error: empty id or price';
 }
