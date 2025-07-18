@@ -777,8 +777,10 @@ class ControllerExtensionModuleDelovod extends Controller
 	{
 		$log_file = DIR_LOGS . 'delovod_night_price_sync.log';
 		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены. ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
+
 		if ($id != '' && (float)$price > 0) {
 			$priceType = '1101300000001001'; // Факт
+
 			// Получаем текущую цену
 			$packetCheck = [
 				'action' => 'request',
@@ -786,7 +788,8 @@ class ControllerExtensionModuleDelovod extends Controller
 					'from' => 'informationRegisters.goodsPrices',
 					'fields' => [
 						'@id' => 'id',
-						'price' => 'price'
+						'price' => 'price',
+						'date' => 'date'
 					],
 					'filters' => [
 						['alias' => 'good', 'operator' => '=', 'value' => $id],
@@ -800,67 +803,45 @@ class ControllerExtensionModuleDelovod extends Controller
 			$checkData = $this->handleResult($check);
 
 			$existing_price_id = null;
-			$current_price = null;
 			$current_date = null;
 
 			if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0])) {
 				$existing_price_id = $checkData[0]->id ?? null;
-				$current_price = (float)($checkData[0]->price ?? 0);
 				$current_date = isset($checkData[0]->date) ? substr($checkData[0]->date, 0, 10) : null;
-
-				$today = $time->format('Y-m-d');
-				if ($current_date === $today) {
-					// Обновить цену через saveObject
-					$header = [
-						'id' => $existing_price_id,
-						'good' => $id,
-						'priceType' => $priceType,
-						'price' => (float)$price,
-						'date' => $time->format('Y-m-d H:i:s'),
-					];
-					$packetSave = [
-						'action' => 'saveObject',
-						'params' => [
-							'header' => $header
-						]
-					];
-					$save = $this->sendRequest($packetSave);
-					$saveData = $this->handleResult($save);
-					if (!isset($saveData->is_error) && isset($saveData->id)) {
-						file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена обновлена. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
-						return 'updated: ' . $saveData->id;
-					} else {
-						$err = isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : json_encode($saveData));
-						file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка обновления. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
-						return 'error: saveObject failed';
-					}
-				}
 			}
-			// Если нет цены на сегодня — добавить новую через addRow
-			$row = [
+
+			$today = $time->format('Y-m-d');
+			$header = [
 				'good' => $id,
 				'priceType' => $priceType,
 				'price' => (float)$price,
 				'date' => $time->format('Y-m-d H:i:s'),
 			];
-			$packetAdd = [
-				'action' => 'addRow',
+
+			if ($current_date === $today && $existing_price_id) {
+				// Обновить цену через saveObject
+				$header['id'] = $existing_price_id;
+			}
+
+			$packetSave = [
+				'action' => 'saveObject',
 				'params' => [
-					'to' => 'informationRegisters.goodsPrices',
-					'row' => $row
+					'header' => $header
 				]
 			];
-			$add = $this->sendRequest($packetAdd);
-			$addData = $this->handleResult($add);
-			if (!isset($addData->is_error) && isset($addData->id)) {
-				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена добавлена. ID={$id}, запись={$addData->id}, цена={$price}\n", FILE_APPEND);
-				return 'added: ' . $addData->id;
+			$save = $this->sendRequest($packetSave);
+			$saveData = $this->handleResult($save);
+
+			if (!isset($saveData->is_error) && isset($saveData->id)) {
+				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена успешно сохранена. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
+				return ($current_date === $today) ? 'updated: ' . $saveData->id : 'added: ' . $saveData->id;
 			} else {
-				$err = isset($addData->error_msg) ? $addData->error_msg : (isset($addData->error) ? $addData->error : json_encode($addData));
-				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка добавления. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
-				return 'error: addRow failed';
+				$err = isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : json_encode($saveData));
+				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка сохранения. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
+				return 'error: saveObject failed';
 			}
 		}
+
 		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка передачи (пустой id или цена). ID={$id}, цена={$price}\n", FILE_APPEND);
 		return 'error: empty id or price';
 	}
