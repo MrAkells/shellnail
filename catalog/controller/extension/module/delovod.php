@@ -829,6 +829,9 @@ class ControllerExtensionModuleDelovod extends Controller
 				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: обновление существующего объекта с ID={$existing_price_id}\n", FILE_APPEND);
 			}
 
+			$header['firm'] = '1100400000001001'; // Интернет-магазин shellnail.com.ua
+            $header['storage'] = '1100700000000001'; // Основной склад
+
 			$packetSave = [
 				'action' => 'saveObject',
 				'params' => [
