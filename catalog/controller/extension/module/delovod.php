@@ -816,13 +816,17 @@ class ControllerExtensionModuleDelovod extends Controller
 				'priceType' => $priceType,
 				'price' => (float)$price,
 				'date' => $time->format('Y-m-d H:i:s'),
-				'firm' => '1100400000001001', // Пример обязательного поля
-				'storage' => '1100700000000001' // Пример обязательного поля
+				// 'firm' => '1100400000001001', // Пример обязательного поля
+				// 'storage' => '1100700000000001' // Пример обязательного поля
 			];
 
-			if ($current_date === $today && $existing_price_id) {
+			// Логирование получения ID текущей цены
+            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: текущий ID цены: " . ($existing_price_id ?? 'не найден') . "\n", FILE_APPEND);
+
+            if ($current_date === $today && $existing_price_id) {
 				// Обновить цену через saveObject
 				$header['id'] = $existing_price_id;
+				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: обновление существующего объекта с ID={$existing_price_id}\n", FILE_APPEND);
 			}
 
 			$packetSave = [
@@ -831,19 +835,21 @@ class ControllerExtensionModuleDelovod extends Controller
 					'header' => $header
 				]
 			];
+			// Логирование содержимого пакета перед отправкой
+            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: содержимое пакета перед отправкой: " . json_encode($packetSave, JSON_PRETTY_PRINT) . "\n", FILE_APPEND);
 			$save = $this->sendRequest($packetSave);
 			$saveData = $this->handleResult($save);
 
 			if (!isset($saveData->is_error) && isset($saveData->id)) {
 				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена успешно сохранена. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
 				return ($current_date === $today) ? 'updated: ' . $saveData->id : 'added: ' . $saveData->id;
-            } else {
-                file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка сохранения. ID={$id}, цена={$price}. Ошибка: " . json_encode($saveData) . "\n", FILE_APPEND);
-                return 0;
-            }
-        } else {
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: некорректные данные. ID={$id}, цена={$price}\n", FILE_APPEND);
-            return 0;
-        }
-    }
+			} else {
+				$error_msg = (isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : ''));
+				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка при сохранении цены. ID={$id}, ошибка: {$error_msg}\n", FILE_APPEND);
+				return 'error: ' . $error_msg;
+			}
+		} else {
+			return 'error: empty id or price';
+		}
+	}
 }
