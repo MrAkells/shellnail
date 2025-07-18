@@ -77,14 +77,14 @@ class ControllerExtensionModuleDelovod extends Controller
 						}
 						
 						$client_full_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
-                        $packet["params"]['header'] = [
-                            "id"		=> "catalogs.persons",
-                            "parent"	=> "1100100000001022", //Покупатели
-                            "name" 		=> ["ru" => $client_full_name, "uk" => $client_full_name],
-                            "details"	=> json_encode(["phones" => [["pr" => $telephone, "kind" => "phone"]], "emails" => [["pr" => $order_info['email'], "kind" => "email"]]])
-                        ];
+						$packet["params"]['header'] = [
+							"id"		=> "catalogs.persons",
+							"parent"	=> "1100100000001022", //Покупатели
+							"name" 		=> ["ru" => $client_full_name, "uk" => $client_full_name],
+							"details"	=> json_encode(["phones" => [["pr" => $telephone, "kind" => "phone"]], "emails" => [["pr" => $order_info['email'], "kind" => "email"]]])
+						];
 						$person_id = $this->saveObject($packet, $time);
-                        // if ($person_id) file_put_contents(DIR_LOGS . 'delovod_orders.log', "Add new user email: " . $order_info['email'] . ". Person ID = " . $person_id . "\n", FILE_APPEND);
+						// if ($person_id) file_put_contents(DIR_LOGS . 'delovod_orders.log', "Add new user email: " . $order_info['email'] . ". Person ID = " . $person_id . "\n", FILE_APPEND);
 					}
 					if (!$person_id) return 0;
 
@@ -684,169 +684,206 @@ class ControllerExtensionModuleDelovod extends Controller
 	}
 
 	/**
-     * Ночная синхронизация цен с Деловод (фронт)
-     * Для запуска через крон: https://shellnail.com.ua/index.php?route=extension/module/delovod/syncPrices
-     * Для теста: ограничено 2 товарами (убрать ограничение после проверки)
-     */
-    public function syncPrices()
-    {
-        // Проверка статуса модуля
-        if (!$this->config->get('delovod_status')) {
-            exit('Delovod module disabled');
-        }
-        $this->load->model('extension/module/delovod');
-        $limit = 100;
-        $page = 1;
-        $updated = 0;
-        $log_file = DIR_LOGS . 'delovod_night_price_sync.log';
-        $total_items = $this->model_extension_module_delovod->getAllProductsTotalForPriceUpdate();
-        $total_pages = ceil($total_items / $limit);
-        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Ночная синхронизация цен (фронт). Всего товаров: {$total_items}\n", FILE_APPEND);
-        $time = new DateTime('now', new DateTimeZone('UTC'));
-        $exported_isbns = [];
-        $debug_data = [];
-        do {
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Начало страницы: {$page}\n", FILE_APPEND);
-            $products = $this->model_extension_module_delovod->getAllProductsForPriceUpdate($page, $limit);
-            foreach ($products as $product) {
-                $isbn = $product['isbn'] ?? null;
-                $price = $product['price'] ?? null;
-                $product_id = $product['product_id'] ?? null;
-                if (!$isbn || !$price) continue;
-                $result = $this->setPrice($isbn, $price, $time, $product_id);
-                file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Экспорт товара: ID={$product_id}, ISBN={$isbn}, цена={$price}\n", FILE_APPEND);
-                $debug_data[] = ['isbn' => $isbn, 'price' => $price, 'type' => 'base', 'result' => $result];
-                $updated++;
-                $exported_isbns[$isbn] = true;
-                // Обновление метки price_synced
-                if ($result !== 'error: empty id or price') {
-                    $this->model_extension_module_delovod->setPriceSynced($product_id);
-                }
-            }
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Конец страницы: {$page}\n", FILE_APPEND);
-            $page++;
-        } while ($page <= $total_pages);
-        // Добавляем акционные товары с постраничной обработкой
-        $promo_total_items = $this->model_extension_module_delovod->getAllActivePromoProductsTotalForPriceUpdate();
-        $promo_total_pages = ceil($promo_total_items / $limit);
-        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Получено акционных товаров: {$promo_total_items}\n", FILE_APPEND);
-        $promo_page = 1;
-        $promo_updated = 0;
-        do {
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Начало страницы (promo): {$promo_page}\n", FILE_APPEND);
-            $promo_products = $this->model_extension_module_delovod->getAllActivePromoProductsForPriceUpdate($promo_page, $limit);
-            foreach ($promo_products as $product) {
-                $isbn = $product['isbn'] ?? null;
-                $price = $product['price'] ?? null;
-                $promo_id = $product['promo_id'] ?? null;
-                $product_id = $product['product_id'] ?? null;
-                if (!$isbn || !$price) {
-                    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Пропущен акционный товар: ISBN или цена отсутствует: " . print_r($product, true) . "\n", FILE_APPEND);
-                    continue;
-                }
-                if (isset($exported_isbns[$isbn])) {
-                    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Пропущен дубликат акционного товара: {$isbn}\n", FILE_APPEND);
-                    continue; // не дублируем
-                }
-                $result = $this->setPrice($isbn, $price, $time, $product_id);
-                file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Экспорт акционного товара: ID={$product_id}, ISBN={$isbn}, цена={$price}\n", FILE_APPEND);
-                $debug_data[] = ['isbn' => $isbn, 'price' => $price, 'type' => 'promo', 'result' => $result];
-                $updated++;
-                $promo_updated++;
-                $exported_isbns[$isbn] = true;
-                // Обновление метки promo_price_synced
-                if ($result !== 'error: empty id or price') {
-                    $this->model_extension_module_delovod->setPromoPriceSynced($product_id, $promo_id);
-                }
-            }
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Конец страницы (promo): {$promo_page}\n", FILE_APPEND);
-            $promo_page++;
-        } while ($promo_page <= $promo_total_pages);
-        file_put_contents(DIR_LOGS . 'delovod_debug_export.json', json_encode($debug_data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
-        exit("OK. Updated: $updated");
-    }
+	 * Ночная синхронизация цен с Деловод (фронт)
+	 * Для запуска через крон: https://shellnail.com.ua/index.php?route=extension/module/delovod/syncPrices
+	 * Для теста: ограничено 2 товарами (убрать ограничение после проверки)
+	 */
+	public function syncPrices()
+	{
+		// Проверка статуса модуля
+		if (!$this->config->get('delovod_status')) {
+			exit('Delovod module disabled');
+		}
+		$this->load->model('extension/module/delovod');
+		$limit = 100;
+		$page = 1;
+		$updated = 0;
+		$log_file = DIR_LOGS . 'delovod_night_price_sync.log';
+		$total_items = $this->model_extension_module_delovod->getAllProductsTotalForPriceUpdate();
+		$total_pages = ceil($total_items / $limit);
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Ночная синхронизация цен (фронт). Всего товаров: {$total_items}\n", FILE_APPEND);
+		$time = new DateTime('now', new DateTimeZone('UTC'));
+		$exported_isbns = [];
+		$debug_data = [];
+		do {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Начало страницы: {$page}\n", FILE_APPEND);
+			$products = $this->model_extension_module_delovod->getAllProductsForPriceUpdate($page, $limit);
+			foreach ($products as $product) {
+				$isbn = $product['isbn'] ?? null;
+				$price = $product['price'] ?? null;
+				$product_id = $product['product_id'] ?? null;
+				if (!$isbn || !$price) continue;
+				$result = $this->setPrice($isbn, $price, $time, $product_id);
+				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Экспорт товара: ID={$product_id}, ISBN={$isbn}, цена={$price}\n", FILE_APPEND);
+				$debug_data[] = ['isbn' => $isbn, 'price' => $price, 'type' => 'base', 'result' => $result];
+				$updated++;
+				$exported_isbns[$isbn] = true;
+				// Обновление метки price_synced
+				if ($result !== 'error: empty id or price') {
+					$this->model_extension_module_delovod->setPriceSynced($product_id);
+				}
+			}
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Конец страницы: {$page}\n", FILE_APPEND);
+			$page++;
+		} while ($page <= $total_pages);
+		// Добавляем акционные товары с постраничной обработкой
+		$promo_total_items = $this->model_extension_module_delovod->getAllActivePromoProductsTotalForPriceUpdate();
+		$promo_total_pages = ceil($promo_total_items / $limit);
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Получено акционных товаров: {$promo_total_items}\n", FILE_APPEND);
+		$promo_page = 1;
+		$promo_updated = 0;
+		do {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Начало страницы (promo): {$promo_page}\n", FILE_APPEND);
+			$promo_products = $this->model_extension_module_delovod->getAllActivePromoProductsForPriceUpdate($promo_page, $limit);
+			foreach ($promo_products as $product) {
+				$isbn = $product['isbn'] ?? null;
+				$price = $product['price'] ?? null;
+				$promo_id = $product['promo_id'] ?? null;
+				$product_id = $product['product_id'] ?? null;
+				if (!$isbn || !$price) {
+					file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Пропущен акционный товар: ISBN или цена отсутствует: " . print_r($product, true) . "\n", FILE_APPEND);
+					continue;
+				}
+				if (isset($exported_isbns[$isbn])) {
+					file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Пропущен дубликат акционного товара: {$isbn}\n", FILE_APPEND);
+					continue; // не дублируем
+				}
+				$result = $this->setPrice($isbn, $price, $time, $product_id);
+				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Экспорт акционного товара: ID={$product_id}, ISBN={$isbn}, цена={$price}\n", FILE_APPEND);
+				$debug_data[] = ['isbn' => $isbn, 'price' => $price, 'type' => 'promo', 'result' => $result];
+				$updated++;
+				$promo_updated++;
+				$exported_isbns[$isbn] = true;
+				// Обновление метки promo_price_synced
+				if ($result !== 'error: empty id or price') {
+					$this->model_extension_module_delovod->setPromoPriceSynced($product_id, $promo_id);
+				}
+			}
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Конец страницы (promo): {$promo_page}\n", FILE_APPEND);
+			$promo_page++;
+		} while ($promo_page <= $promo_total_pages);
+		file_put_contents(DIR_LOGS . 'delovod_debug_export.json', json_encode($debug_data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+		exit("OK. Updated: $updated");
+	}
 
-    /**
-     * Установить цену товара в Деловод (по isbn) через informationRegisters.goodsPrices (только добавление)
-     * @param string $id (isbn)
-     * @param float $price
-     * @param DateTime $time
-     * @return int|string
-     */
-    private function setPrice($id, $price, $time, $product_id = null)
+	/**
+	 * Установить цену товара в Деловод (по isbn) через informationRegisters.goodsPrices (только добавление)
+	 * @param string $id (isbn)
+	 * @param float $price
+	 * @param DateTime $time
+	 * @return int|string
+	 */
+	private function setPrice($id, $price, $time, $product_id = null)
 {
-    $log_file = DIR_LOGS . 'delovod_night_price_sync.log';
-    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены. ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
-    if ($id != '' && (float)$price > 0) {
-        $priceType = '1101300000001001'; // Факт
-        // Получаем текущую цену
-        $packetCheck = [
-            'action' => 'request',
-            'params' => [
-                'from' => 'informationRegisters.goodsPrices',
-                'fields' => [
-                    '@id' => 'id',
-                    'price' => 'price'
-                ],
-                'filters' => [
-                    ['alias' => 'good', 'operator' => '=', 'value' => $id],
-                    ['alias' => 'priceType', 'operator' => '=', 'value' => $priceType]
-                ],
-                'sortOrder' => [['alias' => 'date', 'order' => 'DESC']],
-                'limit' => 1
-            ]
-        ];
-        $check = $this->sendRequest($packetCheck);
-        $checkData = $this->handleResult($check);
+	$log_file = DIR_LOGS . 'delovod_night_price_sync.log';
+	file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены. ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
+	if ($id != '' && (float)$price > 0) {
+		$priceType = '1101300000001001'; // Факт
+		// Получаем текущую цену
+		$packetCheck = [
+			'action' => 'request',
+			'params' => [
+				'from' => 'informationRegisters.goodsPrices',
+				'fields' => [
+					'@id' => 'id',
+					'price' => 'price'
+				],
+				'filters' => [
+					['alias' => 'good', 'operator' => '=', 'value' => $id],
+					['alias' => 'priceType', 'operator' => '=', 'value' => $priceType]
+				],
+				'sortOrder' => [['alias' => 'date', 'order' => 'DESC']],
+				'limit' => 1
+			]
+		];
+		$check = $this->sendRequest($packetCheck);
+		$checkData = $this->handleResult($check);
 
-        $existing_price_id = null;
-        $current_price = null;
+		$existing_price_id = null;
+	if ($id != '' && (float)$price > 0) {
+		$priceType = '1101300000001001'; // Факт
+		// Получаем текущую цену
+		$packetCheck = [
+			'action' => 'request',
+			'params' => [
+				'from' => 'informationRegisters.goodsPrices',
+				'fields' => [
+					'@id' => 'id',
+					'price' => 'price',
+					'date' => 'date'
+				],
+				'filters' => [
+					['alias' => 'good', 'operator' => '=', 'value' => $id],
+					['alias' => 'priceType', 'operator' => '=', 'value' => $priceType]
+				],
+				'sortOrder' => [['alias' => 'date', 'order' => 'DESC']],
+				'limit' => 1
+			]
+		];
+		$check = $this->sendRequest($packetCheck);
+		$checkData = $this->handleResult($check);
 
-        if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0])) {
-            $existing_price_id = $checkData[0]->id ?? null;
-            $current_price = (float)($checkData[0]->price ?? 0);
+		$existing_price_id = null;
+		$current_price = null;
+		$current_date = null;
 
-            if (abs($current_price - (float)$price) < 0.0001) {
-                file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена уже актуальна, обновление не требуется. ID={$id}, цена={$price}\n", FILE_APPEND);
-                return 'skip: already set';
-            }
-        }
+		if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0])) {
+			$existing_price_id = $checkData[0]->id ?? null;
+			$current_price = (float)($checkData[0]->price ?? 0);
+			$current_date = isset($checkData[0]->date) ? substr($checkData[0]->date, 0, 10) : null;
 
-        // Сохраняем новую цену или обновляем существующую
-        $header = [
-            'good' => $id,
-            'priceType' => $priceType,
-            'price' => (float)$price,
-            'date' => $time->format('Y-m-d H:i:s'),
-        ];
-
-        // если есть ID существующей записи — обновим её
-        if ($existing_price_id) {
-            $header['id'] = $existing_price_id;
-        }
-
-        $packetSave = [
-            'action' => 'saveObject',
-            'params' => [
-                'header' => $header
-            ]
-        ];
-
-        $save = $this->sendRequest($packetSave);
-        $saveData = $this->handleResult($save);
-
-        if (!isset($saveData->is_error) && isset($saveData->id)) {
-            $operation = $existing_price_id ? 'обновлена' : 'создана';
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена {$operation}. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
-            return ($existing_price_id ? 'updated: ' : 'added: ') . $saveData->id;
-        } else {
-            $err = isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : json_encode($saveData));
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка сохранения. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
-            return 'error: saveObject failed';
-        }
-    }
-    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка передачи (пустой id или цена). ID={$id}, цена={$price}\n", FILE_APPEND);
-    return 'error: empty id or price';
-}
-
-}
+			$today = $time->format('Y-m-d');
+			if ($current_date === $today) {
+				// Обновить цену через saveObject
+				$header = [
+					'id' => $existing_price_id,
+					'good' => $id,
+					'priceType' => $priceType,
+					'price' => (float)$price,
+					'date' => $time->format('Y-m-d H:i:s'),
+				];
+				$packetSave = [
+					'action' => 'saveObject',
+					'params' => [
+						'header' => $header
+					]
+				];
+				$save = $this->sendRequest($packetSave);
+				$saveData = $this->handleResult($save);
+				if (!isset($saveData->is_error) && isset($saveData->id)) {
+					file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена обновлена. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
+					return 'updated: ' . $saveData->id;
+				} else {
+					$err = isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : json_encode($saveData));
+					file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка обновления. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
+					return 'error: saveObject failed';
+				}
+			}
+		}
+		// Если нет цены на сегодня — добавить новую через addRow
+		$row = [
+			'good' => $id,
+			'priceType' => $priceType,
+			'price' => (float)$price,
+			'date' => $time->format('Y-m-d H:i:s'),
+		];
+		$packetAdd = [
+			'action' => 'addRow',
+			'params' => [
+				'to' => 'informationRegisters.goodsPrices',
+				'row' => $row
+			]
+		];
+		$add = $this->sendRequest($packetAdd);
+		$addData = $this->handleResult($add);
+		if (!isset($addData->is_error) && isset($addData->id)) {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена добавлена. ID={$id}, запись={$addData->id}, цена={$price}\n", FILE_APPEND);
+			return 'added: ' . $addData->id;
+		} else {
+			$err = isset($addData->error_msg) ? $addData->error_msg : (isset($addData->error) ? $addData->error : json_encode($addData));
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка добавления. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
+			return 'error: addRow failed';
+		}
+	}
+	file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка передачи (пустой id или цена). ID={$id}, цена={$price}\n", FILE_APPEND);
+	return 'error: empty id or price';
