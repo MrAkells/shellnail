@@ -65,6 +65,7 @@ class ControllerExtensionModuleDelovod extends Controller
 						$packet["params"]['header']['person'] = $person_id;
 					} else { // export new person
 						$telephone = '';
+						$client_full_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
 						// if(isset($order_info['telephone']) && $order_info['telephone'] != '') {
 						// 	$telephone = $order_info['telephone'];
 						// } elseif (isset($order_info['payment_custom_field']['1']) && $order_info['payment_custom_field']['1'] != '') {
@@ -75,8 +76,8 @@ class ControllerExtensionModuleDelovod extends Controller
 						} elseif (isset($order_info['telephone']) && $order_info['telephone'] != '') {
 							$telephone = $order_info['telephone'];
 						}
-						
-						$client_full_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
+
+						// Removed extra closing brace
 						$packet["params"]['header'] = [
 							"id"		=> "catalogs.persons",
 							"parent"	=> "1100100000001022", //Покупатели
@@ -349,7 +350,7 @@ class ControllerExtensionModuleDelovod extends Controller
 		$packet['version'] = "0.15";
 
 		//file_put_contents(DIR_LOGS . "delovod_Request.log", print_r($packet,true) . "\n", FILE_APPEND);
-	
+
 		if ($curl = curl_init()) {
 			curl_setopt($curl, CURLOPT_URL, 'https://api.dilovod.ua');
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -447,7 +448,7 @@ class ControllerExtensionModuleDelovod extends Controller
 	{
 		$packet['action'] = "request";
 		//$packet['params']['from']="catalogs.states";
-		$packet['params']['from']="catalogs.goods";
+		$packet['params']['from'] = "catalogs.goods";
 		$packet['params']['fields'] = ["id" => "id", "name" => "name", "code" => "code"];
 		// $packet['params']['from'] = "catalogs.goods";
 		// $packet['params']['fields'] = ["id" => "id", "name" => "name", "gType_forDel" => "gType_forDel"];
@@ -463,12 +464,12 @@ class ControllerExtensionModuleDelovod extends Controller
 		$fp = fopen(DIR_LOGS . 'delovod.csv', 'w');
 
 		foreach ($data as $fields) {
-			fputcsv($fp, [$fields->id,$fields->code,$fields->name],";");
+			fputcsv($fp, [$fields->id, $fields->code, $fields->name], ";");
 		}
 
 		fclose($fp);
 
-		
+
 		//print_r($data);
 		print_r('ok');
 	}
@@ -497,7 +498,7 @@ class ControllerExtensionModuleDelovod extends Controller
 						$check = 0;
 						// Пропускать доставку
 						if (in_array($good->good, ["1100300000004217", "1100300000003062", "1100300000003068", "1100300000004929"])) {
-							if($good->good == "1100300000004929") {
+							if ($good->good == "1100300000004929") {
 								$aftershipping = $good->price;
 							} else {
 								$shipping_cost = $good->price;
@@ -538,9 +539,9 @@ class ControllerExtensionModuleDelovod extends Controller
 						$this->model_extension_module_delovod->deleteProductsFromOrder($order_products);
 						//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Delete products.' . "\n", FILE_APPEND);
 					}
-								
+
 					// change total
-					if($change){ 
+					if ($change) {
 
 						// get new sub_total by products
 						$sub_total = $this->model_extension_module_delovod->getOrderSubTotal($order['order_id']);
@@ -561,21 +562,21 @@ class ControllerExtensionModuleDelovod extends Controller
 								}
 							}
 							//Комиссия в случае оплаты наложенным платежом
-							if (isset($totals['aftershipping'])){
-								$new_totals['aftershipping'] = $this->config->get('new_mail_nalozhniy_fee') + (float)((float)($this->config->get('new_mail_nalozhniy_percent')/100)*(float)$sub_total);
+							if (isset($totals['aftershipping'])) {
+								$new_totals['aftershipping'] = $this->config->get('new_mail_nalozhniy_fee') + (float)((float)($this->config->get('new_mail_nalozhniy_percent') / 100) * (float)$sub_total);
 								//$total = $total + $new_totals['aftershipping'] - $totals['aftershipping'];
 							}
 
 							// Shipping
-							if($order['shipping_code'] == 'new_mail.new_mail'){
-								if( $sub_total >= $this->config->get('new_mail_freetotal')){
+							if ($order['shipping_code'] == 'new_mail.new_mail') {
+								if ($sub_total >= $this->config->get('new_mail_freetotal')) {
 									$new_totals['shipping'] = 0;
 									//$total = $total - $totals['shipping'];
 								}
 							}
-							
+
 							$new_totals['sub_total'] = $sub_total;
-							$new_totals['total'] = $data->header->amountCur;//$total;
+							$new_totals['total'] = $data->header->amountCur; //$total;
 							//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($totals,true) . "\n", FILE_APPEND);
 							//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . print_r($new_totals,true) . "\n", FILE_APPEND);
 							$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], $new_totals);
@@ -583,10 +584,9 @@ class ControllerExtensionModuleDelovod extends Controller
 							$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $new_totals['total']);
 							//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update totals.' . "\n", FILE_APPEND);
 						}
-
-					} else if($data->header->discountPercent && $totals['total'] != $data->header->amountCur){ // Add discount
+					} else if ($data->header->discountPercent && $totals['total'] != $data->header->amountCur) { // Add discount
 						$this->model_extension_module_delovod->updateOrderTotals($order['order_id'], ['total' => $data->header->amountCur]);
-						
+
 						$this->model_extension_module_delovod->updateOrder($order['order_id'], $order_status_id, $data->header->amountCur);
 						//file_put_contents(DIR_LOGS . 'delovod_orders_sync.log', $time->format('Y-m-d H:i:s') . ' Order ID:' . $order['order_id'] . '. Update total. Add Discount.' . "\n", FILE_APPEND);					
 					}
@@ -628,7 +628,7 @@ class ControllerExtensionModuleDelovod extends Controller
 				foreach ($order_products as $product) {
 					// накопительная скидка только для неакционных товаров
 					if ($product["price"] == $product["base_price"] && !(isset($active_promos_products["3"]) && isset($active_promos_products["3"][$product["product_id"]]))) {
-						$accumulative_discount += $product["price"]*$product["quantity"];
+						$accumulative_discount += $product["price"] * $product["quantity"];
 					}
 				}
 			}
@@ -762,7 +762,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Конец страницы (promo): {$promo_page}\n", FILE_APPEND);
 			$promo_page++;
 		} while ($promo_page <= $promo_total_pages);
-		file_put_contents(DIR_LOGS . 'delovod_debug_export.json', json_encode($debug_data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+		file_put_contents(DIR_LOGS . 'delovod_debug_export.json', json_encode($debug_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 		exit("OK. Updated: $updated");
 	}
 
@@ -774,116 +774,94 @@ class ControllerExtensionModuleDelovod extends Controller
 	 * @return int|string
 	 */
 	private function setPrice($id, $price, $time, $product_id = null)
-{
-	$log_file = DIR_LOGS . 'delovod_night_price_sync.log';
-	file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены. ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
-	if ($id != '' && (float)$price > 0) {
-		$priceType = '1101300000001001'; // Факт
-		// Получаем текущую цену
-		$packetCheck = [
-			'action' => 'request',
-			'params' => [
-				'from' => 'informationRegisters.goodsPrices',
-				'fields' => [
-					'@id' => 'id',
-					'price' => 'price'
-				],
-				'filters' => [
-					['alias' => 'good', 'operator' => '=', 'value' => $id],
-					['alias' => 'priceType', 'operator' => '=', 'value' => $priceType]
-				],
-				'sortOrder' => [['alias' => 'date', 'order' => 'DESC']],
-				'limit' => 1
-			]
-		];
-		$check = $this->sendRequest($packetCheck);
-		$checkData = $this->handleResult($check);
+	{
+		$log_file = DIR_LOGS . 'delovod_night_price_sync.log';
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены. ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
+		if ($id != '' && (float)$price > 0) {
+			$priceType = '1101300000001001'; // Факт
+			// Получаем текущую цену
+			$packetCheck = [
+				'action' => 'request',
+				'params' => [
+					'from' => 'informationRegisters.goodsPrices',
+					'fields' => [
+						'@id' => 'id',
+						'price' => 'price'
+					],
+					'filters' => [
+						['alias' => 'good', 'operator' => '=', 'value' => $id],
+						['alias' => 'priceType', 'operator' => '=', 'value' => $priceType]
+					],
+					'sortOrder' => [['alias' => 'date', 'order' => 'DESC']],
+					'limit' => 1
+				]
+			];
+			$check = $this->sendRequest($packetCheck);
+			$checkData = $this->handleResult($check);
 
-		$existing_price_id = null;
-	if ($id != '' && (float)$price > 0) {
-		$priceType = '1101300000001001'; // Факт
-		// Получаем текущую цену
-		$packetCheck = [
-			'action' => 'request',
-			'params' => [
-				'from' => 'informationRegisters.goodsPrices',
-				'fields' => [
-					'@id' => 'id',
-					'price' => 'price',
-					'date' => 'date'
-				],
-				'filters' => [
-					['alias' => 'good', 'operator' => '=', 'value' => $id],
-					['alias' => 'priceType', 'operator' => '=', 'value' => $priceType]
-				],
-				'sortOrder' => [['alias' => 'date', 'order' => 'DESC']],
-				'limit' => 1
-			]
-		];
-		$check = $this->sendRequest($packetCheck);
-		$checkData = $this->handleResult($check);
+			$existing_price_id = null;
+			$current_price = null;
+			$current_date = null;
 
-		$existing_price_id = null;
-		$current_price = null;
-		$current_date = null;
+			if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0])) {
+				$existing_price_id = $checkData[0]->id ?? null;
+				$current_price = (float)($checkData[0]->price ?? 0);
+				$current_date = isset($checkData[0]->date) ? substr($checkData[0]->date, 0, 10) : null;
 
-		if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0])) {
-			$existing_price_id = $checkData[0]->id ?? null;
-			$current_price = (float)($checkData[0]->price ?? 0);
-			$current_date = isset($checkData[0]->date) ? substr($checkData[0]->date, 0, 10) : null;
-
-			$today = $time->format('Y-m-d');
-			if ($current_date === $today) {
-				// Обновить цену через saveObject
-				$header = [
-					'id' => $existing_price_id,
-					'good' => $id,
-					'priceType' => $priceType,
-					'price' => (float)$price,
-					'date' => $time->format('Y-m-d H:i:s'),
-				];
-				$packetSave = [
-					'action' => 'saveObject',
-					'params' => [
-						'header' => $header
-					]
-				];
-				$save = $this->sendRequest($packetSave);
-				$saveData = $this->handleResult($save);
-				if (!isset($saveData->is_error) && isset($saveData->id)) {
-					file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена обновлена. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
-					return 'updated: ' . $saveData->id;
-				} else {
-					$err = isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : json_encode($saveData));
-					file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка обновления. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
-					return 'error: saveObject failed';
+				$today = $time->format('Y-m-d');
+				if ($current_date === $today) {
+					// Обновить цену через saveObject
+					$header = [
+						'id' => $existing_price_id,
+						'good' => $id,
+						'priceType' => $priceType,
+						'price' => (float)$price,
+						'date' => $time->format('Y-m-d H:i:s'),
+					];
+					$packetSave = [
+						'action' => 'saveObject',
+						'params' => [
+							'header' => $header
+						]
+					];
+					$save = $this->sendRequest($packetSave);
+					$saveData = $this->handleResult($save);
+					if (!isset($saveData->is_error) && isset($saveData->id)) {
+						file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена обновлена. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
+						return 'updated: ' . $saveData->id;
+					} else {
+						$err = isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : json_encode($saveData));
+						file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка обновления. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
+						return 'error: saveObject failed';
+					}
 				}
 			}
+			// Если нет цены на сегодня — добавить новую через addRow
+			$row = [
+				'good' => $id,
+				'priceType' => $priceType,
+				'price' => (float)$price,
+				'date' => $time->format('Y-m-d H:i:s'),
+			];
+			$packetAdd = [
+				'action' => 'addRow',
+				'params' => [
+					'to' => 'informationRegisters.goodsPrices',
+					'row' => $row
+				]
+			];
+			$add = $this->sendRequest($packetAdd);
+			$addData = $this->handleResult($add);
+			if (!isset($addData->is_error) && isset($addData->id)) {
+				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена добавлена. ID={$id}, запись={$addData->id}, цена={$price}\n", FILE_APPEND);
+				return 'added: ' . $addData->id;
+			} else {
+				$err = isset($addData->error_msg) ? $addData->error_msg : (isset($addData->error) ? $addData->error : json_encode($addData));
+				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка добавления. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
+				return 'error: addRow failed';
+			}
 		}
-		// Если нет цены на сегодня — добавить новую через addRow
-		$row = [
-			'good' => $id,
-			'priceType' => $priceType,
-			'price' => (float)$price,
-			'date' => $time->format('Y-m-d H:i:s'),
-		];
-		$packetAdd = [
-			'action' => 'addRow',
-			'params' => [
-				'to' => 'informationRegisters.goodsPrices',
-				'row' => $row
-			]
-		];
-		$add = $this->sendRequest($packetAdd);
-		$addData = $this->handleResult($add);
-		if (!isset($addData->is_error) && isset($addData->id)) {
-			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена добавлена. ID={$id}, запись={$addData->id}, цена={$price}\n", FILE_APPEND);
-			return 'added: ' . $addData->id;
-		} else {
-			$err = isset($addData->error_msg) ? $addData->error_msg : (isset($addData->error) ? $addData->error : json_encode($addData));
-			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка добавления. ID={$id}, цена={$price}. Ошибка: {$err}\n", FILE_APPEND);
-			return 'error: addRow failed';
-		}
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка передачи (пустой id или цена). ID={$id}, цена={$price}\n", FILE_APPEND);
+		return 'error: empty id or price';
 	}
-	file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка передачи (пустой id или цена). ID={$id}, цена={$price}\n", FILE_APPEND);
-	return 'error: empty id or price';
+}
