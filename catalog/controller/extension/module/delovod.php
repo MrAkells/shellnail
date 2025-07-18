@@ -838,6 +838,7 @@ class ControllerExtensionModuleDelovod extends Controller
 					'header' => $header
 				]
 			];
+			$packetSave['params']['saveType'] = 0; // Добавлено поле saveType для режима сохранения
 			// Логирование содержимого пакета перед отправкой
             file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: содержимое пакета перед отправкой: " . json_encode($packetSave, JSON_PRETTY_PRINT) . "\n", FILE_APPEND);
 			$save = $this->sendRequest($packetSave);
@@ -845,7 +846,7 @@ class ControllerExtensionModuleDelovod extends Controller
 
 			if (!isset($saveData->is_error) && isset($saveData->id)) {
 				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена успешно сохранена. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
-				return ($current_date === $today) ? 'updated: ' . $saveData->id : 'added: ' . $saveData->id;
+				return ($current_date === $today) ? 'updated: ' . $saveData->id : 'added' . $saveData->id;
 			} else {
 				$error_msg = (isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : ''));
 				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка при сохранении цены. ID={$id}, ошибка: {$error_msg}\n", FILE_APPEND);
