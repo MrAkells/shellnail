@@ -613,6 +613,39 @@ class ControllerExtensionModuleDelovod extends Controller
 	// 	];
 	// 	$this->syncOrder($order);
 	// }
+
+	// Test function to get all goods fields
+	public function testGoodsFields() {
+    $packet = [
+        'action' => 'request',
+        'key' => $this->config->get('delovod_api_key'),
+        'version' => '0.25',
+        'params' => [
+            'from'   => 'catalogs.goods',
+           	'fields' => [
+				'id' => 'id',
+				'name' => 'name',
+				'code' => 'code',
+				'article' => 'article',
+				'barcode' => 'barcode',
+				'barCode' => 'barCode',
+				'eanCode' => 'eanCode'
+			],
+            'limit'  => 1
+        ]
+    ];
+
+    file_put_contents(DIR_LOGS . "delovod_test_packet.log", print_r($packet,true) . "\n", FILE_APPEND);
+    
+    $response = $this->sendRequest($packet);
+
+    echo "<pre>";
+    print_r($response->data); // теперь будет корректный результат
+    echo "</pre>";
+    exit;
+}
+
+
 	/**
 	 * накопительная скидка
 	 */
@@ -773,87 +806,107 @@ class ControllerExtensionModuleDelovod extends Controller
 	 * @param DateTime $time
 	 * @return int|string
 	 */
-	private function setPrice($id, $price, $time, $product_id = null)
-	{
-		$log_file = DIR_LOGS . 'delovod_night_price_sync.log';
-		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены. ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
+    private function setPrice($id, $price, $time, $product_id = null)
+    {
+        /**
+         * Установка/обновление цены товара в регистре informationRegisters.goodsPrices.
+         * 
+         * В API Dilovod при создании новой записи або при перезаписі існуючої обов'язково
+         * передається ключ header.id. Для нової записи у ньому має бути зазначено ім'я метаданих
+         * інформаційного реєстру (наприклад, "informationRegisters.goodsPrices"), а при
+         * перезаписі – унікальний ідентифікатор запису【263885577246345†L103-L105】.
+         * Цей метод спочатку отримує актуальну ціну для артикулу/ISBN за поточний день.
+         * Якщо запис за сьогодні вже є, ціна перезаписується шляхом передачі ID існуючого
+         * запису в параметр header.id; у протилежному випадку створюється новий запис.
+         */
 
-		if ($id != '' && (float)$price > 0) {
-			$priceType = '1101300000001001'; // Факт
+        $log_file = DIR_LOGS . 'delovod_night_price_sync.log';
+        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: попытка передачи цены. ID={$id}, цена={$price}, product_id={$product_id}\n", FILE_APPEND);
 
-			// Получаем текущую цену
-			$packetCheck = [
-				'action' => 'request',
-				'params' => [
-					'from' => 'informationRegisters.goodsPrices',
-					'fields' => [
-						'@id' => 'id',
-						'price' => 'price',
-						'date' => 'date'
-					],
-					'filters' => [
-						['alias' => 'good', 'operator' => '=', 'value' => $id],
-						['alias' => 'priceType', 'operator' => '=', 'value' => $priceType]
-					],
-					'sortOrder' => [['alias' => 'date', 'order' => 'DESC']],
-					'limit' => 1
-				]
-			];
-			$check = $this->sendRequest($packetCheck);
-			$checkData = $this->handleResult($check);
+        // Проверяем входные данные
+        if ($id == '' || (float)$price <= 0) {
+            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: некорректные данные. ID={$id}, цена={$price}\n", FILE_APPEND);
+            return 0;
+        }
 
-			$existing_price_id = null;
-			$current_date = null;
+        // Категория цены (тип цены). Значение 1101300000001001 — «Факт»
+        $priceType = '1101300000001001';
+		$today = $time->format('Y-m-d');
 
-			if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0])) {
-				$existing_price_id = $checkData[0]->id ?? null;
-				$current_date = isset($checkData[0]->date) ? substr($checkData[0]->date, 0, 10) : null;
-			}
+        // Получаем последнюю цену для товара и категории цены
+        $packetCheck = [
+            'action' => 'request',
+            'params' => [
+                'from' => 'informationRegisters.goodsPrices',
+                'fields' => [
+                    'id'  => 'id',
+					'good' => 'good',
+					'priceType'=> 'priceType',
+                    'price' => 'price',
+                    'date'  => 'date'
+                ],
+                'filters' => [
+                    ['alias' => 'good',      'operator' => '=', 'value' => $id],
+                    ['alias' => 'priceType', 'operator' => '=', 'value' => $priceType],
+					['alias' => 'date',      'operator' => '=', 'value' => $today]
+                ],
+                'sortOrder' => [
+                    ['alias' => 'date', 'order' => 'DESC']
+                ],
+                'limit' => 1
+            ]
+        ];
+        $check    = $this->sendRequest($packetCheck);
+        $checkData = $this->handleResult($check);
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ответ Dilovod на проверку цены: " . json_encode($checkData) . "\n", FILE_APPEND);
 
-			$today = $time->format('Y-m-d');
-			$header = [
-				'good' => $id,
-				'priceType' => $priceType,
-				'price' => (float)$price,
-				'date' => $time->format('Y-m-d H:i:s'),
-				// 'firm' => '1100400000001001', // Пример обязательного поля
-				// 'storage' => '1100700000000001' // Пример обязательного поля
-			];
+        $existing_price_id = null;
+        $current_date      = null;
+        if (!isset($checkData->is_error) && is_array($checkData) && isset($checkData[0])) {
+            $existing_price_id = $checkData[0]->id ?? null;
+            $current_date = isset($checkData[0]->date) ? substr($checkData[0]->date, 0, 10) : null;
+        }
 
-			// Логирование получения ID текущей цены
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: текущий ID цены: " . ($existing_price_id ?? 'не найден') . "\n", FILE_APPEND);
+        // Текущая дата в формате Y-m-d
+        $today = $time->format('Y-m-d');
 
-            if ($current_date === $today && $existing_price_id) {
-				// Обновить цену через saveObject
-				$header['id'] = $existing_price_id;
-				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: обновление существующего объекта с ID={$existing_price_id}\n", FILE_APPEND);
-			}
+        // Формируем заголовок. Для новой записи id = informationRegisters.goodsPrices, для обновления id = существующему идентификатору
+        $header = [
+            'good'      => $id,
+            'priceType' => $priceType,
+            'price'     => (float)$price,
+            'date'      => $time->format('Y-m-d H:i:s'),
+            // Поле currency указывает валюту цены. 1101200000001001 — гривна
+            'currency'  => '1101200000001001',
+            // Маржа используется только для некоторых категорий цен; по умолчанию 0
+            'markup'    => 0
+        ];
 
-			$header['firm'] = '1100400000001001'; // Интернет-магазин shellnail.com.ua
-            $header['storage'] = '1100700000000001'; // Основной склад
+        // Если сегодня уже есть запись, то обновляем её, иначе создаём новую
+        if ($current_date === $today && $existing_price_id) {
+            $header['id'] = $existing_price_id;
+        } else {
+            $header['id'] = 'informationRegisters.goodsPrices';
+        }
 
-			$packetSave = [
-				'action' => 'saveObject',
-				'params' => [
-					'header' => $header
-				]
-			];
-			$packetSave['params']['saveType'] = 0; // Добавлено поле saveType для режима сохранения
-			// Логирование содержимого пакета перед отправкой
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: содержимое пакета перед отправкой: " . json_encode($packetSave, JSON_PRETTY_PRINT) . "\n", FILE_APPEND);
-			$save = $this->sendRequest($packetSave);
-			$saveData = $this->handleResult($save);
+        $packetSave = [
+            'action' => 'saveObject',
+            'params' => [
+                // Периодические регистры не имеют проведения, saveType не нужен
+                'header' => $header
+            ]
+        ];
 
-			if (!isset($saveData->is_error) && isset($saveData->id)) {
-				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена успешно сохранена. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
-				return ($current_date === $today) ? 'updated: ' . $saveData->id : 'added' . $saveData->id;
-			} else {
-				$error_msg = (isset($saveData->error_msg) ? $saveData->error_msg : (isset($saveData->error) ? $saveData->error : ''));
-				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка при сохранении цены. ID={$id}, ошибка: {$error_msg}\n", FILE_APPEND);
-				return 'error: ' . $error_msg;
-			}
-		} else {
-			return 'error: empty id or price';
-		}
-	}
+        $save    = $this->sendRequest($packetSave);
+        $saveData = $this->handleResult($save);
+
+        if (!isset($saveData->is_error) && isset($saveData->id)) {
+            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: цена успешно сохранена. ID={$id}, запись={$saveData->id}, цена={$price}\n", FILE_APPEND);
+            return ($current_date === $today) ? 'updated: ' . $saveData->id : 'added: ' . $saveData->id;
+        }
+
+        // Если сохранение не удалось, записываем ошибку в лог
+        file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setPrice: ошибка сохранения. ID={$id}, цена={$price}. Ошибка: " . json_encode($saveData) . "\n", FILE_APPEND);
+        return 0;
+    }
 }

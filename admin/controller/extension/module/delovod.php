@@ -227,7 +227,14 @@ class ControllerExtensionModuleDelovod extends Controller
 					$page = isset($this->request->post['page']) ? $this->request->post['page'] : 0;
 					$this->updatePrice($category_id, $page);
 					$this->response->redirect($this->url->link('extension/module/delovod', 'token=' . $this->session->data['token'] . (isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] : ''), true));
-				}	
+				}
+
+				if (isset($this->request->post['only_barcode'])) {
+					$page = isset($this->request->post['page']) ? $this->request->post['page'] : 0;
+					$this->updateBarcode($category_id, $page);
+					$this->response->redirect($this->url->link('extension/module/delovod', 'token=' . $this->session->data['token'] . (isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] : ''), true));
+				}
+
 				$results = $this->model_extension_delovod->getProductsByCategoryId($category_id);
 
 
@@ -369,6 +376,10 @@ class ControllerExtensionModuleDelovod extends Controller
 					}
 				}
 
+				 if (!empty($product_info['ean'])) {
+					$packet["params"]['header']['barCode'] = $product_info['ean'];
+				}
+
 				$requestResult = $this->sendRequest($packet);
 				$data = $this->handleResult($requestResult);
 
@@ -377,6 +388,9 @@ class ControllerExtensionModuleDelovod extends Controller
 					file_put_contents(DIR_LOGS . 'delovod_goods.log', $time->format('Y-m-d H:i:s') . ' Add new product: id = ' . $product_id . ", isbn = " . $data->id . "\n", FILE_APPEND);
 					//set price
 					$this->setPrice($data->id, $product_info['price'], $time);
+					 if (!empty($product_info['ean'])) {
+						$this->setBarcode($data->id, $product_info['ean']);
+					}
 					return 2;
 				} else {
 
@@ -452,6 +466,44 @@ class ControllerExtensionModuleDelovod extends Controller
 		}
 	}
 
+	/**
+	 * Set barcode for product by Id
+	 *
+	 * @param $id, $barcode
+	 * @return int
+	 */
+	private function setBarcode($id, $barcode) {
+		$log_file = DIR_LOGS . 'delovod_night_barcode_sync.log';
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: попытка. ID={$id}, штрихкод={$barcode}\n", FILE_APPEND);
+
+		if ($id == '' || $barcode == '') {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: данные пустые\n", FILE_APPEND);
+			return 0;
+		}
+
+		// Формируем пакет
+		$packet = [
+			'action' => 'saveObject',
+			'params' => [
+				'header' => [
+					'id'   => 'informationRegisters.barCodes',
+					'good' => $id,
+					'code' => $barcode
+				]
+			]
+		];
+
+		$save = $this->sendRequest($packet);
+		$result = $this->handleResult($save);
+
+		if (!isset($result->is_error) && isset($result->id)) {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: успешно сохранено. ID={$id}, barcode={$barcode}, запись={$result->id}\n", FILE_APPEND);
+			return $result->id;
+		}
+
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: ошибка: " . json_encode($result) . "\n", FILE_APPEND);
+		return 0;
+	}
 
 
 	/**
@@ -752,6 +804,28 @@ class ControllerExtensionModuleDelovod extends Controller
 			$this->response->redirect($final_url);
 		}
 	}
+
+	/**
+ * Массовое обновление штрихкодов по категории
+ * @param $category_id
+ * @param $page
+ * @return void
+ */
+private function updateBarcode($category_id, $page = 0) {
+    $i = 0;
+    $j = 0;
+    $results = $this->model_extension_delovod->getProductsByCategoryId($category_id, false, $page);
+    foreach ($results as $result) {
+        $i++;
+        if (!empty($result['isbn']) && !empty($result['ean'])) {
+            if ($this->setBarcode($result['isbn'], $result['ean'])) {
+                $j++;
+            }
+        }
+    }
+    $this->session->data['success'] = "Обновление штрихкодов. Всего: $i. Обновлено: $j. Page: $page";
+}
+
 
 	/**
      * Ночная синхронизация цен с Деловод

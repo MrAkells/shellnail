@@ -101,7 +101,7 @@ class ModelExtensionDelovod extends Model {
     
 
 	public function getProduct($product_id) {
-		$query = $this->db->query("SELECT DISTINCT p.price, p.weight, pd.name, pdu.name as name_ua,p.sku, p.isbn, p2c.category_id, cd.name as category, md.name as manufacturer  FROM " . DB_PREFIX . "product p
+		$query = $this->db->query("SELECT DISTINCT p.price, p.weight, pd.name, pdu.name as name_ua,p.sku, p.isbn, p.ean, p2c.category_id, cd.name as category, md.name as manufacturer  FROM " . DB_PREFIX . "product p
 					LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')
                     LEFT JOIN " . DB_PREFIX . "product_description pdu ON (p.product_id = pdu.product_id AND pdu.language_id = 3)
 					LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (p.manufacturer_id = md.manufacturer_id AND md.language_id = '" . (int)$this->config->get('config_language_id') . "')
