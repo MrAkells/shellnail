@@ -112,27 +112,39 @@ class ModelExtensionDelovod extends Model {
 		return $query->row;
 	}
 
-    public function getProductsForBarcodeSync($category_id = 0, $page = 0, $limit = 50)
-    {
-        $sql = "SELECT p.product_id, pd.name, p.isbn, p.ean 
-                FROM " . DB_PREFIX . "product p
-                LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')
-                LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)
-                WHERE p.isbn <> '' AND p.ean <> ''";
-
-        if ($category_id) {
-            $sql .= " AND p2c.category_id = '" . (int)$category_id . "'";
-        }
-
-        $sql .= " ORDER BY pd.name ASC";
-
-        if ($page) {
-            $sql .= " LIMIT " . (int)(($page - 1) * $limit) . ", " . (int)$limit;
-        }
-
+    /**
+     * Получить товары для синхронизации штрихкодов по категории
+     * @param int $category_id ID категории
+     * @param int $page Номер страницы (для постраничной обработки)
+     * @param int $limit Количество товаров на странице
+     * @return array Массив товаров с полями product_id, isbn, ean
+     */
+    public function getProductsForBarcodeSync($category_id, $page = 1, $limit = 50) {
+        $offset = ($page - 1) * $limit;
+        $sql = "SELECT p.product_id, p.isbn, p.ean
+            FROM " . DB_PREFIX . "product p
+            LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)
+            WHERE p2c.category_id = '" . (int)$category_id . "'
+            AND p.isbn != '' AND p.ean != ''
+            ORDER BY p.product_id ASC
+            LIMIT $offset, $limit";
         $query = $this->db->query($sql);
-
         return $query->rows;
+    }
+    
+    /**
+         * Получить общее количество товаров для синхронизации штрихкодов по категории
+         * @param int $category_id ID категории
+         * @return int Общее количество товаров
+         */
+    public function getTotalProductsForBarcodeSync($category_id) {
+        $sql = "SELECT COUNT(*) as total
+            FROM " . DB_PREFIX . "product p
+            LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)
+            WHERE p2c.category_id = '" . (int)$category_id . "'
+            AND p.isbn != '' AND p.ean != ''";
+        $query = $this->db->query($sql);
+        return (int)$query->row['total'];
     }
 
 

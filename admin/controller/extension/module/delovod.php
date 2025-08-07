@@ -505,6 +505,57 @@ class ControllerExtensionModuleDelovod extends Controller
 		return 0;
 	}
 
+	/**
+	 * Массовое обновление штрихкодов по категории
+	 * @param $category_id
+	 * @param $page
+	 * @return void
+	 */
+	private function updateBarcode($category_id, $page = 1) {
+		$limit = 50; // количество товаров за один заход
+		$i = 0;
+		$j = 0;
+
+		// Получаем пачку товаров для текущей страницы
+		$results = $this->model_extension_delovod->getProductsForBarcodeSync($category_id, $page, $limit);
+
+		foreach ($results as $result) {
+			$i++;
+			if (!empty($result['isbn']) && !empty($result['ean'])) {
+				if ($this->setBarcode($result['isbn'], $result['ean'])) {
+					$j++;
+				}
+			}
+		}
+
+		// Узнаём общее количество товаров, которым нужен штрихкод (для пагинации)
+		$total = $this->model_extension_delovod->getTotalProductsForBarcodeSync($category_id);
+		$total_pages = ceil($total / $limit);
+
+		// Сохраняем прогресс
+		$this->session->data['success'] = "Обновление штрихкодов. Всего: $i. Обновлено: $j. Страница: $page из $total_pages. Всего товаров: $total";
+
+		if ($page < $total_pages) {
+			// Переход на следующую страницу
+			$next_url = $this->url->link(
+				'extension/module/delovod/sync',
+				'token=' . $this->session->data['token']
+				. '&only_barcode=1'
+				. '&category_id=' . $category_id
+				. '&page=' . ($page + 1),
+				true
+			);
+			$this->response->redirect($next_url);
+		} else {
+			// Завершено — возврат на модуль
+			$this->response->redirect($this->url->link(
+				'extension/module/delovod',
+				'token=' . $this->session->data['token'] . '&category_id=' . $category_id,
+				true
+			));
+		}
+	}
+
 
 	/**
 	 * Get Object Id from delovod by object_type and object name
@@ -804,27 +855,6 @@ class ControllerExtensionModuleDelovod extends Controller
 			$this->response->redirect($final_url);
 		}
 	}
-
-	/**
- * Массовое обновление штрихкодов по категории
- * @param $category_id
- * @param $page
- * @return void
- */
-private function updateBarcode($category_id, $page = 0) {
-    $i = 0;
-    $j = 0;
-    $results = $this->model_extension_delovod->getProductsForBarcodeSync($category_id, $page, 50);
-    foreach ($results as $result) {
-        $i++;
-        if (!empty($result['isbn']) && !empty($result['ean'])) {
-            if ($this->setBarcode($result['isbn'], $result['ean'])) {
-                $j++;
-            }
-        }
-    }
-    $this->session->data['success'] = "Обновление штрихкодов. Всего: $i. Обновлено: $j. Page: $page";
-}
 
 
 	/**
