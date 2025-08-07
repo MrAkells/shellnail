@@ -376,9 +376,9 @@ class ControllerExtensionModuleDelovod extends Controller
 					}
 				}
 
-				 if (!empty($product_info['ean'])) {
-					$packet["params"]['header']['barCode'] = $product_info['ean'];
-				}
+				//  if (!empty($product_info['ean'])) {
+				// 	$packet["params"]['header']['barCode'] = $product_info['ean'];
+				// }
 
 				$requestResult = $this->sendRequest($packet);
 				$data = $this->handleResult($requestResult);
@@ -486,9 +486,9 @@ class ControllerExtensionModuleDelovod extends Controller
 			'action' => 'saveObject',
 			'params' => [
 				'header' => [
-					'id'   => 'informationRegisters.barCodes',
-					'good' => $id,
-					'code' => $barcode
+					'id'     => 'informationRegisters.barCodes',
+					'object' => $id,
+					'code'   => $barcode
 				]
 			]
 		];
