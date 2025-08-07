@@ -814,7 +814,7 @@ class ControllerExtensionModuleDelovod extends Controller
 private function updateBarcode($category_id, $page = 0) {
     $i = 0;
     $j = 0;
-    $results = $this->model_extension_delovod->getProductsByCategoryId($category_id, false, $page);
+    $results = $this->model_extension_delovod->getProductsForBarcodeSync($category_id, $page, 50);
     foreach ($results as $result) {
         $i++;
         if (!empty($result['isbn']) && !empty($result['ean'])) {
