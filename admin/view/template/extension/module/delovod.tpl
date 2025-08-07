@@ -138,7 +138,7 @@
                   <label><input type="checkbox" name="only_name" value="1">Обновить только наименование</label><br>
                   <label><input type="checkbox" name="only_price" value="1">Обновить только Цену</label><br>
                   <label><input type="checkbox" name="update_all_prices" value="1">Обновить цену всех товаров (постранично)</label><br>
-                  <label><input type="checkbox" name="only_barcodes" value="1"> Обновить только штрихкоды</label><br>
+                  <label><input type="checkbox" name="only_barcode" value="1"> Обновить только штрихкоды</label><br>
                   <?php if ($total_pages > 1) { ?>
                   <div class="progress" style="margin-top: 20px;">
                     <div class="progress-bar" role="progressbar"
