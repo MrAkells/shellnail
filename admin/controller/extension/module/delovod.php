@@ -517,6 +517,15 @@ class ControllerExtensionModuleDelovod extends Controller
 	 * @param $category_id
 	 */
 	private function updateBarcode($category_id = 0, $page = 1) {
+		// Получаем актуальный номер страницы из POST или GET
+		if (isset($this->request->post['page'])) {
+			$page = (int)$this->request->post['page'];
+		} elseif (isset($this->request->get['page'])) {
+			$page = (int)$this->request->get['page'];
+		} else {
+			$page = 1;
+		}
+
 		$limit = 50;
 		$i = 0;
 		$j = 0;
@@ -551,6 +560,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			));
 		}
 	}
+
 
 
 	/**

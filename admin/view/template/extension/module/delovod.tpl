@@ -155,7 +155,7 @@
                 <div class="col-sm-6">
                   <label>
                     Page
-                    <input type="text" name="page" value="0">
+                    <input type="text" name="page" value="<?php echo isset($_GET['page']) ? (int)$_GET['page'] : 1; ?>">
                   </label>
                 </div>
               </div>
