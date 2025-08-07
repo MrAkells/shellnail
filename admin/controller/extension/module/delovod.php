@@ -492,6 +492,7 @@ class ControllerExtensionModuleDelovod extends Controller
 	
 	private function updateBarcode($category_id = 0)
 	{
+		$this->load->model('extension/delovod');
 		// Получаем номер страницы только из GET (после первой отправки формы идёт только GET)
 		$page = isset($this->request->get['page']) ? max(1, (int)$this->request->get['page']) : 1;
 
