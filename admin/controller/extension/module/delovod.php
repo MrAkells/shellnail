@@ -246,13 +246,13 @@ class ControllerExtensionModuleDelovod extends Controller
 					$this->response->redirect($this->url->link('extension/module/delovod', 'token=' . $this->session->data['token'] . (isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] : ''), true));
 				}
 
-				if (isset($this->request->post['only_barcode'])) {
+				if (isset($this->request->get['only_barcode'])) {
 					$this->updateBarcode($category_id);
 					$this->response->redirect(
 						$this->url->link(
 							'extension/module/delovod',
 							'token=' . $this->session->data['token'] .
-							(isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] . '&tab=goods' : ''),
+							(isset($this->request->get['category_id']) ? '&category_id=' . $this->request->get['category_id'] . '&tab=goods' : ''),
 							true
 						)
 					);
