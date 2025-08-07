@@ -168,6 +168,14 @@ class ControllerExtensionModuleDelovod extends Controller
 			? round($data['current_page'] / $data['total_pages'] * 100)
 			: 0;
 
+		$data['url_sync_barcode'] = $this->url->link(
+			'extension/module/delovod/sync',
+			'token=' . $this->session->data['token']
+			. (isset($data['category_id']) ? '&category_id=' . $data['category_id'] : '')
+			. '&only_barcode=1&page=1&tab=goods',
+			true
+		);
+		
 		$this->response->setOutput($this->load->view('extension/module/delovod', $data));
 	}
 
@@ -473,21 +481,15 @@ class ControllerExtensionModuleDelovod extends Controller
 	}
 
 	
-	private function updateBarcode($category_id = 0, $page = 1)
+	private function updateBarcode($category_id = 0)
 	{
-		// Получаем актуальный номер страницы из POST или GET (приоритет POST)
-		if (isset($this->request->post['page'])) {
-			$page = max(1, (int)$this->request->post['page']);
-		} elseif (isset($this->request->get['page'])) {
-			$page = max(1, (int)$this->request->get['page']);
-		} else {
-			$page = 1;
-		}
+		// Получаем номер страницы только из GET (после первой отправки формы идёт только GET)
+		$page = isset($this->request->get['page']) ? max(1, (int)$this->request->get['page']) : 1;
 
 		$limit = 50;
-		$processed = 0;    // Всего обработано
-		$success = 0;      // Новых добавлено
-		$already = 0;      // Уже внесено
+		$processed = 0;
+		$success = 0;
+		$already = 0;
 
 		$results = $this->model_extension_delovod->getProductsForBarcodeSync($category_id, $page, $limit);
 
@@ -495,10 +497,10 @@ class ControllerExtensionModuleDelovod extends Controller
 			$processed++;
 			if (!empty($result['isbn']) && !empty($result['ean'])) {
 				$res = $this->setBarcode($result['isbn'], $result['ean']);
-				if ($res === 1) { // успешно добавлен новый
+				if ($res === 1) {
 					$success++;
 					$this->model_extension_delovod->markEanSynced($result['product_id']);
-				} elseif ($res === 2) { // уже внесён
+				} elseif ($res === 2) {
 					$already++;
 					$this->model_extension_delovod->markEanSynced($result['product_id']);
 				}
@@ -522,18 +524,20 @@ class ControllerExtensionModuleDelovod extends Controller
 				'token=' . $this->session->data['token']
 				. '&only_barcode=1'
 				. ($category_id ? '&category_id=' . $category_id : '')
-				. '&page=' . ($page + 1),
+				. '&page=' . ($page + 1)
+				. '&tab=goods',
 				true
 			);
 			$this->response->redirect($next_url);
 		} else {
 			$this->response->redirect($this->url->link(
 				'extension/module/delovod',
-				'token=' . $this->session->data['token'] . ($category_id ? '&category_id=' . $category_id : ''),
+				'token=' . $this->session->data['token'] . ($category_id ? '&category_id=' . $category_id : '') . '&tab=goods',
 				true
 			));
 		}
 	}
+
 
 
 	/**

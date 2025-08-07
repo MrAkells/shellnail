@@ -138,7 +138,7 @@
                   <label><input type="checkbox" name="only_name" value="1">Обновить только наименование</label><br>
                   <label><input type="checkbox" name="only_price" value="1">Обновить только Цену</label><br>
                   <label><input type="checkbox" name="update_all_prices" value="1">Обновить цену всех товаров (постранично)</label><br>
-                  <label><input type="checkbox" name="only_barcode" value="1"> Обновить только штрихкоды</label><br>
+                  <label><input type="checkbox" name="only_barcode" value="1"> Обновить только штрихкоды</label>&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $url_sync_barcode; ?>"  class="btn btn-primary btn-sm">Обновить</a><br>
                   <?php if ($total_pages > 1) { ?>
                   <div class="progress" style="margin-top: 20px;">
                     <div class="progress-bar" role="progressbar"
@@ -236,6 +236,16 @@
       </div>
     </div>
   </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+      var params = new URLSearchParams(window.location.search);
+      var tab = params.get('tab');
+      if (tab) {
+          $('.nav-tabs a[href="#tab-' + tab + '"]').tab('show');
+      }
+  });
+  </script>
 
 
   <script type="text/javascript">
