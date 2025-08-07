@@ -485,16 +485,21 @@ class ControllerExtensionModuleDelovod extends Controller
 		}
 
 		$limit = 50;
-		$i = 0;
-		$j = 0;
+		$processed = 0;    // Всего обработано
+		$success = 0;      // Новых добавлено
+		$already = 0;      // Уже внесено
+
 		$results = $this->model_extension_delovod->getProductsForBarcodeSync($category_id, $page, $limit);
 
 		foreach ($results as $result) {
-			$i++;
+			$processed++;
 			if (!empty($result['isbn']) && !empty($result['ean'])) {
 				$res = $this->setBarcode($result['isbn'], $result['ean']);
-				if ($res === 1 || $res === 2) { // 1 — успешно, 2 — уже есть
-					$j++;
+				if ($res === 1) { // успешно добавлен новый
+					$success++;
+					$this->model_extension_delovod->markEanSynced($result['product_id']);
+				} elseif ($res === 2) { // уже внесён
+					$already++;
 					$this->model_extension_delovod->markEanSynced($result['product_id']);
 				}
 			}
@@ -503,7 +508,13 @@ class ControllerExtensionModuleDelovod extends Controller
 		$total = $this->model_extension_delovod->getTotalProductsForBarcodeSync($category_id);
 		$total_pages = $limit > 0 ? ceil($total / $limit) : 1;
 
-		$this->session->data['success'] = "Обновление штрихкодов. Обработано: $i. Успешно: $j. Страница: $page из $total_pages. Всего товаров: $total";
+		$this->session->data['success'] =
+			"Обновление штрихкодов. " .
+			"Обработано: $processed. " .
+			"Успешно добавлено: $success. " .
+			"Уже было установлено: $already. " .
+			"Страница: $page из $total_pages. " .
+			"Всего товаров: $total";
 
 		if ($page < $total_pages) {
 			$next_url = $this->url->link(
@@ -523,6 +534,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			));
 		}
 	}
+
 
 	/**
 	 * Установка штрихкода для товара в Деловод.
