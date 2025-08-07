@@ -175,7 +175,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			. '&only_barcode=1&page=1&tab=goods',
 			true
 		);
-		
+
 		$this->response->setOutput($this->load->view('extension/module/delovod', $data));
 	}
 
@@ -222,7 +222,16 @@ class ControllerExtensionModuleDelovod extends Controller
 			if (isset($this->request->post['category_id']) && $this->request->post['category_id']) {
 				$time = new DateTime('now', new DateTimeZone('UTC'));
 				file_put_contents(DIR_LOGS . 'delovod_sync.log', "\nBEGIN -------" . $time->format('Y-m-d H:i:s') . "--------\n", FILE_APPEND);
-				$category_id = $this->request->post['category_id'];
+
+				//$category_id = $this->request->post['category_id'];
+				$category_id = $this->request->post['category_id'] ?? $this->request->get['category_id'] ?? 0;
+				$only_barcode = $this->request->post['only_barcode'] ?? $this->request->get['only_barcode'] ?? 0;
+
+				if ($only_barcode && $category_id) {
+					$this->updateBarcode($category_id);
+					return;
+				}
+
 				$this->load->model('extension/delovod');
 
 				if(isset($this->request->post['only_name'])){
@@ -243,7 +252,7 @@ class ControllerExtensionModuleDelovod extends Controller
 						$this->url->link(
 							'extension/module/delovod',
 							'token=' . $this->session->data['token'] .
-							(isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] : ''),
+							(isset($this->request->post['category_id']) ? '&category_id=' . $this->request->post['category_id'] . '&tab=goods' : ''),
 							true
 						)
 					);
