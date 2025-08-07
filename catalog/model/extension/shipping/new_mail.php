@@ -13,8 +13,8 @@ class ModelExtensionShippingNewMail extends Model
                    
             $results= $this->checkCity($this->session->data['payment_address']['city']);
             $recipient=false;
-            if(count($results)==1){
-                $recipient=$results[0]['city_ref'];
+            if (count($results) === 1 && isset($results[0]['city_ref'])) {
+                $recipient = $results[0]['city_ref'];
             }
             if($recipient){
                 $cost=$this->cost($recipient, $weight, 'db5c8927-391c-11dd-90d9-001a92567626');
