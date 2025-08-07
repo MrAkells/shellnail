@@ -506,18 +506,21 @@ class ControllerExtensionModuleDelovod extends Controller
 	}
 
 	/**
-	 * Массовое обновление штрихкодов по категории
-	 * @param $category_id
-	 * @param $page
+	 * Массовое обновление штрихкодов по категории постранично с автопереходом
+	 * @param int $category_id
+	 * @param int $page
 	 * @return void
 	 */
-	private function updateBarcode($category_id, $page = 1) {
-		$limit = 50; // количество товаров за один заход
-		$i = 0;
-		$j = 0;
+	private function updateBarcode($category_id, $page = 1)
+	{
+		$limit = 50; // Количество товаров за один запрос
+		$page = max(1, (int)$page); // Безопасно приводим к минимуму 1
 
 		// Получаем пачку товаров для текущей страницы
 		$results = $this->model_extension_delovod->getProductsForBarcodeSync($category_id, $page, $limit);
+
+		$i = 0;
+		$j = 0;
 
 		foreach ($results as $result) {
 			$i++;
@@ -530,10 +533,9 @@ class ControllerExtensionModuleDelovod extends Controller
 
 		// Узнаём общее количество товаров, которым нужен штрихкод (для пагинации)
 		$total = $this->model_extension_delovod->getTotalProductsForBarcodeSync($category_id);
-		$total_pages = ceil($total / $limit);
+		$total_pages = ($total > 0) ? ceil($total / $limit) : 1;
 
-		// Сохраняем прогресс
-		$this->session->data['success'] = "Обновление штрихкодов. Всего: $i. Обновлено: $j. Страница: $page из $total_pages. Всего товаров: $total";
+		$this->session->data['success'] = "Обновление штрихкодов. Обработано: $i. Успешно: $j. Страница: $page из $total_pages. Всего товаров: $total.";
 
 		if ($page < $total_pages) {
 			// Переход на следующую страницу
@@ -555,6 +557,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			));
 		}
 	}
+
 
 
 	/**

@@ -120,6 +120,7 @@ class ModelExtensionDelovod extends Model {
      * @return array Массив товаров с полями product_id, isbn, ean
      */
     public function getProductsForBarcodeSync($category_id, $page = 1, $limit = 50) {
+        $page = max(1, (int)$page); // исправлено здесь
         $offset = ($page - 1) * $limit;
         $sql = "SELECT p.product_id, p.isbn, p.ean
             FROM " . DB_PREFIX . "product p
@@ -131,7 +132,7 @@ class ModelExtensionDelovod extends Model {
         $query = $this->db->query($sql);
         return $query->rows;
     }
-    
+
     /**
          * Получить общее количество товаров для синхронизации штрихкодов по категории
          * @param int $category_id ID категории
