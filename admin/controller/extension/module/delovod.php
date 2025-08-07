@@ -219,7 +219,15 @@ class ControllerExtensionModuleDelovod extends Controller
 				return;
 			}
 
-			if (isset($this->request->post['category_id']) && $this->request->post['category_id']) {
+			$category_id = (int)($this->request->post['category_id'] ?? $this->request->get['category_id'] ?? 0);
+			$only_barcode = (int)($this->request->post['only_barcode'] ?? $this->request->get['only_barcode'] ?? 0);
+
+			if ($only_barcode === 1 && $category_id > 0) {
+				$this->updateBarcode($category_id);
+				return;
+			}
+
+			if ($category_id > 0) {
 				$time = new DateTime('now', new DateTimeZone('UTC'));
 				file_put_contents(DIR_LOGS . 'delovod_sync.log', "\nBEGIN -------" . $time->format('Y-m-d H:i:s') . "--------\n", FILE_APPEND);
 
@@ -227,7 +235,7 @@ class ControllerExtensionModuleDelovod extends Controller
 				$category_id = $this->request->post['category_id'] ?? $this->request->get['category_id'] ?? 0;
 				$only_barcode = $this->request->post['only_barcode'] ?? $this->request->get['only_barcode'] ?? 0;
 
-				if ($only_barcode && $category_id) {
+				if ((int)$only_barcode === 1 && (int)$category_id > 0) {
 					$this->updateBarcode($category_id);
 					return;
 				}
