@@ -472,50 +472,7 @@ class ControllerExtensionModuleDelovod extends Controller
 		}
 	}
 
-	/**
-	 * Set barcode for product by Id
-	 *
-	 * @param $id, $barcode
-	 * @return int
-	 */
-	private function setBarcode($id, $barcode) {
-		$log_file = DIR_LOGS . 'delovod_night_barcode_sync.log';
-		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: попытка. ID={$id}, штрихкод={$barcode}\n", FILE_APPEND);
-
-		if ($id == '' || $barcode == '') {
-			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: данные пустые\n", FILE_APPEND);
-			return 0;
-		}
-
-		// Формируем пакет
-		$packet = [
-			'action' => 'saveObject',
-			'params' => [
-				'header' => [
-					'id'     => 'informationRegisters.barCodes',
-					'object' => $id,
-					'code'   => $barcode
-				]
-			]
-		];
-
-		$save = $this->sendRequest($packet);
-		$result = $this->handleResult($save);
-
-		if (!isset($result->is_error) && isset($result->id)) {
-			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: успешно сохранено. ID={$id}, barcode={$barcode}, запись={$result->id}\n", FILE_APPEND);
-			return $result->id;
-		}
-
-		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: ошибка: " . json_encode($result) . "\n", FILE_APPEND);
-		return 0;
-	}
-
-	/**
-	 * Обновление штрихкодов для товаров в категории
-	 *
-	 * @param $category_id
-	 */
+	
 	private function updateBarcode($category_id = 0, $page = 1)
 	{
 		// Получаем актуальный номер страницы из POST или GET (приоритет POST)
@@ -566,6 +523,60 @@ class ControllerExtensionModuleDelovod extends Controller
 			));
 		}
 	}
+
+	/**
+	 * Установка штрихкода для товара в Деловод.
+	 * @return int 1 — успешно, 2 — уже внесён, 0 — ошибка
+	 */
+	private function setBarcode($id, $barcode)
+	{
+		$log_file = DIR_LOGS . 'delovod_night_barcode_sync.log';
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: попытка. ID={$id}, штрихкод={$barcode}\n", FILE_APPEND);
+
+		if ($id == '' || $barcode == '') {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: данные пустые\n", FILE_APPEND);
+			return 0;
+		}
+
+		// Формируем пакет
+		$packet = [
+			'action' => 'saveObject',
+			'params' => [
+				'header' => [
+					'id'     => 'informationRegisters.barCodes',
+					'object' => $id,
+					'code'   => $barcode
+				]
+			]
+		];
+
+		$save = $this->sendRequest($packet);
+		$result = $this->handleResult($save);
+
+		// Успешно
+		if (!isset($result->is_error) && isset($result->id)) {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: успешно сохранено. ID={$id}, barcode={$barcode}, запись={$result->id}\n", FILE_APPEND);
+			return 1;
+		}
+
+		// Уже внесён (ищем ключевую фразу в error)
+		if (
+			isset($result->error)
+			&& (
+				strpos($result->error, 'вже внесено') !== false
+				|| strpos($result->error, 'уже внесено') !== false
+				|| strpos($result->error, 'already exists') !== false
+			)
+		) {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: уже внесён. ID={$id}, barcode={$barcode}\n", FILE_APPEND);
+			return 2;
+		}
+
+		// Ошибка
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] setBarcode: ошибка: " . json_encode($result) . "\n", FILE_APPEND);
+		return 0;
+	}
+
 
 
 	/**
