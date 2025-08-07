@@ -112,41 +112,23 @@ class ModelExtensionDelovod extends Model {
 		return $query->row;
 	}
 
-    /**
-     * Получить товары для синхронизации штрихкодов по категории
-     * @param int $category_id ID категории
-     * @param int $page Номер страницы (для постраничной обработки)
-     * @param int $limit Количество товаров на странице
-     * @return array Массив товаров с полями product_id, isbn, ean
+    /*     * Получить товары для синхронизации штрихкодов
+     * @param int $category_id - ID категории, для которой нужно получить товары
+     * @return array - массив товаров с полями product_id, isbn, ean
      */
-    public function getProductsForBarcodeSync($category_id, $page = 1, $limit = 50) {
-        $page = max(1, (int)$page); // исправлено здесь
-        $offset = ($page - 1) * $limit;
+    public function getProductsForBarcodeSync($category_id)
+    {
         $sql = "SELECT p.product_id, p.isbn, p.ean
-            FROM " . DB_PREFIX . "product p
-            LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)
-            WHERE p2c.category_id = '" . (int)$category_id . "'
-            AND p.isbn != '' AND p.ean != ''
-            ORDER BY p.product_id ASC
-            LIMIT $offset, $limit";
+                FROM " . DB_PREFIX . "product p
+                LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)
+                WHERE p2c.category_id = '" . (int)$category_id . "'
+                AND p.isbn != ''
+                AND p.ean != ''
+                ORDER BY p.product_id ASC";
         $query = $this->db->query($sql);
         return $query->rows;
     }
 
-    /**
-         * Получить общее количество товаров для синхронизации штрихкодов по категории
-         * @param int $category_id ID категории
-         * @return int Общее количество товаров
-         */
-    public function getTotalProductsForBarcodeSync($category_id) {
-        $sql = "SELECT COUNT(*) as total
-            FROM " . DB_PREFIX . "product p
-            LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)
-            WHERE p2c.category_id = '" . (int)$category_id . "'
-            AND p.isbn != '' AND p.ean != ''";
-        $query = $this->db->query($sql);
-        return (int)$query->row['total'];
-    }
 
 
 	public function updateBalance($data) {
