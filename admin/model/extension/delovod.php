@@ -254,5 +254,66 @@ class ModelExtensionDelovod extends Model {
         $this->url=$urlToCatalog;
     }
 
+    /**
+    ============================================================
+     * Методы для массового обновления цен (admin, перенос из catalog)
+     * Используются для updateAllPricesWithPromo()
+    ============================================================
+    */
+    private function getAllProductsTotalForPriceUpdateCatalog() {
+    // Старая версия с фильтрацией по дате изменения (ОТКЛЮЧЕНО)
+    /*
+    $yesterday = date('Y-m-d H:i:s', strtotime('-24 hours'));
+    $sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1 WHERE p.isbn != '' AND (p.date_modified >= '" . $this->db->escape($yesterday) . "' OR ps.date_start >= '" . $this->db->escape($yesterday) . "' OR ps.date_end >= '" . $this->db->escape($yesterday) . "')";
+    $query = $this->db->query($sql);
+    return (int)$query->row['total'];
+    */
+    // Новая версия: все товары с ISBN
+    $sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p WHERE p.isbn != ''";
+    $query = $this->db->query($sql);
+    return (int)$query->row['total'];
+    }
+
+    private function getAllProductsForPriceUpdateCatalog($page = 1, $limit = 100) {
+    $page = max(1, (int)$page);
+    $offset = ($page - 1) * $limit;
+    // Старая версия с фильтрацией по дате изменения (ОТКЛЮЧЕНО)
+    /*
+    $sql = "SELECT p.product_id, p.isbn, CASE WHEN MIN(ps.price) IS NOT NULL AND MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW() THEN MIN(ps.price) ELSE p.price END AS price FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1 WHERE p.isbn != '' AND (p.price_modified >= NOW() - INTERVAL 1 DAY OR ps.date_start >= NOW() - INTERVAL 1 DAY OR ps.date_end >= NOW() - INTERVAL 1 DAY OR (ps.date_end IS NOT NULL AND ps.date_end < NOW())) GROUP BY p.product_id ORDER BY p.product_id ASC LIMIT " . (int)$offset . ", " . (int)$limit;
+    $query = $this->db->query($sql);
+    return $query->rows;
+    */
+    // Новая версия: все товары с ISBN
+    $sql = "SELECT p.product_id, p.isbn, CASE WHEN MIN(ps.price) IS NOT NULL AND MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW() THEN MIN(ps.price) ELSE p.price END AS price FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1 WHERE p.isbn != '' GROUP BY p.product_id ORDER BY p.product_id ASC LIMIT " . (int)$offset . ", " . (int)$limit;
+    $query = $this->db->query($sql);
+    return $query->rows;
+    }
+
+    private function getAllActivePromoProductsTotalForPriceUpdateCatalog() {
+        $sql = "SELECT COUNT(DISTINCT ps.product_id) AS total FROM " . DB_PREFIX . "product_special ps WHERE ps.customer_group_id = 1 AND ps.date_start <= NOW() AND ps.date_end > NOW()";
+        $query = $this->db->query($sql);
+        return (int)$query->row['total'];
+    }
+
+    private function getAllActivePromoProductsForPriceUpdateCatalog($page = 1, $limit = 100) {
+        $page = max(1, (int)$page);
+        $offset = ($page - 1) * $limit;
+        $sql = "SELECT ps.product_id, ps.price, ps.product_special_id AS promo_id, p.isbn FROM " . DB_PREFIX . "product_special ps LEFT JOIN " . DB_PREFIX . "product p ON ps.product_id = p.product_id WHERE ps.customer_group_id = 1 AND ps.date_start <= NOW() AND ps.date_end > NOW() AND p.isbn != '' GROUP BY ps.product_special_id ORDER BY ps.product_id ASC LIMIT " . (int)$offset . ", " . (int)$limit;
+        $query = $this->db->query($sql);
+        return $query->rows;
+    }
+
+    private function setPriceSyncedCatalog($product_id) {
+        $this->db->query("UPDATE `" . DB_PREFIX . "product` SET `price_synced` = 1 WHERE `product_id` = '" . (int)$product_id . "'");
+    }
+
+    private function setPromoPriceSyncedCatalog($product_id, $promo_id) {
+        $this->db->query("UPDATE `" . DB_PREFIX . "product_special` SET `promo_price_synced` = 1 WHERE `product_special_id` = '" . (int)$promo_id . "' AND `product_id` = '" . (int)$product_id . "'");
+    }
+    /**
+    ============================================================
+     * КОНЕЦ методов для массового обновления цен (admin, перенос из catalog)
+    ============================================================
+    */
 }
 
