@@ -260,7 +260,7 @@ class ModelExtensionDelovod extends Model {
      * Используются для updateAllPricesWithPromo()
     ============================================================
     */
-    private function getAllProductsTotalForPriceUpdateCatalog() {
+    public function getAllProductsTotalForPriceUpdateCatalog() {
     // Старая версия с фильтрацией по дате изменения (ОТКЛЮЧЕНО)
     /*
     $yesterday = date('Y-m-d H:i:s', strtotime('-24 hours'));
@@ -274,7 +274,7 @@ class ModelExtensionDelovod extends Model {
     return (int)$query->row['total'];
     }
 
-    private function getAllProductsForPriceUpdateCatalog($page = 1, $limit = 100) {
+    public function getAllProductsForPriceUpdateCatalog($page = 1, $limit = 100) {
     $page = max(1, (int)$page);
     $offset = ($page - 1) * $limit;
     // Старая версия с фильтрацией по дате изменения (ОТКЛЮЧЕНО)
@@ -289,13 +289,13 @@ class ModelExtensionDelovod extends Model {
     return $query->rows;
     }
 
-    private function getAllActivePromoProductsTotalForPriceUpdateCatalog() {
+    public function getAllActivePromoProductsTotalForPriceUpdateCatalog() {
         $sql = "SELECT COUNT(DISTINCT ps.product_id) AS total FROM " . DB_PREFIX . "product_special ps WHERE ps.customer_group_id = 1 AND ps.date_start <= NOW() AND ps.date_end > NOW()";
         $query = $this->db->query($sql);
         return (int)$query->row['total'];
     }
 
-    private function getAllActivePromoProductsForPriceUpdateCatalog($page = 1, $limit = 100) {
+    public function getAllActivePromoProductsForPriceUpdateCatalog($page = 1, $limit = 100) {
         $page = max(1, (int)$page);
         $offset = ($page - 1) * $limit;
         $sql = "SELECT ps.product_id, ps.price, ps.product_special_id AS promo_id, p.isbn FROM " . DB_PREFIX . "product_special ps LEFT JOIN " . DB_PREFIX . "product p ON ps.product_id = p.product_id WHERE ps.customer_group_id = 1 AND ps.date_start <= NOW() AND ps.date_end > NOW() AND p.isbn != '' GROUP BY ps.product_special_id ORDER BY ps.product_id ASC LIMIT " . (int)$offset . ", " . (int)$limit;
@@ -303,11 +303,11 @@ class ModelExtensionDelovod extends Model {
         return $query->rows;
     }
 
-    private function setPriceSyncedCatalog($product_id) {
+    public function setPriceSyncedCatalog($product_id) {
         $this->db->query("UPDATE `" . DB_PREFIX . "product` SET `price_synced` = 1 WHERE `product_id` = '" . (int)$product_id . "'");
     }
 
-    private function setPromoPriceSyncedCatalog($product_id, $promo_id) {
+    public function setPromoPriceSyncedCatalog($product_id, $promo_id) {
         $this->db->query("UPDATE `" . DB_PREFIX . "product_special` SET `promo_price_synced` = 1 WHERE `product_special_id` = '" . (int)$promo_id . "' AND `product_id` = '" . (int)$product_id . "'");
     }
     /**
