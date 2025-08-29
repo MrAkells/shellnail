@@ -1045,7 +1045,7 @@ class ControllerExtensionModuleDelovod extends Controller
  * Использует логику из catalog syncPrices
 ============================================================
  */
-public function updateAllPricesWithPromo()
+public function updateAllPricesWithPromo($page = 1)
 	{
 		$this->load->model('extension/delovod');
 		$limit = 100;
@@ -1055,31 +1055,30 @@ public function updateAllPricesWithPromo()
 		$debug_data = [];
 		$time = new DateTime('now', new DateTimeZone('UTC'));
 
-		// Обычные товары
-		$total_items = $this->model_extension_delovod->getAllProductsTotalForPriceUpdateCatalog();
-		$total_pages = ceil($total_items / $limit);
-		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Всего обычных товаров: {$total_items}\n", FILE_APPEND);
-		$page = 1;
-		do {
-			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Начало страницы: {$page}\n", FILE_APPEND);
-			$products = $this->model_extension_delovod->getAllProductsForPriceUpdateCatalog($page, $limit);
-			foreach ($products as $product) {
-				$isbn = $product['isbn'] ?? null;
-				$price = $product['price'] ?? null;
-				$product_id = $product['product_id'] ?? null;
-				if (!$isbn || !$price) continue;
-				$result = $this->setPrice($isbn, $price, $time);
-				file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Экспорт товара: ID={$product_id}, ISBN={$isbn}, цена={$price}\n", FILE_APPEND);
-				$debug_data[] = ['isbn' => $isbn, 'price' => $price, 'type' => 'base', 'result' => $result];
-				$updated++;
-				$exported_isbns[$isbn] = true;
-				if ($result !== 'error: empty id or price' && method_exists($this->model_extension_delovod, 'setPriceSyncedCatalog')) {
-					$this->model_extension_delovod->setPriceSyncedCatalog($product_id);
-				}
+	// Обычные товары
+	$total_items = $this->model_extension_delovod->getAllProductsTotalForPriceUpdateCatalog();
+	$total_pages = ceil($total_items / $limit);
+	file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Всего обычных товаров: {$total_items}\n", FILE_APPEND);
+	do {
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Начало страницы: {$page}\n", FILE_APPEND);
+		$products = $this->model_extension_delovod->getAllProductsForPriceUpdateCatalog($page, $limit);
+		foreach ($products as $product) {
+			$isbn = $product['isbn'] ?? null;
+			$price = $product['price'] ?? null;
+			$product_id = $product['product_id'] ?? null;
+			if (!$isbn || !$price) continue;
+			$result = $this->setPrice($isbn, $price, $time);
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Экспорт товара: ID={$product_id}, ISBN={$isbn}, цена={$price}\n", FILE_APPEND);
+			$debug_data[] = ['isbn' => $isbn, 'price' => $price, 'type' => 'base', 'result' => $result];
+			$updated++;
+			$exported_isbns[$isbn] = true;
+			if ($result !== 'error: empty id or price' && method_exists($this->model_extension_delovod, 'setPriceSyncedCatalog')) {
+				$this->model_extension_delovod->setPriceSyncedCatalog($product_id);
 			}
-			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Конец страницы: {$page}\n", FILE_APPEND);
-			$page++;
-		} while ($page <= $total_pages);
+		}
+		file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Конец страницы: {$page}\n", FILE_APPEND);
+		$page++;
+	} while ($page <= $total_pages);
 
 		// Акционные товары
 		if (method_exists($this->model_extension_delovod, 'getAllActivePromoProductsTotalForPriceUpdateCatalog')) {
