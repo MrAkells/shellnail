@@ -204,6 +204,7 @@ class ControllerExtensionModuleDelovod extends Controller
 			($this->request->get['update_all_prices'] ?? null) == 1 ||
 			($this->request->post['update_all_prices'] ?? null) == 1
 		) {
+			$this->load->model('extension/delovod');
 			$page = (int)($this->request->get['page'] ?? $this->request->post['page'] ?? 1);
 			$this->updateAllPricesWithPromo($page);
 			return;
