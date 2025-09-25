@@ -284,21 +284,21 @@ class ModelExtensionDelovod extends Model {
     return $query->rows;
     */
     // Новая версия: все товары с ISBN
-    $sql = "SELECT p.product_id, p.isbn, CASE WHEN MIN(ps.price) IS NOT NULL AND MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW() THEN MIN(ps.price) ELSE p.price END AS price FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1 WHERE p.isbn != '' GROUP BY p.product_id ORDER BY p.product_id ASC LIMIT " . (int)$offset . ", " . (int)$limit;
+    $sql = "SELECT p.product_id, p.isbn, CASE WHEN MIN(ps.price) IS NOT NULL AND MIN(ps.date_start) <= NOW() AND (MIN(ps.date_end) > NOW() OR MIN(ps.date_end) IS NULL OR MIN(ps.date_end) = '0000-00-00') THEN MIN(ps.price) ELSE p.price END AS price FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1 WHERE p.isbn != '' GROUP BY p.product_id ORDER BY p.product_id ASC LIMIT " . (int)$offset . ", " . (int)$limit;
     $query = $this->db->query($sql);
     return $query->rows;
     }
 
     public function getAllActivePromoProductsTotalForPriceUpdateCatalog() {
-        $sql = "SELECT COUNT(DISTINCT p.product_id) AS total
-                FROM " . DB_PREFIX . "product p
-                LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1
-                INNER JOIN " . DB_PREFIX . "promotion_candidates pc ON pc.candidate_product_id = p.product_id
-                INNER JOIN " . DB_PREFIX . "promotions promo ON promo.promo_id = pc.promo_id
-                WHERE p.isbn != ''
-                    AND promo.status = 1
-                    AND promo.date_start <= NOW()
-                    AND promo.date_end >= NOW()";
+    $sql = "SELECT COUNT(DISTINCT p.product_id) AS total
+        FROM " . DB_PREFIX . "product p
+        INNER JOIN " . DB_PREFIX . "promotion_candidates pc ON pc.candidate_product_id = p.product_id
+        INNER JOIN " . DB_PREFIX . "promotions promo ON promo.promo_id = pc.promo_id
+        INNER JOIN " . DB_PREFIX . "product_to_category ptc ON ptc.product_id = p.product_id AND ptc.category_id = promo.promo_id
+        WHERE p.isbn != ''
+            AND promo.status = 1
+            AND promo.date_start <= NOW()
+            AND promo.date_end >= NOW()";
     $query = $this->db->query($sql);
     return (int)$query->row['total'];
     }
@@ -318,45 +318,36 @@ class ModelExtensionDelovod extends Model {
     }
 
     // ОКНО АКЦИИ: учитываем «вечные» даты '0000-00-00'
+    // Дополнительная проверка: товар должен быть привязан к промоакции через категорию
     $sql = "
         SELECT
             p.product_id,
             p.isbn,
             pc.promo_id,
-
             p.price AS base_price,
-
             CASE
-                /* type=1: скидка в процентах (settings = проценты) */
                 WHEN promo.type = 1 AND promo.settings <> '' THEN
                     GREATEST(0, ROUND(p.price * (100 - CAST(promo.settings AS DECIMAL(10,4))) / 100, 0))
-
-                /* type=2: скидка фиксированной суммой (settings = сумма минус) */
                 WHEN promo.type = 2 AND promo.settings <> '' THEN
                     GREATEST(0, ROUND(p.price - CAST(promo.settings AS DECIMAL(10,4)), 0))
-
-                /* type=3: фиксированная конечная цена (settings = конечная цена) */
                 WHEN promo.type = 3 AND promo.settings <> '' THEN
                     GREATEST(0, ROUND(CAST(promo.settings AS DECIMAL(10,4)), 0))
-
                 ELSE NULL
             END AS special
-
         FROM " . DB_PREFIX . "product p
         INNER JOIN " . DB_PREFIX . "promotion_candidates pc
             ON pc.candidate_product_id = p.product_id
         INNER JOIN " . DB_PREFIX . "promotions promo
             ON promo.promo_id = pc.promo_id
-
+        INNER JOIN " . DB_PREFIX . "product_to_category ptc
+            ON ptc.product_id = p.product_id AND ptc.category_id = promo.promo_id
         WHERE p.isbn <> ''
           AND promo.status = 1
           AND (promo.date_start = '0000-00-00' OR promo.date_start <= NOW())
           AND (promo.date_end   = '0000-00-00' OR promo.date_end   >= NOW())
-
         ORDER BY pc.promo_id, p.product_id
         " . $limit_sql . "
     ";
-
     $query = $this->db->query($sql);
     return $query->rows;
 }

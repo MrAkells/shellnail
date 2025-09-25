@@ -1052,11 +1052,12 @@ public function updateAllPricesWithPromo($page = 1)
     $this->load->model('extension/delovod');
 
     // ---------------- Константы / режим ----------------
-    $limit        = 100;
+    $limit        = 200;
     $log_file     = DIR_LOGS . 'delovod_all_price_update_with_promo.log';
     $debug_data   = [];
     $updated      = 0;
-    $exported_isbns = [];
+	$exported_isbns = [];
+	$exported_ids = [];
     $time         = new DateTime('now', new DateTimeZone('UTC'));
 
     // Жестко включаем DRY-RUN (только лог, без реальной отправки)
@@ -1135,8 +1136,8 @@ public function updateAllPricesWithPromo($page = 1)
             }
 
             // Реальную отправку отключаем
-            $result = $this->setPrice($isbn, $discounted, $time);
-            //$result = 'TEST'; // DRY-RUN
+            //$result = $this->setPrice($isbn, $discounted, $time);
+            $result = 'TEST'; // DRY-RUN
 
             file_put_contents(
                 $log_file,
@@ -1238,48 +1239,55 @@ public function updateAllPricesWithPromo($page = 1)
         return true;
     }));
 
-    foreach ($products as $product) {
-        $isbn       = isset($product['isbn']) ? trim((string)$product['isbn']) : null;
-        $price      = $product['price'] ?? null; // базовая цена из модели обычных
-        $product_id = isset($product['product_id']) ? (int)$product['product_id'] : 0;
+	foreach ($products as $product) {
+		$isbn       = isset($product['isbn']) ? trim((string)$product['isbn']) : null;
+		$price      = $product['price'] ?? null; // базовая цена из модели обычных
+		$product_id = isset($product['product_id']) ? (int)$product['product_id'] : 0;
 
-        // Страховка от гонок данных: повторная проверка
-        if (($product_id > 0 && isset($promo_product_ids[$product_id])) || ($isbn && isset($promo_isbns[$isbn]))) {
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [GROUP] Пропущен (есть в PROMO): ID={$product_id}, ISBN={$isbn}\n", FILE_APPEND);
-            continue;
-        }
+		// Страховка от гонок данных: повторная проверка
+		if (($product_id > 0 && isset($promo_product_ids[$product_id])) || ($isbn && isset($promo_isbns[$isbn]))) {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [GROUP] Пропущен (есть в PROMO): ID={$product_id}, ISBN={$isbn}\n", FILE_APPEND);
+			continue;
+		}
 
-        if (!$isbn || !$price) {
-            file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [GROUP] Пропущен: нет ISBN или цены. ID={$product_id}, ISBN=" . var_export($isbn, true) . ", price=" . var_export($price, true) . "\n", FILE_APPEND);
-            continue;
-        }
+		// Проверка на уникальность по id и ISBN
+		if (($product_id > 0 && isset($exported_ids[$product_id])) || ($isbn && isset($exported_isbns[$isbn]))) {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [GROUP] Пропущен (уже экспортирован): ID={$product_id}, ISBN={$isbn}\n", FILE_APPEND);
+			continue;
+		}
 
-        // Реальную отправку отключаем
-        $result = $this->setPrice($isbn, (float)$price, $time);
-        //$result = 'TEST'; // DRY-RUN
+		if (!$isbn || !$price) {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] [GROUP] Пропущен: нет ISBN или цены. ID={$product_id}, ISBN=" . var_export($isbn, true) . ", price=" . var_export($price, true) . "\n", FILE_APPEND);
+			continue;
+		}
 
-        file_put_contents(
-            $log_file,
-            "[" . date('Y-m-d H:i:s') . "] [{$run_mode}][GROUP] Экспорт: ID={$product_id}, ISBN={$isbn}, цена=" . number_format((float)$price, 4, '.', '') . "\n",
-            FILE_APPEND
-        );
+		// Реальную отправку отключаем
+		//$result = $this->setPrice($isbn, (float)$price, $time);
+		$result = 'TEST'; // DRY-RUN
 
-        $debug_data[] = [
-            'isbn'       => $isbn,
-            'price'      => (float)$price,
-            'type'       => 'group',
-            'result'     => $result,
-            'product_id' => $product_id,
-        ];
+		file_put_contents(
+			$log_file,
+			"[" . date('Y-m-d H:i:s') . "] [{$run_mode}][GROUP] Экспорт: ID={$product_id}, ISBN={$isbn}, цена=" . number_format((float)$price, 4, '.', '') . "\n",
+			FILE_APPEND
+		);
 
-        $updated++;
-        $exported_isbns[$isbn] = true;
+		$debug_data[] = [
+			'isbn'       => $isbn,
+			'price'      => (float)$price,
+			'type'       => 'group',
+			'result'     => $result,
+			'product_id' => $product_id,
+		];
 
-        // В DRY-RUN НЕ помечаем как синхронизированные
-        // if (method_exists($this->model_extension_delovod, 'setPriceSyncedCatalog')) {
-        //     $this->model_extension_delovod->setPriceSyncedCatalog($product_id);
-        // }
-    }
+		$updated++;
+		if ($isbn) $exported_isbns[$isbn] = true;
+		if ($product_id > 0) $exported_ids[$product_id] = true;
+
+		// В DRY-RUN НЕ помечаем как синхронизированные
+		// if (method_exists($this->model_extension_delovod, 'setPriceSyncedCatalog')) {
+		//     $this->model_extension_delovod->setPriceSyncedCatalog($product_id);
+		// }
+	}
 
     file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Конец страницы: {$page}\n", FILE_APPEND);
 

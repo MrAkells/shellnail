@@ -13,8 +13,8 @@ class File {
 				$time = substr(strrchr($file, '.'), 1);
 
 				if ($time < time()) {
-					if (file_exists($file)) {
-						unlink($file);
+					if (is_string($file) && is_file($file)) {
+						@unlink($file); // @ гасит предупреждение, если файл исчез между проверкой и удалением
 					}
 				}
 			}
