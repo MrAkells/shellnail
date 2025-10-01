@@ -1136,8 +1136,8 @@ public function updateAllPricesWithPromo($page = 1)
             }
 
             // Реальную отправку отключаем
-            //$result = $this->setPrice($isbn, $discounted, $time);
-            $result = 'TEST'; // DRY-RUN
+            $result = $this->setPrice($isbn, $discounted, $time);
+            //$result = 'TEST'; // DRY-RUN
 
             file_put_contents(
                 $log_file,
@@ -1262,8 +1262,8 @@ public function updateAllPricesWithPromo($page = 1)
 		}
 
 		// Реальную отправку отключаем
-		//$result = $this->setPrice($isbn, (float)$price, $time);
-		$result = 'TEST'; // DRY-RUN
+		$result = $this->setPrice($isbn, (float)$price, $time);
+		//$result = 'TEST'; // DRY-RUN
 
 		file_put_contents(
 			$log_file,
