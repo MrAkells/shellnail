@@ -244,4 +244,124 @@ class ModelExtensionModuleDelovod extends Model
 		$result = curl_exec($ch);
 		$this->sms_log->write('SMS was sended to user ' . $data['user_name'] . ' on number ' . $data['user_phone'] . '. Result = ' . $result);
 	}
+
+	/**
+     * Получить товары с изменённой ценой за последние 24 часа (price_modified)
+     * Только если price_modified не null и не старше суток
+     * Выбирается актуальная цена (акционная, если действует, иначе обычная)
+     */
+    public function getAllProductsForPriceUpdate($page = 1, $limit = 100)
+    {
+        $page = max(1, (int)$page);
+        $offset = ($page - 1) * $limit;
+
+        $sql = "
+            SELECT 
+                p.product_id, 
+                p.isbn, 
+                CASE 
+                    WHEN MIN(ps.price) IS NOT NULL AND (
+                        (
+                            (MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW())
+                        )
+                        OR (MIN(ps.date_start) = '0000-00-00' OR MIN(ps.date_start) IS NULL)
+                        OR (MIN(ps.date_end) = '0000-00-00' OR MIN(ps.date_end) IS NULL)
+                    )
+                    THEN MIN(ps.price)
+                    ELSE p.price
+                END AS price
+            FROM " . DB_PREFIX . "product p
+            LEFT JOIN " . DB_PREFIX . "product_special ps 
+                ON ps.product_id = p.product_id AND ps.customer_group_id = 1
+            WHERE 
+                p.isbn != '' 
+                AND p.price_modified IS NOT NULL
+                AND p.price_modified >= NOW() - INTERVAL 1 DAY
+            GROUP BY p.product_id
+            ORDER BY p.product_id ASC
+            LIMIT " . (int)$offset . ", " . (int)$limit;
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    /**
+     * Получить общее количество товаров с изменённой ценой за последние 24 часа (price_modified)
+     * Только если price_modified не null и не старше суток
+     */
+    public function getAllProductsTotalForPriceUpdate()
+    {
+        $yesterday = date('Y-m-d H:i:s', strtotime('-24 hours'));
+
+        $sql = "
+            SELECT COUNT(DISTINCT p.product_id) AS total
+            FROM " . DB_PREFIX . "product p
+            WHERE 
+                p.isbn != ''
+                AND p.price_modified IS NOT NULL
+                AND p.price_modified >= '" . $this->db->escape($yesterday) . "'
+        ";
+
+        $query = $this->db->query($sql);
+        return (int)$query->row['total'];
+    }
+
+    /**
+     * Получить все товары с активной акцией, у которых акция менялась за последние сутки
+     * [delovod export] Выборка по promo_price_modified
+     * Использует oc_product_to_category, где category_id = promo_id
+     */
+    public function getAllActivePromoProductsForPriceUpdate()
+    {
+        $sql = "SELECT p.product_id, p.isbn, p.price as base_price, pr.type, pr.settings, pr.promo_id\n                FROM " . DB_PREFIX . "product p\n                INNER JOIN " . DB_PREFIX . "product_to_category ptc ON p.product_id = ptc.product_id\n                INNER JOIN " . DB_PREFIX . "promotions pr ON ptc.category_id = pr.promo_id\n                WHERE pr.status = 1\n                  AND pr.date_start <= NOW()\n                  AND pr.date_end >= NOW()\n                  AND p.isbn != ''\n                  AND pr.promo_price_modified IS NOT NULL\n                  AND pr.promo_price_modified >= NOW() - INTERVAL 1 DAY\n                  AND (pr.promo_price_synced IS NULL OR pr.promo_price_synced < pr.promo_price_modified)\n                GROUP BY p.product_id, pr.promo_id";
+        $query = $this->db->query($sql);
+        $result = [];
+        foreach ($query->rows as $row) {
+            $promo_price = $row['base_price'];
+            if ($row['type'] == 1) { // процент
+                $promo_price = $row['base_price'] * (1 - $row['settings'] / 100);
+            } elseif ($row['type'] == 2) { // скидка
+                $promo_price = $row['base_price'] - $row['settings'];
+            } elseif ($row['type'] == 3) { // фиксированная цена
+                $promo_price = $row['settings'];
+            }
+            if ($promo_price < 0) $promo_price = 0;
+            $result[] = [
+                'product_id' => $row['product_id'],
+                'isbn'       => $row['isbn'],
+                'price'      => $promo_price,
+                'promo_id'   => $row['promo_id']
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * Установить promo_price_synced для товара-акции
+     * @param int $product_id
+     * @param int $promo_id
+     */
+    public function setPromoPriceSynced($product_id, $promo_id) {
+        $this->db->query("UPDATE " . DB_PREFIX . "promotions SET promo_price_synced = NOW() WHERE promo_id = '" . (int)$promo_id . "'");
+    }
+
+    /**
+     * Установить price_synced для обычного товара
+     * @param int $product_id
+     */
+    public function setPriceSynced($product_id) {
+        $this->db->query("UPDATE " . DB_PREFIX . "product SET price_synced = NOW() WHERE product_id = '" . (int)$product_id . "'");
+    }
+
+    /**
+     * Получить общее количество акционных товаров для выгрузки (по promo_price_modified и promo_price_synced)
+     * Использует oc_product_to_category, где category_id = promo_id
+     */
+    public function getAllActivePromoProductsTotalForPriceUpdate()
+    {
+        $sql = "SELECT COUNT(DISTINCT p.product_id) AS total\n                FROM " . DB_PREFIX . "product p\n                INNER JOIN " . DB_PREFIX . "product_to_category ptc ON p.product_id = ptc.product_id\n                INNER JOIN " . DB_PREFIX . "promotions pr ON ptc.category_id = pr.promo_id\n                WHERE pr.status = 1\n                  AND pr.date_start <= NOW()\n                  AND pr.date_end >= NOW()\n                  AND p.isbn != ''\n                  AND pr.promo_price_modified IS NOT NULL\n                  AND pr.promo_price_modified >= NOW() - INTERVAL 1 DAY\n                  AND (pr.promo_price_synced IS NULL OR pr.promo_price_synced < pr.promo_price_modified)\n        ";
+        $query = $this->db->query($sql);
+        return (int)$query->row['total'];
+    }
 }

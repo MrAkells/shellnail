@@ -3,15 +3,14 @@
 <!--[if IE 8 ]><html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" class="ie8"><![endif]-->
 <!--[if IE 9 ]><html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" class="ie9"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!-->
-<html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" <?php
-                                                                    switch ($route) {
-                                                                        case 'newsblog/article':
-                                                                            echo "itemscope itemtype='https://schema.org/Article'";
-                                                                            break;
-                                                                            // case 'product/product':
-                                                                            //     echo "itemscope itemtype='https://schema.org/Product'";
-                                                                            //     break;
-                                                                    } ?>>
+<html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" <?php switch ($route) {
+        case 'newsblog/article':
+            echo "itemscope itemtype='https://schema.org/Article'";
+            break;
+            // case 'product/product':
+            //     echo "itemscope itemtype='https://schema.org/Product'";
+            //     break;
+    } ?>>
 <!--<![endif]-->
 
 <head>
@@ -78,11 +77,11 @@
                 "address": {
                     "@type": "PostalAddress",
                     "@id": "https://shellnail.com.ua/contacts.html",
-                    "name": "ShellNail, Краматорск",
-                    "addressRegion": "Донецкая область",
-                    "addressLocality": "Краматорск",
-                    "postalCode": "84313",
-                    "streetAddress": "ул.Парковая, 3",
+                    "name": "ShellNail, Олександрія",
+                    "addressRegion": "Кіровоградська область",
+                    "addressLocality": "Олександрія",
+                    "postalCode": "28000",
+                    "streetAddress": "вул. Григорія Усика, 47",
                     "telephone": "+38 066 807 70 50",
                     "email": "shopshellnail@gmail.com",
                     "addressCountry": "UA"
@@ -223,12 +222,13 @@
             s.parentNode.insertBefore(t, s)
         }(window, document, 'script',
             'https://connect.facebook.net/ru/fbevents.js');
-        fbq('init', '1322266524515292');
+        //fbq('init', '1322266524515292');
+        fbq('init', '2201637793668578');
         fbq('track', 'PageView');
         fbq('track', 'ViewContent');
     </script>
     <noscript>
-        <img height="1" width="1" src="https://www.facebook.com/tr?id=1322266524515292&ev=PageView
+        <img height="1" width="1" src="https://www.facebook.com/tr?id=2201637793668578&ev=PageView
 &noscript=1" />
     </noscript>
     <!-- End Facebook Pixel Code -->

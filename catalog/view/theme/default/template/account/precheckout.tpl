@@ -116,7 +116,9 @@
     </div> 
     <div class="col-lg-5 col-lg-offset-2 col-md-6 col-md-offset-0 hidden-sm hidden-xs">
       <div>
+        <?php if (!empty($big_cart)) { ?>
           <?php echo $big_cart; ?>
+        <?php } ?>
       </div>
     </div>
       
