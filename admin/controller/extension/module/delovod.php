@@ -1052,7 +1052,7 @@ public function updateAllPricesWithPromo($page = 1)
     $this->load->model('extension/delovod');
 
     // ---------------- Константы / режим ----------------
-    $limit        = 200;
+    $limit        = 100;
     $log_file     = DIR_LOGS . 'delovod_all_price_update_with_promo.log';
     $debug_data   = [];
     $updated      = 0;
