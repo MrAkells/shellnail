@@ -223,12 +223,12 @@
         }(window, document, 'script',
             'https://connect.facebook.net/ru/fbevents.js');
         //fbq('init', '1322266524515292');
-        fbq('init', '2201637793668578');
+        fbq('init', '1980090912831695');
         fbq('track', 'PageView');
         fbq('track', 'ViewContent');
     </script>
     <noscript>
-        <img height="1" width="1" src="https://www.facebook.com/tr?id=2201637793668578&ev=PageView
+        <img height="1" width="1" src="https://www.facebook.com/tr?id=1980090912831695&ev=PageView
 &noscript=1" />
     </noscript>
     <!-- End Facebook Pixel Code -->
