@@ -38,4 +38,64 @@ class ModelExtensionModulePageNoIndex extends Model
         }
         return [];
     }
+
+    // Сheck if the given URL is allowed to be indexed
+    public function isCurrentUrlIndexAllowed() {
+        if (empty($this->request->server['REQUEST_URI'])) {
+            return false;
+        }
+
+        $uri = $this->request->server['REQUEST_URI'];
+
+        $uri = $this->db->escape($uri);
+
+        $query = $this->db->query("
+            SELECT page_id 
+            FROM `" . DB_PREFIX . "page_no_index`
+            WHERE is_noindex = '0'
+            AND url = '" . $uri . "'
+            LIMIT 1
+        ");
+
+        return (bool)$query->num_rows;
+    }
+
+    public function isUrlIndexAllowed($href) {
+        if (!$href) {
+            return false;
+        }
+
+        $parts = parse_url($href);
+
+        if (!$parts) {
+            return false;
+        }
+
+        $uri = '';
+
+        if (!empty($parts['path'])) {
+            $uri .= $parts['path'];
+        }
+
+        if (!empty($parts['query'])) {
+            $uri .= '?' . $parts['query'];
+        }
+
+        if ($uri === '') {
+            return false;
+        }
+
+        $uri = $this->db->escape($uri);
+
+        $query = $this->db->query("
+            SELECT page_id 
+            FROM `" . DB_PREFIX . "page_no_index`
+            WHERE is_noindex = '0'
+            AND url = '" . $uri . "'
+            LIMIT 1
+        ");
+
+        return (bool)$query->num_rows;
+    }
+
 }

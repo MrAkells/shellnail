@@ -91,6 +91,7 @@ class ControllerInformationSdSitemap extends Controller {
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/sd_sitemap');
 		$this->load->model('catalog/dvfilter');
+		$this->load->model('extension/module/page_no_index');
 
 		if (isset($_GET['auth']) && $_GET['auth'] == '2020')
 		{
@@ -199,22 +200,24 @@ class ControllerInformationSdSitemap extends Controller {
 		foreach ($manufacturers as $manufacturer) {
 			$cat_manufacture_name = $cat_name . $manufacturer['name'];
 			$cat_manufacture_href = $cat_href . '_' . $manufacturer['keyword'];
-			if(isset($counters['m'.$manufacturer['value_id']])){
-				$rows[] = [
-						'name' => $cat_manufacture_name,
-						'href' => $cat_manufacture_href. '/',
+
+			if (isset($counters['m' . $manufacturer['value_id']])) {
+				$href = $cat_manufacture_href . '/';
+
+				// Добавляем в sitemap только если URL явно разрешён
+				if ($this->model_extension_module_page_no_index->isUrlIndexAllowed($href)) {
+					$rows[] = [
+						'name'  => $cat_manufacture_name,
+						'href'  => $href,
 						'level' => $level,
-				];
-				// $this->model_catalog_sd_sitemap->add([
-				// 	'name' => $cat_manufacture_name,
-				// 	'href' => $cat_manufacture_href,
-				// 	'level' => $level,
-				// 	]);				
-			
+					];
+				}
+
+				// Дальнейшая логика с $filter_data и т.п. оставляем как есть
 				$filter_data = array(
 					'filter_category_id' => $data['category_id'],
 					//'filter_manufacturer_id' => $manufacturer['value_id'],
-					'filter_dvfilter' => 'm:'.$manufacturer['value_id']
+					'filter_dvfilter'    => 'm:' . $manufacturer['value_id']
 				);
 				$c_m_counters = $this->model_catalog_dvfilter->getCounters($filter_data);
 
@@ -261,11 +264,17 @@ class ControllerInformationSdSitemap extends Controller {
             foreach ($option['values'] as $key_val => $value) {
 
 				//if(isset($counters[$option['option_id'].$value['value_id']])){
-					$insert_rows[] = [
-						'name' => $cat_option_name . $value['name'],
-						'href' => $cat_option_href . $value['keyword']. '/',
-						'level' => $level,
-					];
+					$href = $cat_option_href . $value['keyword'] . '/';
+
+					// Добавляем только если URL разрешён в Page No Index
+					if ($this->model_extension_module_page_no_index->isUrlIndexAllowed($href)) {
+						$insert_rows[] = [
+							'name'  => $cat_option_name . $value['name'],
+							'href'  => $href,
+							'level' => $level,
+						];
+					}
+
 					unset($options[$key_opt]['values'][$key_val]);
 					// if($type) {
 					// 	if($option_id != $option['option_id']){
