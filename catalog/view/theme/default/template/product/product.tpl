@@ -502,6 +502,11 @@
 
         <!-- Конец атрибутов  -->
       </div>
+
+
+      <?php echo $content_bottom; ?>
+
+      
       <!-- Начало Вместе с этим продуктом покупают  -->
       <?php if ($products) { ?>
         <div class="row new-product">
@@ -635,7 +640,7 @@
 
 
 
-      <?php echo $content_bottom; ?>
+      
     </div>
 
 
