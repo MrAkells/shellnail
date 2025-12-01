@@ -33,10 +33,14 @@ class ControllerProductCategory extends Controller {
 		}
 
 		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
+			$page = (int)$this->request->get['page'];
 		} else {
 			$page = 1;
 		}
+		if ($page < 1) {
+			$page = 1;
+		}
+
 		$data['number_page'] = $page;
 		if (isset($this->request->get['limit'])) {
 			$limit = (int)$this->request->get['limit'];
@@ -520,10 +524,22 @@ class ControllerProductCategory extends Controller {
 
 			$data['pagination'] = $pagination->render();
 
-			$data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
+			$product_total_int = (int)$product_total;
+			$limit_int         = (int)$limit > 0 ? (int)$limit : 1;
+			$page_int          = (int)$page;
+
+			$data['results'] = sprintf(
+				$this->language->get('text_pagination'),
+				($product_total_int ? (($page_int - 1) * $limit_int) + 1 : 0),
+				((($page_int - 1) * $limit_int) > ($product_total_int - $limit_int))
+					? $product_total_int
+					: ((($page_int - 1) * $limit_int) + $limit_int),
+				$product_total_int,
+				ceil($product_total_int / $limit_int)
+			);
  
-                        //$data['load_more_products']=$this->config->get('infscrl_endtext')[$this->config->get('config_language_id')];
-                        $data['load_more_products']=sprintf($this->language->get('load_more_products'), $limit);
+			//$data['load_more_products']=$this->config->get('infscrl_endtext')[$this->config->get('config_language_id')];
+			$data['load_more_products']=sprintf($this->language->get('load_more_products'), $limit);
                          
 			// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
 			if ($page == 1) {
