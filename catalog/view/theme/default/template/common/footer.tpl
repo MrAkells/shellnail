@@ -240,7 +240,7 @@
                 return false;
             });
         });
-
+        /*
         setTimeout(function tick() {
             ! function(f, b, e, v, n, t, s) {
                 if (f.fbq) return;
@@ -274,7 +274,7 @@
             }(document, 'script', 'facebook-jssdk'));
 
         }, 3000);
-
+        */
     });
 </script>
 
