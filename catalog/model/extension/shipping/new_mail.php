@@ -13,8 +13,8 @@ class ModelExtensionShippingNewMail extends Model
                    
             $results= $this->checkCity($this->session->data['payment_address']['city']);
             $recipient=false;
-            if(count($results)==1){
-                $recipient=$results[0]['city_ref'];
+            if (count($results) === 1 && isset($results[0]['city_ref'])) {
+                $recipient = $results[0]['city_ref'];
             }
             if($recipient){
                 $cost=$this->cost($recipient, $weight, 'db5c8927-391c-11dd-90d9-001a92567626');
@@ -76,43 +76,47 @@ class ModelExtensionShippingNewMail extends Model
     }
         
     public function getOffices($ref) {
-        // Получаем данные офисов из базы данных
         $data_city = $this->db->query("SELECT * FROM " . DB_PREFIX . "newmail_office WHERE city_ref = '" . $ref . "'");
 
         if (isset($data_city->rows) && !empty($data_city->rows)) {
-            // Сортируем офисы сначала по типу, затем по номеру
             usort($data_city->rows, function($a, $b) {
-                // Устанавливаем порядок типов
-                $typeOrder = ['Отделение' => 1, 'Почтомат' => 2, 'Пункт' => 3];
-                
-                // Определяем типы офисов
-                preg_match('/^(Отделение|Почтомат|Пункт)/u', $a['description'], $matchesA);
-                preg_match('/^(Отделение|Почтомат|Пункт)/u', $b['description'], $matchesB);
-                
-                $typeA = isset($matchesA[1]) ? $matchesA[1] : '';
-                $typeB = isset($matchesB[1]) ? $matchesB[1] : '';
+                $typeOrder = [
+                    'Отделение' => 1,
+                    'Почтомат'  => 2,
+                    'Пункт'     => 3,
+                ];
 
-                // Сравниваем по типу
-                if ($typeOrder[$typeA] !== $typeOrder[$typeB]) {
-                    return $typeOrder[$typeA] <=> $typeOrder[$typeB];
+                $descA = (is_array($a) && isset($a['description'])) ? $a['description'] : '';
+                $descB = (is_array($b) && isset($b['description'])) ? $b['description'] : '';
+
+                preg_match('/^(Отделение|Почтомат|Пункт)/u', $descA, $matchesA);
+                preg_match('/^(Отделение|Почтомат|Пункт)/u', $descB, $matchesB);
+
+                $typeA = $matchesA[1] ?? null;
+                $typeB = $matchesB[1] ?? null;
+
+                $orderA = ($typeA !== null && isset($typeOrder[$typeA])) ? $typeOrder[$typeA] : PHP_INT_MAX;
+                $orderB = ($typeB !== null && isset($typeOrder[$typeB])) ? $typeOrder[$typeB] : PHP_INT_MAX;
+
+                if ($orderA !== $orderB) {
+                    return $orderA <=> $orderB;
                 }
 
-                // Извлекаем числа из описания офиса
-                preg_match('/\d+/', $a['description'], $matchesNumA);
-                preg_match('/\d+/', $b['description'], $matchesNumB);
+                preg_match('/\d+/', $descA, $matchesNumA);
+                preg_match('/\d+/', $descB, $matchesNumB);
 
                 $numA = isset($matchesNumA[0]) ? (int)$matchesNumA[0] : 0;
                 $numB = isset($matchesNumB[0]) ? (int)$matchesNumB[0] : 0;
 
-                // Сравниваем числовые значения
                 return $numA <=> $numB;
             });
 
             return $data_city->rows;
         }
-        
+
         return array();
     }
+
         
     public function getCityByHint($piece, $limit = 10) {
         $query = $this->db->query("SELECT city_id AS id, ref AS city_ref, areas, description AS name_ua, description_ru AS name_ru, settlement_type_description_ru AS type_ru, settlement_type_description AS type_ua FROM " . DB_PREFIX . "newmail_city WHERE description LIKE '" . $this->db->escape($piece) . "%' OR description_ru LIKE '" . $this->db->escape($piece) . "%' LIMIT " . (int)$limit);

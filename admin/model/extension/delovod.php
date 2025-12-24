@@ -12,8 +12,96 @@ class ModelExtensionDelovod extends Model {
 		return $query->rows;
 	}
 
+    public function getProductsPriceByCategoryId($category_id, $isbn = true, $page = 0 ) {
+        $sql = "SELECT p.product_id, p.price, p.isbn FROM " . DB_PREFIX . "product p  LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) WHERE  p2c.category_id = '" . (int)$category_id. "' ORDER BY p.product_id ASC";
+        if($page) $sql .= " LIMIT " . (int)($page - 1)*50 . ", 50";
+		$query = $this->db->query($sql);
+
+		return $query->rows;
+	}
+
+    /**
+     * Получить товары с изменённой ценой за последние 24 часа или истекшей акцией
+     * Теперь учитывается поле price_modified и выбирается актуальная цена (акционная, если действует, иначе обычная)
+     */
+    public function getAllProductsForPriceUpdate($page = 1, $limit = 100)
+    {
+        $page = max(1, (int)$page);
+        $offset = ($page - 1) * $limit;
+
+        // Выбираем товары, у которых была изменена цена за последние сутки (price_modified)
+        // или у которых началась/закончилась акция за последние сутки, или акция истекла
+        $sql = "
+            SELECT 
+                p.product_id, 
+                p.isbn, 
+                CASE 
+                    WHEN MIN(ps.price) IS NOT NULL AND MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW() 
+                        THEN MIN(ps.price)
+                    ELSE p.price
+                END AS price
+            FROM " . DB_PREFIX . "product p
+            LEFT JOIN " . DB_PREFIX . "product_special ps 
+                ON ps.product_id = p.product_id AND ps.customer_group_id = 1
+            WHERE 
+                p.isbn != '' 
+                AND (
+                    p.price_modified >= NOW() - INTERVAL 1 DAY
+                    OR ps.date_start >= NOW() - INTERVAL 1 DAY
+                    OR ps.date_end >= NOW() - INTERVAL 1 DAY
+                    OR (ps.date_end IS NOT NULL AND ps.date_end < NOW())
+                )
+            GROUP BY p.product_id
+            ORDER BY p.product_id ASC
+            LIMIT " . (int)$offset . ", " . (int)$limit;
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    /**
+     * Проверка, активна ли акционная цена
+     */
+    private function isSpecialPriceActive($row)
+    {
+        $now = strtotime(date('Y-m-d'));
+        $start = strtotime($row['date_start']);
+        $end = strtotime($row['date_end']);
+
+        return (!$row['date_start'] || $start <= $now) &&
+            (!$row['date_end'] || $end >= $now);
+    }
+
+    /**
+     * Получить общее количество товаров с изменённой ценой за последние 24 часа или истекшей акцией
+     */
+    public function getAllProductsTotalForPriceUpdate()
+    {
+        $yesterday = date('Y-m-d H:i:s', strtotime('-24 hours'));
+
+        $sql = "
+            SELECT COUNT(DISTINCT p.product_id) AS total
+            FROM " . DB_PREFIX . "product p
+            LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1
+            WHERE 
+                p.isbn != ''
+                AND (
+                    p.date_modified >= '" . $this->db->escape($yesterday) . "' 
+                    OR ps.date_start >= '" . $this->db->escape($yesterday) . "' 
+                    OR ps.date_end >= '" . $this->db->escape($yesterday) . "'
+                )
+        ";
+
+        $query = $this->db->query($sql);
+        return (int)$query->row['total'];
+    }
+
+
+    
+
 	public function getProduct($product_id) {
-		$query = $this->db->query("SELECT DISTINCT p.price, p.weight, pd.name, pdu.name as name_ua,p.sku, p.isbn, p2c.category_id, cd.name as category, md.name as manufacturer  FROM " . DB_PREFIX . "product p
+		$query = $this->db->query("SELECT DISTINCT p.price, p.weight, pd.name, pdu.name as name_ua,p.sku, p.isbn, p.ean, p2c.category_id, cd.name as category, md.name as manufacturer  FROM " . DB_PREFIX . "product p
 					LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')
                     LEFT JOIN " . DB_PREFIX . "product_description pdu ON (p.product_id = pdu.product_id AND pdu.language_id = 3)
 					LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (p.manufacturer_id = md.manufacturer_id AND md.language_id = '" . (int)$this->config->get('config_language_id') . "')
@@ -23,6 +111,45 @@ class ModelExtensionDelovod extends Model {
 
 		return $query->row;
 	}
+
+    
+    // Получить пачку товаров для выгрузки штрихкодов
+    public function getProductsForBarcodeSync($category_id = 0, $page = 1, $limit = 50) {
+        $start = ($page - 1) * $limit;
+        $sql = "SELECT p.product_id, p.isbn, p.ean 
+                FROM " . DB_PREFIX . "product p 
+                LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) 
+                WHERE p.isbn != '' 
+                AND p.ean != '' 
+                AND p.ean_synced = 0";
+        if ($category_id) {
+            $sql .= " AND p2c.category_id = '" . (int)$category_id . "'";
+        }
+        $sql .= " ORDER BY p.product_id ASC LIMIT " . (int)$start . ", " . (int)$limit;
+        $query = $this->db->query($sql);
+        return $query->rows;
+    }
+
+
+    // Получить общее количество товаров для выгрузки штрихкодов
+    public function getTotalProductsForBarcodeSync($category_id = 0) {
+        $sql = "SELECT COUNT(*) AS total
+                FROM " . DB_PREFIX . "product p 
+                LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) 
+                WHERE p.isbn != '' 
+                AND p.ean != '' 
+                AND p.ean_synced = 0";
+        if ($category_id) {
+            $sql .= " AND p2c.category_id = '" . (int)$category_id . "'";
+        }
+        $query = $this->db->query($sql);
+        return (int)$query->row['total'];
+    }
+
+    public function markEanSynced($product_id) {
+        $this->db->query("UPDATE `" . DB_PREFIX . "product` SET `ean_synced` = 1 WHERE `product_id` = '" . (int)$product_id . "'");
+    }
+
 
 	public function updateBalance($data) {
         // auto sms code
@@ -127,5 +254,117 @@ class ModelExtensionDelovod extends Model {
         $this->url=$urlToCatalog;
     }
 
+    /**
+    ============================================================
+     * Методы для массового обновления цен (admin, перенос из catalog)
+     * Используются для updateAllPricesWithPromo()
+    ============================================================
+    */
+    public function getAllProductsTotalForPriceUpdateCatalog() {
+    // Старая версия с фильтрацией по дате изменения (ОТКЛЮЧЕНО)
+    /*
+    $yesterday = date('Y-m-d H:i:s', strtotime('-24 hours'));
+    $sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1 WHERE p.isbn != '' AND (p.date_modified >= '" . $this->db->escape($yesterday) . "' OR ps.date_start >= '" . $this->db->escape($yesterday) . "' OR ps.date_end >= '" . $this->db->escape($yesterday) . "')";
+    $query = $this->db->query($sql);
+    return (int)$query->row['total'];
+    */
+    // Новая версия: все товары с ISBN
+    $sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p WHERE p.isbn != ''";
+    $query = $this->db->query($sql);
+    return (int)$query->row['total'];
+    }
+
+    public function getAllProductsForPriceUpdateCatalog($page = 1, $limit = 100) {
+    $page = max(1, (int)$page);
+    $offset = ($page - 1) * $limit;
+    // Старая версия с фильтрацией по дате изменения (ОТКЛЮЧЕНО)
+    /*
+    $sql = "SELECT p.product_id, p.isbn, CASE WHEN MIN(ps.price) IS NOT NULL AND MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW() THEN MIN(ps.price) ELSE p.price END AS price FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1 WHERE p.isbn != '' AND (p.price_modified >= NOW() - INTERVAL 1 DAY OR ps.date_start >= NOW() - INTERVAL 1 DAY OR ps.date_end >= NOW() - INTERVAL 1 DAY OR (ps.date_end IS NOT NULL AND ps.date_end < NOW())) GROUP BY p.product_id ORDER BY p.product_id ASC LIMIT " . (int)$offset . ", " . (int)$limit;
+    $query = $this->db->query($sql);
+    return $query->rows;
+    */
+    // Новая версия: все товары с ISBN
+    $sql = "SELECT p.product_id, p.isbn, CASE WHEN MIN(ps.price) IS NOT NULL AND MIN(ps.date_start) <= NOW() AND (MIN(ps.date_end) > NOW() OR MIN(ps.date_end) IS NULL OR MIN(ps.date_end) = '0000-00-00') THEN MIN(ps.price) ELSE p.price END AS price FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1 WHERE p.isbn != '' GROUP BY p.product_id ORDER BY p.product_id ASC LIMIT " . (int)$offset . ", " . (int)$limit;
+    $query = $this->db->query($sql);
+    return $query->rows;
+    }
+
+    public function getAllActivePromoProductsTotalForPriceUpdateCatalog() {
+    $sql = "SELECT COUNT(DISTINCT p.product_id) AS total
+        FROM " . DB_PREFIX . "product p
+        INNER JOIN " . DB_PREFIX . "promotion_candidates pc ON pc.candidate_product_id = p.product_id
+        INNER JOIN " . DB_PREFIX . "promotions promo ON promo.promo_id = pc.promo_id
+        INNER JOIN " . DB_PREFIX . "product_to_category ptc ON ptc.product_id = p.product_id AND ptc.category_id = promo.promo_id
+        WHERE p.isbn != ''
+            AND promo.status = 1
+            AND promo.date_start <= NOW()
+            AND promo.date_end >= NOW()";
+    $query = $this->db->query($sql);
+    return (int)$query->row['total'];
+    }
+
+    public function getAllActivePromoProductsForPriceUpdateCatalog($page = 1, $limit = 100)
+{
+    // Поддержка "верни все": (0,0) => без LIMIT
+    $use_limit = !($page == 0 && $limit == 0);
+
+    if ($use_limit) {
+        $page  = max(1, (int)$page);
+        $limit = max(1, (int)$limit);
+        $offset = ($page - 1) * $limit;
+        $limit_sql = " LIMIT " . (int)$offset . ", " . (int)$limit;
+    } else {
+        $limit_sql = "";
+    }
+
+    // ОКНО АКЦИИ: учитываем «вечные» даты '0000-00-00'
+    // Дополнительная проверка: товар должен быть привязан к промоакции через категорию
+    $sql = "
+        SELECT
+            p.product_id,
+            p.isbn,
+            pc.promo_id,
+            p.price AS base_price,
+            CASE
+                WHEN promo.type = 1 AND promo.settings <> '' THEN
+                    GREATEST(0, ROUND(p.price * (100 - CAST(promo.settings AS DECIMAL(10,4))) / 100, 0))
+                WHEN promo.type = 2 AND promo.settings <> '' THEN
+                    GREATEST(0, ROUND(p.price - CAST(promo.settings AS DECIMAL(10,4)), 0))
+                WHEN promo.type = 3 AND promo.settings <> '' THEN
+                    GREATEST(0, ROUND(CAST(promo.settings AS DECIMAL(10,4)), 0))
+                ELSE NULL
+            END AS special
+        FROM " . DB_PREFIX . "product p
+        INNER JOIN " . DB_PREFIX . "promotion_candidates pc
+            ON pc.candidate_product_id = p.product_id
+        INNER JOIN " . DB_PREFIX . "promotions promo
+            ON promo.promo_id = pc.promo_id
+        INNER JOIN " . DB_PREFIX . "product_to_category ptc
+            ON ptc.product_id = p.product_id AND ptc.category_id = promo.promo_id
+        WHERE p.isbn <> ''
+          AND promo.status = 1
+          AND (promo.date_start = '0000-00-00' OR promo.date_start <= NOW())
+          AND (promo.date_end   = '0000-00-00' OR promo.date_end   >= NOW())
+        ORDER BY pc.promo_id, p.product_id
+        " . $limit_sql . "
+    ";
+    $query = $this->db->query($sql);
+    return $query->rows;
+}
+
+
+
+    public function setPriceSyncedCatalog($product_id) {
+        $this->db->query("UPDATE `" . DB_PREFIX . "product` SET `price_synced` = 1 WHERE `product_id` = '" . (int)$product_id . "'");
+    }
+
+    public function setPromoPriceSyncedCatalog($product_id, $promo_id) {
+        $this->db->query("UPDATE `" . DB_PREFIX . "product_special` SET `promo_price_synced` = 1 WHERE `product_special_id` = '" . (int)$promo_id . "' AND `product_id` = '" . (int)$product_id . "'");
+    }
+    /**
+    ============================================================
+     * КОНЕЦ методов для массового обновления цен (admin, перенос из catalog)
+    ============================================================
+    */
 }
 

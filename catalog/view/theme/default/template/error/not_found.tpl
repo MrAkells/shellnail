@@ -13,7 +13,7 @@
           <?php } ?>
         </ul>
 
-        <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>
+        <div class="visible-xs mini-catalog-product"><?php echo isset($mini_catalog) ? $mini_catalog : ''; ?></div>
 
       <?php echo $content_top; ?>
       <h1><?php echo $heading_title; ?></h1>

@@ -5,6 +5,7 @@ config.php
 admin/config.php
 ocext_google_feed.xml
 sitemap-informations.xml
+ocext_google_feed_ua.xml
 hotline.xml
 priceua.xml
 prom.xml
