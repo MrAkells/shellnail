@@ -2,6 +2,74 @@
 class ModelExtensionModuleDelovod extends Model
 {
 
+	/**
+	 * Откат цен акций, которые уже закончились обратно на базовые.
+	 */
+	public function getExpiredPromotionsForPriceRevert()
+	{
+		$query = $this->db->query(
+			"SELECT promo_id FROM " . DB_PREFIX . "promotions WHERE status = 1 AND date_end < NOW() AND promo_price_synced IS NOT NULL"
+		);
+
+		$ids = [];
+		foreach ($query->rows as $row) {
+			$ids[] = (int)$row['promo_id'];
+		}
+
+		return $ids;
+	}
+
+	public function getExpiredPromoProductsTotalForPriceRevert($promo_id)
+	{
+		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total\n"
+			. "FROM " . DB_PREFIX . "product p\n"
+			. "INNER JOIN " . DB_PREFIX . "product_to_category ptc ON p.product_id = ptc.product_id\n"
+			. "WHERE ptc.category_id = '" . (int)$promo_id . "'\n"
+			. "  AND p.isbn != ''";
+
+		$query = $this->db->query($sql);
+		return (int)$query->row['total'];
+	}
+
+	/**
+	 * Получием товары завершённой акции с базовой (или special) ценой.
+	 */
+	public function getExpiredPromoProductsForPriceRevert($promo_id, $page = 1, $limit = 100)
+	{
+		$offset = ((int)$page - 1) * (int)$limit;
+
+		$sql = "SELECT\n"
+			. "  p.product_id,\n"
+			. "  p.isbn,\n"
+			. "  CASE\n"
+			. "    WHEN MIN(ps.price) IS NOT NULL AND (\n"
+			. "      ((MIN(ps.date_start) <= NOW() AND MIN(ps.date_end) > NOW()))\n"
+			. "      OR (MIN(ps.date_start) = '0000-00-00' OR MIN(ps.date_start) IS NULL)\n"
+			. "      OR (MIN(ps.date_end) = '0000-00-00' OR MIN(ps.date_end) IS NULL)\n"
+			. "    ) THEN MIN(ps.price)\n"
+			. "    ELSE p.price\n"
+			. "  END AS price\n"
+			. "FROM " . DB_PREFIX . "product p\n"
+			. "INNER JOIN " . DB_PREFIX . "product_to_category ptc ON p.product_id = ptc.product_id\n"
+			. "LEFT JOIN " . DB_PREFIX . "product_special ps ON ps.product_id = p.product_id AND ps.customer_group_id = 1\n"
+			. "WHERE ptc.category_id = '" . (int)$promo_id . "'\n"
+			. "  AND p.isbn != ''\n"
+			. "GROUP BY p.product_id\n"
+			. "ORDER BY p.product_id ASC\n"
+			. "LIMIT " . (int)$offset . ", " . (int)$limit;
+
+		$query = $this->db->query($sql);
+		return $query->rows;
+	}
+
+	/**
+	 * Пометить завершённую акцию как обработанную (откат выполнен).
+	 */
+	public function markExpiredPromoReverted($promo_id)
+	{
+		$this->db->query("UPDATE " . DB_PREFIX . "promotions SET promo_price_synced = NULL WHERE promo_id = '" . (int)$promo_id . "'");
+	}
+
 	public function updateOrderDelovodId($order_id, $id)
 	{
 		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `delovod_order_id` = '" . $id . "' WHERE `order_id` = '" . (int) $order_id . "'");
@@ -247,8 +315,6 @@ class ModelExtensionModuleDelovod extends Model
 
 	/**
      * Получить товары с изменённой ценой за последние 24 часа (price_modified)
-     * Только если price_modified не null и не старше суток
-     * Выбирается актуальная цена (акционная, если действует, иначе обычная)
      */
     public function getAllProductsForPriceUpdate($page = 1, $limit = 100)
     {
@@ -288,7 +354,6 @@ class ModelExtensionModuleDelovod extends Model
 
     /**
      * Получить общее количество товаров с изменённой ценой за последние 24 часа (price_modified)
-     * Только если price_modified не null и не старше суток
      */
     public function getAllProductsTotalForPriceUpdate()
     {
@@ -309,8 +374,6 @@ class ModelExtensionModuleDelovod extends Model
 
     /**
      * Получить все товары с активной акцией, у которых акция менялась за последние сутки
-     * [delovod export] Выборка по promo_price_modified
-     * Использует oc_product_to_category, где category_id = promo_id
      */
     public function getAllActivePromoProductsForPriceUpdate()
     {
@@ -356,7 +419,6 @@ class ModelExtensionModuleDelovod extends Model
 
     /**
      * Получить общее количество акционных товаров для выгрузки (по promo_price_modified и promo_price_synced)
-     * Использует oc_product_to_category, где category_id = promo_id
      */
     public function getAllActivePromoProductsTotalForPriceUpdate()
     {

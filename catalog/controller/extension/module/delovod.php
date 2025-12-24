@@ -719,7 +719,7 @@ class ControllerExtensionModuleDelovod extends Controller
 	/**
 	 * Ночная синхронизация цен с Деловод (фронт)
 	 * Для запуска через крон: https://shellnail.com.ua/index.php?route=extension/module/delovod/syncPrices
-	 * Для теста: ограничено 2 товарами (убрать ограничение после проверки)
+	 * Для теста: ограничено 2 товарами / ! убрать ограничение после проверки/
 	 */
 	public function syncPrices()
 	{
@@ -795,6 +795,49 @@ class ControllerExtensionModuleDelovod extends Controller
 			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Конец страницы (promo): {$promo_page}\n", FILE_APPEND);
 			$promo_page++;
 		} while ($promo_page <= $promo_total_pages);
+
+		// Откат промо-цен в Деловод после завершения акции
+		$expired_promos = $this->model_extension_module_delovod->getExpiredPromotionsForPriceRevert();
+		if ($expired_promos) {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Найдено завершённых акций для отката цен: " . count($expired_promos) . "\n", FILE_APPEND);
+		}
+
+		foreach ($expired_promos as $expired_promo_id) {
+			$revert_total_items = $this->model_extension_module_delovod->getExpiredPromoProductsTotalForPriceRevert($expired_promo_id);
+			$revert_total_pages = (int)ceil($revert_total_items / $limit);
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Откат цен для promo_id={$expired_promo_id}. Товаров: {$revert_total_items}\n", FILE_APPEND);
+
+			$revert_page = 1;
+			do {
+				$revert_products = $this->model_extension_module_delovod->getExpiredPromoProductsForPriceRevert($expired_promo_id, $revert_page, $limit);
+				foreach ($revert_products as $product) {
+					$isbn = $product['isbn'] ?? null;
+					$price = $product['price'] ?? null;
+					$product_id = $product['product_id'] ?? null;
+					if (!$isbn || !$price) {
+						continue;
+					}
+					if (isset($exported_isbns[$isbn])) {
+						continue;
+					}
+
+					$result = $this->setPrice($isbn, $price, $time, $product_id);
+					file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Откат цены (promo ended): ID={$product_id}, ISBN={$isbn}, цена={$price}, promo_id={$expired_promo_id}\n", FILE_APPEND);
+					$debug_data[] = ['isbn' => $isbn, 'price' => $price, 'type' => 'promo_revert', 'promo_id' => $expired_promo_id, 'result' => $result];
+					$updated++;
+					$exported_isbns[$isbn] = true;
+					if ($result !== 'error: empty id or price') {
+						$this->model_extension_module_delovod->setPriceSynced($product_id);
+					}
+				}
+				$revert_page++;
+			} while ($revert_page <= $revert_total_pages);
+
+			// Помечаем акцию обработанной, чтобы не откатывать повторно
+			$this->model_extension_module_delovod->markExpiredPromoReverted($expired_promo_id);
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Откат цен для promo_id={$expired_promo_id} завершён. promo_price_synced сброшен.\n", FILE_APPEND);
+		}
+
 		file_put_contents(DIR_LOGS . 'delovod_debug_export.json', json_encode($debug_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 		exit("OK. Updated: $updated");
 	}
