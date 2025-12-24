@@ -86,8 +86,11 @@ class ModelExtensionShippingNewMail extends Model
                     'Пункт'     => 3,
                 ];
 
-                preg_match('/^(Отделение|Почтомат|Пункт)/u', $a['description'], $matchesA);
-                preg_match('/^(Отделение|Почтомат|Пункт)/u', $b['description'], $matchesB);
+                $descA = (is_array($a) && isset($a['description'])) ? $a['description'] : '';
+                $descB = (is_array($b) && isset($b['description'])) ? $b['description'] : '';
+
+                preg_match('/^(Отделение|Почтомат|Пункт)/u', $descA, $matchesA);
+                preg_match('/^(Отделение|Почтомат|Пункт)/u', $descB, $matchesB);
 
                 $typeA = $matchesA[1] ?? null;
                 $typeB = $matchesB[1] ?? null;
@@ -99,8 +102,8 @@ class ModelExtensionShippingNewMail extends Model
                     return $orderA <=> $orderB;
                 }
 
-                preg_match('/\d+/', $a['description'], $matchesNumA);
-                preg_match('/\d+/', $b['description'], $matchesNumB);
+                preg_match('/\d+/', $descA, $matchesNumA);
+                preg_match('/\d+/', $descB, $matchesNumB);
 
                 $numA = isset($matchesNumA[0]) ? (int)$matchesNumA[0] : 0;
                 $numB = isset($matchesNumB[0]) ? (int)$matchesNumB[0] : 0;

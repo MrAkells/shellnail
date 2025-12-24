@@ -16,7 +16,8 @@ class ControllerAccountPrecheckout extends Controller {
 		$this->load->model('account/customer');
 
 		if ($this->request->server['REQUEST_METHOD'] == 'POST'){
-                    if($this->request->get['cred']=='guest' && $this->validate()){
+					$cred = $this->request->get['cred'] ?? '';
+					if($cred == 'guest' && $this->validate()){
                         $this->session->data['ready_for_checkout']=[];
                         $this->session->data['payment_address']['firstname']=$this->request->post['firstname'];
                         $this->session->data['payment_address']['lastname']=$this->request->post['lastname'];
@@ -41,7 +42,7 @@ class ControllerAccountPrecheckout extends Controller {
                         }
                         $this->response->setOutput("<div><span id='login_success'></div>");
                         return;
-                    }else if($this->request->get['cred']=='login' && $this->loginValidate()){
+					}else if($cred == 'login' && $this->loginValidate()){
                         $this->response->setOutput("<div><span id='login_success'></div>");
                         return;
                     }

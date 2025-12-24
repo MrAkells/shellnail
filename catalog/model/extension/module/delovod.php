@@ -7,8 +7,11 @@ class ModelExtensionModuleDelovod extends Model
 	 */
 	public function getExpiredPromotionsForPriceRevert()
 	{
+		// Важно: акция может быть выключена (status=0) и/или уже закончиться по date_end.
+		// Отбираем по факту окончания, и делаем операцию идемпотентной:
+		// если promo_price_synced >= date_end, считаем что откат уже выполнялся.
 		$query = $this->db->query(
-			"SELECT promo_id FROM " . DB_PREFIX . "promotions WHERE status = 1 AND date_end < NOW() AND promo_price_synced IS NOT NULL"
+			"SELECT promo_id FROM " . DB_PREFIX . "promotions WHERE date_end < NOW() AND (promo_price_synced IS NULL OR promo_price_synced < date_end)"
 		);
 
 		$ids = [];
@@ -67,7 +70,8 @@ class ModelExtensionModuleDelovod extends Model
 	 */
 	public function markExpiredPromoReverted($promo_id)
 	{
-		$this->db->query("UPDATE " . DB_PREFIX . "promotions SET promo_price_synced = NULL WHERE promo_id = '" . (int)$promo_id . "'");
+		// Ставим NOW() чтобы не откатывать повторно.
+		$this->db->query("UPDATE " . DB_PREFIX . "promotions SET promo_price_synced = NOW() WHERE promo_id = '" . (int)$promo_id . "'");
 	}
 
 	public function updateOrderDelovodId($order_id, $id)

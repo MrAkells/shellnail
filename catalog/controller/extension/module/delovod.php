@@ -800,6 +800,8 @@ class ControllerExtensionModuleDelovod extends Controller
 		$expired_promos = $this->model_extension_module_delovod->getExpiredPromotionsForPriceRevert();
 		if ($expired_promos) {
 			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Найдено завершённых акций для отката цен: " . count($expired_promos) . "\n", FILE_APPEND);
+		} else {
+			file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Завершённых акций для отката цен не найдено\n", FILE_APPEND);
 		}
 
 		foreach ($expired_promos as $expired_promo_id) {
@@ -814,10 +816,16 @@ class ControllerExtensionModuleDelovod extends Controller
 					$isbn = $product['isbn'] ?? null;
 					$price = $product['price'] ?? null;
 					$product_id = $product['product_id'] ?? null;
-					if (!$isbn || !$price) {
+					if (!$isbn) {
+						file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Пропущен откат: пустой ISBN. ID={$product_id}, promo_id={$expired_promo_id}\n", FILE_APPEND);
+						continue;
+					}
+					if ($price === null || $price === '' || (float)$price <= 0) {
+						file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Пропущен откат: некорректная цена. ID={$product_id}, ISBN={$isbn}, price=" . var_export($price, true) . ", promo_id={$expired_promo_id}\n", FILE_APPEND);
 						continue;
 					}
 					if (isset($exported_isbns[$isbn])) {
+						file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] Пропущен откат: дубликат ISBN уже выгружен в этом запуске. ISBN={$isbn}, promo_id={$expired_promo_id}\n", FILE_APPEND);
 						continue;
 					}
 
