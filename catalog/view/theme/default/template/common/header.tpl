@@ -139,21 +139,6 @@
     </script>
     <!-- End of Google Analytics 4 -->
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-59209923-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-59209923-1');
-        gtag('config', 'AW-969257410');
-    </script>
-    <!-- End of Global site tag (gtag.js) - Google Analytics -->
-
     <!-- Google Tag Manager -->
     <script>
         (function(w, d, s, l, i) {
