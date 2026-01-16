@@ -384,6 +384,9 @@ class ControllerRecordLangmark extends Controller {
 		}
 
 		$hreflang_norm = strtolower(str_replace('_', '-', $hreflang));
+		if ($hreflang_norm === 'ru' || $hreflang_norm === 'ru-ru') {
+			return 'ru-UA';
+		}
 		if ($hreflang_norm === 'uk' || $hreflang_norm === 'uk-ua') {
 			return 'uk-UA';
 		}
