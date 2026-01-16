@@ -1132,6 +1132,24 @@
                 </div>
               </fieldset>
               <fieldset>
+                <legend><?php echo $text_sitemap; ?></legend>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-sitemap"><span data-toggle="tooltip" title="<?php echo $help_sitemap; ?>"><?php echo $entry_sitemap; ?></span></label>
+                  <div class="col-sm-10">
+                    <select name="config_sitemap_id" id="input-sitemap" class="form-control">
+                      <option value="0"><?php echo $text_none; ?></option>
+                      <?php foreach ($informations as $information) { ?>
+                      <?php if ($information['information_id'] == $config_sitemap_id) { ?>
+                      <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+                      <?php } else { ?>
+                      <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+                      <?php } ?>
+                      <?php } ?>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
                 <legend><?php echo $text_captcha; ?></legend>
                 <div class="form-group">
                   <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="<?php echo $help_captcha; ?>"><?php echo $entry_captcha; ?></span></label>

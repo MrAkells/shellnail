@@ -972,6 +972,12 @@ class ControllerSettingSetting extends Controller {
 			$data['config_return_id'] = $this->config->get('config_return_id');
 		}
 
+		if (isset($this->request->post['config_sitemap_id'])) {
+			$data['config_sitemap_id'] = $this->request->post['config_sitemap_id'];
+		} else {
+			$data['config_sitemap_id'] = $this->config->get('config_sitemap_id');
+		}
+
 		if (isset($this->request->post['config_return_status_id'])) {
 			$data['config_return_status_id'] = $this->request->post['config_return_status_id'];
 		} else {

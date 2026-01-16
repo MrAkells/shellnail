@@ -6,6 +6,17 @@ class ControllerStartupSeoUrl extends Controller {
 			$this->url->addRewrite($this);
 		}
 
+		if (isset($this->request->get['_route_'])) {
+			$route_trim = trim($this->request->get['_route_'], '/');
+
+			if ($route_trim === 'sitemap' || $route_trim === 'ua/sitemap') {
+				$this->request->get['route'] = 'information/sitemap';
+				$_GET['route'] = $this->request->get['route'];
+
+				return;
+			}
+		}
+
                 // -------$_GET['_route_'] появляется благодаря .htaccess-----
                  
 		// Decode URL
@@ -75,6 +86,27 @@ class ControllerStartupSeoUrl extends Controller {
 		$data = array();
 
 		parse_str($url_info['query'], $data);
+
+		if (isset($data['route']) && $data['route'] === 'information/sitemap') {
+			unset($data['route']);
+
+			$query = '';
+
+			if ($data) {
+				foreach ($data as $key => $value) {
+					$query .= '&' . rawurlencode((string)$key) . '=' . rawurlencode((is_array($value) ? http_build_query($value) : (string)$value));
+				}
+
+				if ($query) {
+					$query = '?' . str_replace('&', '&amp;', trim($query, '&'));
+				}
+			}
+
+			$base_path = str_replace('/index.php', '', $url_info['path']);
+			$base_path = rtrim($base_path, '/');
+
+			return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . $base_path . '/sitemap/' . $query;
+		}
 
 		foreach ($data as $key => $value) {
 			if (isset($data['route'])) {

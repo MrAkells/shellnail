@@ -21,14 +21,22 @@ class ControllerStartupSeoPro extends Controller {
 	}
 
 	public function index() {
-
-              
-            
 		// Add rewrite to url class
 		if ($this->config->get('config_seo_url')) {
 			$this->url->addRewrite($this);
 		} else {
 			return;
+		}
+               
+		if (isset($this->request->get['_route_'])) {
+			$route_trim = trim($this->request->get['_route_'], '/');
+
+			if ($route_trim === 'sitemap' || $route_trim === 'ua/sitemap') {
+				$this->request->get['route'] = 'information/sitemap';
+				$_GET['route'] = $this->request->get['route'];
+
+				return new Action($this->request->get['route']);
+			}
 		}
 
                // -------$_GET['_route_'] появляется благодаря .htaccess-----
@@ -132,6 +140,25 @@ class ControllerStartupSeoPro extends Controller {
 
 		$route = $data['route'];
 		unset($data['route']);
+
+		if ($route === 'information/sitemap') {
+			$seo_url = 'sitemap';
+			$seo_url = trim($seo_url, '/');
+
+			if ($component['scheme'] == 'https') {
+				$seo_url = $this->config->get('config_ssl') . $seo_url;
+			} else {
+				$seo_url = $this->config->get('config_url') . $seo_url;
+			}
+
+			$seo_url .= '/';
+
+			if (count($data)) {
+				$seo_url .= '?' . urldecode(http_build_query($data, '', '&amp;'));
+			}
+
+			return $seo_url;
+		}
 
 		switch ($route) {
 			case 'product/product':

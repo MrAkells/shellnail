@@ -178,6 +178,7 @@ class ControllerRecordLangmark extends Controller {
 							        } else {
 							        	$hreflang = $languages_by_id[$settings_multi['language_id']]['code'];
 							        }
+									$hreflang = $this->normalizeHreflang($hreflang);
 									if ($hreflang != '') {
 										if (!isset($array_hreflang[$hreflang])) {
 											//$array_hreflang[$languages_by_id[$settings_multi['language_id']]['code']] = Array('href' => $url_lang , 'hreflang' => $hreflang );
@@ -337,8 +338,9 @@ class ControllerRecordLangmark extends Controller {
 				if ($sc_hreflang && !empty($sc_hreflang)) {
 					foreach($sc_hreflang as $sc_hreflang_code => $sc_hreflang_array) {
 
+							$hreflang = $this->normalizeHreflang($sc_hreflang_array['hreflang']);
 							$output = str_replace("</head>", '
-<link rel="alternate" hreflang="' . $sc_hreflang_array['hreflang'] . '" href="' . $sc_hreflang_array['href'] . '" />
+<link rel="alternate" hreflang="' . $hreflang . '" href="' . $sc_hreflang_array['href'] . '" />
 </head>', $output);
 					}
                     $this->document->setSCHreflang(array());
@@ -374,6 +376,19 @@ class ControllerRecordLangmark extends Controller {
 			}
 		}
 		return $output;
+	}
+
+	private function normalizeHreflang($hreflang) {
+		if (!is_string($hreflang) || $hreflang === '') {
+			return $hreflang;
+		}
+
+		$hreflang_norm = strtolower(str_replace('_', '-', $hreflang));
+		if ($hreflang_norm === 'uk' || $hreflang_norm === 'uk-ua') {
+			return 'uk-UA';
+		}
+
+		return $hreflang;
 	}
 
 
