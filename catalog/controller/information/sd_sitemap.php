@@ -2,8 +2,23 @@
 class ControllerInformationSdSitemap extends Controller {
 	public function index() {
 		$this->load->language('information/sitemap');
+		$this->load->model('catalog/information');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$information_info = array();
+		if ($this->config->get('config_sitemap_id')) {
+			$information_info = $this->model_catalog_information->getInformation((int)$this->config->get('config_sitemap_id'));
+		}
+
+		if ($information_info) {
+			$this->document->setTitle($information_info['meta_title'] ? $information_info['meta_title'] : $information_info['title']);
+			$this->document->setDescription((mb_detect_encoding($information_info['meta_description']) == 'UTF-8' ? $information_info['meta_description'] : mb_convert_encoding($information_info['meta_description'], 'utf-8', "HTML-ENTITIES")));
+			$data['heading_title'] = $information_info['meta_h1'] ? $information_info['meta_h1'] : $information_info['title'];
+		} else {
+			$this->document->setTitle($this->language->get('text_title'));
+			$this->document->setDescription($this->language->get('text_description'));
+			$data['heading_title'] = $this->language->get('heading_title');
+		}
+		$this->document->addLink($this->url->link('information/sitemap'), 'canonical');
 
 		$data['breadcrumbs'] = array();
 
@@ -13,11 +28,13 @@ class ControllerInformationSdSitemap extends Controller {
 		);
 
 		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('heading_title'),
+			'text' => $data['heading_title'],
 			'href' => $this->url->link('information/sitemap')
 		);
 
-		$data['heading_title'] = $this->language->get('heading_title');
+		if (!isset($data['heading_title'])) {
+			$data['heading_title'] = $this->language->get('heading_title');
+		}
 
 		$data['text_special'] = $this->language->get('text_special');
 		$data['text_account'] = $this->language->get('text_account');
@@ -26,11 +43,13 @@ class ControllerInformationSdSitemap extends Controller {
 		$data['text_address'] = $this->language->get('text_address');
 		$data['text_history'] = $this->language->get('text_history');
 		$data['text_download'] = $this->language->get('text_download');
+		$data['text_wishlist'] = $this->language->get('text_wishlist');
 		$data['text_cart'] = $this->language->get('text_cart');
 		$data['text_checkout'] = $this->language->get('text_checkout');
 		$data['text_search'] = $this->language->get('text_search');
 		$data['text_information'] = $this->language->get('text_information');
 		$data['text_contact'] = $this->language->get('text_contact');
+		$data['text_reviews'] = $this->language->get('text_reviews');
 		
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
@@ -50,15 +69,22 @@ class ControllerInformationSdSitemap extends Controller {
 		$data['special'] = $this->url->link('product/special');
 		$data['search'] = $this->url->link('product/search');
 		$data['contact'] = $this->url->link('information/contact');
-
-		$this->load->model('catalog/information');
+		$data['reviews'] = $this->url->link('features/reviews');
+		$data['wishlist'] = $this->url->link('account/wishlist', '', true);
 
 		$data['informations'] = array();
+		$sitemap_id = (int)$this->config->get('config_sitemap_id');
 
 		foreach ($this->model_catalog_information->getInformations() as $result) {
+			$href = $this->url->link('information/information', 'information_id=' . $result['information_id']);
+
+			if ($sitemap_id && (int)$result['information_id'] === $sitemap_id) {
+				$href = $this->url->link('information/sitemap');
+			}
+
 			$data['informations'][] = array(
 				'title' => $result['title'],
-				'href'  => $this->url->link('information/information', 'information_id=' . $result['information_id'])
+				'href'  => $href
 			);
 		}
 

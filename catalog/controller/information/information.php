@@ -29,6 +29,7 @@ class ControllerInformationInformation extends Controller {
 			} else {
 				$this->document->setTitle($information_info['title']);
 			}
+			$this->document->addLink($this->url->link('information/information', 'information_id=' . $information_id), 'canonical');
 			$this->document->setDescription((mb_detect_encoding($information_info['meta_description']) == 'UTF-8' ? $information_info['meta_description'] : mb_convert_encoding($information_info['meta_description'],'utf-8', "HTML-ENTITIES")));
 			$this->document->setKeywords($information_info['meta_keyword']);
 

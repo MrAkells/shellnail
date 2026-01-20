@@ -33,13 +33,12 @@
       <div class="row">
         <div class="col-sm-12">
           <ul>
-            <li><a href="<?php echo $special; ?>"><?php echo $text_special; ?></a></li>
-            <li><a href="<?php echo $search; ?>"><?php echo $text_search; ?></a></li>
             <li><?php echo $text_information; ?>
               <ul>
                 <?php foreach ($informations as $information) { ?>
                 <li><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
                 <?php } ?>
+                <li><a href="<?php echo $reviews; ?>"><?php echo $text_reviews; ?></a></li>
                 <li><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
               </ul>
             </li>

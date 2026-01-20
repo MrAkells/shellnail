@@ -8,9 +8,10 @@ class ControllerFeaturesPromotions extends Controller {
 
 		$data['heading_title']=$this->language->get('heading_title');
 
-                $this->document->setTitle($this->config->get('owner_description')[$this->config->get('config_language_id')]['promotions_meta_title']);
+		$this->document->setTitle($this->config->get('owner_description')[$this->config->get('config_language_id')]['promotions_meta_title']);
 		$this->document->setDescription($this->config->get('owner_description')[$this->config->get('config_language_id')]['promotions_meta_description']);  
 		$this->document->setKeywords($this->config->get('owner_description')[$this->config->get('config_language_id')]['promotions_meta_keywords']); 
+		$this->document->addLink($this->url->link('features/promotions'), 'canonical');
                 
                 $data['breadcrumbs'] = array();
 

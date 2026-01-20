@@ -107,6 +107,11 @@
                             </a>
                         </div>
                         <div>
+                            <a href="<?php echo $contact; ?>">
+                                <?php echo $text_contact; ?>
+                            </a>
+                        </div>
+                        <div>
                             <a href="<?php echo $informations['7']['href']; ?>">
                                 <?php echo $informations['7']['title']; ?>
                             </a>

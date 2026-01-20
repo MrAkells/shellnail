@@ -7,6 +7,7 @@ class ControllerExtensionModuleInformation extends Controller {
 
 		$data['text_contact'] = $this->language->get('text_contact');
 		$data['text_sitemap'] = $this->language->get('text_sitemap');
+		$data['text_reviews'] = $this->language->get('text_reviews');
 
 		$this->load->model('catalog/information');
 
@@ -20,6 +21,7 @@ class ControllerExtensionModuleInformation extends Controller {
 		}
 
 		$data['contact'] = $this->url->link('information/contact');
+		$data['reviews'] = $this->url->link('features/reviews');
 		$data['sitemap'] = $this->url->link('information/sitemap');
 
 		return $this->load->view('extension/module/information', $data);

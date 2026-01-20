@@ -8,6 +8,9 @@
         <li>
             <a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a>
         </li>
+        <li>
+            <a href="<?php echo $reviews; ?>"><?php echo $text_reviews; ?></a>
+        </li>
 
         <li>
             <a href="<?php echo $sitemap; ?>"><?php echo $text_sitemap; ?></a>

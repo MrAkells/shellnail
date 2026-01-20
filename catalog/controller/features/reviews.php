@@ -9,6 +9,7 @@ class ControllerFeaturesReviews extends Controller {
 		$this->document->setTitle($this->config->get('shopreview_meta_title'));
 		$this->document->setDescription($this->config->get('shopreview_meta_description'));  
 		$this->document->setKeywords($this->config->get('shopreview_meta_keywords')); 
+		$this->document->addLink($this->url->link('features/reviews'), 'canonical');
 		
 		$data['heading_title']=$this->language->get('heading_title');
 
