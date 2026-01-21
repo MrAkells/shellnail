@@ -1,13 +1,22 @@
 <?php
-class ControllerExtensionModuleSocialAuth extends Controller {
+class ControllerExtensionModuleSocialAuth extends Controller
+{
     private $error = array();
-    
-    public function index() {
+
+    private function logFacebookAuth($label, array $context = array())
+    {
+        $line = '[' . date('Y-m-d H:i:s') . '] ' . $label . ' ' . json_encode($context, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        @file_put_contents(DIR_LOGS . 'facebook_oauth.log', $line . "\n", FILE_APPEND);
+    }
+
+    public function index()
+    {
         echo 'false';
     }
-    
+
     // form for adding non-existing fields
-    public function register() {
+    public function register()
+    {
         $this->load->language('account/edit');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -17,27 +26,27 @@ class ControllerExtensionModuleSocialAuth extends Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->register_validate()) {
 
             $customer = array(
-                    'firstname' => $this->request->post['firstname'],
-                    'lastname' => $this->request->post['lastname'],
-                    'email' => $this->request->post['email'],
-                    'telephone' => '',
-                    'fax' => '',
-                    'password' => md5(time()),
-                    'company' => '',
-                    'address_1' => '',
-                    'address_2' => '',
-                    'city' => '',
-                    'postcode' => '',
-                    'country_id' => 220,
-                    'zone_id' => 0,
-                    'social_id' => $this->request->post['social_id'],
-                );
+                'firstname' => $this->request->post['firstname'],
+                'lastname' => $this->request->post['lastname'],
+                'email' => $this->request->post['email'],
+                'telephone' => '',
+                'fax' => '',
+                'password' => md5(time()),
+                'company' => '',
+                'address_1' => '',
+                'address_2' => '',
+                'city' => '',
+                'postcode' => '',
+                'country_id' => 220,
+                'zone_id' => 0,
+                'social_id' => $this->request->post['social_id'],
+            );
 
             $customer_id = $this->model_account_customer->addCustomer($customer);
 
             $this->db->query("UPDATE " . DB_PREFIX . "customer SET social_id = '" . (string)$customer['social_id'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
 
-            if($customer_id){
+            if ($customer_id) {
                 $customer_info = $this->model_account_customer->getCustomer($customer_id);
 
                 if ($this->customer->login($customer_info['email'], "", true)) {
@@ -143,7 +152,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
         } else {
             $data['telephone'] = '';
         }
-        
+
         if (isset($this->request->post['social_id'])) {
             $data['social_id'] = $this->request->post['social_id'];
         } elseif (!empty($customer_info)) {
@@ -163,16 +172,17 @@ class ControllerExtensionModuleSocialAuth extends Controller {
 
         $this->response->setOutput($this->load->view('extension/module/social_auth_register', $data));
     }
-    
+
     // validate fiels register function
-    protected function register_validate() {
+    protected function register_validate()
+    {
         if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
             $this->error['firstname'] = $this->language->get('error_firstname');
         }
         if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
             $this->error['lastname'] = $this->language->get('error_lastname');
         }
-       if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+        if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
         }
         if (($this->customer->getEmail() != $this->request->post['email']) && $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
@@ -183,12 +193,13 @@ class ControllerExtensionModuleSocialAuth extends Controller {
         }
         return !$this->error;
     }
-    
+
     // method login to Google with  oauth2
-    public function iframeGoogleLogin(){
-        
-        $redirect_href = HTTPS_SERVER.'gp_login';
-        
+    public function iframeGoogleLogin()
+    {
+
+        $redirect_href = HTTPS_SERVER . 'gp_login';
+
         $google_app_id = $this->config->get('social_auth_google_app_id');
         $google_secret_key = $this->config->get('social_auth_google_secret_key');
 
@@ -198,18 +209,17 @@ class ControllerExtensionModuleSocialAuth extends Controller {
         if (!isset($this->request->get['code'])) {
             // not find code
             $this->response->redirect($link);
-
         } else {
 
             $code = $this->request->get['code'];
 
-            $data = $this->getTokenWithCurl('https://accounts.google.com/o/oauth2/token',array(
-                    'code' => $code,
-                    'client_id' => $google_app_id,
-                    'client_secret' => $google_secret_key,
-                    'redirect_uri' => $redirect_href, //это на случай если на сайте, к которому обращаемся проверяется была ли нажата кнопка submit, а не была ли оправлена форма
-                    'grant_type' => 'authorization_code',
-                ));
+            $data = $this->getTokenWithCurl('https://accounts.google.com/o/oauth2/token', array(
+                'code' => $code,
+                'client_id' => $google_app_id,
+                'client_secret' => $google_secret_key,
+                'redirect_uri' => $redirect_href, //это на случай если на сайте, к которому обращаемся проверяется была ли нажата кнопка submit, а не была ли оправлена форма
+                'grant_type' => 'authorization_code',
+            ));
             // get token
             $token = $data->access_token;
 
@@ -217,7 +227,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
 
             $result = $this->getCurl($url);
 
-            if(isset($result->id)){
+            if (isset($result->id)) {
 
                 $customer = array(
                     'firstname' => @$result->given_name,
@@ -235,57 +245,74 @@ class ControllerExtensionModuleSocialAuth extends Controller {
                     'zone_id' => 0,
                     'social_id' => $result->id,
                 );
-                
+
                 $return_data = $this->toLoginRegister($customer);
 
-                if($return_data['status']){
+                if ($return_data['status']) {
 
                     $this->response->setOutput('<script>
-                        window.opener.document.location = '. $return_data['redirect'].';
+                        window.opener.document.location = ' . $return_data['redirect'] . ';
                         window.close();
                         </script>');
-                
                 } else {
-                    echo $return_data['text']; exit;
+                    echo $return_data['text'];
+                    exit;
                 }
-            
             } else {
-                echo 'not find user'; exit;
+                echo 'not find user';
+                exit;
             }
         }
     }
 
     // method login to Facebook with  oauth2
-    public function iframeFacebookLogin(){
-        
-        $redirect_href = HTTPS_SERVER.'fb_login';
+    public function iframeFacebookLogin()
+    {
+
+        $redirect_href = HTTPS_SERVER . 'fb_login';
 
         $facebook_app_id = $this->config->get('social_auth_facebook_app_id');
         $facebook_secret_key = $this->config->get('social_auth_facebook_secret_key');
 
         $link = 'https://www.facebook.com/v3.2/dialog/oauth?client_id=' . $facebook_app_id . '&redirect_uri=' . urlencode($redirect_href) . '&scope=email,public_profile&response_type=code';
-          
+
         if (!isset($this->request->get['code'])) {
 
             $this->response->redirect($link);
-
         } else {
 
             $code = $this->request->get['code'];
 
-            $url_token = 'https://graph.facebook.com/v3.2/oauth/access_token?client_id='.$facebook_app_id.'&redirect_uri=' . urlencode($redirect_href) . '&client_secret='.$facebook_secret_key.'&code='.$code.'';
+            $url_token = 'https://graph.facebook.com/v3.2/oauth/access_token?client_id=' . $facebook_app_id . '&redirect_uri=' . urlencode($redirect_href) . '&client_secret=' . $facebook_secret_key . '&code=' . urlencode($code);
 
             $data = $this->getCurl($url_token);
+            if (!isset($data->access_token) || !$data->access_token || isset($data->error)) {
+                $this->logFacebookAuth('token_exchange_failed', array(
+                    'redirect_href' => $redirect_href,
+                    'request_uri' => isset($this->request->server['REQUEST_URI']) ? $this->request->server['REQUEST_URI'] : null,
+                    'http_host' => isset($this->request->server['HTTP_HOST']) ? $this->request->server['HTTP_HOST'] : null,
+                    'user_agent' => isset($this->request->server['HTTP_USER_AGENT']) ? $this->request->server['HTTP_USER_AGENT'] : null,
+                    'fb_response' => $data,
+                ));
 
-            $url = 'https://graph.facebook.com/me?fields=email,about,first_name,last_name&access_token=' . $data->access_token;
-            $result = $this->getCurl($url);
-           //file_put_contents(DIR_LOGS . 'facebook.log', print_r($result,true) . "\n", FILE_APPEND);
-
-            if(isset($result->error)){
-                echo @$result->error->message; exit;
+                if (isset($data->error) && isset($data->error->message)) {
+                    echo (string)$data->error->message;
+                    exit;
+                }
+                echo 'Facebook token error';
+                exit;
             }
 
-            if(isset($result->id)){
+            $url = 'https://graph.facebook.com/v3.2/me?fields=email,about,first_name,last_name&access_token=' . urlencode($data->access_token);
+            $result = $this->getCurl($url);
+            //file_put_contents(DIR_LOGS . 'facebook.log', print_r($result,true) . "\n", FILE_APPEND);
+
+            if (isset($result->error)) {
+                echo @$result->error->message;
+                exit;
+            }
+
+            if (isset($result->id)) {
 
                 $data_customer = array(
                     'firstname' => @$result->first_name,
@@ -306,26 +333,28 @@ class ControllerExtensionModuleSocialAuth extends Controller {
 
                 $return_data = $this->toLoginRegister($data_customer);
 
-                if($return_data['status']){
+                if ($return_data['status']) {
 
                     $this->response->setOutput('<script>
-                        window.opener.document.location = '.$return_data['redirect'].';
+                        window.opener.document.location = ' . $return_data['redirect'] . ';
                         window.close();
                         </script>');
-                
                 } else {
-                    echo $return_data['text']; exit;
+                    echo $return_data['text'];
+                    exit;
                 }
             } else {
-                echo 'not find user'; exit;
+                echo 'not find user';
+                exit;
             }
         }
     }
 
-    public function iframeInstagramLogin(){
-        
-        $redirect_href = HTTPS_SERVER.'insta_login';
-        
+    public function iframeInstagramLogin()
+    {
+
+        $redirect_href = HTTPS_SERVER . 'insta_login';
+
         $insatagram_client_id = trim($this->config->get('social_auth_insatagram_client_id'));
         $insatagram_secret_key = trim($this->config->get('social_auth_insatagram_secret_key'));
 
@@ -334,18 +363,17 @@ class ControllerExtensionModuleSocialAuth extends Controller {
         if (!isset($this->request->get['code'])) {
 
             $this->response->redirect($link);
-
         } else {
 
             $code = $this->request->get['code'];
 
-            $data = $this->getTokenWithCurl('https://api.instagram.com/oauth/access_token',array(
-                    'code' => $code,
-                    'client_id' => $insatagram_client_id,
-                    'client_secret' => $insatagram_secret_key,
-                    'redirect_uri' => $redirect_href, //это на случай если на сайте, к которому обращаемся проверяется была ли нажата кнопка submit, а не была ли оправлена форма
-                    'grant_type' => 'authorization_code',
-                ));
+            $data = $this->getTokenWithCurl('https://api.instagram.com/oauth/access_token', array(
+                'code' => $code,
+                'client_id' => $insatagram_client_id,
+                'client_secret' => $insatagram_secret_key,
+                'redirect_uri' => $redirect_href, //это на случай если на сайте, к которому обращаемся проверяется была ли нажата кнопка submit, а не была ли оправлена форма
+                'grant_type' => 'authorization_code',
+            ));
 
             $token = $data->access_token;
 
@@ -353,7 +381,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
 
             $result = $this->getCurl($url);
 
-            if(isset($result->data->id)){
+            if (isset($result->data->id)) {
 
                 $customer = array(
                     'firstname' => @$result->data->username,
@@ -371,50 +399,51 @@ class ControllerExtensionModuleSocialAuth extends Controller {
                     'zone_id' => 0,
                     'social_id' => $result->data->id,
                 );
-                
+
                 $return_data = $this->toLoginRegister($customer);
 
-                if($return_data['status']){
+                if ($return_data['status']) {
 
                     $this->response->setOutput('<script>
-                        window.opener.document.location = '.$return_data['redirect'].';
+                        window.opener.document.location = ' . $return_data['redirect'] . ';
                         window.close();
                         </script>');
-                
                 } else {
-                    echo $return_data['text']; exit;
+                    echo $return_data['text'];
+                    exit;
                 }
             } else {
-                echo 'not find user'; exit;
+                echo 'not find user';
+                exit;
             }
         }
     }
 
     // login or redister user
-    private function toLoginRegister($customer){
-        
+    private function toLoginRegister($customer)
+    {
+
         $redirect_after = 'window.opener.document.location';
         $redirect_after_add = '"' . $this->url->link('account/account', '', 'SSL') . '"';
         //$redirect_after_register = $this->url->link('extension/module/social_auth/register', '', 'SSL');
         $redirect_after_register = '"' . $this->url->link('account/register', '', 'SSL') . '"';
-        
-        if($customer['social_id']){
+
+        if ($customer['social_id']) {
             $this->load->model('account/customer');
 
             $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE social_id = '" . (string)$customer['social_id'] . "'");
-            
+
             $customer_info = $customer_query->row;
-            
+
             if ($customer_info) {
-                if(!$customer_info['approved']){
+                if (!$customer_info['approved']) {
                     return ['status' => false, 'text' => 'not approved'];
                 } else {
                     // login customer
                     if ($this->customer->login($customer_info['email'], "", true)) {
                         $this->login($customer_info);
 
-                        return ['status' => true, 'text' => 'login','redirect' => $redirect_after];
-
+                        return ['status' => true, 'text' => 'login', 'redirect' => $redirect_after];
                     } else {
                         return ['status' => false, 'text' => 'not login'];
                         $this->model_account_customer->deleteLoginAttempts($customer_info['email']);
@@ -423,12 +452,12 @@ class ControllerExtensionModuleSocialAuth extends Controller {
             } else {
                 // add customer
 
-                if($customer['email']){
+                if ($customer['email']) {
                     $customer_id = $this->model_account_customer->addCustomer($customer);
 
                     $this->db->query("UPDATE " . DB_PREFIX . "customer SET social_id = '" . (string)$customer['social_id'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
 
-                    if($customer_id){
+                    if ($customer_id) {
 
                         $customer_info = $this->model_account_customer->getCustomer($customer_id);
 
@@ -436,8 +465,7 @@ class ControllerExtensionModuleSocialAuth extends Controller {
 
                             $this->login($customer_info);
 
-                            return ['status' => true, 'text' => 'login','redirect' => $redirect_after_add];
-
+                            return ['status' => true, 'text' => 'login', 'redirect' => $redirect_after_add];
                         } else {
                             return ['status' => false, 'text' => 'not login'];
                             $this->model_account_customer->deleteLoginAttempts($customer_info['email']);
@@ -449,23 +477,24 @@ class ControllerExtensionModuleSocialAuth extends Controller {
 
                     $this->session->data['social_auth'] = $customer;
 
-                    return ['status' => true, 'text' => 'login','redirect' => $redirect_after_register];
-                    
+                    return ['status' => true, 'text' => 'login', 'redirect' => $redirect_after_register];
+
                     // not email
                 }
             }
         }
     }
-    
-    // method unset guest data with login 
-    protected function login($customer_info){
+
+    // method unset guest data with login
+    protected function login($customer_info)
+    {
 
         $this->load->model('account/customer');
         $this->model_account_customer->addLoginAttempt($customer_info['email']);
 
         // login OK
         unset($this->session->data['guest']);
-        
+
         // Default Shipping Address
         $this->load->model('account/address');
         if ($this->config->get('config_tax_customer') == 'payment') {
@@ -487,7 +516,8 @@ class ControllerExtensionModuleSocialAuth extends Controller {
 
 
     // get curl POST
-    private function getTokenWithCurl($url = '',$data = array()){
+    private function getTokenWithCurl($url = '', $data = array())
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -496,19 +526,22 @@ class ControllerExtensionModuleSocialAuth extends Controller {
         ));
         curl_setopt($ch, CURLOPT_POST, 1); //передача данных методом POST
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //теперь curl вернет нам ответ, а не выведет
-        curl_setopt($ch, CURLOPT_POSTFIELDS, //тут переменные которые будут переданы методом POST
+        curl_setopt(
+            $ch,
+            CURLOPT_POSTFIELDS, //тут переменные которые будут переданы методом POST
             http_build_query($data)
         );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 40);
         curl_setopt($ch, CURLOPT_USERAGENT, 'PHP Bot');
         $data = curl_exec($ch);
         curl_close($ch);
-        
+
         return json_decode($data);
     }
-    
+
     // get curl GET
-    protected function getCurl($url){
+    protected function getCurl($url)
+    {
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -526,5 +559,4 @@ class ControllerExtensionModuleSocialAuth extends Controller {
 
         return $data;
     }
-
 }
