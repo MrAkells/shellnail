@@ -7,6 +7,15 @@ class ControllerNewsBlogCategory extends Controller {
 		$this->load->model('newsblog/article');
 
 		$this->load->model('tool/image');
+		$popular_info_id = (int)$this->config->get('config_popular_news_id');
+		$popular_news_category_id = 0;
+		$query = $this->db->query("SELECT `query` FROM " . DB_PREFIX . "url_alias WHERE keyword = 'popular-news' LIMIT 1");
+		if ($query->num_rows) {
+			$parts = explode('=', $query->row['query'], 2);
+			if (count($parts) === 2 && $parts[0] === 'newsblog_category_id') {
+				$popular_news_category_id = (int)$parts[1];
+			}
+		}
 
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
@@ -52,6 +61,9 @@ class ControllerNewsBlogCategory extends Controller {
 		$category_info = $this->model_newsblog_category->getCategory($category_id);
 
 		if ($category_info) {
+			$is_popular_news = ($popular_news_category_id && $category_id === $popular_news_category_id);
+			$force_canonical = $is_popular_news;
+			$data['is_popular_news'] = $is_popular_news;
 
 			//for no errors with versions < 20160920
 			$articles_image_size=array($this->config->get($this->config->get('config_theme') . '_image_product_width'),$this->config->get($this->config->get('config_theme') . '_image_product_height'));
@@ -81,6 +93,24 @@ class ControllerNewsBlogCategory extends Controller {
 				$data['heading_title'] = $category_info['name'];
 			}
 
+			$data['show_description'] = false;
+			if ($popular_info_id && $is_popular_news) {
+				$this->load->model('catalog/information');
+				$information_info = $this->model_catalog_information->getInformation($popular_info_id);
+				if ($information_info) {
+					$this->document->setTitle($information_info['meta_title'] ? $information_info['meta_title'] : $information_info['title']);
+					if ($information_info['meta_description']) {
+						$this->document->setDescription((mb_detect_encoding($information_info['meta_description']) == 'UTF-8' ? $information_info['meta_description'] : mb_convert_encoding($information_info['meta_description'], 'utf-8', "HTML-ENTITIES")));
+					}
+					if ($information_info['meta_keyword']) {
+						$this->document->setKeywords($information_info['meta_keyword']);
+					}
+					$data['heading_title'] = $information_info['meta_h1'] ? $information_info['meta_h1'] : $information_info['title'];
+					$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
+					$data['show_description'] = true;
+				}
+			}
+
 			$data['text_empty'] = $this->language->get('text_empty');
 			$data['button_continue'] = $this->language->get('button_continue');
 			$data['text_refine'] = $this->language->get('text_refine');
@@ -102,7 +132,9 @@ class ControllerNewsBlogCategory extends Controller {
 				$data['thumb'] 		= '';
 			}
 
-			$data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+			if (!isset($data['description'])) {
+				$data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+			}
 
 			$data['categories'] = array();
 
@@ -192,7 +224,7 @@ class ControllerNewsBlogCategory extends Controller {
 				$data['results'] = sprintf($this->language->get('text_pagination'), ($article_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($article_total - $limit)) ? $article_total : ((($page - 1) * $limit) + $limit), $article_total, ceil($article_total / $limit));
 
 				// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
-				if ($page == 1) {
+				if ($page == 1 && !$force_canonical) {
 				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'], 'SSL'), 'canonical');
 				} elseif ($page == 2) {
 				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'], 'SSL'), 'prev');
@@ -203,6 +235,10 @@ class ControllerNewsBlogCategory extends Controller {
 				if ($limit && ceil($article_total / $limit) > $page) {
 				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'] . '&page='. ($page + 1), 'SSL'), 'next');
 				}
+			}
+
+			if ($force_canonical && $page == 1) {
+				$this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'], 'SSL'), 'canonical');
 			}
 
 			$data['canonical']=$this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'], 'SSL');

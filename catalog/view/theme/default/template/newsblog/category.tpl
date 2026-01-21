@@ -15,8 +15,13 @@
       </ul>
       <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>
       <h1 class="title-article" itemprop="name"><?php echo $heading_title; ?></h1>
+      <?php if (!empty($show_description) && !empty($description)) { ?>
+      <div class="newsblog-category-description">
+        <?php echo $description; ?>
+      </div>
+      <?php } ?>
     
-   
+  
       <?php if ($articles) { ?>
       <div class="row row-flex row-article">
         <?php foreach ($articles as $article) { ?>
@@ -33,7 +38,11 @@
             
             <div class="caption">
               <p class="article-date"><?php echo $article['date']; ?></p>
+              <?php if (!empty($is_popular_news)) { ?>
+              <div class="title-news"><strong><a href="<?php echo $article['href']; ?>"><?php echo $article['name']; ?></a></strong></div>
+              <?php } else { ?>
               <h4 class="title-news"><a href="<?php echo $article['href']; ?>"><?php echo $article['name']; ?></a></h4>
+              <?php } ?>
               <p class="desctiption-news"><?php echo $article['preview']; ?></p>
             </div>
             </div>  
