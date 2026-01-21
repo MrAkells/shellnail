@@ -1150,6 +1150,24 @@
                 </div>
               </fieldset>
               <fieldset>
+                <legend><?php echo $text_brands; ?></legend>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-brands"><span data-toggle="tooltip" title="<?php echo $help_brands; ?>"><?php echo $entry_brands; ?></span></label>
+                  <div class="col-sm-10">
+                    <select name="config_brands_id" id="input-brands" class="form-control">
+                      <option value="0"><?php echo $text_none; ?></option>
+                      <?php foreach ($informations as $information) { ?>
+                      <?php if ($information['information_id'] == $config_brands_id) { ?>
+                      <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+                      <?php } else { ?>
+                      <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+                      <?php } ?>
+                      <?php } ?>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
                 <legend><?php echo $text_captcha; ?></legend>
                 <div class="form-group">
                   <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="<?php echo $help_captcha; ?>"><?php echo $entry_captcha; ?></span></label>

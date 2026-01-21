@@ -7,6 +7,14 @@ class ControllerNewsBlogCategory extends Controller {
 		$this->load->model('newsblog/article');
 
 		$this->load->model('tool/image');
+		$popular_news_category_id = 0;
+		$query = $this->db->query("SELECT `query` FROM " . DB_PREFIX . "url_alias WHERE keyword = 'popular-news' LIMIT 1");
+		if ($query->num_rows) {
+			$parts = explode('=', $query->row['query'], 2);
+			if (count($parts) === 2 && $parts[0] === 'newsblog_category_id') {
+				$popular_news_category_id = (int)$parts[1];
+			}
+		}
 
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
@@ -52,6 +60,8 @@ class ControllerNewsBlogCategory extends Controller {
 		$category_info = $this->model_newsblog_category->getCategory($category_id);
 
 		if ($category_info) {
+			$is_popular_news = ($popular_news_category_id && $category_id === $popular_news_category_id);
+			$data['is_popular_news'] = $is_popular_news;
 
 			//for no errors with versions < 20160920
 			$articles_image_size=array($this->config->get($this->config->get('config_theme') . '_image_product_width'),$this->config->get($this->config->get('config_theme') . '_image_product_height'));

@@ -2231,8 +2231,10 @@ h2.title-promotions {
   margin-bottom: 5px;
 }
 .title-news a {
-  color: #303030;
+  color: #161616;
   font-size: 14px;
+  font-family: "Roboto Bold";
+  font-weight: 500;
   border-bottom: 1px solid #303030;
 }
 .title-news {
