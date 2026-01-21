@@ -9,6 +9,27 @@ class ControllerExtensionModuleSocialAuth extends Controller
         @file_put_contents(DIR_LOGS . 'facebook_oauth.log', $line . "\n", FILE_APPEND);
     }
 
+    private function buildSocialRedirectScript($redirectUrl)
+    {
+        $redirectUrl = (string)$redirectUrl;
+
+        return '<script>
+            (function(){
+                var url = ' . json_encode($redirectUrl) . ';
+                try {
+                    if (window.opener && window.opener.location) {
+                        window.opener.location = url;
+                        window.close();
+                    } else {
+                        window.location = url;
+                    }
+                } catch(e) {
+                    window.location = url;
+                }
+            })();
+            </script>';
+    }
+
     public function index()
     {
         echo 'false';
@@ -250,10 +271,7 @@ class ControllerExtensionModuleSocialAuth extends Controller
 
                 if ($return_data['status']) {
 
-                    $this->response->setOutput('<script>
-                        window.opener.document.location = ' . $return_data['redirect'] . ';
-                        window.close();
-                        </script>');
+                    $this->response->setOutput($this->buildSocialRedirectScript($return_data['redirect_url']));
                 } else {
                     echo $return_data['text'];
                     exit;
@@ -303,22 +321,7 @@ class ControllerExtensionModuleSocialAuth extends Controller
             // Avoid exchanging the same authorization code multiple times (mobile browsers can reload/prefetch).
             if (isset($this->session->data['fb_oauth_last_code']) && (string)$this->session->data['fb_oauth_last_code'] === $code) {
                 if (!empty($this->session->data['fb_oauth_last_redirect_url'])) {
-                    $redirect_url = (string)$this->session->data['fb_oauth_last_redirect_url'];
-                    $this->response->setOutput('<script>
-                        (function(){
-                            var url = ' . json_encode($redirect_url) . ';
-                            try {
-                                if (window.opener && window.opener.location) {
-                                    window.opener.location = url;
-                                    window.close();
-                                } else {
-                                    window.location = url;
-                                }
-                            } catch(e) {
-                                window.location = url;
-                            }
-                        })();
-                        </script>');
+                    $this->response->setOutput($this->buildSocialRedirectScript((string)$this->session->data['fb_oauth_last_redirect_url']));
                     return;
                 }
             }
@@ -341,22 +344,7 @@ class ControllerExtensionModuleSocialAuth extends Controller
                 // If the code was already used but we did succeed earlier in this session, just redirect again.
                 if (isset($data->error) && isset($data->error->error_subcode) && (int)$data->error->error_subcode === 36009) {
                     if (!empty($this->session->data['fb_oauth_last_redirect_url'])) {
-                        $redirect_url = (string)$this->session->data['fb_oauth_last_redirect_url'];
-                        $this->response->setOutput('<script>
-                            (function(){
-                                var url = ' . json_encode($redirect_url) . ';
-                                try {
-                                    if (window.opener && window.opener.location) {
-                                        window.opener.location = url;
-                                        window.close();
-                                    } else {
-                                        window.location = url;
-                                    }
-                                } catch(e) {
-                                    window.location = url;
-                                }
-                            })();
-                            </script>');
+                        $this->response->setOutput($this->buildSocialRedirectScript((string)$this->session->data['fb_oauth_last_redirect_url']));
                         return;
                     }
                 }
@@ -411,24 +399,9 @@ class ControllerExtensionModuleSocialAuth extends Controller
                 if ($return_data['status']) {
 
                     // Save redirect url so we can safely repeat it if the callback page reloads.
-                    $this->session->data['fb_oauth_last_redirect_url'] = trim($return_data['redirect'], "\"'");
+                    $this->session->data['fb_oauth_last_redirect_url'] = (string)$return_data['redirect_url'];
 
-                    $redirect_url = $this->session->data['fb_oauth_last_redirect_url'];
-                    $this->response->setOutput('<script>
-                        (function(){
-                            var url = ' . json_encode($redirect_url) . ';
-                            try {
-                                if (window.opener && window.opener.location) {
-                                    window.opener.location = url;
-                                    window.close();
-                                } else {
-                                    window.location = url;
-                                }
-                            } catch(e) {
-                                window.location = url;
-                            }
-                        })();
-                        </script>');
+                    $this->response->setOutput($this->buildSocialRedirectScript($this->session->data['fb_oauth_last_redirect_url']));
                 } else {
                     echo $return_data['text'];
                     exit;
@@ -494,10 +467,7 @@ class ControllerExtensionModuleSocialAuth extends Controller
 
                 if ($return_data['status']) {
 
-                    $this->response->setOutput('<script>
-                        window.opener.document.location = ' . $return_data['redirect'] . ';
-                        window.close();
-                        </script>');
+                    $this->response->setOutput($this->buildSocialRedirectScript($return_data['redirect_url']));
                 } else {
                     echo $return_data['text'];
                     exit;
@@ -513,10 +483,10 @@ class ControllerExtensionModuleSocialAuth extends Controller
     private function toLoginRegister($customer)
     {
 
-        $redirect_after = 'window.opener.document.location';
-        $redirect_after_add = '"' . $this->url->link('account/account', '', 'SSL') . '"';
-        //$redirect_after_register = $this->url->link('extension/module/social_auth/register', '', 'SSL');
-        $redirect_after_register = '"' . $this->url->link('account/register', '', 'SSL') . '"';
+        $redirect_account = $this->url->link('account/account', '', 'SSL');
+        // If you want a custom social register page, switch this back:
+        // $redirect_register = $this->url->link('extension/module/social_auth/register', '', 'SSL');
+        $redirect_register = $this->url->link('account/register', '', 'SSL');
 
         if ($customer['social_id']) {
             $this->load->model('account/customer');
@@ -533,7 +503,7 @@ class ControllerExtensionModuleSocialAuth extends Controller
                     if ($this->customer->login($customer_info['email'], "", true)) {
                         $this->login($customer_info);
 
-                        return ['status' => true, 'text' => 'login', 'redirect' => $redirect_after];
+                        return ['status' => true, 'text' => 'login', 'redirect_url' => $redirect_account];
                     } else {
                         return ['status' => false, 'text' => 'not login'];
                         $this->model_account_customer->deleteLoginAttempts($customer_info['email']);
@@ -555,7 +525,7 @@ class ControllerExtensionModuleSocialAuth extends Controller
 
                             $this->login($customer_info);
 
-                            return ['status' => true, 'text' => 'login', 'redirect' => $redirect_after_add];
+                            return ['status' => true, 'text' => 'login', 'redirect_url' => $redirect_account];
                         } else {
                             return ['status' => false, 'text' => 'not login'];
                             $this->model_account_customer->deleteLoginAttempts($customer_info['email']);
@@ -567,7 +537,7 @@ class ControllerExtensionModuleSocialAuth extends Controller
 
                     $this->session->data['social_auth'] = $customer;
 
-                    return ['status' => true, 'text' => 'login', 'redirect' => $redirect_after_register];
+                    return ['status' => true, 'text' => 'login', 'redirect_url' => $redirect_register];
 
                     // not email
                 }
