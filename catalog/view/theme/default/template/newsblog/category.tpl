@@ -38,11 +38,7 @@
             
             <div class="caption">
               <p class="article-date"><?php echo $article['date']; ?></p>
-              <?php if (!empty($is_popular_news)) { ?>
               <div class="title-news"><strong><a href="<?php echo $article['href']; ?>"><?php echo $article['name']; ?></a></strong></div>
-              <?php } else { ?>
-              <h4 class="title-news"><a href="<?php echo $article['href']; ?>"><?php echo $article['name']; ?></a></h4>
-              <?php } ?>
               <p class="desctiption-news"><?php echo $article['preview']; ?></p>
             </div>
             </div>  
