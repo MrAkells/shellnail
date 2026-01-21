@@ -30,6 +30,14 @@ class ControllerExtensionModuleSocialAuth extends Controller
             </script>';
     }
 
+    private function flushSession()
+    {
+        // Ensure session data is persisted before client-side redirect.
+        if (function_exists('session_write_close')) {
+            @session_write_close();
+        }
+    }
+
     public function index()
     {
         echo 'false';
@@ -271,7 +279,9 @@ class ControllerExtensionModuleSocialAuth extends Controller
 
                 if ($return_data['status']) {
 
+                    $this->flushSession();
                     $this->response->setOutput($this->buildSocialRedirectScript($return_data['redirect_url']));
+                    return;
                 } else {
                     echo $return_data['text'];
                     exit;
@@ -321,6 +331,7 @@ class ControllerExtensionModuleSocialAuth extends Controller
             // Avoid exchanging the same authorization code multiple times (mobile browsers can reload/prefetch).
             if (isset($this->session->data['fb_oauth_last_code']) && (string)$this->session->data['fb_oauth_last_code'] === $code) {
                 if (!empty($this->session->data['fb_oauth_last_redirect_url'])) {
+                    $this->flushSession();
                     $this->response->setOutput($this->buildSocialRedirectScript((string)$this->session->data['fb_oauth_last_redirect_url']));
                     return;
                 }
@@ -344,6 +355,7 @@ class ControllerExtensionModuleSocialAuth extends Controller
                 // If the code was already used but we did succeed earlier in this session, just redirect again.
                 if (isset($data->error) && isset($data->error->error_subcode) && (int)$data->error->error_subcode === 36009) {
                     if (!empty($this->session->data['fb_oauth_last_redirect_url'])) {
+                        $this->flushSession();
                         $this->response->setOutput($this->buildSocialRedirectScript((string)$this->session->data['fb_oauth_last_redirect_url']));
                         return;
                     }
@@ -401,7 +413,9 @@ class ControllerExtensionModuleSocialAuth extends Controller
                     // Save redirect url so we can safely repeat it if the callback page reloads.
                     $this->session->data['fb_oauth_last_redirect_url'] = (string)$return_data['redirect_url'];
 
+                    $this->flushSession();
                     $this->response->setOutput($this->buildSocialRedirectScript($this->session->data['fb_oauth_last_redirect_url']));
+                    return;
                 } else {
                     echo $return_data['text'];
                     exit;
@@ -467,7 +481,9 @@ class ControllerExtensionModuleSocialAuth extends Controller
 
                 if ($return_data['status']) {
 
+                    $this->flushSession();
                     $this->response->setOutput($this->buildSocialRedirectScript($return_data['redirect_url']));
+                    return;
                 } else {
                     echo $return_data['text'];
                     exit;
@@ -486,7 +502,7 @@ class ControllerExtensionModuleSocialAuth extends Controller
         $redirect_account = $this->url->link('account/account', '', 'SSL');
         // If you want a custom social register page, switch this back:
         // $redirect_register = $this->url->link('extension/module/social_auth/register', '', 'SSL');
-        $redirect_register = $this->url->link('account/register', '', 'SSL');
+        $redirect_register = $this->url->link('extension/module/social_auth/register', '', 'SSL');
 
         if ($customer['social_id']) {
             $this->load->model('account/customer');
