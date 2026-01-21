@@ -274,19 +274,62 @@ class ControllerExtensionModuleSocialAuth extends Controller
         $facebook_app_id = $this->config->get('social_auth_facebook_app_id');
         $facebook_secret_key = $this->config->get('social_auth_facebook_secret_key');
 
-        $link = 'https://www.facebook.com/v3.2/dialog/oauth?client_id=' . $facebook_app_id . '&redirect_uri=' . urlencode($redirect_href) . '&scope=email,public_profile&response_type=code';
+        if (empty($this->session->data['fb_oauth_state'])) {
+            $this->session->data['fb_oauth_state'] = bin2hex(random_bytes(16));
+        }
+        $state = $this->session->data['fb_oauth_state'];
+
+        $link = 'https://www.facebook.com/v3.2/dialog/oauth?client_id=' . $facebook_app_id . '&redirect_uri=' . urlencode($redirect_href) . '&scope=email,public_profile&response_type=code&state=' . urlencode($state);
 
         if (!isset($this->request->get['code'])) {
 
             $this->response->redirect($link);
         } else {
 
-            $code = $this->request->get['code'];
+            $code = (string)$this->request->get['code'];
+            $incoming_state = isset($this->request->get['state']) ? (string)$this->request->get['state'] : '';
+
+            if (!empty($incoming_state) && isset($this->session->data['fb_oauth_state']) && $incoming_state !== (string)$this->session->data['fb_oauth_state']) {
+                $this->logFacebookAuth('state_mismatch', array(
+                    'expected' => (string)$this->session->data['fb_oauth_state'],
+                    'got' => $incoming_state,
+                    'request_uri' => isset($this->request->server['REQUEST_URI']) ? $this->request->server['REQUEST_URI'] : null,
+                    'user_agent' => isset($this->request->server['HTTP_USER_AGENT']) ? $this->request->server['HTTP_USER_AGENT'] : null,
+                ));
+                echo 'Facebook state mismatch';
+                exit;
+            }
+
+            // Avoid exchanging the same authorization code multiple times (mobile browsers can reload/prefetch).
+            if (isset($this->session->data['fb_oauth_last_code']) && (string)$this->session->data['fb_oauth_last_code'] === $code) {
+                if (!empty($this->session->data['fb_oauth_last_redirect_url'])) {
+                    $redirect_url = (string)$this->session->data['fb_oauth_last_redirect_url'];
+                    $this->response->setOutput('<script>
+                        (function(){
+                            var url = ' . json_encode($redirect_url) . ';
+                            try {
+                                if (window.opener && window.opener.location) {
+                                    window.opener.location = url;
+                                    window.close();
+                                } else {
+                                    window.location = url;
+                                }
+                            } catch(e) {
+                                window.location = url;
+                            }
+                        })();
+                        </script>');
+                    return;
+                }
+            }
 
             $url_token = 'https://graph.facebook.com/v3.2/oauth/access_token?client_id=' . $facebook_app_id . '&redirect_uri=' . urlencode($redirect_href) . '&client_secret=' . $facebook_secret_key . '&code=' . urlencode($code);
 
             $data = $this->getCurl($url_token);
             if (!isset($data->access_token) || !$data->access_token || isset($data->error)) {
+                // Mark last seen code so reloads don't keep hammering the token endpoint.
+                $this->session->data['fb_oauth_last_code'] = $code;
+
                 $this->logFacebookAuth('token_exchange_failed', array(
                     'redirect_href' => $redirect_href,
                     'request_uri' => isset($this->request->server['REQUEST_URI']) ? $this->request->server['REQUEST_URI'] : null,
@@ -295,6 +338,29 @@ class ControllerExtensionModuleSocialAuth extends Controller
                     'fb_response' => $data,
                 ));
 
+                // If the code was already used but we did succeed earlier in this session, just redirect again.
+                if (isset($data->error) && isset($data->error->error_subcode) && (int)$data->error->error_subcode === 36009) {
+                    if (!empty($this->session->data['fb_oauth_last_redirect_url'])) {
+                        $redirect_url = (string)$this->session->data['fb_oauth_last_redirect_url'];
+                        $this->response->setOutput('<script>
+                            (function(){
+                                var url = ' . json_encode($redirect_url) . ';
+                                try {
+                                    if (window.opener && window.opener.location) {
+                                        window.opener.location = url;
+                                        window.close();
+                                    } else {
+                                        window.location = url;
+                                    }
+                                } catch(e) {
+                                    window.location = url;
+                                }
+                            })();
+                            </script>');
+                        return;
+                    }
+                }
+
                 if (isset($data->error) && isset($data->error->message)) {
                     echo (string)$data->error->message;
                     exit;
@@ -302,6 +368,15 @@ class ControllerExtensionModuleSocialAuth extends Controller
                 echo 'Facebook token error';
                 exit;
             }
+
+            $this->session->data['fb_oauth_last_code'] = $code;
+            $this->logFacebookAuth('token_exchange_success', array(
+                'redirect_href' => $redirect_href,
+                'request_uri' => isset($this->request->server['REQUEST_URI']) ? $this->request->server['REQUEST_URI'] : null,
+                'http_host' => isset($this->request->server['HTTP_HOST']) ? $this->request->server['HTTP_HOST'] : null,
+                'user_agent' => isset($this->request->server['HTTP_USER_AGENT']) ? $this->request->server['HTTP_USER_AGENT'] : null,
+                'expires_in' => isset($data->expires_in) ? $data->expires_in : null,
+            ));
 
             $url = 'https://graph.facebook.com/v3.2/me?fields=email,about,first_name,last_name&access_token=' . urlencode($data->access_token);
             $result = $this->getCurl($url);
@@ -335,9 +410,24 @@ class ControllerExtensionModuleSocialAuth extends Controller
 
                 if ($return_data['status']) {
 
+                    // Save redirect url so we can safely repeat it if the callback page reloads.
+                    $this->session->data['fb_oauth_last_redirect_url'] = trim($return_data['redirect'], "\"'");
+
+                    $redirect_url = $this->session->data['fb_oauth_last_redirect_url'];
                     $this->response->setOutput('<script>
-                        window.opener.document.location = ' . $return_data['redirect'] . ';
-                        window.close();
+                        (function(){
+                            var url = ' . json_encode($redirect_url) . ';
+                            try {
+                                if (window.opener && window.opener.location) {
+                                    window.opener.location = url;
+                                    window.close();
+                                } else {
+                                    window.location = url;
+                                }
+                            } catch(e) {
+                                window.location = url;
+                            }
+                        })();
                         </script>');
                 } else {
                     echo $return_data['text'];
