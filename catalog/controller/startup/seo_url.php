@@ -8,6 +8,18 @@ class ControllerStartupSeoUrl extends Controller {
 
 		if (isset($this->request->get['_route_'])) {
 			$route_trim = trim($this->request->get['_route_'], '/');
+			if (strpos($route_trim, 'ua/') === 0) {
+				$route_trim = substr($route_trim, 3);
+				if ($route_trim === '') {
+					unset($this->request->get['_route_']);
+				} else {
+					$this->request->get['_route_'] = $route_trim;
+				}
+			}
+		}
+
+		if (isset($this->request->get['_route_'])) {
+			$route_trim = trim($this->request->get['_route_'], '/');
 
 			if ($route_trim === 'sitemap' || $route_trim === 'ua/sitemap') {
 				$this->request->get['route'] = 'information/sitemap';
