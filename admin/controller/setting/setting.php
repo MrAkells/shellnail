@@ -57,6 +57,7 @@ class ControllerSettingSetting extends Controller {
 		$data['text_affiliate'] = $this->language->get('text_affiliate');
 		$data['text_return'] = $this->language->get('text_return');
 		$data['text_sitemap'] = $this->language->get('text_sitemap');
+		$data['text_brands'] = $this->language->get('text_brands');
 		$data['text_captcha'] = $this->language->get('text_captcha');
 		$data['text_register'] = $this->language->get('text_register');
 		$data['text_shipping'] = $this->language->get('text_shipping');
@@ -145,6 +146,7 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_return'] = $this->language->get('entry_return');
 		$data['entry_return_status'] = $this->language->get('entry_return_status');
 		$data['entry_sitemap'] = $this->language->get('entry_sitemap');
+		$data['entry_brands'] = $this->language->get('entry_brands');
 		$data['entry_captcha'] = $this->language->get('entry_captcha');
 		$data['entry_captcha_page'] = $this->language->get('entry_captcha_page');
 		$data['entry_logo'] = $this->language->get('entry_logo');
@@ -248,6 +250,7 @@ class ControllerSettingSetting extends Controller {
 		$data['help_return'] = $this->language->get('help_return');
 		$data['help_return_status'] = $this->language->get('help_return_status');
 		$data['help_sitemap'] = $this->language->get('help_sitemap');
+		$data['help_brands'] = $this->language->get('help_brands');
 		$data['help_captcha'] = $this->language->get('help_captcha');
 		$data['help_icon'] = $this->language->get('help_icon');
 		$data['help_ftp_root'] = $this->language->get('help_ftp_root');
@@ -979,6 +982,12 @@ class ControllerSettingSetting extends Controller {
 			$data['config_sitemap_id'] = $this->request->post['config_sitemap_id'];
 		} else {
 			$data['config_sitemap_id'] = $this->config->get('config_sitemap_id');
+		}
+
+		if (isset($this->request->post['config_brands_id'])) {
+			$data['config_brands_id'] = $this->request->post['config_brands_id'];
+		} else {
+			$data['config_brands_id'] = $this->config->get('config_brands_id');
 		}
 
 		if (isset($this->request->post['config_return_status_id'])) {

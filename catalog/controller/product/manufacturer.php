@@ -7,9 +7,31 @@ class ControllerProductManufacturer extends Controller {
 
 		$this->load->model('tool/image');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$this->load->model('catalog/information');
 
-		$data['heading_title'] = $this->language->get('heading_title');
+		$information_info = array();
+		$brands_information_id = (int)$this->config->get('config_brands_id');
+		if ($brands_information_id) {
+			$information_info = $this->model_catalog_information->getInformation($brands_information_id);
+		}
+
+		$data['description'] = '';
+
+		if ($information_info) {
+			$this->document->setTitle($information_info['meta_title'] ? $information_info['meta_title'] : $information_info['title']);
+			if ($information_info['meta_description']) {
+				$this->document->setDescription((mb_detect_encoding($information_info['meta_description']) == 'UTF-8' ? $information_info['meta_description'] : mb_convert_encoding($information_info['meta_description'], 'utf-8', "HTML-ENTITIES")));
+			}
+			if ($information_info['meta_keyword']) {
+				$this->document->setKeywords($information_info['meta_keyword']);
+			}
+			$data['heading_title'] = $information_info['meta_h1'] ? $information_info['meta_h1'] : $information_info['title'];
+			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
+		} else {
+			$this->document->setTitle($this->language->get('heading_title'));
+			$data['heading_title'] = $this->language->get('heading_title');
+		}
+		$this->document->addLink($this->url->link('product/manufacturer'), 'canonical');
 
 		$data['text_index'] = $this->language->get('text_index');
 		$data['text_empty'] = $this->language->get('text_empty');
