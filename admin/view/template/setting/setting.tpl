@@ -1168,24 +1168,6 @@
                 </div>
               </fieldset>
               <fieldset>
-                <legend><?php echo $text_popular_news; ?></legend>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label" for="input-popular-news"><span data-toggle="tooltip" title="<?php echo $help_popular_news; ?>"><?php echo $entry_popular_news; ?></span></label>
-                  <div class="col-sm-10">
-                    <select name="config_popular_news_id" id="input-popular-news" class="form-control">
-                      <option value="0"><?php echo $text_none; ?></option>
-                      <?php foreach ($informations as $information) { ?>
-                      <?php if ($information['information_id'] == $config_popular_news_id) { ?>
-                      <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
-                      <?php } else { ?>
-                      <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
-                      <?php } ?>
-                      <?php } ?>
-                    </select>
-                  </div>
-                </div>
-              </fieldset>
-              <fieldset>
                 <legend><?php echo $text_captcha; ?></legend>
                 <div class="form-group">
                   <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="<?php echo $help_captcha; ?>"><?php echo $entry_captcha; ?></span></label>

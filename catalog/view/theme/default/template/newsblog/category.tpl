@@ -15,7 +15,7 @@
       </ul>
       <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>
       <h1 class="title-article" itemprop="name"><?php echo $heading_title; ?></h1>
-      <?php if (!empty($show_description) && !empty($description)) { ?>
+      <?php if (!empty($is_popular_news) && !empty($description)) { ?>
       <div class="newsblog-category-description">
         <?php echo $description; ?>
       </div>
