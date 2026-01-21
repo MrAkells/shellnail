@@ -154,6 +154,18 @@ class ControllerInformationContact extends Controller {
 		$this->load->model('catalog/information');
 		$information_info = $this->model_catalog_information->getInformation(12);
 		if ($information_info) {
+			if ($information_info['meta_title']) {
+				$this->document->setTitle($information_info['meta_title']);
+			}
+			if ($information_info['meta_description']) {
+				$this->document->setDescription((mb_detect_encoding($information_info['meta_description']) == 'UTF-8' ? $information_info['meta_description'] : mb_convert_encoding($information_info['meta_description'],'utf-8', "HTML-ENTITIES")));
+			}
+			if ($information_info['meta_keyword']) {
+				$this->document->setKeywords($information_info['meta_keyword']);
+			}
+			if (!empty($information_info['meta_h1'])) {
+				$data['heading_title'] = $information_info['meta_h1'];
+			}
 			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
 		}
 

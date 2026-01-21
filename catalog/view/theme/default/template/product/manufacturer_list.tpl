@@ -18,6 +18,11 @@
         <?php } ?>
       </ul>
       <h1 itemprop="name"><?php echo $heading_title; ?></h1>
+      <?php if (!empty($description)) { ?>
+      <div class="brand-description">
+        <?php echo $description; ?>
+      </div>
+      <?php } ?>
       <div class="row tile-of-brand">
         <?php if ($categories) { ?>
     
