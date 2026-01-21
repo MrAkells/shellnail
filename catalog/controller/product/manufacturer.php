@@ -205,14 +205,27 @@ class ControllerProductManufacturer extends Controller {
 				'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url)
 			);
 
-			if ($manufacturer_info['meta_title']) {
-				$this->document->setTitle($manufacturer_info['meta_title']);
-			} else {
-				$this->document->setTitle($manufacturer_info['name']);
-			}
+			$text_page = $this->language->get('text_page');
+			$meta_description = (mb_detect_encoding($manufacturer_info['meta_description']) == 'UTF-8' ? $manufacturer_info['meta_description'] : mb_convert_encoding($manufacturer_info['meta_description'],'utf-8', "HTML-ENTITIES"));
+			if ($page == 1) {
+				if ($manufacturer_info['meta_title']) {
+					$this->document->setTitle($manufacturer_info['meta_title']);
+				} else {
+					$this->document->setTitle($manufacturer_info['name']);
+				}
 
-			$this->document->setDescription((mb_detect_encoding($manufacturer_info['meta_description']) == 'UTF-8' ? $manufacturer_info['meta_description'] : mb_convert_encoding($manufacturer_info['meta_description'],'utf-8', "HTML-ENTITIES")));
-			$this->document->setKeywords($manufacturer_info['meta_keyword']);
+				$this->document->setDescription($meta_description);
+				$this->document->setKeywords($manufacturer_info['meta_keyword']);
+			} else {
+				if ($manufacturer_info['meta_title']) {
+					$this->document->setTitle($manufacturer_info['meta_title'] . $text_page . $page);
+				} else {
+					$this->document->setTitle($manufacturer_info['name'] . $text_page . $page);
+				}
+
+				$this->document->setDescription($meta_description . $text_page . $page);
+				$this->document->setKeywords($manufacturer_info['meta_keyword']);
+			}
 
 			if ($manufacturer_info['meta_h1']) {
 				$data['heading_title'] = $manufacturer_info['meta_h1'];
@@ -431,13 +444,16 @@ class ControllerProductManufacturer extends Controller {
 			$data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
 
 			// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
-			if ($page == 1) {
-			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'canonical');
-			} elseif ($page == 2) {
-			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'prev');
-			} else {
-			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page='. ($page - 1), true), 'prev');
-			}
+				if ($page == 1) {
+				    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'canonical');
+				} elseif ($page == 2) {
+				    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'prev');
+				} else {
+				    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page='. ($page - 1), true), 'prev');
+				}
+				if ($page != 1) {
+				    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'canonical');
+				}
 
 			if ($limit && ceil($product_total / $limit) > $page) {
 			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page='. ($page + 1), true), 'next');

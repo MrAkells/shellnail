@@ -32,6 +32,7 @@ $_['text_po_poryadku_asc']        = 'По порядку ';
 $_['text_most_viewed_desc']        = 'Популярные';
 
 $_['text_newest_desc']        = 'Новиннки';
+$_['text_page']              = ' - стр. ';
 
 $_['btn_more_detailed']        = 'Подробнее';
 $_['btn_less_detailed']        = 'Свернуть';

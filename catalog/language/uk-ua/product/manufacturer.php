@@ -35,6 +35,7 @@ $_['text_most_viewed_asc']        = 'Популярні (по зростанню
 
 $_['text_newest_desc']        = 'Новинки';
 $_['text_newest_asc']        = 'За датою (по зростанню)';
+$_['text_page']               = ' - стор. ';
 
 $_['btn_more_detailed']        = 'Докладніше';
 $_['btn_less_detailed']        = 'Свернуть';

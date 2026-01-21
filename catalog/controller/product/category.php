@@ -139,7 +139,7 @@ class ControllerProductCategory extends Controller {
 			}
 
 			$this->document->setDescription($meta_description.$text_page.$page);
-			$this->document->setKeywords($category_info['meta_keyword'].$text_page.$page);
+			$this->document->setKeywords($category_info['meta_keyword']);
 			}
 		
 
