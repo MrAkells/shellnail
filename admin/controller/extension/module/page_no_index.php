@@ -89,8 +89,11 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		return !$this->error;
 	}
 
-    public function urls()
+	public function urls()
 	{
+		$this->load->model('extension/module/page_no_index');
+		$this->model_extension_module_page_no_index->createTable();
+
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = $this->request->get['filter_name'];
 		} else {
@@ -106,7 +109,7 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		} else {
 			$filter_canonical = null;
 		}
-        if (isset($this->request->get['page'])) {
+		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
 		} else {
 			$page = 1;
@@ -124,7 +127,7 @@ class ControllerExtensionModulePageNoIndex extends Controller
 			$url .= '&filter_canonical=' . $this->request->get['filter_canonical'];
 		}
 
-        if (isset($this->request->get['page'])) {
+		if (isset($this->request->get['page'])) {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
@@ -152,8 +155,8 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		$data['button_add'] = $this->language->get('button_add');
 		$data['button_edit'] = $this->language->get('button_edit');
 		$data['button_delete'] = $this->language->get('button_delete');
-        $data['button_filter'] = $this->language->get('button_filter');
-        $data['token'] = $this->session->data['token'];
+		$data['button_filter'] = $this->language->get('button_filter');
+		$data['token'] = $this->session->data['token'];
 
 		$data['entry_noindex'] = $this->language->get('entry_noindex');
 		$data['entry_canonical'] = $this->language->get('entry_canonical');
@@ -169,14 +172,14 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		$data['urls'] = array();
 
 		$this->load->model('extension/module/page_no_index');
-        $filter_data = array(
+		$filter_data = array(
 			'filter_name'	  => $filter_name,
 			'filter_noindex'	  => $filter_noindex,
 			'filter_canonical'	  => $filter_canonical,
 			'start'           => ($page - 1) * $this->config->get('config_limit_admin'),
 			'limit'           => $this->config->get('config_limit_admin')
 		);
-        $urls_total = $this->model_extension_module_page_no_index->getTotalUrls($filter_data);
+		$urls_total = $this->model_extension_module_page_no_index->getTotalUrls($filter_data);
 		$results = $this->model_extension_module_page_no_index->getUrls($filter_data);
 
 		foreach ($results as $result) {
@@ -229,10 +232,11 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		$this->response->setOutput($this->load->view('extension/module/page_no_index_list', $data));
 	}
 
-    public function add()
+	public function add()
 	{
 		$this->load->language('extension/module/page_no_index');
 		$this->load->model('extension/module/page_no_index');
+		$this->model_extension_module_page_no_index->createTable();
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -253,6 +257,7 @@ class ControllerExtensionModulePageNoIndex extends Controller
 	{
 		$this->load->language('extension/module/page_no_index');
 		$this->load->model('extension/module/page_no_index');
+		$this->model_extension_module_page_no_index->createTable();
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -271,6 +276,7 @@ class ControllerExtensionModulePageNoIndex extends Controller
 	{
 		$this->load->language('extension/module/page_no_index');
 		$this->load->model('extension/module/page_no_index');
+		$this->model_extension_module_page_no_index->createTable();
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -312,6 +318,7 @@ class ControllerExtensionModulePageNoIndex extends Controller
 		$data['entry_canonical'] = $this->language->get('entry_canonical');
 
 		$data['entry_description'] = $this->language->get('entry_description');
+		$data['entry_h1'] = $this->language->get('entry_h1');
 		$data['entry_meta_title'] = $this->language->get('entry_meta_title');
 		$data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
 		$data['entry_meta_description'] = $this->language->get('entry_meta_description');

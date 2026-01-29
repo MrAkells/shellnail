@@ -59,7 +59,7 @@ rozetka.xml
 
 # Modification Files
 /static_sitemap/*
-# Flags 
+# Flags
 # remove sharp char if you want to add flags to gitignore
 # /upload/flags/*
 
@@ -74,6 +74,7 @@ nbproject/
 
 *.sql
 *.zip
+.osp
 
 ocext_google_feed.xml
 admin/view/stylesheet/sd_np_invoice.css

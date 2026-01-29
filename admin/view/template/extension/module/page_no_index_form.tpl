@@ -89,6 +89,12 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-h1<?php echo $language['language_id']; ?>"><?php echo $entry_h1; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="page_description[<?php echo $language['language_id']; ?>][h1]" value="<?php echo isset($page_description[$language['language_id']]) && isset($page_description[$language['language_id']]['h1']) ? $page_description[$language['language_id']]['h1'] : ''; ?>" placeholder="<?php echo $entry_h1; ?>" id="input-h1<?php echo $language['language_id']; ?>" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-meta-title<?php echo $language['language_id']; ?>"><?php echo $entry_meta_title; ?></label>
                 <div class="col-sm-10">
                   <input type="text" name="page_description[<?php echo $language['language_id']; ?>][meta_title]" value="<?php echo isset($page_description[$language['language_id']]) ? $page_description[$language['language_id']]['meta_title'] : ''; ?>" placeholder="<?php echo $entry_meta_title; ?>" id="input-meta-title<?php echo $language['language_id']; ?>" class="form-control" />
@@ -108,7 +114,7 @@
               </div>
             </div>
             <?php } ?>
-          </div>          
+          </div>
         </form>
       </div>
     </div>
