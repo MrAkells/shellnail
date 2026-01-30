@@ -6,10 +6,18 @@
         <div id="content" class="col-md-9">
             <?php echo $content_top; ?>
             <ul class="breadcrumbs list-inline" itemscope itemtype="http://schema.org/BreadcrumbList">
-                <?php $i=0; ?>
-                <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="crumb" href="<?php echo $breadcrumb['href']; ?>"><span itemprop="name"><?php echo $breadcrumb['text']; ?></span></a>
-                    <meta itemprop="position" content="<?php echo $i++; ?>">
+                <?php foreach ($breadcrumbs as $i => $breadcrumb) { ?>
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <?php if ($i + 1 < count($breadcrumbs)) { ?>
+                        <a itemprop="item" class="crumb" href="<?php echo $breadcrumb['href']; ?>">
+                            <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
+                        </a>
+                    <?php } else { ?>
+                        <span class="crumb">
+                            <span itemprop="name"><?php echo $breadcrumb['text']; ?></span>
+                        </span>
+                    <?php } ?>
+                    <meta itemprop="position" content="<?php echo $i; ?>">
                 </li>
                 <?php } ?>
             </ul>
