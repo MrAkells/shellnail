@@ -475,7 +475,15 @@ class ControllerExtensionModuleSdNpInvoice extends Controller
 				$shippingCost = $this->model_extension_module_sd_np_invoice->getShippingCostOrder($order_id);
 
 				$payer_type = "Sender";
-				if ($order_info['payment_code'] == 'privat' && $order_info['shipping_code'] == 'new_mail.new_mail' && $shippingCost > 0) {
+				if ($order_info['shipping_code'] == 'new_mail.new_mail' && $order_info['payment_code'] == 'cod') {
+					$free_total = (float)$this->config->get('new_mail_freetotal');
+					if ($free_total > 0) {
+						$sub_total = $this->model_extension_module_sd_np_invoice->getSubTotalOrder($order_id);
+						if ($sub_total !== null && $sub_total < $free_total) {
+							$payer_type = "Recipient";
+						}
+					}
+				} elseif ($order_info['payment_code'] == 'privat' && $order_info['shipping_code'] == 'new_mail.new_mail' && $shippingCost > 0) {
 					$payer_type = "Recipient";
 				}
 				$ref_city = $this->model_extension_module_sd_np_invoice->getRefCity($order_info['shipping_city']);

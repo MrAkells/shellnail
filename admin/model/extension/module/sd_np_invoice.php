@@ -31,25 +31,24 @@ class ModelExtensionModuleSdNpInvoice extends Model
 
     public function addPackage($data)
     {
-        $this->db->query("INSERT INTO ".DB_PREFIX."np_packaging SET title='". $this->db->escape($data['title'])."', volume='".$this->db->escape($data['volume']) . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "'");
+        $this->db->query("INSERT INTO " . DB_PREFIX . "np_packaging SET title='" . $this->db->escape($data['title']) . "', volume='" . $this->db->escape($data['volume']) . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "'");
 
         return $this->db->getLastId();
     }
 
     public function editPackage($packaging_id, $data)
     {
-        $this->db->query("UPDATE " . DB_PREFIX . "np_packaging  SET  title='".$this->db->escape($data['title'])."', volume='".$this->db->escape($data['volume']) . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] ."' WHERE packaging_id='".(int)$packaging_id."'");
-
+        $this->db->query("UPDATE " . DB_PREFIX . "np_packaging  SET  title='" . $this->db->escape($data['title']) . "', volume='" . $this->db->escape($data['volume']) . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "' WHERE packaging_id='" . (int)$packaging_id . "'");
     }
 
     public function deletePackages($packages_ids)
     {
-        $this->db->query("DELETE FROM ".DB_PREFIX."np_packaging WHERE packaging_id IN (" . implode(",", $packages_ids) .")");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "np_packaging WHERE packaging_id IN (" . implode(",", $packages_ids) . ")");
     }
 
     public function getPackage($id)
     {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "np_packaging  WHERE packaging_id = ". $id);
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "np_packaging  WHERE packaging_id = " . $id);
 
         return $query->row;
     }
@@ -63,55 +62,77 @@ class ModelExtensionModuleSdNpInvoice extends Model
 
     public function getPackageOrder($order_id)
     {
-        $query = $this->db->query("SELECT packaging_id FROM " . DB_PREFIX . "np_invoices  WHERE order_id = ". $order_id);
+        $query = $this->db->query("SELECT packaging_id FROM " . DB_PREFIX . "np_invoices  WHERE order_id = " . $order_id);
 
-        return ($query->num_rows ? $query->row['packaging_id']: false);
+        return ($query->num_rows ? $query->row['packaging_id'] : false);
     }
 
     public function getInvoiceOrder($order_id)
     {
-        $query = $this->db->query("SELECT np_number, is_warning FROM " . DB_PREFIX . "np_invoices  WHERE order_id = ". $order_id);
+        $query = $this->db->query("SELECT np_number, is_warning FROM " . DB_PREFIX . "np_invoices  WHERE order_id = " . $order_id);
 
         return ($query->num_rows ? $query->row : '');
     }
 
     public function setOrderPackage($data)
     {
-        $this->db->query("REPLACE INTO ".DB_PREFIX."np_invoices SET order_id='". (int)$data['order_id']."', packaging_id='". (int)$data['package_id']."'");
-
+        $this->db->query("REPLACE INTO " . DB_PREFIX . "np_invoices SET order_id='" . (int)$data['order_id'] . "', packaging_id='" . (int)$data['package_id'] . "'");
     }
 
     public function getWeightOrder($order_id)
     {
         $query = $this->db->query("SELECT sum(p.weight*op.quantity) as order_weight FROM `oc_order_product` op LEFT JOIN `oc_product` p on (p.`product_id` = op.`product_id`) WHERE `order_id` = " . $order_id);
 
-        return ($query->num_rows ? $query->row['order_weight']/1000: 0);
+        return ($query->num_rows ? $query->row['order_weight'] / 1000 : 0);
     }
 
     public function getShippingCostOrder($order_id)
     {
-        $query = $this->db->query("SELECT `value` FROM `oc_order_total` WHERE  `code` = 'shipping' AND `order_id` = " . $order_id );
-        return ($query->num_rows ? $query->row['value']: 0);
+        $query = $this->db->query("SELECT `value` FROM `oc_order_total` WHERE  `code` = 'shipping' AND `order_id` = " . $order_id);
+        return ($query->num_rows ? $query->row['value'] : 0);
     }
 
-    public function setInvoiceOrder($order_id, $inNumber, $packaging_id, $is_warning){
-        $this->db->query("REPLACE INTO ".DB_PREFIX."np_invoices SET order_id='". (int)$order_id."', np_number='". $inNumber . "', packaging_id=". (int)$packaging_id. ", is_warning=". (int)$is_warning);
+    public function getSubTotalOrder($order_id)
+    {
+        $query = $this->db->query("SELECT `value` FROM `oc_order_total` WHERE `code` = 'sub_total' AND `order_id` = " . (int)$order_id);
+
+        if ($query->num_rows) {
+            return (float)$query->row['value'];
+        }
+
+        return $this->getSubTotalFromProductsOrder($order_id);
+    }
+
+    public function getSubTotalFromProductsOrder($order_id)
+    {
+        $query = $this->db->query("SELECT SUM(`total`) AS sub_total FROM `oc_order_product` WHERE `order_id` = " . (int)$order_id);
+
+        if (!$query->num_rows) {
+            return null;
+        }
+
+        $value = $query->row['sub_total'];
+        return ($value === null ? null : (float)$value);
+    }
+
+    public function setInvoiceOrder($order_id, $inNumber, $packaging_id, $is_warning)
+    {
+        $this->db->query("REPLACE INTO " . DB_PREFIX . "np_invoices SET order_id='" . (int)$order_id . "', np_number='" . $inNumber . "', packaging_id=" . (int)$packaging_id . ", is_warning=" . (int)$is_warning);
     }
 
     public function getRefCity($city)
     {
-        $query = $this->db->query("SELECT `ref` FROM `oc_newmail_city` WHERE `description` = '" . $city ."' OR `description_ru` = '" . $city ."'" );
-        return ($query->num_rows ? $query->row['ref']: '');
+        $query = $this->db->query("SELECT `ref` FROM `oc_newmail_city` WHERE `description` = '" . $city . "' OR `description_ru` = '" . $city . "'");
+        return ($query->num_rows ? $query->row['ref'] : '');
     }
 
     public function getRefOffice($office, $ref_city)
     {
-        $query = $this->db->query("SELECT `ref` FROM `oc_newmail_office` WHERE `city_ref` = '" . $ref_city ."' AND (`description` = '" . $this->db->escape($office) ."' OR `description_ru` = '" . $this->db->escape($office) ."')" );
-        return ($query->num_rows ? $query->row['ref']: '');
+        $query = $this->db->query("SELECT `ref` FROM `oc_newmail_office` WHERE `city_ref` = '" . $ref_city . "' AND (`description` = '" . $this->db->escape($office) . "' OR `description_ru` = '" . $this->db->escape($office) . "')");
+        return ($query->num_rows ? $query->row['ref'] : '');
     }
     public function setCheckInvoiceOrder($ttn)
     {
-        $this->db->query("UPDATE " . DB_PREFIX . "np_invoices  SET  is_warning=0 WHERE np_number='".$ttn."'");
-
+        $this->db->query("UPDATE " . DB_PREFIX . "np_invoices  SET  is_warning=0 WHERE np_number='" . $ttn . "'");
     }
 }
