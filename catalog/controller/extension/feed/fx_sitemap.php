@@ -256,6 +256,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 			}else{
 				$output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
 			}
+			$head_output = $output;
 			//	$output = $output . '<url><loc>'. $host .'</loc><changefreq>daily</changefreq><priority>1</priority></url>'; //главная
 			
 			$data['limit'] = $settings['limit'] ? (int)$settings['limit'] : 49499;
@@ -265,6 +266,10 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 			if ($data['start'] < 0) $data['start'] = 0;
 			
 			$out = array();
+			$product_output = '';
+			$categories_output = '';
+			$other_output = '';
+			$info_output = '';
 
 			if ($settings['product_changefreq'] == 'off') $settings['product_changefreq'] = '';
 			if ($settings['category_changefreq'] == 'off') $settings['category_changefreq'] = '';
@@ -293,7 +298,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 						
 						if ($settings['product_lastmod']) $date = (int)$product['date_modified'] > 2000 ? substr($product['date_modified'], 0, 10) : '';
 						
-						$output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority']);
+						$product_output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority']);
 					}
 					
 				}else if ($mode == 'ultra'){   /////  ULTRA
@@ -330,7 +335,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 						
 						if ($settings['product_lastmod']) $date = (int)$product['date_modified'] > 2000 ? substr($product['date_modified'], 0, 10) : '';
 						
-						$output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority']);
+						$product_output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority']);
 					}
 					
 				}else{   /////  NORMAL
@@ -359,7 +364,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 						
 						if (isset($settings['amp'])) $url = str_replace("&product_id=", "&amp;product_id=", $url);
 						
-						$output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority'], isset($settings['img']) ? $product : array());
+						$product_output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority'], isset($settings['img']) ? $product : array());
 
 					}
 				}
@@ -409,7 +414,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 									
 									$date = $settings['category_lastmod'] ? $category['date_modified'] : '';
 									
-									$out[$i] = $this->xml($url, $date, $settings['category_changefreq'], $settings['category_priority']);
+									$categories_output .= $this->xml($url, $date, $settings['category_changefreq'], $settings['category_priority']);
 								}
 								$i++; if ($i > $max) break(2);								
 							}
@@ -434,7 +439,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 										if ($date == '-0001-11-30') $date = '';									
 									}
 									
-									$out[$i] = $this->xml($url, $date, $settings['category_changefreq'], $settings['category_priority']);
+									$categories_output .= $this->xml($url, $date, $settings['category_changefreq'], $settings['category_priority']);
 								}
 								$i++; if ($i > $max) break(2);								
 							}
@@ -465,14 +470,14 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 					
 					
 					if ($settings['informations_on']){
-						$informations = ($mode == 'express' || $mode == 'ultra') ? $this->model_extension_module_fxsitemap->getInformationsExpress() : $this->model_extension_module_fxsitemap->getInformations();
+						$informations = $this->model_extension_module_fxsitemap->getInformations();
 						foreach ($informations as $information) {
 							if ($i > $start){
 								$url= isset($information['keyword']) ? $host . $information['keyword'] . $settings['postfix'] : $this->url->link('information/information', 'information_id=' . $information['information_id'], 'SSL');
 								
 								if (isset($settings['amp'])) $url = str_replace("&information_id=", "&amp;information_id=", $url);
 								
-								$out[$i] = $this->xml($url);
+								$info_output .= $this->xml($url);
 							}
 							$i++; if ($i > $max) break(2);
 						}
@@ -657,6 +662,10 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 							$i++; if ($i > $max) break(2);
 						}
 					}
+
+					// Capture any direct $output appends from OCMOD blocks (e.g., newsblog) to reorder later.
+					$pre_output = $output;
+					$output = '';
 					
 					if ($settings['add_file_on']){	   ////// ADD			
 						foreach ($plus as $p) {
@@ -664,16 +673,25 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 							$i++; if ($i > $max) break(2);
 						}
 					}
+
+					if (!empty($output)) {
+						$other_output = $output . $other_output;
+					}
+					$output = $pre_output;
 					
 					break;
 				}
 			}
 			
-			$lines = $out;
-			
-			foreach ($lines as $line) {
-				$output = $output . $line;
-			}
+				foreach ($out as $line) {
+					$other_output .= $line;
+				}
+
+				if (isset($head_output) && strlen($output) > strlen($head_output)) {
+					$other_output = substr($output, strlen($head_output)) . $other_output;
+					$output = $head_output;
+				}
+				$output .= $info_output . $categories_output . $product_output . $other_output;
 			
 			$plug = '';
 			
@@ -812,6 +830,12 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 		if ($this->settings['only_seo_url'] && strpos($url, '=')) return '';
 		
 		if ($this->settings['exclude_file_on'] && in_array($url, $this->excluded)) return '';
+		
+		if (strpos($url, 'articles-news-reviews') !== false || strpos($url, '/popular-news/') !== false) {
+			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+			$caller = isset($trace[1]['file']) ? ($trace[1]['file'] . ':' . $trace[1]['line']) : 'unknown';
+			file_put_contents(DIR_LOGS . 'fx_sitemap.log', '[' . date('Y-m-d H:i:s') . "] article-url caller: " . $caller . " | " . $url . "\n", FILE_APPEND);
+		}
 
 		$output = '<url>';
 		$output .= '<loc>' . $url . '</loc>';
@@ -1531,6 +1555,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 			}else{
 				$output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
 			}
+			$head_output = $output;
 			//	$output = $output . '<url><loc>'. $host .'</loc><changefreq>daily</changefreq><priority>1</priority></url>'; //главная
 			
 			$data['limit'] = $settings['limit'] ? (int)$settings['limit'] : 49499;
@@ -1540,6 +1565,10 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 			if ($data['start'] < 0) $data['start'] = 0;
 			
 			$out = array();
+			$product_output = '';
+			$categories_output = '';
+			$other_output = '';
+			$info_output = '';
 
 			if ($settings['product_changefreq'] == 'off') $settings['product_changefreq'] = '';
 			if ($settings['category_changefreq'] == 'off') $settings['category_changefreq'] = '';
@@ -1568,7 +1597,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 						
 						if ($settings['product_lastmod']) $date = (int)$product['date_modified'] > 2000 ? substr($product['date_modified'], 0, 10) : '';
 						
-						$output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority']);
+						$product_output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority']);
 					}
 					
 				}else if ($mode == 'ultra'){   /////  ULTRA
@@ -1605,7 +1634,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 						
 						if ($settings['product_lastmod']) $date = (int)$product['date_modified'] > 2000 ? substr($product['date_modified'], 0, 10) : '';
 						
-						$output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority']);
+						$product_output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority']);
 					}
 					
 				}else{   /////  NORMAL
@@ -1638,7 +1667,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 						
 						if (isset($settings['amp'])) $url = str_replace("&product_id=", "&amp;product_id=", $url);
 						
-						$output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority'], isset($settings['img']) ? $product : array());
+						$product_output .= $this->xml($url, $date, $settings['product_changefreq'], $settings['product_priority'], isset($settings['img']) ? $product : array());
 
 					}
 				}
@@ -1692,7 +1721,7 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 								
 								if ($i > $start){
 									$date = '';
-									$output .= $this->xml($category['href'], $date, $settings['category_changefreq'], $settings['category_priority']);
+									$categories_output .= $this->xml($category['href'], $date, $settings['category_changefreq'], $settings['category_priority']);
 								}
 						
 							}
@@ -1724,14 +1753,14 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 					
 					
 					if ($settings['informations_on']){
-						$informations = ($mode == 'express' || $mode == 'ultra') ? $this->model_extension_module_fxsitemap->getInformationsExpress() : $this->model_extension_module_fxsitemap->getInformations();
+						$informations = $this->model_extension_module_fxsitemap->getInformations();
 						foreach ($informations as $information) {
 							if ($i > $start){
 								$url= isset($information['keyword']) ? $host . $information['keyword'] . $settings['postfix'] : $this->url->link('information/information', 'information_id=' . $information['information_id'], 'SSL');
 								
 								if (isset($settings['amp'])) $url = str_replace("&information_id=", "&amp;information_id=", $url);
 								
-								$out[$i] = $this->xml($url);
+								$info_output .= $this->xml($url);
 							}
 							$i++; if ($i > $max) break(2);
 						}
@@ -1874,6 +1903,9 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 						}
 					}
 
+					// Capture any direct $output appends from OCMOD blocks (e.g., newsblog) to reorder later.
+					$pre_output = $output;
+					$output = '';
 				
 					if ($settings['add_file_on']){	   ////// ADD			
 						foreach ($plus as $p) {
@@ -1881,6 +1913,11 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 							$i++; if ($i > $max) break(2);
 						}
 					}
+
+					if (!empty($output)) {
+						$other_output = $output . $other_output;
+					}
+					$output = $pre_output;
 					
 					break;
 				}
@@ -1893,11 +1930,14 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 			$i++;
 			$out[$i] = $this->xml($base_url . 'brands/', '', 'monthly', '0.6');
 			$i++;
-			$lines = $out;
-			
-			foreach ($lines as $line) {
-				$output = $output . $line;
+			foreach ($out as $line) {
+				$other_output .= $line;
 			}
+			if (isset($head_output) && strlen($output) > strlen($head_output)) {
+				$other_output = substr($output, strlen($head_output)) . $other_output;
+				$output = $head_output;
+			}
+			$output .= $info_output . $categories_output . $product_output . $other_output;
 			
 			$plug = '';
 			

@@ -1,0 +1,994 @@
+diff --git a/admin/controller/setting/setting.php b/admin/controller/setting/setting.php
+index 7632284..5a49b93 100644
+--- a/admin/controller/setting/setting.php
++++ b/admin/controller/setting/setting.php
+@@ -57,6 +57,7 @@ class ControllerSettingSetting extends Controller {
+ 		$data['text_affiliate'] = $this->language->get('text_affiliate');
+ 		$data['text_return'] = $this->language->get('text_return');
+ 		$data['text_sitemap'] = $this->language->get('text_sitemap');
++		$data['text_brands'] = $this->language->get('text_brands');
+ 		$data['text_captcha'] = $this->language->get('text_captcha');
+ 		$data['text_register'] = $this->language->get('text_register');
+ 		$data['text_shipping'] = $this->language->get('text_shipping');
+@@ -145,6 +146,7 @@ class ControllerSettingSetting extends Controller {
+ 		$data['entry_return'] = $this->language->get('entry_return');
+ 		$data['entry_return_status'] = $this->language->get('entry_return_status');
+ 		$data['entry_sitemap'] = $this->language->get('entry_sitemap');
++		$data['entry_brands'] = $this->language->get('entry_brands');
+ 		$data['entry_captcha'] = $this->language->get('entry_captcha');
+ 		$data['entry_captcha_page'] = $this->language->get('entry_captcha_page');
+ 		$data['entry_logo'] = $this->language->get('entry_logo');
+@@ -248,6 +250,7 @@ class ControllerSettingSetting extends Controller {
+ 		$data['help_return'] = $this->language->get('help_return');
+ 		$data['help_return_status'] = $this->language->get('help_return_status');
+ 		$data['help_sitemap'] = $this->language->get('help_sitemap');
++		$data['help_brands'] = $this->language->get('help_brands');
+ 		$data['help_captcha'] = $this->language->get('help_captcha');
+ 		$data['help_icon'] = $this->language->get('help_icon');
+ 		$data['help_ftp_root'] = $this->language->get('help_ftp_root');
+@@ -981,6 +984,12 @@ class ControllerSettingSetting extends Controller {
+ 			$data['config_sitemap_id'] = $this->config->get('config_sitemap_id');
+ 		}
+ 
++		if (isset($this->request->post['config_brands_id'])) {
++			$data['config_brands_id'] = $this->request->post['config_brands_id'];
++		} else {
++			$data['config_brands_id'] = $this->config->get('config_brands_id');
++		}
++
+ 		if (isset($this->request->post['config_return_status_id'])) {
+ 			$data['config_return_status_id'] = $this->request->post['config_return_status_id'];
+ 		} else {
+diff --git a/admin/language/en-gb/setting/setting.php b/admin/language/en-gb/setting/setting.php
+index 83d71d1..0501d04 100644
+--- a/admin/language/en-gb/setting/setting.php
++++ b/admin/language/en-gb/setting/setting.php
+@@ -18,6 +18,7 @@ $_['text_captcha']                 = 'Captcha';
+ $_['text_register']                = 'Register';
+ $_['text_guest']                   = 'Guest Checkout';
+ $_['text_return']                  = 'Returns';
++$_['text_brands']                  = 'Brands';
+ $_['text_contact']                 = 'Contact';
+ $_['text_shipping']                = 'Shipping Address';
+ $_['text_payment']                 = 'Payment Address';
+@@ -93,6 +94,7 @@ $_['entry_affiliate_auto']         = 'Automatic Commission';
+ $_['entry_affiliate_commission']   = 'Affiliate Commission (%)';
+ $_['entry_affiliate']              = 'Affiliate Terms';
+ $_['entry_return']                 = 'Return Terms';
++$_['entry_brands']                 = 'Brands page';
+ $_['entry_return_status']          = 'Return Status';
+ $_['entry_captcha']                = 'Captcha';
+ $_['entry_captcha_page']           = 'Captcha Page';
+@@ -169,6 +171,7 @@ $_['help_affiliate_auto']          = 'Automatically add commission when each ord
+ $_['help_affiliate_commission']    = 'The default affiliate commission percentage.';
+ $_['help_affiliate']               = 'Forces people to agree to terms before an affiliate account can be created.';
+ $_['help_return']                  = 'Forces people to agree to terms before a return can be created.';
++$_['help_brands']                  = 'Select an information page for brands list meta data.';
+ $_['help_return_status']           = 'Set the default return status when a return request is submitted.';
+ $_['help_captcha']                 = 'Captcha to use for registration, login, contact and reviews.';
+ $_['help_icon']                    = 'The icon should be a PNG that is 16px x 16px.';
+diff --git a/admin/language/ru-ru/setting/setting.php b/admin/language/ru-ru/setting/setting.php
+index 7ff1e74..254a36f 100644
+--- a/admin/language/ru-ru/setting/setting.php
++++ b/admin/language/ru-ru/setting/setting.php
+@@ -18,6 +18,7 @@ $_['text_captcha']                     = 'Captcha';
+ $_['text_register']                    = 'РЕГИСТРАЦИЯ';
+ $_['text_return']                      = 'ВОЗВРАТЫ';
+ $_['text_sitemap']                     = 'КАРТА САЙТА';
++$_['text_brands']                      = 'БРЕНДЫ';
+ $_['text_guest']                       = 'ГОСТЕВОЕ ОФОРМЛЕНИЕ ЗАКАЗА';
+ $_['text_contact']                     = 'КОНТАКТЫ';
+ $_['text_shipping']                    = 'Адрес доставки';
+@@ -115,6 +116,7 @@ $_['entry_affiliate_mail']             = 'Уведомлять о новом п
+ $_['entry_return']                     = 'Условия возврата';
+ $_['entry_return_status']              = 'Статус возврата';
+ $_['entry_sitemap']                    = 'Карта сайта';
++$_['entry_brands']                     = 'Страница брендов';
+ $_['entry_captcha']                    = 'Captcha';
+ $_['entry_captcha_page']               = 'Cтраницы для использования Captcha';
+ $_['entry_logo']                       = 'Логотип';
+@@ -234,6 +236,7 @@ $_['help_affiliate_mail']              = 'Отправить письмо на E
+ $_['help_return']                      = 'Требовать подтверждения согласия с правилами перед возвратом товара';
+ $_['help_return_status']               = 'Статус возврата по умолчанию после того, как покупателем инициирован запрос на возврат купленного товара';
+ $_['help_sitemap']                     = 'Выберите информационную страницу для мета-данных карты сайта';
++$_['help_brands']                      = 'Выберите информационную страницу для мета-данных списка брендов';
+ $_['help_captcha']                     = 'Использовать выбранную Captcha-службу на страницах регистрации/авторизации, обратной связи и при добавлении отзыва.';
+ $_['help_icon']                        = 'Должна быть в PNG 16px на 16px.';
+ $_['help_ftp_root']                    = 'Каталог, в который установлен Opencart; обычно \'public_html/\'';
+diff --git a/admin/language/uk-ua/setting/setting.php b/admin/language/uk-ua/setting/setting.php
+index 1612458..25de9b5 100644
+--- a/admin/language/uk-ua/setting/setting.php
++++ b/admin/language/uk-ua/setting/setting.php
+@@ -18,6 +18,7 @@ $_['text_captcha'] 		= 'Captcha';
+ $_['text_register'] 		= 'РЕЄСТРАЦІЯ';
+ $_['text_return'] 		= 'ПОВЕРНЕННЯ';
+ $_['text_sitemap'] 		= 'МАПА САЙТУ';
++$_['text_brands'] 		= 'БРЕНДИ';
+ $_['text_review'] 		= 'ВІДГУКИ';
+ $_['text_contact'] 		= 'КОНТАКТИ';
+ $_['text_shipping'] 		= 'Адреса доставки';
+@@ -112,6 +113,7 @@ $_['entry_affiliate_mail'] 	= 'Повідомляти про нових парт
+ $_['entry_return'] 		= 'Умови повернення';
+ $_['entry_return_status'] 	= 'Статус повернення';
+ $_['entry_sitemap'] 	= 'Мапа сайту';
++$_['entry_brands'] 	= 'Сторінка брендів';
+ $_['entry_captcha'] 		= 'Captcha';
+ $_['entry_captcha_page'] 	= 'Сторінки для використання Captcha';
+ $_['entry_logo'] 		= 'Логотип';
+@@ -228,6 +230,7 @@ $_['help_affiliate_mail'] 	= 'Відправити лист на E-Mail Адмі
+ $_['help_return'] 		= 'Вимагати підтвердження згоди з правилами перед поверненням товару';
+ $_['help_return_status'] 	= 'Статус повернення за замовчуванням після того, як покупцем ініційований запит на повернення купленого товару';
+ $_['help_sitemap'] 	= 'Оберіть інформаційну сторінку для мета-даних карти сайту';
++$_['help_brands'] 	= 'Оберіть інформаційну сторінку для мета-даних списку брендів';
+ $_['help_captcha'] 		= 'Використовувати обрану Captcha-службу на сторінках реєстрації / авторизації, зворотнього зв’язку і при додаванні відкликання.';
+ $_['help_icon'] 		= 'Повинна бути в PNG 16px на 16px.';
+ $_['help_ftp_root'] 		= 'Каталог, в який встановлений Opencart; зазвичай \'public_html \'';
+diff --git a/admin/view/template/setting/setting.tpl b/admin/view/template/setting/setting.tpl
+index 0426415..34475af 100644
+--- a/admin/view/template/setting/setting.tpl
++++ b/admin/view/template/setting/setting.tpl
+@@ -1149,6 +1149,24 @@
+                   </div>
+                 </div>
+               </fieldset>
++              <fieldset>
++                <legend><?php echo $text_brands; ?></legend>
++                <div class="form-group">
++                  <label class="col-sm-2 control-label" for="input-brands"><span data-toggle="tooltip" title="<?php echo $help_brands; ?>"><?php echo $entry_brands; ?></span></label>
++                  <div class="col-sm-10">
++                    <select name="config_brands_id" id="input-brands" class="form-control">
++                      <option value="0"><?php echo $text_none; ?></option>
++                      <?php foreach ($informations as $information) { ?>
++                      <?php if ($information['information_id'] == $config_brands_id) { ?>
++                      <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
++                      <?php } else { ?>
++                      <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
++                      <?php } ?>
++                      <?php } ?>
++                    </select>
++                  </div>
++                </div>
++              </fieldset>
+               <fieldset>
+                 <legend><?php echo $text_captcha; ?></legend>
+                 <div class="form-group">
+diff --git a/catalog/controller/information/contact.php b/catalog/controller/information/contact.php
+index 3b23c15..a6ca60f 100644
+--- a/catalog/controller/information/contact.php
++++ b/catalog/controller/information/contact.php
+@@ -154,6 +154,18 @@ class ControllerInformationContact extends Controller {
+ 		$this->load->model('catalog/information');
+ 		$information_info = $this->model_catalog_information->getInformation(12);
+ 		if ($information_info) {
++			if ($information_info['meta_title']) {
++				$this->document->setTitle($information_info['meta_title']);
++			}
++			if ($information_info['meta_description']) {
++				$this->document->setDescription((mb_detect_encoding($information_info['meta_description']) == 'UTF-8' ? $information_info['meta_description'] : mb_convert_encoding($information_info['meta_description'],'utf-8', "HTML-ENTITIES")));
++			}
++			if ($information_info['meta_keyword']) {
++				$this->document->setKeywords($information_info['meta_keyword']);
++			}
++			if (!empty($information_info['meta_h1'])) {
++				$data['heading_title'] = $information_info['meta_h1'];
++			}
+ 			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
+ 		}
+ 
+diff --git a/catalog/controller/newsblog/category.php b/catalog/controller/newsblog/category.php
+index cf99cd1..e319419 100644
+--- a/catalog/controller/newsblog/category.php
++++ b/catalog/controller/newsblog/category.php
+@@ -1,266 +1,276 @@
+-<?php
+-class ControllerNewsBlogCategory extends Controller {
+-	public function index() {
+-		$this->load->language('newsblog/category');
+-
+-		$this->load->model('newsblog/category');
+-		$this->load->model('newsblog/article');
+-
+-		$this->load->model('tool/image');
+-
+-		if (isset($this->request->get['page'])) {
+-			$page = $this->request->get['page'];
+-		} else {
+-			$page = 1;
+-		}
+-
+-		$data['breadcrumbs'] = array();
+-
+-		$data['breadcrumbs'][] = array(
+-			'text' => $this->language->get('text_home'),
+-			'href' => $this->url->link('common/home')
+-		);
+-		$data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
+-
+-		if (isset($this->request->get['newsblog_path'])) {
+-			$path = '';
+-
+-			$parts = explode('_', (string)$this->request->get['newsblog_path']);
+-
+-			$category_id = (int)array_pop($parts);
+-
+-			foreach ($parts as $path_id) {
+-				if (!$path) {
+-					$path = (int)$path_id;
+-				} else {
+-					$path .= '_' . (int)$path_id;
+-				}
+-
+-				$category_info = $this->model_newsblog_category->getCategory($path_id);
+-
+-				if ($category_info) {
+-					$data['breadcrumbs'][] = array(
+-						'text' => $category_info['name'],
+-						'href' => $this->url->link('newsblog/category', 'newsblog_path=' . $path)
+-					);
+-				}
+-			}
+-		} else {
+-			$category_id = 0;
+-		}
+-
+-		$category_info = $this->model_newsblog_category->getCategory($category_id);
+-
+-		if ($category_info) {
+-
+-			//for no errors with versions < 20160920
+-			$articles_image_size=array($this->config->get($this->config->get('config_theme') . '_image_product_width'),$this->config->get($this->config->get('config_theme') . '_image_product_height'));
+-	        $category_image_size=array($this->config->get($this->config->get('config_theme') . '_image_category_width'),$this->config->get($this->config->get('config_theme') . '_image_category_height'));
+-			$date_format=$this->language->get('date_format_short');
+-			if ($category_info['settings']) {
+-				$settings=unserialize($category_info['settings']);
+-	            $category_info=array_merge($category_info,$settings);
+-
+-	            $articles_image_size=array($settings['images_size_width'],$settings['images_size_height']);
+-	            $category_image_size=array($settings['image_size_width'],$settings['image_size_height']);
+-	            $date_format=$settings['date_format'];
+-            }
+-
+-			if ($category_info['meta_title']) {
+-				$this->document->setTitle($category_info['meta_title']);
+-			} else {
+-				$this->document->setTitle($category_info['name']);
+-			}
+-
+-			$this->document->setDescription($category_info['meta_description']);
+-			$this->document->setKeywords($category_info['meta_keyword']);
+-
+-			if ($category_info['meta_h1']) {
+-				$data['heading_title'] = $category_info['meta_h1'];
+-			} else {
+-				$data['heading_title'] = $category_info['name'];
+-			}
+-
+-			$data['text_empty'] = $this->language->get('text_empty');
+-			$data['button_continue'] = $this->language->get('button_continue');
+-			$data['text_refine'] = $this->language->get('text_refine');
+-			$data['text_attributes'] = $this->language->get('text_attributes');
+-
+-			$data['continue'] = $this->url->link('common/home');
+-
+-			// Set the last category breadcrumb
+-			$data['breadcrumbs'][] = array(
+-				'text' => $category_info['name'],
+-				'href' => $this->url->link('newsblog/category', 'newsblog_path=' . $this->request->get['newsblog_path'])
+-			);
+-
+-			if ($category_info['image']) {
+-				$data['original']	= HTTP_SERVER.'image/'.$category_info['image'];
+-				$data['thumb'] 		= $this->model_tool_image->resize($category_info['image'], $category_image_size[0], $category_image_size[1]);
+-			} else {
+-				$data['original'] 	= '';
+-				$data['thumb'] 		= '';
+-			}
+-
+-			$data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+-
+-			$data['categories'] = array();
+-
+-			$categories = $this->model_newsblog_category->getCategories($category_id);
+-
+-			foreach ($categories as $category) {
+-				if ($category['image']) {
+-					$original 	= HTTP_SERVER.'image/'.$category['image'];
+-					$thumb 		= $this->model_tool_image->resize($category['image'], $articles_image_size[0], $articles_image_size[1]);
+-				} else {
+-					$original 	= false;
+-					$thumb 		= false;
+-				}
+-
+-				$filter_data = array(
+-					'filter_category_id' 	=> $category['category_id'],
+-					'filter_sub_category' 	=> true
+-				);
+-
+-				$articles_total = $this->model_newsblog_article->getTotalArticles($filter_data);
+-
+-				$data['categories'][] = array(
+-					'name' 			=> $category['name'],
+-					'total'       	=> $articles_total,
+-					'original'		=> $original,
+-					'thumb'			=> $thumb,
+-					'href' 			=> $this->url->link('newsblog/category', 'newsblog_path=' . $this->request->get['newsblog_path'] . '_' . $category['category_id'])
+-				);
+-			}
+-
+-
+-
+-			$data['articles'] = array();
+-
+-			$limit = $category_info['limit'];
+-
+-			if ($limit>0) {
+-
+-				$sort = $category_info['sort_by'];
+-				$order = $category_info['sort_direction'];
+-
+-				$filter_data = array(
+-					'filter_category_id' => $category_id,
+-					'sort'               => $sort,
+-					'order'              => $order,
+-					'start'              => ($page - 1) * $limit,
+-					'limit'              => $limit
+-				);
+-
+-				$article_total = $this->model_newsblog_article->getTotalArticles($filter_data);
+-
+-				$results = $this->model_newsblog_article->getArticles($filter_data);
+-
+-				foreach ($results as $result) {
+-
+-					if ($result['image']) {
+-						$original 	= HTTP_SERVER.'image/'.$result['image'];
+-						$thumb 		= $this->model_tool_image->resize($result['image'], $articles_image_size[0], $articles_image_size[1]);
+-					} else {
+-						$original 	= '';
+-						$thumb 		= '';	//or use 'placeholder.png' if you need
+-					}
+-
+-					$data['articles'][] = array(
+-						'article_id'  		=> $result['article_id'],
+-						'original'			=> $original,
+-						'thumb'       		=> $thumb,
+-						'name'        		=> $result['name'],
+-						'preview'     		=> html_entity_decode($result['preview'], ENT_QUOTES, 'UTF-8'),
+-						'attributes'  		=> $result['attributes'],
+-						'href'        		=> $this->url->link('newsblog/article', 'newsblog_path=' . $this->request->get['newsblog_path'] . '&newsblog_article_id=' . $result['article_id']),
+-						'date'		  	=> ($date_format ? date($date_format, strtotime($result['date_available'])) : false),
+-						'date_modified'		=> ($date_format ? date($date_format, strtotime($result['date_modified'])) : false),
+-						'viewed' 			=> $result['viewed']
+-					);
+-				}
+-
+-
+-				$pagination = new Pagination();
+-				$pagination->total = $article_total;
+-				$pagination->page = $page;
+-				$pagination->limit = $limit;
+-				$pagination->url = $this->url->link('newsblog/category', 'newsblog_path=' . $this->request->get['newsblog_path'] . '&page={page}');
+-
+-				$data['pagination'] = $pagination->render();
+-
+-				$data['results'] = sprintf($this->language->get('text_pagination'), ($article_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($article_total - $limit)) ? $article_total : ((($page - 1) * $limit) + $limit), $article_total, ceil($article_total / $limit));
+-
+-				// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
+-				if ($page == 1) {
+-				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'], 'SSL'), 'canonical');
+-				} elseif ($page == 2) {
+-				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'], 'SSL'), 'prev');
+-				} else {
+-				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'] . '&page='. ($page - 1), 'SSL'), 'prev');
+-				}
+-
+-				if ($limit && ceil($article_total / $limit) > $page) {
+-				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'] . '&page='. ($page + 1), 'SSL'), 'next');
+-				}
+-			}
+-
+-			$data['canonical']=$this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'], 'SSL');
+-
+-			//for no errors with versions < 20170906
+-			$data['comments_vk'] = false;
+-			$data['comments_fb'] = false;
+-			$data['comments_dq'] = false;
+-			if ($settings && isset($settings['show_comments_vk_id'])) {
+-				if ($settings && $settings['show_comments_vk_id'] && $settings['show_comments_vk_category']) {
+-		            $data['comments_vk'] = $settings['show_comments_vk_id'];
+-		            $this->document->addScript('//vk.com/js/api/openapi.js');
+-	            }
+-
+-	            if ($settings && $settings['show_comments_fb_category'])
+-	            $data['comments_fb'] = true;
+-
+-	            if ($settings && $settings['show_comments_dq_id'] && $settings['show_comments_dq_category'])
+-	            $data['comments_dq'] = $settings['show_comments_dq_id'];
+-            }
+-
+-			$data['column_left'] = $this->load->controller('common/column_left');
+-			$data['column_right'] = $this->load->controller('common/column_right');
+-			$data['content_top'] = $this->load->controller('common/content_top');
+-			$data['content_bottom'] = $this->load->controller('common/content_bottom');
+-			$data['footer'] = $this->load->controller('common/footer');
+-			$data['header'] = $this->load->controller('common/header');
+-
+-			$template_default='category.tpl';
+-			if ($category_info['template_category']) $template_default=$category_info['template_category'];
+-
+-			$this->response->setOutput($this->load->view('newsblog/'.$template_default, $data));
+-		} else {
+-			$data['breadcrumbs'][] = array(
+-				'text' => $this->language->get('text_error'),
+-				'href' => $this->url->link('newsblog/category')
+-			);
+-
+-			$this->document->setTitle($this->language->get('text_error'));
+-
+-			$data['heading_title'] = $this->language->get('text_error');
+-
+-			$data['text_error'] = $this->language->get('text_error');
+-
+-			$data['button_continue'] = $this->language->get('button_continue');
+-
+-			$data['continue'] = $this->url->link('common/home');
+-
+-			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+-
+-			$data['column_left'] = $this->load->controller('common/column_left');
+-			$data['column_right'] = $this->load->controller('common/column_right');
+-			$data['content_top'] = $this->load->controller('common/content_top');
+-			$data['content_bottom'] = $this->load->controller('common/content_bottom');
+-			$data['footer'] = $this->load->controller('common/footer');
+-			$data['header'] = $this->load->controller('common/header');
+-
+-			$this->response->setOutput($this->load->view('error/not_found.tpl', $data));
+-		}
+-	}
+-}
++<?php
++class ControllerNewsBlogCategory extends Controller {
++	public function index() {
++		$this->load->language('newsblog/category');
++
++		$this->load->model('newsblog/category');
++		$this->load->model('newsblog/article');
++
++		$this->load->model('tool/image');
++		$popular_news_category_id = 0;
++		$query = $this->db->query("SELECT `query` FROM " . DB_PREFIX . "url_alias WHERE keyword = 'popular-news' LIMIT 1");
++		if ($query->num_rows) {
++			$parts = explode('=', $query->row['query'], 2);
++			if (count($parts) === 2 && $parts[0] === 'newsblog_category_id') {
++				$popular_news_category_id = (int)$parts[1];
++			}
++		}
++
++		if (isset($this->request->get['page'])) {
++			$page = $this->request->get['page'];
++		} else {
++			$page = 1;
++		}
++
++		$data['breadcrumbs'] = array();
++
++		$data['breadcrumbs'][] = array(
++			'text' => $this->language->get('text_home'),
++			'href' => $this->url->link('common/home')
++		);
++		$data['mini_catalog']=$this->load->controller('extension/module/menu', ['template'=>"extension/module/mini_menu_noindex"]);
++
++		if (isset($this->request->get['newsblog_path'])) {
++			$path = '';
++
++			$parts = explode('_', (string)$this->request->get['newsblog_path']);
++
++			$category_id = (int)array_pop($parts);
++
++			foreach ($parts as $path_id) {
++				if (!$path) {
++					$path = (int)$path_id;
++				} else {
++					$path .= '_' . (int)$path_id;
++				}
++
++				$category_info = $this->model_newsblog_category->getCategory($path_id);
++
++				if ($category_info) {
++					$data['breadcrumbs'][] = array(
++						'text' => $category_info['name'],
++						'href' => $this->url->link('newsblog/category', 'newsblog_path=' . $path)
++					);
++				}
++			}
++		} else {
++			$category_id = 0;
++		}
++
++		$category_info = $this->model_newsblog_category->getCategory($category_id);
++
++		if ($category_info) {
++			$is_popular_news = ($popular_news_category_id && $category_id === $popular_news_category_id);
++			$data['is_popular_news'] = $is_popular_news;
++
++			//for no errors with versions < 20160920
++			$articles_image_size=array($this->config->get($this->config->get('config_theme') . '_image_product_width'),$this->config->get($this->config->get('config_theme') . '_image_product_height'));
++	        $category_image_size=array($this->config->get($this->config->get('config_theme') . '_image_category_width'),$this->config->get($this->config->get('config_theme') . '_image_category_height'));
++			$date_format=$this->language->get('date_format_short');
++			if ($category_info['settings']) {
++				$settings=unserialize($category_info['settings']);
++	            $category_info=array_merge($category_info,$settings);
++
++	            $articles_image_size=array($settings['images_size_width'],$settings['images_size_height']);
++	            $category_image_size=array($settings['image_size_width'],$settings['image_size_height']);
++	            $date_format=$settings['date_format'];
++            }
++
++			if ($category_info['meta_title']) {
++				$this->document->setTitle($category_info['meta_title']);
++			} else {
++				$this->document->setTitle($category_info['name']);
++			}
++
++			$this->document->setDescription($category_info['meta_description']);
++			$this->document->setKeywords($category_info['meta_keyword']);
++
++			if ($category_info['meta_h1']) {
++				$data['heading_title'] = $category_info['meta_h1'];
++			} else {
++				$data['heading_title'] = $category_info['name'];
++			}
++
++			$data['text_empty'] = $this->language->get('text_empty');
++			$data['button_continue'] = $this->language->get('button_continue');
++			$data['text_refine'] = $this->language->get('text_refine');
++			$data['text_attributes'] = $this->language->get('text_attributes');
++
++			$data['continue'] = $this->url->link('common/home');
++
++			// Set the last category breadcrumb
++			$data['breadcrumbs'][] = array(
++				'text' => $category_info['name'],
++				'href' => $this->url->link('newsblog/category', 'newsblog_path=' . $this->request->get['newsblog_path'])
++			);
++
++			if ($category_info['image']) {
++				$data['original']	= HTTP_SERVER.'image/'.$category_info['image'];
++				$data['thumb'] 		= $this->model_tool_image->resize($category_info['image'], $category_image_size[0], $category_image_size[1]);
++			} else {
++				$data['original'] 	= '';
++				$data['thumb'] 		= '';
++			}
++
++			$data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
++
++			$data['categories'] = array();
++
++			$categories = $this->model_newsblog_category->getCategories($category_id);
++
++			foreach ($categories as $category) {
++				if ($category['image']) {
++					$original 	= HTTP_SERVER.'image/'.$category['image'];
++					$thumb 		= $this->model_tool_image->resize($category['image'], $articles_image_size[0], $articles_image_size[1]);
++				} else {
++					$original 	= false;
++					$thumb 		= false;
++				}
++
++				$filter_data = array(
++					'filter_category_id' 	=> $category['category_id'],
++					'filter_sub_category' 	=> true
++				);
++
++				$articles_total = $this->model_newsblog_article->getTotalArticles($filter_data);
++
++				$data['categories'][] = array(
++					'name' 			=> $category['name'],
++					'total'       	=> $articles_total,
++					'original'		=> $original,
++					'thumb'			=> $thumb,
++					'href' 			=> $this->url->link('newsblog/category', 'newsblog_path=' . $this->request->get['newsblog_path'] . '_' . $category['category_id'])
++				);
++			}
++
++
++
++			$data['articles'] = array();
++
++			$limit = $category_info['limit'];
++
++			if ($limit>0) {
++
++				$sort = $category_info['sort_by'];
++				$order = $category_info['sort_direction'];
++
++				$filter_data = array(
++					'filter_category_id' => $category_id,
++					'sort'               => $sort,
++					'order'              => $order,
++					'start'              => ($page - 1) * $limit,
++					'limit'              => $limit
++				);
++
++				$article_total = $this->model_newsblog_article->getTotalArticles($filter_data);
++
++				$results = $this->model_newsblog_article->getArticles($filter_data);
++
++				foreach ($results as $result) {
++
++					if ($result['image']) {
++						$original 	= HTTP_SERVER.'image/'.$result['image'];
++						$thumb 		= $this->model_tool_image->resize($result['image'], $articles_image_size[0], $articles_image_size[1]);
++					} else {
++						$original 	= '';
++						$thumb 		= '';	//or use 'placeholder.png' if you need
++					}
++
++					$data['articles'][] = array(
++						'article_id'  		=> $result['article_id'],
++						'original'			=> $original,
++						'thumb'       		=> $thumb,
++						'name'        		=> $result['name'],
++						'preview'     		=> html_entity_decode($result['preview'], ENT_QUOTES, 'UTF-8'),
++						'attributes'  		=> $result['attributes'],
++						'href'        		=> $this->url->link('newsblog/article', 'newsblog_path=' . $this->request->get['newsblog_path'] . '&newsblog_article_id=' . $result['article_id']),
++						'date'		  	=> ($date_format ? date($date_format, strtotime($result['date_available'])) : false),
++						'date_modified'		=> ($date_format ? date($date_format, strtotime($result['date_modified'])) : false),
++						'viewed' 			=> $result['viewed']
++					);
++				}
++
++
++				$pagination = new Pagination();
++				$pagination->total = $article_total;
++				$pagination->page = $page;
++				$pagination->limit = $limit;
++				$pagination->url = $this->url->link('newsblog/category', 'newsblog_path=' . $this->request->get['newsblog_path'] . '&page={page}');
++
++				$data['pagination'] = $pagination->render();
++
++				$data['results'] = sprintf($this->language->get('text_pagination'), ($article_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($article_total - $limit)) ? $article_total : ((($page - 1) * $limit) + $limit), $article_total, ceil($article_total / $limit));
++
++				// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
++				if ($page == 1) {
++				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'], 'SSL'), 'canonical');
++				} elseif ($page == 2) {
++				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'], 'SSL'), 'prev');
++				} else {
++				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'] . '&page='. ($page - 1), 'SSL'), 'prev');
++				}
++
++				if ($limit && ceil($article_total / $limit) > $page) {
++				    $this->document->addLink($this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'] . '&page='. ($page + 1), 'SSL'), 'next');
++				}
++			}
++
++			$data['canonical']=$this->url->link('newsblog/category', 'newsblog_path=' . $category_info['category_id'], 'SSL');
++
++			//for no errors with versions < 20170906
++			$data['comments_vk'] = false;
++			$data['comments_fb'] = false;
++			$data['comments_dq'] = false;
++			if ($settings && isset($settings['show_comments_vk_id'])) {
++				if ($settings && $settings['show_comments_vk_id'] && $settings['show_comments_vk_category']) {
++		            $data['comments_vk'] = $settings['show_comments_vk_id'];
++		            $this->document->addScript('//vk.com/js/api/openapi.js');
++	            }
++
++	            if ($settings && $settings['show_comments_fb_category'])
++	            $data['comments_fb'] = true;
++
++	            if ($settings && $settings['show_comments_dq_id'] && $settings['show_comments_dq_category'])
++	            $data['comments_dq'] = $settings['show_comments_dq_id'];
++            }
++
++			$data['column_left'] = $this->load->controller('common/column_left');
++			$data['column_right'] = $this->load->controller('common/column_right');
++			$data['content_top'] = $this->load->controller('common/content_top');
++			$data['content_bottom'] = $this->load->controller('common/content_bottom');
++			$data['footer'] = $this->load->controller('common/footer');
++			$data['header'] = $this->load->controller('common/header');
++
++			$template_default='category.tpl';
++			if ($category_info['template_category']) $template_default=$category_info['template_category'];
++
++			$this->response->setOutput($this->load->view('newsblog/'.$template_default, $data));
++		} else {
++			$data['breadcrumbs'][] = array(
++				'text' => $this->language->get('text_error'),
++				'href' => $this->url->link('newsblog/category')
++			);
++
++			$this->document->setTitle($this->language->get('text_error'));
++
++			$data['heading_title'] = $this->language->get('text_error');
++
++			$data['text_error'] = $this->language->get('text_error');
++
++			$data['button_continue'] = $this->language->get('button_continue');
++
++			$data['continue'] = $this->url->link('common/home');
++
++			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
++
++			$data['column_left'] = $this->load->controller('common/column_left');
++			$data['column_right'] = $this->load->controller('common/column_right');
++			$data['content_top'] = $this->load->controller('common/content_top');
++			$data['content_bottom'] = $this->load->controller('common/content_bottom');
++			$data['footer'] = $this->load->controller('common/footer');
++			$data['header'] = $this->load->controller('common/header');
++
++			$this->response->setOutput($this->load->view('error/not_found.tpl', $data));
++		}
++	}
++}
+diff --git a/catalog/controller/product/category.php b/catalog/controller/product/category.php
+index 891c9f3..0274afc 100644
+--- a/catalog/controller/product/category.php
++++ b/catalog/controller/product/category.php
+@@ -139,7 +139,7 @@ class ControllerProductCategory extends Controller {
+ 			}
+ 
+ 			$this->document->setDescription($meta_description.$text_page.$page);
+-			$this->document->setKeywords($category_info['meta_keyword'].$text_page.$page);
++			$this->document->setKeywords($category_info['meta_keyword']);
+ 			}
+ 		
+ 
+diff --git a/catalog/controller/product/manufacturer.php b/catalog/controller/product/manufacturer.php
+index 6b585e2..55c8909 100644
+--- a/catalog/controller/product/manufacturer.php
++++ b/catalog/controller/product/manufacturer.php
+@@ -7,9 +7,31 @@ class ControllerProductManufacturer extends Controller {
+ 
+ 		$this->load->model('tool/image');
+ 
+-		$this->document->setTitle($this->language->get('heading_title'));
++		$this->load->model('catalog/information');
+ 
+-		$data['heading_title'] = $this->language->get('heading_title');
++		$information_info = array();
++		$brands_information_id = (int)$this->config->get('config_brands_id');
++		if ($brands_information_id) {
++			$information_info = $this->model_catalog_information->getInformation($brands_information_id);
++		}
++
++		$data['description'] = '';
++
++		if ($information_info) {
++			$this->document->setTitle($information_info['meta_title'] ? $information_info['meta_title'] : $information_info['title']);
++			if ($information_info['meta_description']) {
++				$this->document->setDescription((mb_detect_encoding($information_info['meta_description']) == 'UTF-8' ? $information_info['meta_description'] : mb_convert_encoding($information_info['meta_description'], 'utf-8', "HTML-ENTITIES")));
++			}
++			if ($information_info['meta_keyword']) {
++				$this->document->setKeywords($information_info['meta_keyword']);
++			}
++			$data['heading_title'] = $information_info['meta_h1'] ? $information_info['meta_h1'] : $information_info['title'];
++			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
++		} else {
++			$this->document->setTitle($this->language->get('heading_title'));
++			$data['heading_title'] = $this->language->get('heading_title');
++		}
++		$this->document->addLink($this->url->link('product/manufacturer'), 'canonical');
+ 
+ 		$data['text_index'] = $this->language->get('text_index');
+ 		$data['text_empty'] = $this->language->get('text_empty');
+@@ -183,14 +205,27 @@ class ControllerProductManufacturer extends Controller {
+ 				'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url)
+ 			);
+ 
+-			if ($manufacturer_info['meta_title']) {
+-				$this->document->setTitle($manufacturer_info['meta_title']);
++			$text_page = $this->language->get('text_page');
++			$meta_description = (mb_detect_encoding($manufacturer_info['meta_description']) == 'UTF-8' ? $manufacturer_info['meta_description'] : mb_convert_encoding($manufacturer_info['meta_description'],'utf-8', "HTML-ENTITIES"));
++			if ($page == 1) {
++				if ($manufacturer_info['meta_title']) {
++					$this->document->setTitle($manufacturer_info['meta_title']);
++				} else {
++					$this->document->setTitle($manufacturer_info['name']);
++				}
++
++				$this->document->setDescription($meta_description);
++				$this->document->setKeywords($manufacturer_info['meta_keyword']);
+ 			} else {
+-				$this->document->setTitle($manufacturer_info['name']);
+-			}
++				if ($manufacturer_info['meta_title']) {
++					$this->document->setTitle($manufacturer_info['meta_title'] . $text_page . $page);
++				} else {
++					$this->document->setTitle($manufacturer_info['name'] . $text_page . $page);
++				}
+ 
+-			$this->document->setDescription((mb_detect_encoding($manufacturer_info['meta_description']) == 'UTF-8' ? $manufacturer_info['meta_description'] : mb_convert_encoding($manufacturer_info['meta_description'],'utf-8', "HTML-ENTITIES")));
+-			$this->document->setKeywords($manufacturer_info['meta_keyword']);
++				$this->document->setDescription($meta_description . $text_page . $page);
++				$this->document->setKeywords($manufacturer_info['meta_keyword']);
++			}
+ 
+ 			if ($manufacturer_info['meta_h1']) {
+ 				$data['heading_title'] = $manufacturer_info['meta_h1'];
+@@ -409,13 +444,16 @@ class ControllerProductManufacturer extends Controller {
+ 			$data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
+ 
+ 			// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
+-			if ($page == 1) {
+-			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'canonical');
+-			} elseif ($page == 2) {
+-			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'prev');
+-			} else {
+-			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page='. ($page - 1), true), 'prev');
+-			}
++				if ($page == 1) {
++				    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'canonical');
++				} elseif ($page == 2) {
++				    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'prev');
++				} else {
++				    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page='. ($page - 1), true), 'prev');
++				}
++				if ($page != 1) {
++				    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'canonical');
++				}
+ 
+ 			if ($limit && ceil($product_total / $limit) > $page) {
+ 			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page='. ($page + 1), true), 'next');
+diff --git a/catalog/controller/startup/seo_pro.php b/catalog/controller/startup/seo_pro.php
+index f66d5ea..17f7766 100644
+--- a/catalog/controller/startup/seo_pro.php
++++ b/catalog/controller/startup/seo_pro.php
+@@ -28,6 +28,18 @@ class ControllerStartupSeoPro extends Controller {
+ 			return;
+ 		}
+                
++		if (isset($this->request->get['_route_'])) {
++			$route_trim = trim($this->request->get['_route_'], '/');
++			if (strpos($route_trim, 'ua/') === 0) {
++				$route_trim = substr($route_trim, 3);
++				if ($route_trim === '') {
++					unset($this->request->get['_route_']);
++				} else {
++					$this->request->get['_route_'] = $route_trim;
++				}
++			}
++		}
++
+ 		if (isset($this->request->get['_route_'])) {
+ 			$route_trim = trim($this->request->get['_route_'], '/');
+ 
+diff --git a/catalog/controller/startup/seo_url.php b/catalog/controller/startup/seo_url.php
+index c54890b..2763da3 100644
+--- a/catalog/controller/startup/seo_url.php
++++ b/catalog/controller/startup/seo_url.php
+@@ -6,6 +6,18 @@ class ControllerStartupSeoUrl extends Controller {
+ 			$this->url->addRewrite($this);
+ 		}
+ 
++		if (isset($this->request->get['_route_'])) {
++			$route_trim = trim($this->request->get['_route_'], '/');
++			if (strpos($route_trim, 'ua/') === 0) {
++				$route_trim = substr($route_trim, 3);
++				if ($route_trim === '') {
++					unset($this->request->get['_route_']);
++				} else {
++					$this->request->get['_route_'] = $route_trim;
++				}
++			}
++		}
++
+ 		if (isset($this->request->get['_route_'])) {
+ 			$route_trim = trim($this->request->get['_route_'], '/');
+ 
+diff --git a/catalog/language/ru-ru/product/manufacturer.php b/catalog/language/ru-ru/product/manufacturer.php
+index d9276d1..16b7687 100644
+--- a/catalog/language/ru-ru/product/manufacturer.php
++++ b/catalog/language/ru-ru/product/manufacturer.php
+@@ -32,6 +32,7 @@ $_['text_po_poryadku_asc']        = 'По порядку ';
+ $_['text_most_viewed_desc']        = 'Популярные';
+ 
+ $_['text_newest_desc']        = 'Новиннки';
++$_['text_page']              = ' - стр. ';
+ 
+ $_['btn_more_detailed']        = 'Подробнее';
+ $_['btn_less_detailed']        = 'Свернуть';
+diff --git a/catalog/language/uk-ua/common/footer.php b/catalog/language/uk-ua/common/footer.php
+index cebfe7d..8681ff9 100644
+--- a/catalog/language/uk-ua/common/footer.php
++++ b/catalog/language/uk-ua/common/footer.php
+@@ -3,7 +3,7 @@
+ $_['text_information']  = 'Інформація';
+ $_['text_service']      = 'Служба підтримки';
+ $_['text_extra']        = 'Додатково';
+-$_['text_contact']      = 'Зворотній зв’язок';
++$_['text_contact']      = 'Контакти';
+ $_['text_return']       = 'Повернення товару';
+ $_['text_sitemap']      = 'Мапа сайту';
+ $_['text_manufacturer'] = 'Виробники';
+diff --git a/catalog/language/uk-ua/product/manufacturer.php b/catalog/language/uk-ua/product/manufacturer.php
+index 5f616fa..215c769 100644
+--- a/catalog/language/uk-ua/product/manufacturer.php
++++ b/catalog/language/uk-ua/product/manufacturer.php
+@@ -35,8 +35,9 @@ $_['text_most_viewed_asc']        = 'Популярні (по зростанню
+ 
+ $_['text_newest_desc']        = 'Новинки';
+ $_['text_newest_asc']        = 'За датою (по зростанню)';
++$_['text_page']               = ' - стор. ';
+ 
+ $_['btn_more_detailed']        = 'Докладніше';
+ $_['btn_less_detailed']        = 'Свернуть';
+ 
+-$_['load_more_products']        = 'Завантажити наступні %s товарів';
+\ No newline at end of file
++$_['load_more_products']        = 'Завантажити наступні %s товарів';
+diff --git a/catalog/view/theme/default/stylesheet/stylesheet.css b/catalog/view/theme/default/stylesheet/stylesheet.css
+index cac64e7..749292e 100644
+--- a/catalog/view/theme/default/stylesheet/stylesheet.css
++++ b/catalog/view/theme/default/stylesheet/stylesheet.css
+@@ -2231,8 +2231,10 @@ h2.title-promotions {
+   margin-bottom: 5px;
+ }
+ .title-news a {
+-  color: #303030;
++  color: #161616;
+   font-size: 14px;
++  font-family: "Roboto Bold";
++  font-weight: 500;
+   border-bottom: 1px solid #303030;
+ }
+ .title-news {
+diff --git a/catalog/view/theme/default/template/newsblog/category.tpl b/catalog/view/theme/default/template/newsblog/category.tpl
+index 04f2447..1a8d78f 100644
+--- a/catalog/view/theme/default/template/newsblog/category.tpl
++++ b/catalog/view/theme/default/template/newsblog/category.tpl
+@@ -15,8 +15,13 @@
+       </ul>
+       <div class="visible-xs mini-catalog-product"><?php echo $mini_catalog; ?></div>
+       <h1 class="title-article" itemprop="name"><?php echo $heading_title; ?></h1>
++      <?php if (!empty($is_popular_news) && !empty($description)) { ?>
++      <div class="newsblog-category-description">
++        <?php echo $description; ?>
++      </div>
++      <?php } ?>
+     
+-   
++  
+       <?php if ($articles) { ?>
+       <div class="row row-flex row-article">
+         <?php foreach ($articles as $article) { ?>
+@@ -33,7 +38,7 @@
+             
+             <div class="caption">
+               <p class="article-date"><?php echo $article['date']; ?></p>
+-              <h4 class="title-news"><a href="<?php echo $article['href']; ?>"><?php echo $article['name']; ?></a></h4>
++              <div class="title-news"><strong><a href="<?php echo $article['href']; ?>"><?php echo $article['name']; ?></a></strong></div>
+               <p class="desctiption-news"><?php echo $article['preview']; ?></p>
+             </div>
+             </div>  
+@@ -58,4 +63,4 @@
+   <?php echo $column_left; ?>
+   </div>
+ </div>
+-<?php echo $footer; ?>
+\ No newline at end of file
++<?php echo $footer; ?>
+diff --git a/catalog/view/theme/default/template/product/manufacturer_list.tpl b/catalog/view/theme/default/template/product/manufacturer_list.tpl
+index c879d57..26174da 100644
+--- a/catalog/view/theme/default/template/product/manufacturer_list.tpl
++++ b/catalog/view/theme/default/template/product/manufacturer_list.tpl
+@@ -18,6 +18,11 @@
+         <?php } ?>
+       </ul>
+       <h1 itemprop="name"><?php echo $heading_title; ?></h1>
++      <?php if (!empty($description)) { ?>
++      <div class="brand-description">
++        <?php echo $description; ?>
++      </div>
++      <?php } ?>
+       <div class="row tile-of-brand">
+         <?php if ($categories) { ?>
+     
+@@ -37,4 +42,4 @@
+       <?php echo $content_bottom; ?></div>
+     <?php echo $column_right; ?></div>
+ </div>
+-<?php echo $footer; ?>
+\ No newline at end of file
++<?php echo $footer; ?>
