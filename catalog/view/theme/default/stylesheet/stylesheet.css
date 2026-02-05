@@ -200,6 +200,22 @@ div.required .control-label:after {
   background-image: linear-gradient(to bottom, #23a1d1, #1f90bb);
   background-repeat: repeat-x;
 }
+.language-current {
+  font-weight: 700;
+  cursor: default;
+  color: #444;
+}
+.language-current:hover,
+.language-current:focus {
+  text-decoration: none;
+  color: #444;
+  background-color: transparent;
+  background-image: none;
+}
+.dropdown-menu li .language-current {
+  display: block;
+  padding: 3px 20px;
+}
 #top .btn-link,
 #top-links li,
 #top-links a {
@@ -4244,6 +4260,9 @@ tr.one_order {
     padding: 4px 0;
   }
   .top-lang-mobile .dropdown-menu li a {
+    padding: 9px 15px;
+  }
+  .top-lang-mobile .dropdown-menu li .language-current {
     padding: 9px 15px;
   }
   #cart_element,
