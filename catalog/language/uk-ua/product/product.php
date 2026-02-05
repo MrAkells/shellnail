@@ -39,6 +39,7 @@ $_['text_benefits']                           = 'Переваги:';
 $_['send_review']                             = 'Надіслати відгук';
 $_['text_more_inf']                           = 'Ще';
 $_['text_promo_sale']                         = 'Акційна ціна';
+$_['text_attribute_product']                   = 'товару:';
 
 // Entry
 $_['entry_qty']                               = 'Вкажіть необхідну кількість';

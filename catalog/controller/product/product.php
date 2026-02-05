@@ -312,6 +312,7 @@ class ControllerProductProduct extends Controller
 
 			$data['tab_description'] = $this->language->get('tab_description');
 			$data['tab_attribute'] = $this->language->get('tab_attribute');
+			$data['text_attribute_product'] = $this->language->get('text_attribute_product');
 			$data['tab_review'] = sprintf($this->language->get('tab_review'), $product_info['reviews']);
 
 			if ($product_info['reviews']) {

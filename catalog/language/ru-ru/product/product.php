@@ -41,6 +41,7 @@ $_['text_year']                               = 'год';
 $_['send_review']                             = 'Отправить отзыв';
 $_['text_more_inf']                           = 'Eщё';
 $_['text_promo_sale']                         = 'Акционная цена';
+$_['text_attribute_product']                   = 'товара:';
 
 // Entry
 $_['entry_qty']                               = 'Укажите необходимое кол-во';
