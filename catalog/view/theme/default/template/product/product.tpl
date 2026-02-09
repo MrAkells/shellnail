@@ -254,7 +254,7 @@
                   <table class="product-filters product-attribute">
                     <tr>
                       <td class="product-attribute-title" colspan="2">
-                        <h2 class="product-tab-title"><?php echo $tab_attribute; ?> <?php echo $text_attribute_product; ?> <?php echo $heading_title; ?></h2>
+                        <h2 class="product-tab-title"><?php echo $tab_attribute; ?></h2>
                       </td>
                     </tr>
                     <?php foreach ($product_filters as $filter) { ?>
@@ -434,7 +434,7 @@
                 <table class="product-filters product-attribute">
                   <tr>
                     <td class="product-attribute-title" colspan="2">
-                      <h2 class="product-tab-title"><?php echo $tab_attribute; ?> <?php echo $text_attribute_product; ?> <?php echo $heading_title; ?></h2>
+                      <h2 class="product-tab-title"><?php echo $tab_attribute; ?></h2>
                     </td>
                   </tr>
                   <?php foreach ($product_filters as $filter) { ?>
