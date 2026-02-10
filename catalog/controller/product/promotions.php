@@ -8,7 +8,9 @@ class ControllerProductPromotions extends Controller {
             
                 $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.carousel.css');
                 $this->document->addScript('catalog/view/javascript/jquery/owl-carousel/owl.carousel.min.js');
-                $this->document->addLink($this->url->link('product/promotions'), 'canonical');
+                if (!empty($this->request->get['route']) && $this->request->get['route'] === 'product/promotions') {
+                    $this->document->addLink($this->url->link('product/promotions'), 'canonical');
+                }
 
                 $cache_data=$this->cache->get('promotions_'. $this->config->get('config_language_id'));
            if(!$cache_data){
