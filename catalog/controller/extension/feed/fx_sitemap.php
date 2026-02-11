@@ -674,24 +674,30 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 						}
 					}
 
-					if (!empty($output)) {
-						$other_output = $output . $other_output;
-					}
+						if (!empty($output)) {
+							$output = $this->filterXmlGroupByRules($output);
+							$other_output = $output . $other_output;
+						}
 					$output = $pre_output;
 					
 					break;
 				}
 			}
 			
-				foreach ($out as $line) {
-					$other_output .= $line;
-				}
+					foreach ($out as $line) {
+						$other_output .= $line;
+					}
+					$other_output = $this->filterXmlGroupByRules($other_output);
 
-				if (isset($head_output) && strlen($output) > strlen($head_output)) {
-					$other_output = substr($output, strlen($head_output)) . $other_output;
-					$output = $head_output;
-				}
-				$output .= $info_output . $categories_output . $product_output . $other_output;
+					$info_output = $this->sortXmlGroup($info_output);
+					$categories_output = $this->sortXmlGroup($categories_output);
+					$product_output = $this->sortXmlGroup($product_output);
+
+					if (isset($head_output) && strlen($output) > strlen($head_output)) {
+						$other_output = substr($output, strlen($head_output)) . $other_output;
+						$output = $head_output;
+					}
+					$output .= $info_output . $categories_output . $product_output . $other_output;
 			
 			$plug = '';
 			
@@ -759,6 +765,63 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 		$pagecode = curl_exec( $ch );
 		curl_close($ch);//*/
 		return $pagecode;
+	}
+
+	protected function sortXmlGroup($group_output) {
+
+		if (!$group_output) {
+			return $group_output;
+		}
+
+		preg_match_all('/<url>.*?<\/url>/s', $group_output, $matches);
+
+		if (empty($matches[0])) {
+			return $group_output;
+		}
+
+		$items = $matches[0];
+		usort($items, array($this, 'compareXmlUrls'));
+
+		return implode('', $items);
+	}
+
+	protected function filterXmlGroupByRules($group_output) {
+
+		if (!$group_output) {
+			return $group_output;
+		}
+
+		preg_match_all('/<url>.*?<\/url>/s', $group_output, $matches);
+
+		if (empty($matches[0])) {
+			return $group_output;
+		}
+
+		$filtered = array();
+
+		foreach ($matches[0] as $item) {
+			$loc = $this->extractXmlLoc($item);
+
+			if ($loc && $this->isForcedExcludedUrl($loc)) {
+				continue;
+			}
+
+			$filtered[] = $item;
+		}
+
+		return implode('', $filtered);
+	}
+
+	protected function compareXmlUrls($a, $b) {
+		return strcmp($this->extractXmlLoc($a), $this->extractXmlLoc($b));
+	}
+
+	protected function extractXmlLoc($xml_line) {
+		if (preg_match('/<loc>(.*?)<\/loc>/s', $xml_line, $matches)) {
+			return html_entity_decode($matches[1], ENT_QUOTES, 'UTF-8');
+		}
+
+		return '';
 	}
 	
 	protected function addhost($url, $host){
@@ -830,6 +893,8 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 		if ($this->settings['only_seo_url'] && strpos($url, '=')) return '';
 		
 		if ($this->settings['exclude_file_on'] && in_array($url, $this->excluded)) return '';
+
+		if ($this->isForcedExcludedUrl($url)) return '';
 		
 		if (strpos($url, 'articles-news-reviews') !== false || strpos($url, '/popular-news/') !== false) {
 			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
@@ -858,6 +923,28 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 		$output .= '</url>';
 		
 		return $output;
+	}
+
+	protected function isForcedExcludedUrl($url) {
+		$normalized = html_entity_decode($url, ENT_QUOTES, 'UTF-8');
+
+		if (preg_match('#/popular-news(?:/|$)#', $normalized)) {
+			return true;
+		}
+
+		if (strpos($normalized, 'route=information/information&information_id=18') !== false) {
+			return true;
+		}
+
+		if (strpos($normalized, 'route=information/information&information_id=19') !== false) {
+			return true;
+		}
+
+		if (strpos($normalized, 'route=information/information&information_id=20') !== false) {
+			return true;
+		}
+
+		return false;
 	}
 
 	
@@ -1914,9 +2001,10 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 						}
 					}
 
-					if (!empty($output)) {
-						$other_output = $output . $other_output;
-					}
+						if (!empty($output)) {
+							$output = $this->filterXmlGroupByRules($output);
+							$other_output = $output . $other_output;
+						}
 					$output = $pre_output;
 					
 					break;
@@ -1930,14 +2018,41 @@ class ControllerExtensionFeedFxSitemap extends Controller {
 			$i++;
 			$out[$i] = $this->xml($base_url . 'brands/', '', 'monthly', '0.6');
 			$i++;
-			foreach ($out as $line) {
-				$other_output .= $line;
-			}
-			if (isset($head_output) && strlen($output) > strlen($head_output)) {
-				$other_output = substr($output, strlen($head_output)) . $other_output;
-				$output = $head_output;
-			}
-			$output .= $info_output . $categories_output . $product_output . $other_output;
+				foreach ($out as $line) {
+					$other_output .= $line;
+				}
+				$other_output = $this->filterXmlGroupByRules($other_output);
+
+				$priority_output = '';
+				$priority_urls = array(
+					$this->url->link('information/contact', '', 'SSL'),
+					$base_url . 'reviews/',
+					$base_url . 'vseakciy/',
+					$base_url . 'brands/'
+				);
+
+				foreach ($priority_urls as $priority_url) {
+					$pattern = '#<url><loc>' . preg_quote($priority_url, '#') . '</loc>.*?</url>#s';
+
+					if (preg_match($pattern, $other_output, $matches)) {
+						$priority_output .= $matches[0];
+						$pos = strpos($other_output, $matches[0]);
+
+						if ($pos !== false) {
+							$other_output = substr_replace($other_output, '', $pos, strlen($matches[0]));
+						}
+					}
+				}
+
+					$info_output = $this->sortXmlGroup($info_output);
+					$categories_output = $this->sortXmlGroup($categories_output);
+					$product_output = $this->sortXmlGroup($product_output);
+
+					if (isset($head_output) && strlen($output) > strlen($head_output)) {
+						$other_output = substr($output, strlen($head_output)) . $other_output;
+						$output = $head_output;
+					}
+				$output .= $priority_output . $info_output . $categories_output . $product_output . $other_output;
 			
 			$plug = '';
 			
